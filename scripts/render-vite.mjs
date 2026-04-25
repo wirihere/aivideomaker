@@ -63,6 +63,7 @@ import { spawn } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
+import { buildDuckFilterGraph } from "./lib/audio-duck.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -307,6 +308,8 @@ const audioScan = await page.evaluate(() => {
       duration: Number.isFinite(duration) ? duration : null,
       volume: Number.isFinite(volumeAttr) ? volumeAttr : 1,
       trackIndex: Number.isFinite(trackIndex) ? trackIndex : null,
+      role: el.dataset.audioRole || null,
+      duckStyle: el.dataset.duckStyle || null,
     });
   });
   return out;
@@ -686,14 +689,45 @@ if (willMux) {
   // The silence pad enters amix with no transformation.
   finalLabels.push(`[${silenceIndex}:a]`);
 
-  // amix sums real tracks + the silence track; the silence track is always
-  // exactly `duration` long, so amix's `duration=longest` output always
-  // reaches the comp's authored timeline length. dropout_transition=0
-  // avoids amix's default 2s gain ramp when shorter inputs end.
+  // Detect spectral-duck opt-in: exactly 1 voice + 1 music + nothing else.
+  // Anything else (no roles / SFX present / multiple voices) falls back to
+  // the flat amix path below — backward compatible.
+  const voices = audioInputs.filter((a) => a.role === "voice");
+  const musics = audioInputs.filter((a) => a.role === "music");
+  const useDuck = voices.length === 1 && musics.length === 1 && audioInputs.length === 2;
+
   const amixLabel = "[aout]";
-  const amixCount = audioInputs.length + 1;
-  const amixSegment = `${finalLabels.join("")}amix=inputs=${amixCount}:duration=longest:dropout_transition=0${amixLabel}`;
-  const filterComplex = [...chainSegments, amixSegment].join(";");
+  let filterComplex;
+
+  if (useDuck) {
+    // Duck path: route per-track chains into [v]/[m] labels, then ducker.
+    const v = voices[0];
+    const m = musics[0];
+    const duckStyle = m.duckStyle || v.duckStyle || "podcast";
+    // chainSegments wrote `[a${idx}]` outputs; rename them to vIn/mIn.
+    const vLabel = `a${v.ffmpegIndex}`;
+    const mLabel = `a${m.ffmpegIndex}`;
+    const duck = buildDuckFilterGraph({
+      style: duckStyle,
+      voiceInput: vLabel,
+      musicInput: mLabel,
+      outLabel: "duckedout",
+    });
+    // The silence track still pads duration. Sum [duckedout] + silence
+    // through one final amix so a comp ending early still hits the full
+    // authored duration.
+    const finalSegment = `[duckedout][${silenceIndex}:a]amix=inputs=2:duration=longest:dropout_transition=0${amixLabel}`;
+    filterComplex = [...chainSegments, duck.filterGraph, finalSegment].join(";");
+    console.log(`▶ render-vite: duck mode (style=${duckStyle}) — voice="${v.id || `(no id)`}" music="${m.id || `(no id)`}"`);
+  } else {
+    // Flat amix sums real tracks + the silence track; the silence track is
+    // always exactly `duration` long, so amix's `duration=longest` output
+    // always reaches the comp's authored timeline length. dropout_transition=0
+    // avoids amix's default 2s gain ramp when shorter inputs end.
+    const amixCount = audioInputs.length + 1;
+    const amixSegment = `${finalLabels.join("")}amix=inputs=${amixCount}:duration=longest:dropout_transition=0${amixLabel}`;
+    filterComplex = [...chainSegments, amixSegment].join(";");
+  }
 
   muxArgs.push(
     "-filter_complex", filterComplex,

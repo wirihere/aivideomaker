@@ -104,30 +104,67 @@ function printHelp() {
 }
 
 // --- Shortlist load ----------------------------------------------------------
+// Priority order:
+//   1. assets/music-shortlists/<template>.json  — hand-curated (operator's pick)
+//   2. assets/music/.catalog/<template>.json    — auto-built by music-library.mjs
+// The curated path wins when both exist so operators can hand-tune over auto.
 function loadShortlist(template) {
   const file = path.join(projectRoot, "assets", "music-shortlists", `${template}.json`);
-  if (!fs.existsSync(file)) {
-    throw new Error(`Shortlist not found: ${file}`);
+  if (fs.existsSync(file)) {
+    let raw;
+    try {
+      raw = fs.readFileSync(file, "utf8");
+    } catch (err) {
+      throw new Error(`Failed to read ${file}: ${err.message}`);
+    }
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (err) {
+      throw new Error(`Invalid JSON in ${file}: ${err.message}`);
+    }
+    if (!data.template || data.template !== template) {
+      throw new Error(`Template mismatch in ${file}: expected "${template}" got "${data.template}"`);
+    }
+    if (!Array.isArray(data.tracks) || data.tracks.length === 0) {
+      throw new Error(`No tracks defined in ${file}`);
+    }
+    return data;
   }
-  let raw;
-  try {
-    raw = fs.readFileSync(file, "utf8");
-  } catch (err) {
-    throw new Error(`Failed to read ${file}: ${err.message}`);
+  // Fallback: auto-built catalog from scripts/music-library.mjs
+  const catalogPath = path.join(projectRoot, "assets", "music", ".catalog", `${template}.json`);
+  if (fs.existsSync(catalogPath)) {
+    let catalog;
+    try {
+      catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
+    } catch (err) {
+      throw new Error(`Invalid JSON in ${catalogPath}: ${err.message}`);
+    }
+    if (!Array.isArray(catalog.tracks) || catalog.tracks.length === 0) {
+      throw new Error(`No tracks defined in ${catalogPath}`);
+    }
+    console.error("[pick-music] using auto-built catalog (run music:catalog to refresh)");
+    return {
+      template,
+      vibe: catalog.vibe || template,
+      bpm_range: catalog.bpmRange || null,
+      default_volume: 0.18,
+      tracks: catalog.tracks.map((t) => ({
+        slug: `${t.source || "src"}-${t.id}`,
+        title: t.title,
+        url: t.url,
+        duration: t.durationSec,
+        bpm: t.bpm,
+        tags: t.tags || [],
+        local_file: t.mp3,
+      })),
+    };
   }
-  let data;
-  try {
-    data = JSON.parse(raw);
-  } catch (err) {
-    throw new Error(`Invalid JSON in ${file}: ${err.message}`);
-  }
-  if (!data.template || data.template !== template) {
-    throw new Error(`Template mismatch in ${file}: expected "${template}" got "${data.template}"`);
-  }
-  if (!Array.isArray(data.tracks) || data.tracks.length === 0) {
-    throw new Error(`No tracks defined in ${file}`);
-  }
-  return data;
+  throw new Error(
+    `No shortlist for template "${template}". ` +
+    `Run 'node scripts/music-library.mjs --vibe=${template}' to build a catalog, ` +
+    `or add 'assets/music-shortlists/${template}.json' manually.`
+  );
 }
 
 // --- Ranking ----------------------------------------------------------------
