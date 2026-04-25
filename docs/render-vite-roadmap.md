@@ -19,16 +19,31 @@ multi-pass compositing). Always uses the bundled ffmpeg via
 - Temp PNGs cleaned on success; preserved on ffmpeg failure.
 - **No audio** — verified on `compositions/text-fx-demo.html`.
 
-## Phase 2 — audio mixing
+## Phase 2 — audio mixing (DONE)
 
-- Scan the comp DOM for `<audio>` elements and their `data-start` /
-  `data-duration`.
-- Encode video first (current path), then a second ffmpeg pass:
-  `ffmpeg -i video.mp4 -i audio.mp3 -map 0:v:0 -map 1:a:0 -c:v copy
-  -c:a aac -b:a 192k -shortest out.mp4`. `-c:v copy` keeps the libx264
-  encode untouched.
-- Multi-track: `-filter_complex amix=inputs=N:duration=longest` ahead of
-  `-map`. Mirror level/duck logic from `scripts/render.mjs` once known.
+- DOM-scan via `page.evaluate` for every `<audio>` (incl. nested
+  sub-comps): pulls `src` (or wrapped `<source src>`), `data-start`,
+  `data-duration`, `data-volume` (default 1), `data-track-index`. Resolves
+  each `src` relative to the comp HTML's directory; missing files are
+  warned-about but don't abort.
+- Phase 1 frame-capture loop is unchanged. When audio exists, libx264
+  writes to a `*.video.mp4` intermediate; a 2nd ffmpeg pass muxes audio
+  with `-c:v copy` so the encode is bit-identical to the visual-only
+  output. When `audio: none`, libx264 writes directly to the final path
+  (Phase 1 byte-for-byte preserved).
+- Filter graph per track: `[k:a]volume=V,adelay=Sms|Sms[a_k]` (volume
+  segment dropped when v=1; adelay segment dropped when start=0; `anull`
+  passthrough labels otherwise-bare inputs). All real tracks are amixed
+  together with a synthetic `anullsrc=...:duration=<comp dur>` silence
+  pad — that pad guarantees amix's `duration=longest` always reaches the
+  comp's authored timeline length, so a comp whose last SFX ends early
+  doesn't get its mp4 truncated by `-shortest`. (`apad=whole_dur` would
+  be the cleaner choice but the bundled @ffmpeg-installer ships a 2018
+  build that pre-dates that option.)
+- `--no-audio` flag short-circuits the mux pass entirely.
+- Output: `aac` audio (192k) muxed into the same h264 mp4. Verified end-
+  to-end on a synthetic 4s comp with two SFX (different starts and
+  volumes) and on `text-fx-demo.html` (no-audio path unchanged).
 
 ## Phase 3 — perf
 

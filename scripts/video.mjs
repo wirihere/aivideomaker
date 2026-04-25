@@ -33,6 +33,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { spawnSync } from "child_process";
+import { node as nodeBin, npmArgs } from "./lib/platform-bin.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -193,15 +194,14 @@ function runNode(scriptPath, args = [], { quiet = true, env = {} } = {}) {
 }
 
 function runNpm(scriptName, extraArgs = [], { quiet = true } = {}) {
-  // On Windows, `npm` is a `.cmd` shim, so we need shell:true. Pass extra
-  // args via `--` so they reach the underlying script.
-  const args = ["run", scriptName];
-  if (extraArgs.length) args.push("--", ...extraArgs);
-  const result = spawnSync("npm", args, {
+  // Spawn `node <npm-cli.js> run <scriptName> [-- ...extraArgs]` directly —
+  // bypasses `npm.cmd` (a Windows .cmd shim) so we can drop shell:true and
+  // avoid both Node 22 DEP0190 and CVE-2024-27980's EINVAL on .cmd spawn.
+  // See scripts/lib/platform-bin.mjs.
+  const result = spawnSync(nodeBin, npmArgs(scriptName, extraArgs), {
     cwd: projectRoot,
     encoding: "utf8",
     stdio: quiet ? ["ignore", "pipe", "pipe"] : "inherit",
-    shell: true,
   });
   return result;
 }

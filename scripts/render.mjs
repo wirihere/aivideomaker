@@ -50,6 +50,7 @@ import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
 import { parseRootDuration, runWithProgress } from "./lib/render-progress.mjs";
+import { node as nodeBin, npxRunArgs } from "./lib/platform-bin.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -366,10 +367,11 @@ const indexHtml = path.join(projectRoot, "index.html");
 const meta = parseRootDuration(indexHtml, fpsFromArgs);
 const totalFrames = meta?.totalFrames ?? null;
 
-// On Windows, npx is npx.cmd. Use shell:true so PATH lookup finds it.
-await runWithProgress("npx", ["hyperframes", "render", ...passThrough], {
+// Spawn the locally-installed `hyperframes` CLI directly via `node`. Skipping
+// `npx` (a `.cmd` on Windows) avoids Node 22's DEP0190 *and* CVE-2024-27980's
+// EINVAL on `.cmd` files. See scripts/lib/platform-bin.mjs.
+await runWithProgress(nodeBin, npxRunArgs("hyperframes", ["render", ...passThrough]), {
   cwd: projectRoot,
-  shell: true,
 }, {
   totalFrames,
   label: "render",
@@ -393,14 +395,15 @@ let gradedPath = null;
 if (skipGrade) {
   console.log("⏭  --no-grade: skipping color grade");
 } else {
-  // Post-grade.
+  // Post-grade. Uses process.execPath (the absolute path to the running
+  // Node binary) — no shell needed, and avoids Node 22 DEP0190.
   console.log(`▶ grade: ${lut} @ strength=${strength}`);
-  await run("node", [
+  await run(nodeBin, [
     path.join("scripts", "post-grade.mjs"),
     path.relative(projectRoot, rendered),
     `--lut=${lut}`,
     `--strength=${strength}`,
-  ], { cwd: projectRoot, shell: true });
+  ], { cwd: projectRoot });
 
   const ext = path.extname(rendered);
   const base = rendered.slice(0, -ext.length);

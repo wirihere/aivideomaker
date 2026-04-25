@@ -35,6 +35,7 @@ import { chromium } from "playwright";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { node as nodeBin, npxRunArgs } from "./lib/platform-bin.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -74,8 +75,10 @@ async function ensureServer() {
     } catch {}
     if (!startServer) break;
     if (i === 0) {
-      const child = spawn("npx", ["hyperframes", "preview", "--port", String(port)], {
-        cwd: projectRoot, shell: true, detached: false, stdio: "ignore",
+      // Spawn the locally-installed `hyperframes` CLI via node directly —
+      // no shell, no .cmd shim, no DEP0190. See scripts/lib/platform-bin.mjs.
+      const child = spawn(nodeBin, npxRunArgs("hyperframes", ["preview", "--port", String(port)]), {
+        cwd: projectRoot, detached: false, stdio: "ignore",
       });
       child.unref();
       await new Promise(r => setTimeout(r, 3500));

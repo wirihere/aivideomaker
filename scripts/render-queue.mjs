@@ -28,13 +28,17 @@
 //
 // Constraints:
 //   - Strictly sequential — never spawn renders in parallel.
-//   - Spawned with shell:true so npm.cmd is found on Windows.
+//   - Spawns `node` directly with resolved JS entry points (npm-cli.js for
+//     `npm run check`, scripts/render.mjs for the render itself) via
+//     scripts/lib/platform-bin.mjs. No shell:true, no .cmd shims — sidesteps
+//     Node 22 DEP0190 and CVE-2024-27980's EINVAL on .cmd spawn.
 //   - Deterministic in spirit: timestamp and ordering are the only mutable state.
 
 import path from "path";
 import fs from "fs";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
+import { node as nodeBin, npmArgs } from "./lib/platform-bin.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -114,9 +118,12 @@ function newMp4sSince(before) {
   return candidates;
 }
 
+// Generic spawn helper. Caller passes the resolved binary name (npm.cmd on
+// Windows, npm on POSIX — see scripts/lib/platform-bin.mjs) so we can drop
+// shell:true and avoid Node 22 DEP0190.
 function run(cmd, args, opts = {}) {
   return new Promise((resolve, reject) => {
-    const p = spawn(cmd, args, { stdio: "inherit", shell: true, ...opts });
+    const p = spawn(cmd, args, { stdio: "inherit", ...opts });
     p.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`${cmd} exited ${code}`))));
     p.on("error", reject);
   });
@@ -264,7 +271,7 @@ try {
     // 2. Lint + smoke (npm run check). On failure, skip render but keep going.
     try {
       console.log("  ▶ npm run check");
-      await run("npm", ["run", "check"], { cwd: projectRoot });
+      await run(nodeBin, npmArgs("check"), { cwd: projectRoot });
       console.log("  ✓ check passed");
     } catch (err) {
       result.status = "skipped";
@@ -280,7 +287,7 @@ try {
     const renderArgs = ["scripts/render.mjs", ...renderFlagArgs];
     const renderCmdLine = `node ${renderArgs.join(" ")}`;
     if (dryRun) {
-      console.log(`  ⏭  --dry-run: would spawn \`${renderCmdLine}\` (cwd=${projectRoot}, shell=true)`);
+      console.log(`  ⏭  --dry-run: would spawn \`${renderCmdLine}\` (cwd=${projectRoot})`);
       result.status = "dry-run-ok";
       result.reason = null;
       result.seconds = ((Date.now() - tStart) / 1000).toFixed(1);
@@ -290,7 +297,7 @@ try {
 
     try {
       console.log(`  ▶ ${renderCmdLine}`);
-      await run("node", renderArgs, { cwd: projectRoot });
+      await run(nodeBin, renderArgs, { cwd: projectRoot });
     } catch (err) {
       result.status = "failed";
       result.reason = `render failed: ${err.message}`;
