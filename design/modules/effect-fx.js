@@ -189,7 +189,7 @@
   function rackFocus(timeline, target, opts) {
     const o = opts || {};
     const at = +o.at || 0;
-    const duration = +pick(o, "duration", 0.6);
+    const duration = o.duration != null ? +o.duration : 0.6;
     const from = o.from != null ? +o.from : 8;
     const to   = o.to   != null ? +o.to   : 0;
     const ease = o.ease || "power2.out";
@@ -221,7 +221,7 @@
   function radialMask(timeline, target, opts) {
     const o = opts || {};
     const at = +o.at || 0;
-    const duration = +pick(o, "duration", 0.5);
+    const duration = o.duration != null ? +o.duration : 0.5;
     const from = o.from != null ? +o.from : 0;
     const to   = o.to   != null ? +o.to   : 50;
     const centerX = o.centerX != null ? +o.centerX : 50;

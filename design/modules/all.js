@@ -467,6 +467,33 @@
     document.head.appendChild(style);
   }
 
+  // Inject the radial-mask CSS-var rule once per document. The mask cuts a
+  // soft-edged disc out of the target so the visible region appears
+  // "spotlit" while the rest is feathered out. We tween a `--rm-radius`
+  // variable that the mask-image consumes, plus center / feather knobs.
+  function ensureRadialMaskRule() {
+    if (document.getElementById("__effect-fx-rm")) return;
+    const style = document.createElement("style");
+    style.id = "__effect-fx-rm";
+    style.textContent = `.fx-radial-mask {
+  --rm-radius: 0%;
+  --rm-cx: 50%;
+  --rm-cy: 50%;
+  --rm-feather: 8%;
+  -webkit-mask-image: radial-gradient(circle at var(--rm-cx) var(--rm-cy),
+    rgba(0,0,0,1) var(--rm-radius),
+    rgba(0,0,0,0) calc(var(--rm-radius) + var(--rm-feather)));
+          mask-image: radial-gradient(circle at var(--rm-cx) var(--rm-cy),
+    rgba(0,0,0,1) var(--rm-radius),
+    rgba(0,0,0,0) calc(var(--rm-radius) + var(--rm-feather)));
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+}`;
+    document.head.appendChild(style);
+  }
+
   // ---------- recipes ----------------------------------------------------
 
   // MULTIPLANE DOLLY — translate the .stage along Z to push toward / pull
@@ -572,7 +599,83 @@
     return { from, to, duration };
   }
 
-  global.effectFx = { multiplaneDolly, inkBleed, glitchBurst, cinemagraphRotate };
+  // RACK FOCUS — animate a CSS `filter: blur(...)` on the target. Pairs with
+  // the cinematographer's "rack focus" — the lens shifts focus from one
+  // depth to another, so out-of-focus planes go soft and the new subject
+  // becomes crisp. Same Windows-safe pattern as `inkBleed` (locks the
+  // filter on at the start, clears it on completion to free render cost).
+  function rackFocus(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = o.duration != null ? +o.duration : 0.6;
+    const from = o.from != null ? +o.from : 8;
+    const to   = o.to   != null ? +o.to   : 0;
+    const ease = o.ease || "power2.out";
+    const clearAfter = o.clearAfter !== false;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("effectFx.rackFocus: no element for", target); return; }
+
+    timeline.fromTo(el,
+      { filter: `blur(${from}px)` },
+      { filter: `blur(${to}px)`, duration, ease },
+      at);
+
+    // Drop the filter when the rack completes — saves render cost on later
+    // frames and prevents stacked blur filters bleeding into other tweens.
+    if (clearAfter) {
+      timeline.set(el, { filter: "none" }, at + duration);
+    }
+
+    return { duration, from, to };
+  }
+
+  // RADIAL MASK — open a soft-edged spotlight on the target by animating a
+  // CSS variable (`--rm-radius`) that an injected mask-image rule consumes.
+  // The mask is a radial-gradient at (centerX, centerY) with a feathered
+  // edge of `feather` width. Default goes 0% → 50% (closed → open
+  // spotlight covering most of the host). Use with siblings dimmed for
+  // "isolate this element" moments.
+  function radialMask(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = o.duration != null ? +o.duration : 0.5;
+    const from = o.from != null ? +o.from : 0;
+    const to   = o.to   != null ? +o.to   : 50;
+    const centerX = o.centerX != null ? +o.centerX : 50;
+    const centerY = o.centerY != null ? +o.centerY : 50;
+    const feather = o.feather != null ? +o.feather : 8;
+    const ease = o.ease || "power2.out";
+    const clearAfter = o.clearAfter !== false;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("effectFx.radialMask: no element for", target); return; }
+    ensureRadialMaskRule();
+    el.classList.add("fx-radial-mask");
+
+    // Set static positioning vars once at `at` so the mask is anchored
+    // correctly even if multiple radialMask calls overlap on the same host.
+    timeline.set(el, {
+      "--rm-cx": `${centerX}%`,
+      "--rm-cy": `${centerY}%`,
+      "--rm-feather": `${feather}%`,
+    }, at);
+
+    timeline.fromTo(el,
+      { "--rm-radius": `${from}%` },
+      { "--rm-radius": `${to}%`, duration, ease },
+      at);
+
+    // Drop the mask class when the spotlight completes — otherwise the
+    // mask-image sticks around and clips later content.
+    if (clearAfter) {
+      timeline.call(() => el.classList.remove("fx-radial-mask"), [], at + duration);
+    }
+
+    return { duration, from, to };
+  }
+
+  global.effectFx = { multiplaneDolly, inkBleed, glitchBurst, cinemagraphRotate, rackFocus, radialMask };
 })(typeof window !== "undefined" ? window : this);
 
 
@@ -949,6 +1052,32 @@
   background-size: 300% 300%;
   background-position: 0% 50%;
   will-change: background-position, transform;
+}
+.combo-fx-strike {
+  position: relative;
+  display: inline-block;
+}
+.combo-fx-strike::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 0.08em;
+  background: currentColor;
+  transform: scaleX(var(--strike-x, 0));
+  transform-origin: left center;
+  pointer-events: none;
+  will-change: transform;
+}
+.combo-fx-spotlight-dim::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 8800;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 1);
+  opacity: var(--combo-dim, 0);
 }
 `;
     document.head.appendChild(style);
@@ -1785,6 +1914,533 @@
     return { duration };
   }
 
+  // ---------- combo 11: glitchStamp --------------------------------------
+  //
+  // Stamp + 1-3 glitch beats. The most-repeated 4-call sequence across the
+  // template library — "stamp the word/headline/price/date with snap-of-
+  // energy". Pure consolidation: collapses the bare-primitive boilerplate
+  // (textFx.stamp + glitchBurst x2-3 + optional dust) into one named moment.
+  //
+  // Stacks: textFx.stamp → effectFx.glitchBurst (xN) → optional glitterFx.burst
+  // Owns:   the "stamp this" beat — words, prices, dates, marks.
+  // Inputs:
+  //   target          element to stamp
+  //   at, duration    placement (default duration 0.9s)
+  //   intensity       multiplier on stamp scale + glitter count
+  //   seed            PRNG seed (only used if glitter is on)
+  //   fromScale       stamp opening scale (default 1.5 + 0.3 * intensity)
+  //   bursts          1 | 2 | 3 glitch beats (default 2)
+  //   burstSpacing    seconds between glitch beats (default 0.18)
+  //   glitter         optional small dust burst (default false)
+  //   shake           pass-through to textFx.stamp shake (default true)
+  function glitchStamp(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 0.9);
+    const intensity = clampIntensity(o.intensity);
+    const seed = o.seed != null ? +o.seed : 11;
+    const fromScale = o.fromScale != null ? +o.fromScale : (1.5 + 0.3 * intensity);
+    const bursts = Math.max(1, Math.min(3, Math.floor(+pick(o, "bursts", 2))));
+    const burstSpacing = +pick(o, "burstSpacing", 0.18);
+    const glitter = !!o.glitter;
+    const shake = o.shake !== false;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("comboFx.glitchStamp: no element for", target); return; }
+
+    const stampDur = Math.min(0.50, duration * 0.6);
+
+    // 1. Stamp opens the moment.
+    if (typeof global.textFx?.stamp === "function") {
+      global.textFx.stamp(timeline, el, {
+        at, duration: stampDur,
+        fromScale, ease: "back.out(2.0)", shake,
+      });
+    }
+
+    // 2. Glitch beats — staggered after stamp lands. burstSpacing is the
+    //    gap between successive beats; first beat lands ~40% into the stamp.
+    const burstStart = at + stampDur * 0.40;
+    for (let i = 0; i < bursts; i++) {
+      const t = burstStart + i * Math.max(0.10, burstSpacing);
+      if (typeof global.effectFx?.glitchBurst === "function") {
+        global.effectFx.glitchBurst(timeline, el, {
+          at: t, duration: 0.14, shake: false,
+        });
+      }
+    }
+
+    // 3. Optional small glitter dust around the host.
+    if (glitter && typeof global.glitterFx?.burst === "function") {
+      const host = resolveTarget(o.particleHost) || el.parentElement || el;
+      global.glitterFx.burst(timeline, host, {
+        at: at + stampDur * 0.50,
+        duration: Math.min(0.6, duration - stampDur * 0.50),
+        count: Math.floor(20 * intensity),
+        distance: 140 * intensity,
+        seed,
+      });
+    }
+
+    return { duration };
+  }
+
+  // ---------- combo 12: pricePop -----------------------------------------
+  //
+  // Price reveal — currency entrance, optional strikethrough wipe on a
+  // "before" price, scale + glitch + glitter on the "now" price. Distinct
+  // from `superImpact` (which expects a counter from 0 — wrong for prices).
+  //
+  // Stacks: currency fade-in → strikethrough scaleX → textFx.stamp →
+  //         effectFx.glitchBurst → glitterFx.burst
+  // Owns:   the price-reveal moment for ecommerce / SaaS templates.
+  // Inputs:
+  //   target          the "now" price element (stamps in)
+  //   at, duration    placement (default 1.2s)
+  //   intensity       glitter count + stamp scale multiplier
+  //   seed            PRNG seed
+  //   currency        optional separate $ element (fades in first)
+  //   strikethrough   optional "was $X" element (line-through scales in)
+  //   particleHost    glitter container (defaults to target.parentElement)
+  function pricePop(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 1.2);
+    const intensity = clampIntensity(o.intensity);
+    const seed = o.seed != null ? +o.seed : 31;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("comboFx.pricePop: no element for", target); return; }
+    ensureComboFxBridge();
+
+    const currency = resolveTarget(o.currency);
+    const strikethrough = resolveTarget(o.strikethrough);
+    const host = resolveTarget(o.particleHost) || el.parentElement || el;
+
+    // 1. Currency symbol fades + slides in (if separate element).
+    if (currency) {
+      timeline.fromTo(currency,
+        { opacity: 0, x: -24 },
+        { opacity: 1, x: 0, duration: 0.30, ease: "power2.out" },
+        at);
+    }
+
+    // 2. Strikethrough wipe — adds the class then tweens scaleX 0 → 1.
+    if (strikethrough) {
+      strikethrough.classList.add("combo-fx-strike");
+      timeline.fromTo(strikethrough,
+        { "--strike-x": 0 },
+        { "--strike-x": 1, duration: 0.40, ease: "power2.out" },
+        at + 0.10);
+      // Soften the crossed-out price so the new one wins focus.
+      timeline.to(strikethrough,
+        { opacity: 0.40, duration: 0.25, ease: "power2.in" },
+        at + 0.50);
+    }
+
+    // 3. Stamp on the "now" price.
+    const stampAt = at + 0.20;
+    if (typeof global.textFx?.stamp === "function") {
+      global.textFx.stamp(timeline, el, {
+        at: stampAt, duration: 0.50,
+        fromScale: 1.4 + 0.4 * intensity,
+        ease: "back.out(2.2)",
+        shake: true,
+      });
+    }
+
+    // 4. Glitch lock on the price.
+    if (typeof global.effectFx?.glitchBurst === "function") {
+      global.effectFx.glitchBurst(timeline, el, {
+        at: stampAt + 0.18, duration: 0.14, shake: false,
+      });
+    }
+
+    // 5. Glitter burst — the deal reward.
+    if (typeof global.glitterFx?.burst === "function") {
+      global.glitterFx.burst(timeline, host, {
+        at: stampAt + 0.10,
+        duration: Math.min(0.9, duration - (stampAt - at) - 0.10),
+        count: Math.floor(40 * intensity),
+        distance: 220 * intensity,
+        seed,
+      });
+    }
+
+    return { duration };
+  }
+
+  // ---------- combo 13: testimonialReveal --------------------------------
+  //
+  // Name + role + avatar + quote choreography. The "real human said this"
+  // moment. Distinct from `cinematicReveal` (one-headline) and `dreamSequence`
+  // (ambient) — this choreographs four element types into one named beat.
+  //
+  // Stacks: avatar fade-scale → textFx.cascade (name) → textFx.typeOn (role)
+  //         → textFx.stagger (per-letter quote, low rotation) →
+  //         optional glitterFx.ambient rim shimmer
+  // Owns:   testimonial / case-study quote moments.
+  // Inputs:
+  //   target          scene container (also used as glitter host)
+  //   at, duration    placement (default 1.8s)
+  //   intensity       quote rotation amount, glitter count
+  //   seed            PRNG seed
+  //   avatar          optional avatar element
+  //   name            optional name element (cascades word-by-word)
+  //   role            optional role/title element (typewriter)
+  //   quote           optional quote element (per-letter stagger)
+  //   ambient         rim glitter on / off (default true)
+  function testimonialReveal(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 1.8);
+    const intensity = clampIntensity(o.intensity);
+    const seed = o.seed != null ? +o.seed : 41;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("comboFx.testimonialReveal: no element for", target); return; }
+
+    const avatar = resolveTarget(o.avatar);
+    const name = resolveTarget(o.name);
+    const role = resolveTarget(o.role);
+    const quote = resolveTarget(o.quote);
+    const ambient = o.ambient !== false;
+
+    // 1. Avatar opacity + scale fade-in (real-human cue).
+    if (avatar) {
+      timeline.fromTo(avatar,
+        { opacity: 0, scale: 0.88 },
+        { opacity: 1, scale: 1, duration: 0.55, ease: "power2.out" },
+        at);
+    }
+
+    // 2. Name cascade — words drop in.
+    if (name && typeof global.textFx?.cascade === "function") {
+      global.textFx.cascade(timeline, name, {
+        at: at + 0.20,
+        duration: 0.45, stagger: 0.07, distance: 30,
+        ease: "power3.out",
+      });
+    }
+
+    // 3. Role typeOn — typewriter feel under the name.
+    if (role && typeof global.textFx?.typeOn === "function") {
+      global.textFx.typeOn(timeline, role, {
+        at: at + 0.40,
+        duration: Math.min(0.6, duration * 0.35),
+      });
+    }
+
+    // 4. Quote per-letter stagger with subtle rotation — conversational rhythm.
+    if (quote && typeof global.textFx?.stagger === "function") {
+      global.textFx.stagger(timeline, quote, {
+        at: at + 0.55,
+        duration: Math.min(0.55, duration * 0.4),
+        stagger: 0.018,
+        rotation: -6 * intensity,
+        ease: "back.out(1.4)",
+        seed,
+      });
+    }
+
+    // 5. Optional rim glitter — gentle, ambient.
+    if (ambient && typeof global.glitterFx?.ambient === "function") {
+      global.glitterFx.ambient(timeline, el, {
+        at: at + 0.30,
+        duration: Math.max(0.6, duration - 0.50),
+        count: Math.floor(18 * intensity),
+        seed: seed + 5,
+        sizeRange: [2, 5],
+      });
+    }
+
+    return { duration };
+  }
+
+  // ---------- combo 14: focusPull ----------------------------------------
+  //
+  // Depth-of-field rack from background to foreground. The "lens just
+  // refocused" moment — most-cited cinematic technique in promo-video
+  // literature. Distinct from `multiplaneDolly` (Z-translation, not focus).
+  //
+  // Stacks: effectFx.rackFocus on bg (sharp → blurred) +
+  //         effectFx.rackFocus on fg (blurred → sharp) +
+  //         optional mild effectFx.multiplaneDolly Z lock-in
+  // Owns:   "lens locked on the subject" moments.
+  // Inputs:
+  //   target          host scene (or stage container)
+  //   at, duration    placement (default 1.4s)
+  //   intensity       blur amount + dolly distance multiplier
+  //   foreground      element that becomes sharp
+  //   background      element that goes blurred
+  //   fromBlur        starting blur in px (default 0)
+  //   toBlur          ending blur in px on the de-focused plane (default 8)
+  //   dolly           also pull foreground forward (default true)
+  function focusPull(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 1.4);
+    const intensity = clampIntensity(o.intensity);
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("comboFx.focusPull: no element for", target); return; }
+
+    const foreground = resolveTarget(o.foreground);
+    const background = resolveTarget(o.background);
+    const fromBlur = o.fromBlur != null ? +o.fromBlur : 0;
+    const toBlur = o.toBlur != null ? +o.toBlur : 8;
+    const dolly = o.dolly !== false;
+    const rackDur = Math.min(1.0, duration * 0.7);
+
+    // 1. Background defocuses — and stays blurred until the moment ends.
+    if (background && typeof global.effectFx?.rackFocus === "function") {
+      global.effectFx.rackFocus(timeline, background, {
+        at, duration: rackDur,
+        from: fromBlur, to: toBlur * intensity,
+        ease: "power2.inOut",
+        clearAfter: false,
+      });
+      // Clear the blur on the way out so later scenes aren't tainted.
+      timeline.set(background, { filter: "none" }, at + duration);
+    }
+
+    // 2. Foreground sharpens (reverse rack — high blur to 0).
+    if (foreground && typeof global.effectFx?.rackFocus === "function") {
+      global.effectFx.rackFocus(timeline, foreground, {
+        at, duration: rackDur,
+        from: toBlur * intensity, to: 0,
+        ease: "power2.inOut",
+        clearAfter: true,
+      });
+    }
+
+    // 3. Mild multiplane Z lock-in — feels like the lens settles.
+    if (dolly && foreground && typeof global.effectFx?.multiplaneDolly === "function") {
+      global.effectFx.multiplaneDolly(timeline, foreground, {
+        at, duration,
+        from: -40 * intensity, to: 0,
+        ease: "power2.out",
+      });
+    }
+
+    return { duration };
+  }
+
+  // ---------- combo 15: statGroup ----------------------------------------
+  //
+  // 3-5 stat numbers count up together with shared shimmer — the stat-grid
+  // moment. Distinct from `superImpact` (one hero number) — `statGroup` is
+  // multiple counters with staggered starts and a single ambient blanket.
+  //
+  // Stacks: textFx.counter (×N, staggered) + scale-in per stat +
+  //         glitterFx.ambient blanket + optional final-stat glitchBurst
+  // Owns:   stat-grid moments — case studies, agent-brand, trust-builder.
+  // Inputs:
+  //   target          grid container (also glitter host)
+  //   at, duration    placement (default 2.0s)
+  //   intensity       glitter count multiplier
+  //   seed            PRNG seed
+  //   stats           array of selectors / elements (the counters)
+  //   stagger         seconds between counter starts (default 0.18)
+  //   ambient         glitter blanket on / off (default true)
+  //   punchLast       glitch on final stat (default true)
+  function statGroup(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 2.0);
+    const intensity = clampIntensity(o.intensity);
+    const seed = o.seed != null ? +o.seed : 51;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("comboFx.statGroup: no element for", target); return; }
+
+    const stats = Array.isArray(o.stats) ? o.stats : [];
+    const stagger = +pick(o, "stagger", 0.18);
+    const ambient = o.ambient !== false;
+    const punchLast = o.punchLast !== false;
+
+    if (!stats.length) {
+      console.warn("comboFx.statGroup: provide opts.stats as an array of selectors");
+      return { duration };
+    }
+
+    const counterDur = Math.min(1.0, Math.max(0.5, duration * 0.5));
+
+    // 1. Counters tick up in sequence with subtle scale-in per stat.
+    stats.forEach((sel, i) => {
+      const elN = resolveTarget(sel);
+      if (!elN) return;
+      const tStart = at + i * stagger;
+      timeline.fromTo(elN,
+        { scale: 0.86, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.40, ease: "back.out(1.6)" },
+        tStart);
+      if (typeof global.textFx?.counter === "function") {
+        try {
+          global.textFx.counter(timeline, elN, {
+            at: tStart,
+            duration: counterDur,
+            from: 0, ease: "power2.out",
+          });
+        } catch (e) {}
+      }
+    });
+
+    // 2. Ambient glitter blanket across the grid.
+    if (ambient && typeof global.glitterFx?.ambient === "function") {
+      global.glitterFx.ambient(timeline, el, {
+        at: at + 0.10,
+        duration: Math.max(0.8, duration - 0.20),
+        count: Math.floor(24 * intensity),
+        seed, sizeRange: [2, 5],
+      });
+    }
+
+    // 3. Glitch on the final stat as the moment locks.
+    if (punchLast && typeof global.effectFx?.glitchBurst === "function") {
+      const last = resolveTarget(stats[stats.length - 1]);
+      if (last) {
+        const lastAt = at + (stats.length - 1) * stagger + counterDur * 0.85;
+        global.effectFx.glitchBurst(timeline, last, {
+          at: lastAt, duration: 0.14, shake: false,
+        });
+      }
+    }
+
+    return { duration };
+  }
+
+  // ---------- combo 16: spotlight ----------------------------------------
+  //
+  // Circular vignette focus on a key element while dimming surroundings —
+  // the "this is the answer" moment. New visual signature; nothing today
+  // owns the "isolate one element with a soft halo + dim siblings" beat.
+  //
+  // Stacks: effectFx.radialMask open → host dim filter → textFx.stamp →
+  //         effectFx.glitchBurst → optional glitterFx.ambient rim →
+  //         radialMask close on the way out
+  // Owns:   the answer-moment / killer-line spotlight.
+  // Inputs:
+  //   target          element to spotlight
+  //   host            container that gets dimmed (defaults to target.parentElement)
+  //   at, duration    placement (default 1.6s)
+  //   intensity       radius + dim depth multiplier
+  //   seed            PRNG seed (rim glitter)
+  //   radius          spotlight radius as % of host (default 50)
+  //   feather         feather width as % (default 14)
+  //   centerX, centerY  spotlight center as % of host (default 50, 50)
+  //   auto            compute center from target's bbox in host (default false)
+  //   dim             dim siblings on (default true)
+  //   dimAmount       0..1 dim opacity (default 0.55)
+  function spotlight(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 1.6);
+    const intensity = clampIntensity(o.intensity);
+    const seed = o.seed != null ? +o.seed : 61;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("comboFx.spotlight: no element for", target); return; }
+    ensureComboFxBridge();
+
+    const host = resolveTarget(o.host) || el.parentElement || el;
+    const radius = o.radius != null ? +o.radius : 50;
+    const feather = o.feather != null ? +o.feather : 14;
+    const dim = o.dim !== false;
+    const dimAmount = o.dimAmount != null ? +o.dimAmount : 0.55;
+
+    let cx = o.centerX != null ? +o.centerX : 50;
+    let cy = o.centerY != null ? +o.centerY : 50;
+    if (o.auto) {
+      try {
+        const hr = host.getBoundingClientRect();
+        const tr = el.getBoundingClientRect();
+        if (hr.width > 0 && hr.height > 0) {
+          cx = (((tr.left - hr.left) + tr.width / 2) / hr.width) * 100;
+          cy = (((tr.top - hr.top) + tr.height / 2) / hr.height) * 100;
+        }
+      } catch (e) {}
+    }
+
+    const openDur = Math.min(0.45, duration * 0.30);
+    const closeDur = Math.min(0.35, duration * 0.25);
+    const closeAt = at + duration - closeDur;
+    const targetRadius = radius * intensity;
+
+    // 1. Radial mask opens on the host — cutting a soft hole that reveals
+    //    the spotlit area while everything outside fades to black.
+    if (typeof global.effectFx?.radialMask === "function") {
+      global.effectFx.radialMask(timeline, host, {
+        at, duration: openDur,
+        from: 0, to: targetRadius,
+        centerX: cx, centerY: cy,
+        feather,
+        ease: "power2.out",
+        clearAfter: false,
+      });
+    }
+
+    // 2. Optional dim layer on the host — the mask cuts through it so the
+    //    spotlit zone stays bright while siblings darken.
+    if (dim) {
+      host.classList.add("combo-fx-spotlight-dim");
+      timeline.fromTo(host,
+        { "--combo-dim": 0 },
+        { "--combo-dim": dimAmount, duration: openDur, ease: "power2.out" },
+        at);
+    }
+
+    // 3. Stamp on the spotlit subject just after the mask opens.
+    const stampAt = at + openDur * 0.6;
+    if (typeof global.textFx?.stamp === "function") {
+      try {
+        global.textFx.stamp(timeline, el, {
+          at: stampAt, duration: 0.45,
+          fromScale: 1.18 + 0.30 * intensity,
+          ease: "back.out(1.8)",
+          shake: false,
+        });
+      } catch (e) {}
+    }
+
+    // 4. Glitch lock on the subject.
+    if (typeof global.effectFx?.glitchBurst === "function") {
+      global.effectFx.glitchBurst(timeline, el, {
+        at: stampAt + 0.20, duration: 0.14, shake: false,
+      });
+    }
+
+    // 5. Rim glitter — soft halo around the spotlit element.
+    if (typeof global.glitterFx?.ambient === "function") {
+      global.glitterFx.ambient(timeline, el, {
+        at: stampAt + 0.20,
+        duration: Math.max(0.5, duration - openDur - closeDur - 0.20),
+        count: Math.floor(14 * intensity),
+        seed, sizeRange: [2, 4],
+      });
+    }
+
+    // 6. Close the spotlight on the way out — mask collapses, dim clears.
+    if (typeof global.effectFx?.radialMask === "function") {
+      global.effectFx.radialMask(timeline, host, {
+        at: closeAt, duration: closeDur,
+        from: targetRadius, to: 0,
+        centerX: cx, centerY: cy,
+        feather,
+        ease: "power2.in",
+        clearAfter: true,
+      });
+    }
+    if (dim) {
+      timeline.to(host,
+        { "--combo-dim": 0, duration: closeDur, ease: "power2.in" },
+        closeAt);
+      timeline.call(() => host.classList.remove("combo-fx-spotlight-dim"), [], at + duration);
+    }
+
+    return { duration };
+  }
+
   // ---------- registry ---------------------------------------------------
 
   global.comboFx = {
@@ -1798,5 +2454,11 @@
     paperTear,
     confettiFinale,
     holoFlash,
+    glitchStamp,
+    pricePop,
+    testimonialReveal,
+    focusPull,
+    statGroup,
+    spotlight,
   };
 })(typeof window !== "undefined" ? window : this);

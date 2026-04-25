@@ -94,6 +94,39 @@
 /* For glitchBurst: the shake animation lives in design/templates/*.css
    (template-aware) or design/modules/text-fx.css (baseline). No add'l rules. */
 
+/* For rackFocus: nothing to declare — the recipe sets `filter: blur(...)`
+   directly via GSAP and clears it on completion. The selector below is a
+   legibility helper so authors can pre-tag a target as "this is going to
+   be racked" without affecting layout. */
+.fx-rack-target {
+  /* Reserve a hair of padding so blurred glyphs don't clip at the bbox.
+     Mirrors the .fx-bleed-ready pattern. */
+  padding: 0.2em 0.3em;
+  margin: -0.2em -0.3em;
+  will-change: filter;
+}
+
+/* For radialMask: the recipe injects this exact rule from JS on first call
+   (so loading this CSS file is optional). It's listed here so authors can
+   set the same vars from CSS keyframes if they want non-GSAP variants. */
+.fx-radial-mask {
+  --rm-radius: 0%;
+  --rm-cx: 50%;
+  --rm-cy: 50%;
+  --rm-feather: 8%;
+  -webkit-mask-image: radial-gradient(circle at var(--rm-cx) var(--rm-cy),
+    rgba(0, 0, 0, 1) var(--rm-radius),
+    rgba(0, 0, 0, 0) calc(var(--rm-radius) + var(--rm-feather)));
+          mask-image: radial-gradient(circle at var(--rm-cx) var(--rm-cy),
+    rgba(0, 0, 0, 1) var(--rm-radius),
+    rgba(0, 0, 0, 0) calc(var(--rm-radius) + var(--rm-feather)));
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+  will-change: mask-image;
+}
+
 
 /* ===== design/modules/glitter-fx.css ===== */
 /* =========================================================================
@@ -301,6 +334,45 @@
   transform-origin: center;
   transform: scaleX(0);
   width: 60%;
+}
+
+
+/* ---------- combo-fx-strike (used by pricePop) ---------------------- */
+/* Animates a horizontal line through inline text via a pseudo-element. The
+   JS adds the class then tweens `--strike-x` from 0 → 1 (scaleX). Stays on
+   the element until cleared by the recipe. */
+
+.combo-fx-strike {
+  position: relative;
+  display: inline-block;
+}
+.combo-fx-strike::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 0.08em;
+  background: currentColor;
+  transform: scaleX(var(--strike-x, 0));
+  transform-origin: left center;
+  pointer-events: none;
+  will-change: transform;
+}
+
+
+/* ---------- combo-fx-spotlight-dim (used by spotlight) -------------- */
+/* Sits inside the host so the radial mask can cut a clear hole through the
+   dim while the rest of the host stays brighter. Driven by `--combo-dim`. */
+
+.combo-fx-spotlight-dim::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 8800;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 1);
+  opacity: var(--combo-dim, 0);
 }
 
 
