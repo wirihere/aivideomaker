@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Kindred — production (combo-fx + audio)</title>
+
+<!-- ============================================================
+     PATHS NOTE
+     ============================================================
+     This composition is authored to live AT THE PROJECT ROOT —
+     i.e. paths below assume the file is loaded as `index.html`.
+     The linter and renderer resolve all `assets/*`, `design/*`,
+     and `scripts/*` paths from project root.
+
+     For browser preview from `compositions/kindred-production-30s.html`
+     directly, prepend `../` to every relative URL (or run
+     `npx hyperframes preview` which serves from project root).
+     ============================================================ -->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="design/cards.css">
+<!-- 2. Vibe template -->
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<!-- 3. Brand tokens -->
+<link rel="stylesheet" href="design/tokens-kindred.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="design/effects-batch-08.css">
+<link rel="stylesheet" href="design/modules/all.css">
+
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+<script src="scripts/lib/amp-bind.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FBF9F6); font-family: var(--card-font-ui); }
+
+  /* Composition canvas — 1920×1080 landscape. */
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper);
+    color: var(--card-navy);
+  }
+
+  /* Scene shell. Each scene is a layered absolute container — the visibility
+     framework keys off `.clip` + data-start/data-duration. */
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 120px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size);
+    letter-spacing: var(--card-kicker-track);
+    text-transform: uppercase;
+    color: var(--card-accent);
+    margin-bottom: 32px;
+    opacity: 0.9;
+  }
+
+  .scene__sfx { display: none; }
+
+  /* ---- Scene 1: from your kitchen table — multiplane open ---- */
+  .s1 .plane-bg {
+    font-family: var(--card-font-display);
+    font-size: 380px; font-weight: 600;
+    color: rgba(20, 128, 111, 0.10);
+    letter-spacing: -0.04em;
+    text-align: center;
+    /* Subtle bass-reactive scale pulse — kindred-bed envelope drives --amp-bass. */
+    transform: scale(calc(1 + var(--amp-bass, 0) * 0.012));
+    will-change: transform;
+  }
+  .s1-title {
+    font-family: var(--card-font-display);
+    font-size: 156px;
+    font-weight: var(--card-title-weight);
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--card-navy);
+    text-align: center;
+    max-width: 1400px;
+    /* Mid-band shadow lift — soft glow as the hook lands. */
+    text-shadow: 0 0 calc(8px + var(--amp-mid, 0) * 26px)
+                  rgba(20, 128, 111, calc(0.12 + var(--amp-mid, 0) * 0.30));
+    will-change: text-shadow;
+  }
+
+  /* ---- Scene 2: wordmark + cinemagraph + ink-bleed ---- */
+  .s2 {
+    background: linear-gradient(160deg, #1A9E8F 0%, #14806F 70%, #0F6A5B 100%);
+    color: var(--card-paper);
+  }
+  /* Cinemagraph blob inherits brand vars to tint its conic gradient. */
+  .s2 .fx-cinemagraph-bg {
+    --brand-primary:   #14806F;
+    --brand-secondary: #FBF9F6;
+    --brand-accent:    #E98B6A;
+    --brand-tertiary:  #1A9E8F;
+  }
+  .s2-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+  .s2-mark {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 280px;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--card-paper);
+    text-shadow: 0 6px 24px rgba(15, 22, 33, 0.30);
+    /* Bass-reactive glow halo on the wordmark — drum hits push the rim. */
+    filter: drop-shadow(0 0 calc(8px + var(--amp-bass, 0) * 32px)
+                         rgba(255, 248, 232, calc(0.18 + var(--amp-bass, 0) * 0.42)));
+    will-change: filter;
+  }
+  .s2-tag {
+    font-family: var(--card-font-ui);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 1.2;
+    color: var(--card-paper-soft);
+    text-align: center;
+    max-width: 1100px;
+    opacity: 0.94;
+  }
+
+  /* ---- Scene 3: GIVE / ASK / SUPPORT three-up ---- */
+  .s3 .three-up {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 80px;
+    width: 100%;
+    max-width: 1640px;
+  }
+  .s3 .three-up__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* Each col rests low-opacity until activated; activation tweens to full
+       brightness (handled by GSAP fromTo on a CSS var). */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .s3 .three-up__col.is-active {
+    transform: translateY(-6px) scale(1.04);
+  }
+  .s3 .three-up__icon {
+    width: 130px; height: 130px;
+    border-radius: 26px;
+    background: var(--card-paper-soft);
+    border: 1px solid rgba(27, 42, 61, 0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; line-height: 1;
+    margin-bottom: 36px;
+    box-shadow: var(--vibe-shadow-soft);
+  }
+  .s3 .three-up__title {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 96px;
+    letter-spacing: -0.02em;
+    color: var(--card-navy);
+    margin-bottom: 18px;
+  }
+  .s3 .three-up__body {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    color: var(--card-slate-ink);
+    line-height: 1.4;
+    max-width: 360px;
+  }
+
+  /* ---- Scene 4: closer + finale ---- */
+  .s4 {
+    background: var(--card-navy);
+    color: var(--card-paper);
+  }
+  .s4 .fx-cinemagraph-bg {
+    --brand-primary:   #1A9E8F;
+    --brand-secondary: #FBF9F6;
+    --brand-accent:    #E98B6A;
+    --brand-tertiary:  #14806F;
+  }
+  .s4-stage {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .s4-mark {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 220px;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--card-paper);
+    text-shadow:
+       2px  2px 0 rgba(0,0,0,0.32),
+       4px  4px 0 rgba(0,0,0,0.26),
+       8px  8px 0 rgba(0,0,0,0.18),
+      14px 14px 0 rgba(0,0,0,0.10);
+  }
+  .s4-rule {
+    width: 360px;
+    height: 3px;
+    background: var(--card-paper);
+    transform: scaleX(0);
+    transform-origin: center;
+    opacity: 0.85;
+  }
+  .s4-tag {
+    font-family: var(--card-font-display);
+    font-size: 72px;
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    line-height: 1.05;
+    text-align: center;
+    color: var(--card-paper);
+    max-width: 1300px;
+  }
+  .s4-fine {
+    font-family: var(--card-font-ui);
+    font-size: 32px;
+    color: var(--card-paper-soft);
+    opacity: 0.86;
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- Persistent atmospheric layers (vignette, film grain) ---- */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at 50% 45%,
+      transparent 50%,
+      rgba(15, 22, 33, 0.18) 100%
+    );
+    mix-blend-mode: multiply;
+  }
+  .film-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 95;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+    will-change: background-position;
+  }
+
+  /* ---- Persistent brand header ---- */
+  .brand-header {
+    position: absolute;
+    top: 40px;
+    left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 50;
+    pointer-events: none;
+    will-change: opacity, transform;
+  }
+  .brand-header__logo {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(15, 22, 33, 0.18);
+    transform: scale(calc(1 + var(--amp-bass, 0) * 0.05));
+    will-change: transform;
+  }
+  .brand-header__wordmark {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--card-navy);
+    transition: color 0.4s ease;
+  }
+  .brand-header[data-mode="dark"] .brand-header__wordmark {
+    color: var(--card-paper);
+  }
+</style>
+</head>
+<body>
+
+<div id="kindred-production" class="comp clip"
+     data-composition-id="kindred-production-30s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="22" data-track-index="0">
+
+  <!-- ============== AUDIO TRACKS ============== -->
+  <!-- Narration — track 9, full volume. 16.55s of TTS. -->
+  <audio id="audio-narration"
+         src="assets/tts/kindred-production.mp3"
+         data-start="0.10" data-duration="16.55"
+         data-track-index="9" data-volume="0.95"
+         class="clip"></audio>
+  <!-- Music bed — track 8, ducked under narration. Full comp duration. -->
+  <audio id="audio-music"
+         src="assets/music/kindred-bed.mp3"
+         data-start="0" data-duration="22"
+         data-track-index="8" data-volume="0.18"
+         class="clip"></audio>
+
+  <!-- ============== PERSISTENT BRAND HEADER (track 10) ============== -->
+  <div id="brand-header" class="clip brand-header"
+       data-start="0" data-duration="22" data-track-index="10"
+       data-mode="light">
+    <img class="brand-header__logo" src="assets/logo/kindred-icon.png" alt="" />
+    <div id="brand-header-wordmark" class="brand-header__wordmark">Kindred</div>
+  </div>
+
+  <!-- ============== GLOBAL FILM GRAIN (track 13) ============== -->
+  <div id="film-grain" class="clip film-grain"
+       data-start="0" data-duration="22" data-track-index="13"></div>
+
+  <!-- ===========================================================
+       SCENE 1 — Kitchen-table multiplane open  (0 → 4.0s)
+       Narration: "From your kitchen table, kindness goes out."
+                  (0.10 → 2.86s in VTT)
+       Combo:    cinematicReveal on the multiplane stage
+       SFX:      pad-warm bed + whoosh-up on close-out
+       =========================================================== -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="4" data-track-index="1"
+       data-scene-mode="light">
+    <div class="vignette"></div>
+    <div class="fx-multiplane">
+      <div id="s1-stage" class="stage">
+        <div class="plane plane-bg">KINDRED</div>
+        <div class="plane plane-base">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div id="s1-kicker" class="scene__kicker">A WARMER WAY</div>
+            <div id="s1-title" class="s1-title">From your kitchen table.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scene__sfx">
+      <audio id="sfx-s1-pad"     src="assets/sfx/pad-warm.wav"  data-start="0.0"  data-duration="3.6" data-track-index="20" data-volume="0.18" class="clip"></audio>
+      <audio id="sfx-s1-whoosh"  src="assets/sfx/whoosh-up.wav" data-start="3.40" data-duration="0.7" data-track-index="21" data-volume="0.40" class="clip"></audio>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 2 — Wordmark + cinemagraph (4.0 → 7.5s)
+       Narration: "Just local. Just helping." (3.96–4.80, 5.87–6.70)
+       Combos:   ink-bleed wordmark + cinemagraph rotate (manual primitives)
+                 hyperGlitch on "Kindred" right at land = punch
+       SFX:      whoosh-in, ding on land, tick on second beat
+       =========================================================== -->
+  <div id="s2" class="scene s2 clip"
+       data-start="4" data-duration="3.5" data-track-index="1"
+       data-scene-mode="dark">
+    <div id="s2-cg" class="fx-cinemagraph-bg"></div>
+    <div class="vignette"></div>
+    <div class="s2-content">
+      <div id="s2-mark" class="s2-mark fx-bleed-ready">Kindred</div>
+      <div id="s2-tag" class="s2-tag">Just local. Just helping.</div>
+    </div>
+    <div class="scene__sfx">
+      <audio id="sfx-s2-whoosh-in" src="assets/sfx/whoosh-up.wav"  data-start="4.0"  data-duration="0.7" data-track-index="22" data-volume="0.40" class="clip"></audio>
+      <audio id="sfx-s2-ding"      src="assets/sfx/ding.wav"       data-start="4.55" data-duration="1.2" data-track-index="23" data-volume="0.34" class="clip"></audio>
+      <audio id="sfx-s2-tick"      src="assets/sfx/tick.wav"       data-start="5.85" data-duration="0.4" data-track-index="24" data-volume="0.32" class="clip"></audio>
+      <audio id="sfx-s2-whoosh-out" src="assets/sfx/whoosh-down.wav" data-start="7.10" data-duration="0.5" data-track-index="25" data-volume="0.36" class="clip"></audio>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 3 — GIVE / ASK / SUPPORT three-up (7.5 → 14.0s)
+       Narration: 7.84  "Give what you've got"
+                  10.01 "Ask what you need"
+                  12.18 "Support a neighbour"
+       Combo:    kineticBurst on each title as it activates
+       SFX:      ticks on each beat + impact on final
+       =========================================================== -->
+  <div id="s3" class="scene s3 clip"
+       data-start="7.5" data-duration="6.5" data-track-index="1"
+       data-scene-mode="light">
+    <div class="vignette"></div>
+    <div class="three-up">
+      <div id="s3-col-1" class="three-up__col">
+        <div class="three-up__icon" aria-hidden="true">🤝</div>
+        <div id="s3-give" class="three-up__title">GIVE</div>
+        <div class="three-up__body">A pram, a meal, a hand.</div>
+      </div>
+      <div id="s3-col-2" class="three-up__col">
+        <div class="three-up__icon" aria-hidden="true">💬</div>
+        <div id="s3-ask" class="three-up__title">ASK</div>
+        <div class="three-up__body">When the day's a lot.</div>
+      </div>
+      <div id="s3-col-3" class="three-up__col">
+        <div class="three-up__icon" aria-hidden="true">❤️</div>
+        <div id="s3-support" class="three-up__title">SUPPORT</div>
+        <div class="three-up__body">Showing up, that's all.</div>
+      </div>
+    </div>
+    <div class="scene__sfx">
+      <audio id="sfx-s3-tick-1"  src="assets/sfx/tick.wav"        data-start="7.84"  data-duration="0.4" data-track-index="26" data-volume="0.34" class="clip"></audio>
+      <audio id="sfx-s3-tick-2"  src="assets/sfx/tick.wav"        data-start="10.01" data-duration="0.4" data-track-index="26" data-volume="0.34" class="clip"></audio>
+      <audio id="sfx-s3-tick-3"  src="assets/sfx/tick.wav"        data-start="12.18" data-duration="0.4" data-track-index="26" data-volume="0.36" class="clip"></audio>
+      <audio id="sfx-s3-impact"  src="assets/sfx/impact.wav"      data-start="13.40" data-duration="0.5" data-track-index="27" data-volume="0.38" class="clip"></audio>
+      <audio id="sfx-s3-whoosh"  src="assets/sfx/whoosh-up.wav"   data-start="13.55" data-duration="0.6" data-track-index="28" data-volume="0.40" class="clip"></audio>
+    </div>
+  </div>
+
+  <!-- ===========================================================
+       SCENE 4 — Closer + confettiFinale (14.0 → 22.0s)
+       Narration: "Free for every street in New Zealand." (14.27→16.55)
+       Combo:    confettiFinale on the lockup (logo stamp + rule line +
+                 glitter burst + glitter fall + cinemagraph drift)
+       SFX:      pad-cool bed under outro, ding on land, sweep-rise mid
+       =========================================================== -->
+  <div id="s4" class="scene s4 clip"
+       data-start="14" data-duration="8" data-track-index="1"
+       data-scene-mode="dark">
+    <div id="s4-cg" class="fx-cinemagraph-bg"></div>
+    <div class="vignette"></div>
+    <div id="s4-camera" class="fx-multiplane">
+      <div id="s4-stage" class="stage">
+        <div class="plane plane-base">
+          <div class="s4-stage">
+            <div id="s4-mark" class="s4-mark">Kindred</div>
+            <div id="s4-rule" class="s4-rule"></div>
+            <div id="s4-tag" class="s4-tag">Free for every street in New Zealand.</div>
+            <div id="s4-fine" class="s4-fine">kindred-nz.org</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="scene__sfx">
+      <audio id="sfx-s4-pad"      src="assets/sfx/pad-cool.wav"   data-start="14.0"  data-duration="6.0" data-track-index="29" data-volume="0.16" class="clip"></audio>
+      <audio id="sfx-s4-ding"     src="assets/sfx/ding.wav"       data-start="14.30" data-duration="1.4" data-track-index="30" data-volume="0.34" class="clip"></audio>
+      <audio id="sfx-s4-sweep"    src="assets/sfx/sweep-rise.wav" data-start="16.55" data-duration="1.4" data-track-index="31" data-volume="0.30" class="clip"></audio>
+      <audio id="sfx-s4-impact"   src="assets/sfx/impact-deep.wav" data-start="17.85" data-duration="0.9" data-track-index="32" data-volume="0.46" class="clip"></audio>
+    </div>
+  </div>
+</div>
+
+<!-- =============== SVG FILTER DEFS — required by inkBleed + glitchBurst =============== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  // =========================================================================
+  // TIMELINE — kindred-production-30s
+  //
+  // Audio is the master clock. Word-level VTT (assets/tts/kindred-production.vtt)
+  // sets every cut: scene boundaries align to phrase ends, micro-effects fire
+  // on word starts. This is the LEARNINGS.md §3 pattern.
+  //
+  // Scene plan (matches narration):
+  //   Scene 1  0.0–4.0   "From your kitchen table…"   cinematicReveal
+  //   Scene 2  4.0–7.5   "Just local. Just helping."  inkBleed + cinemagraph
+  //                                                   + hyperGlitch on "Kindred"
+  //   Scene 3  7.5–14.0  "Give. Ask. Support."        kineticBurst x3
+  //   Scene 4 14.0–22.0  "Free for every street…"     confettiFinale
+  //
+  // Combos used (>= 3): cinematicReveal, hyperGlitch, kineticBurst (x3),
+  //                     confettiFinale. Five combo invocations across four
+  //                     scenes — every scene has at least one combo.
+  // =========================================================================
+
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+  window.__timelines["kindred-production-30s"] = tl;
+
+  // ---- Persistent header — fade in, switch mode on each scene ----
+  tl.fromTo("#brand-header",
+    { y: -22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    0.10);
+
+  // Header data-mode flip on each scene boundary so wordmark contrast tracks bg.
+  document.querySelectorAll('[data-composition-id="kindred-production-30s"] .scene[data-scene-mode]')
+    .forEach((scene) => {
+      const start = parseFloat(scene.dataset.start || "0");
+      const mode  = scene.dataset.sceneMode || "light";
+      tl.set("#brand-header", { attr: { "data-mode": mode } }, start);
+    });
+
+  // Global film-grain drift (background-position, full duration).
+  tl.fromTo("#film-grain",
+    { backgroundPosition: "0px 0px" },
+    { backgroundPosition: "-200px 140px", duration: 22, ease: "none" },
+    0);
+
+  // =========================================================================
+  // SCENE 1 — 0.0–4.0s — cinematicReveal on the multiplane stage
+  // =========================================================================
+  // Scene-fade-in + small kicker entry, then the comboFx.cinematicReveal owns
+  // the headline. cinematicReveal itself: multiplaneDolly underneath +
+  // inkBleed on the headline + per-letter stagger + drop-shadow trail.
+  tl.fromTo("#s1",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.4, ease: "power2.out" },
+    0);
+  tl.fromTo("#s1-kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 0.92, duration: 0.55, ease: "power2.out" },
+    0.30);
+
+  // ⏱ COMBO 1: cinematicReveal (1.6s — runs 0.1 → 1.7)
+  comboFx.cinematicReveal(tl, "#s1-stage", {
+    at: 0.10, duration: 1.6,
+    headline: "#s1-title",
+    intensity: 1.0, seed: 11,
+    stagger: 0.045,
+  });
+
+  // Subtle camera push on the whole scene (additional dolly continues to 3.6s).
+  tl.fromTo("#s1-stage",
+    { scale: 1.0 },
+    { scale: 1.04, duration: 3.4, ease: "none" },
+    0.20);
+
+  // Scene-out — soft zoom + opacity dip into scene 2.
+  tl.to("#s1",
+    { scale: 1.08, opacity: 0, duration: 0.55, ease: "power2.in", transformOrigin: "50% 50%" },
+    3.45);
+  // Hard-kill at the clip boundary — guards against non-linear seeking landing
+  // mid-fade and leaving stale visibility state.
+  tl.set("#s1", { opacity: 0 }, 4.0);
+
+  // =========================================================================
+  // SCENE 2 — 4.0–7.5s — wordmark + cinemagraph + hyperGlitch
+  // =========================================================================
+  // Cinemagraph rotates slowly across the scene; wordmark settles via inkBleed.
+  // hyperGlitch fires at the second "Just" beat to give the wordmark a punch.
+  tl.fromTo("#s2",
+    { scale: 0.86, opacity: 0 },
+    { scale: 1.0, opacity: 1, duration: 0.55, ease: "power2.out", transformOrigin: "50% 50%" },
+    4.0);
+
+  // Cinemagraph rotates a touch as the bed runs.
+  effectFx.cinemagraphRotate(tl, "#s2-cg", {
+    at: 4.0, duration: 3.5, turns: 0.4, ease: "none",
+  });
+
+  // Wordmark lands at 4.55 (sync with ding SFX at 4.55).
+  tl.fromTo("#s2-mark",
+    { scale: 0.94, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.6, ease: "power3.out" },
+    4.5);
+  effectFx.inkBleed(tl, "#s2-mark", { at: 4.5, duration: 0.85, from: 70, to: 0 });
+
+  // Tagline below the mark.
+  tl.fromTo("#s2-tag",
+    { y: 28, opacity: 0 },
+    { y: 0, opacity: 0.94, duration: 0.6, ease: "power3.out" },
+    5.10);
+
+  // ⏱ COMBO 2: hyperGlitch on the wordmark right as "Just helping" hits at 5.87.
+  // 0.5s of two-burst signal-break — gives the wordmark a snap-of-energy.
+  comboFx.hyperGlitch(tl, "#s2-mark", {
+    at: 5.85, duration: 0.5,
+    intensity: 0.9, bursts: 2,
+  });
+
+  // Scene-out — gentle scale-pull + fade.
+  tl.to("#s2",
+    { scale: 0.94, opacity: 0, duration: 0.55, ease: "power2.in", transformOrigin: "50% 50%" },
+    7.0);
+  // Hard-kill at the clip boundary.
+  tl.set("#s2", { opacity: 0 }, 7.5);
+
+  // =========================================================================
+  // SCENE 3 — 7.5–14.0s — three-up GIVE/ASK/SUPPORT
+  // =========================================================================
+  // All three columns rise together at start, but each only "activates"
+  // (kineticBurst on its title) when the narration says its word.
+  tl.fromTo("#s3",
+    { scale: 1.10, opacity: 0 },
+    { scale: 1.0, opacity: 1, duration: 0.55, ease: "power2.out", transformOrigin: "50% 50%" },
+    7.5);
+
+  // Cols rise in stagger (cosmetic — combos drive the title pops below).
+  tl.fromTo(["#s3-col-1", "#s3-col-2", "#s3-col-3"],
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 0.55, duration: 0.7, stagger: 0.16, ease: "power3.out" },
+    7.65);
+
+  // ⏱ COMBOS 3a/3b/3c: kineticBurst on each title as the narration hits.
+  // Narration word-times: GIVE 7.84  ASK 10.01  SUPPORT 12.18.
+  // Each combo is ~0.85s — letters explode-assemble, glitter burst on land,
+  // micro-glitch on settle. Activate the column visually as the burst peaks.
+  comboFx.kineticBurst(tl, "#s3-give", {
+    at: 7.84, duration: 0.85,
+    intensity: 0.9, seed: 21,
+  });
+  tl.call(() => document.getElementById("s3-col-1")?.classList.add("is-active"), [], 8.10);
+  tl.fromTo("#s3-col-1",
+    { opacity: 0.55 }, { opacity: 1, duration: 0.4, ease: "power2.out" },
+    8.10);
+
+  comboFx.kineticBurst(tl, "#s3-ask", {
+    at: 10.01, duration: 0.85,
+    intensity: 0.9, seed: 22,
+  });
+  tl.call(() => document.getElementById("s3-col-2")?.classList.add("is-active"), [], 10.27);
+  tl.fromTo("#s3-col-2",
+    { opacity: 0.55 }, { opacity: 1, duration: 0.4, ease: "power2.out" },
+    10.27);
+  // Pull col-1 back to ambient as col-2 takes focus.
+  tl.call(() => document.getElementById("s3-col-1")?.classList.remove("is-active"), [], 10.27);
+  tl.to("#s3-col-1", { opacity: 0.7, duration: 0.4, ease: "power2.out" }, 10.27);
+
+  comboFx.kineticBurst(tl, "#s3-support", {
+    at: 12.18, duration: 0.85,
+    intensity: 1.0, seed: 23,
+  });
+  tl.call(() => document.getElementById("s3-col-3")?.classList.add("is-active"), [], 12.46);
+  tl.fromTo("#s3-col-3",
+    { opacity: 0.55 }, { opacity: 1, duration: 0.4, ease: "power2.out" },
+    12.46);
+  tl.call(() => document.getElementById("s3-col-2")?.classList.remove("is-active"), [], 12.46);
+  tl.to("#s3-col-2", { opacity: 0.7, duration: 0.4, ease: "power2.out" }, 12.46);
+
+  // Bring all three back up together for a moment before scene-out — visual
+  // "they all matter" beat synced to the impact SFX at 13.40.
+  tl.to("#s3-col-1", { opacity: 1, duration: 0.4, ease: "power2.out" }, 13.30);
+  tl.to("#s3-col-2", { opacity: 1, duration: 0.4, ease: "power2.out" }, 13.30);
+
+  // Scene-out — slight zoom-in, fades.
+  tl.to("#s3",
+    { scale: 1.10, opacity: 0, duration: 0.55, ease: "power2.in", transformOrigin: "50% 50%" },
+    13.50);
+  // Hard-kill at the clip boundary (scene 3 ends at 14.0).
+  tl.set("#s3", { opacity: 0 }, 14.0);
+
+  // =========================================================================
+  // SCENE 4 — 14.0–22.0s — confettiFinale on the closer
+  // =========================================================================
+  // The dark-navy outro. Camera settles, wordmark stamps in, rule line draws,
+  // confetti burst + fall, cinemagraph drifts. ConfettiFinale owns the bulk.
+  tl.fromTo("#s4",
+    { scale: 0.90, opacity: 0 },
+    { scale: 1.0, opacity: 1, duration: 0.6, ease: "power2.out", transformOrigin: "50% 50%" },
+    14.0);
+
+  // Cinemagraph fades-in under the confetti.
+  tl.fromTo("#s4-cg",
+    { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" },
+    14.0);
+
+  // Tagline + fine print are owned by the comp (not by confettiFinale).
+  // confettiFinale handles the lockup stamp + rule + cinemagraph + glitter.
+  // We schedule the tag/fine after the lockup beats so they don't collide.
+  tl.fromTo("#s4-tag",
+    { y: 36, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    15.20);
+  tl.fromTo("#s4-fine",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 0.86, duration: 0.55, ease: "power3.out" },
+    15.90);
+
+  // ⏱ COMBO 4: confettiFinale — the crescendo (~3.0s, runs 14.2 → 17.2).
+  // Lockup stamps in, rule line draws, confetti burst+fall, cinemagraph drift.
+  comboFx.confettiFinale(tl, "#s4", {
+    at: 14.20, duration: 3.0,
+    lockup: "#s4-mark",
+    rule: "#s4-rule",
+    stage: "#s4-stage",
+    cinemagraph: "#s4-cg",
+    intensity: 1.0, seed: 41,
+  });
+
+  // Final beat — second glitter burst on the impact SFX at 17.85.
+  glitterFx.burst(tl, "#s4", {
+    at: 17.85, duration: 1.6,
+    count: 60, distance: 520,
+    seed: 42,
+  });
+
+  // Long hold-out — wordmark and tag stay up; gentle settle.
+  tl.to("#s4-mark",
+    { y: -8, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    17.0);
+
+  // Soft fade into the watermark / black.
+  tl.to(["#s4-tag", "#s4-fine", "#s4-mark", "#brand-header"],
+    { opacity: 0, duration: 0.8, ease: "power2.in" },
+    21.0);
+
+  // =========================================================================
+  // AUDIO-REACTIVE BIND — kindred-bed envelope drives CSS vars (LEARNINGS §3).
+  // Loads asynchronously; timeline is paused, keyframes added before play().
+  // =========================================================================
+  (async () => {
+    try {
+      const amp = await fetch("assets/amp/kindred-bed.json").then(r => r.json());
+      const opts = { stride: 2, smooth: 0.55, gate: 0.06 };
+      window.ampBind(tl, amp, "#brand-header .brand-header__logo", opts);
+      window.ampBind(tl, amp, "#s1-title",  opts);
+      window.ampBind(tl, amp, "#s2-mark",   opts);
+      window.ampBind(tl, amp, "#s4-mark",   opts);
+    } catch (err) {
+      console.warn("ampBind: amp envelope not loaded —", err);
+    }
+  })();
+
+  // Standalone autoplay — only when loaded directly in a top-level browser tab.
+  // Studio + renderer wrap us in an iframe and drive seek themselves.
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

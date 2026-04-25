@@ -331,23 +331,28 @@
   const tl = gsap.timeline({ paused: true });
   window.__timelines["hero-promo-30s"] = tl;
 
-  // ---- Scene 1: 0–8s — multiplane dolly + cascade headline -----------
-  effectFx.multiplaneDolly(tl, "#s1-stage", {
-    at: 0.0, duration: 7.4, from: -220, to: 60, ease: "power2.out"
-  });
+  // ---- Scene 1: 0–8s — cinematicReveal hero entrance -----------------
+  // upgraded: multiplaneDolly + cascade + drop-shadow → comboFx.cinematicReveal
+  // (camera dolly + ink-bleed + per-letter stagger + shadow trail in one beat)
   tl.fromTo("#s1 .scene__kicker",
     { y: 18, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
     0.4);
-  textFx.cascade(tl, "#s1-headline", { at: 0.8, duration: 0.7, stagger: 0.08 });
+  comboFx.cinematicReveal(tl, "#s1-stage", {
+    at: 0.6, duration: 2.2, headline: "#s1-headline", intensity: 1.0, seed: 21
+  });
   tl.fromTo("#s1-support",
     { y: 22, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-    1.8);
+    2.4);
   tl.fromTo("#s1-mark",
     { scale: 0.7, opacity: 0 },
     { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" },
-    2.6);
+    3.0);
+  // long camera drift continues underneath (was the 7.4s dolly).
+  effectFx.multiplaneDolly(tl, "#s1-stage", {
+    at: 3.4, duration: 4.4, from: 60, to: 120, ease: "power1.inOut"
+  });
 
   // ---- Scene 2: 8–18s — three-up stagger + ambient sparkle ----------
   glitterFx.ambient(tl, "#s2-sparkle", {
@@ -361,31 +366,35 @@
   textFx.stagger(tl, "#s2-b2-title", { at: 9.1,  duration: 0.5, stagger: 0.04, rotation: -10 });
   textFx.stagger(tl, "#s2-b3-title", { at: 9.5,  duration: 0.5, stagger: 0.04, rotation: -10 });
 
-  // ---- Scene 3: 18–26s — stat counter -------------------------------
+  // ---- Scene 3: 18–26s — stat reveal via superImpact ----------------
+  // upgraded: counter + scale-in + label fade → comboFx.superImpact
+  // (ink-bleed + counter + stamp + glitchBurst + glitter + grade-pop)
   tl.fromTo("#s3-kicker",
     { y: 18, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
     18.3);
-  tl.fromTo(["#s3-stat", "#s3-stat-suffix"],
+  tl.fromTo("#s3-stat-suffix",
     { scale: 0.85, opacity: 0 },
-    { scale: 1, opacity: 1, duration: 0.7, stagger: 0.08, ease: "back.out(1.6)" },
+    { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.6)" },
     18.6);
-  textFx.counter(tl, "#s3-stat", { at: 19.0, duration: 2.4, from: 0, ease: "power2.out" });
+  comboFx.superImpact(tl, "#s3-stat", {
+    at: 19.0, duration: 2.6, intensity: 1.1, seed: 31, from: 0
+  });
   tl.fromTo("#s3-label",
     { y: 16, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-    21.6);
+    22.0);
 
-  // ---- Scene 4: 26–30s — CTA, glitter burst + glitch on verb --------
-  tl.fromTo("#s4-cta",
-    { scale: 0.92, opacity: 0 },
-    { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" },
-    26.2);
-  glitterFx.burst(tl, "#s4-glitter-host", {
-    at: 26.4, count: 70, duration: 1.6, seed: 13, distance: 720
+  // ---- Scene 4: 26–30s — confettiFinale outro ------------------------
+  // upgraded: scale-in + glitter burst + double-glitch → comboFx.confettiFinale
+  // (camera settle + lockup stamp + rule + burst+fall confetti)
+  comboFx.confettiFinale(tl, "#s4", {
+    at: 26.0, duration: 3.4,
+    lockup: "#s4-cta", stage: "#s4",
+    intensity: 1.0, seed: 41
   });
-  effectFx.glitchBurst(tl, "#s4-cta-verb", { at: 26.9, duration: 0.18 });
-  effectFx.glitchBurst(tl, "#s4-cta-verb", { at: 27.3, duration: 0.18 });
+  // Single emphasis glitch on the verb during the celebration peak.
+  effectFx.glitchBurst(tl, "#s4-cta-verb", { at: 27.0, duration: 0.18 });
   tl.fromTo("#s4-url",
     { y: 22, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },

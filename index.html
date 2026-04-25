@@ -10,9 +10,8 @@
 <link rel="stylesheet" href="design/templates/warm-community.css">
 <!-- 3. Brand tokens -->
 <link rel="stylesheet" href="design/tokens-kindred.css">
-<!-- 4. Effects + modules -->
+<!-- 4. Effects + module bundle -->
 <link rel="stylesheet" href="design/effects-batch-08.css">
-<!-- Module bundle (text-fx + effect-fx + glitter-fx + amp-bind in one file each) -->
 <link rel="stylesheet" href="design/modules/all.css">
 
 <script src="design/vendor/gsap.min.js"></script>
@@ -26,12 +25,10 @@
     position: relative; overflow: hidden;
     background: var(--card-paper);
     color: var(--card-navy);
-    /* Lift contrast + sat to fight the warm-community pastel washout. */
-    filter: contrast(1.08) saturate(1.14) brightness(1.01);
   }
 
   .scene {
-    /* cards.css now sets width/height: 100% — scene fills .comp wrapper. */
+    position: absolute; inset: 0;
     display: flex;
     align-items: center; justify-content: center;
     flex-direction: column;
@@ -52,27 +49,11 @@
   /* ---- Scene 1: from your kitchen table ---- */
   .s1 .plane-bg {
     font-family: var(--card-font-display);
-    font-size: 420px; font-weight: 700;
-    color: rgba(20, 128, 111, 0.22);  /* was 0.10 — too ghosty */
+    font-size: 380px; font-weight: 600;
+    color: rgba(20, 128, 111, 0.10);
     letter-spacing: -0.04em;
     text-align: center;
-    filter: blur(0) !important;       /* override effects-batch-08 plane-bg blur */
   }
-  .s1 .plane-base { filter: none; }   /* drop any inherited haze on foreground */
-  /* Warm radial vignette sits behind content for atmospheric depth. */
-  .s1::before {
-    content: "";
-    position: absolute; inset: 0;
-    background: radial-gradient(
-      ellipse at 50% 55%,
-      rgba(255, 218, 168, 0.0)  0%,
-      rgba(255, 168, 96,  0.10) 60%,
-      rgba(120, 60,  40,  0.22) 100%
-    );
-    pointer-events: none;
-    z-index: 1;
-  }
-  .s1 > * { position: relative; z-index: 2; }
   .s1-title {
     font-family: var(--card-font-display);
     font-size: var(--card-title-size);
@@ -88,17 +69,6 @@
   .s2 {
     background: var(--card-accent);
     color: var(--card-paper);
-    /* Cooler glitter on the teal scene — gold + cream pops against the brand. */
-    --glitter-tint-1: #FFE39A;
-    --glitter-tint-2: #FFFFFF;
-    --glitter-tint-3: #FFD66E;
-    --glitter-tint-4: #FBF9F6;
-  }
-  .s2-glitter-bg {
-    position: absolute; inset: 0;
-    z-index: 1;                 /* above cinemagraph (z=0), below content (z=2) */
-    pointer-events: none;
-    overflow: hidden;
   }
   .s2 .fx-cinemagraph-bg {
     --brand-primary:   #14806F;
@@ -125,10 +95,8 @@
     font-size: 36px;
     margin-top: 28px;
     letter-spacing: 0.04em;
-    /* WCAG fix: cream-on-teal at opacity 0.92 measured 2.9:1 (under AA large 3:1).
-       Pure paper at full opacity clears ~3.3:1; safe and visually identical. */
-    color: var(--card-paper);
-    opacity: 1;
+    color: var(--card-paper-soft);
+    opacity: 0.92;
   }
 
   /* ---- Scene 3: three-up ---- */
@@ -174,19 +142,7 @@
   .s4 {
     background: var(--card-navy);
     color: var(--card-paper);
-    /* Coral + warm-gold glitter against deep navy — high contrast pop. */
-    --glitter-tint-1: #FFB178;
-    --glitter-tint-2: #E98B6A;
-    --glitter-tint-3: #FFD66E;
-    --glitter-tint-4: #FFFFFF;
   }
-  .s4-glitter-bg {
-    position: absolute; inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .s4-line { position: relative; z-index: 2; }
   .s4-line {
     font-family: var(--card-font-display);
     font-size: 96px;
@@ -225,11 +181,10 @@
     </div>
   </div>
 
-  <!-- Scene 2: 4–9s — wordmark with cinemagraph + ambient glitter + ink-bleed -->
+  <!-- Scene 2: 4–9s — wordmark with cinemagraph + ink-bleed -->
   <div id="s2" class="scene s2 clip"
        data-start="4" data-duration="5" data-track-index="1">
     <div id="s2-cg" class="fx-cinemagraph-bg"></div>
-    <div id="s2-glitter" class="s2-glitter-bg"></div>
     <div class="s2-content">
       <div id="s2-mark" class="s2-mark fx-bleed-ready">Kindred</div>
       <div id="s2-url" class="s2-url">kindred-nz.org</div>
@@ -258,10 +213,9 @@
     </div>
   </div>
 
-  <!-- Scene 4: 14–18s — closer with glitter explosion + glitch on "Just" -->
+  <!-- Scene 4: 14–18s — closer with glitch on "Just" -->
   <div id="s4" class="scene s4 clip"
        data-start="14" data-duration="4" data-track-index="1">
-    <div id="s4-glitter" class="s4-glitter-bg"></div>
     <h2 id="s4-line" class="s4-line">
       <span id="s4-just" class="s4-just">Just</span> local, just helping.
     </h2>
@@ -303,13 +257,9 @@
   tl.from("#s1 .scene__kicker", { y: 16, opacity: 0, duration: 0.6, ease: "power2.out" }, 0.4);
   textFx.cascade(tl, "#s1-title", { at: 0.8, duration: 0.7, stagger: 0.08 });
 
-  // ---- Scene 2: 4–9s — cinemagraph + ambient glitter + ink-bleed + url
+  // ---- Scene 2: 4–9s — cinemagraph + ink-bleed + url ------------------
   effectFx.cinemagraphRotate(tl, "#s2-cg", {
     at: 4.0, duration: 5.0, turns: 0.5, ease: "none"
-  });
-  // Ambient gold/cream sparkle behind the wordmark for the full 5s.
-  glitterFx.ambient(tl, "#s2-glitter", {
-    at: 4.0, duration: 5.0, count: 50, seed: 31
   });
   // Land the wordmark with an ink-bleed reveal at 4.5s.
   tl.from("#s2-mark", { scale: 0.96, opacity: 0, duration: 0.6, ease: "power3.out" }, 4.5);
@@ -324,28 +274,16 @@
   textFx.stagger(tl, "#s3-ask",     { at: 10.0, duration: 0.5, stagger: 0.04, rotation: -10 });
   textFx.stagger(tl, "#s3-support", { at: 10.4, duration: 0.5, stagger: 0.04, rotation: -10 });
 
-  // ---- Scene 4: 14–18s — closer with glitter explosion + glitch on "Just"
-  // fromTo (not from) so paused-timeline seeks always have explicit start+end values.
-  tl.fromTo("#s4-line",
-    { opacity: 0, scale: 0.96 },
-    { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" },
-    14.2);
-  // Big celebratory glitter burst right when "Just" hits.
-  glitterFx.burst(tl, "#s4-glitter", {
-    at: 14.6, duration: 1.6, count: 100, seed: 42, distance: 760, gravity: 80
-  });
-  // Gentle continuing fall through the rest of the scene.
-  glitterFx.fall(tl, "#s4-glitter", {
-    at: 15.4, duration: 2.6, count: 40, seed: 17, wobble: 80
-  });
+  // ---- Scene 4: 14–18s — closer with glitch on "Just" -----------------
+  tl.from("#s4-line", { opacity: 0, scale: 0.96, duration: 0.5, ease: "power2.out" }, 14.2);
   effectFx.glitchBurst(tl, "#s4-just", { at: 14.7, duration: 0.18 });
   effectFx.glitchBurst(tl, "#s4-just", { at: 15.1, duration: 0.18 });
   // Hold-and-fade close.
   tl.to("#s4-line", { opacity: 0.92, duration: 0.4 }, 17.4);
 
-  // Standalone autoplay — only when loaded directly in a browser tab (top-level
-  // window). When wrapped in the HyperFrames studio or renderer, those drive
-  // play/seek themselves; we stay paused so they remain in control.
+
+  // Standalone autoplay — only when loaded directly in a top-level browser tab.
+  // Studio + renderer wrap us in an iframe and drive seek themselves; we stay paused.
   if (window === window.top) {
     setTimeout(() => tl.play(0), 250);
   }

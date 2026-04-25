@@ -19,7 +19,9 @@
       "bpm": 70,
       "tags": ["cinematic", "documentary", "ambient", "piano", "emotional"],
       "character": "Cinematic ambient piano underscore, hypnosis-ready, emotional storytelling",
-      "best_for": "Default Documentary Considered bed; B2B explainers, regulated industries"
+      "best_for": "Default Documentary Considered bed; B2B explainers, regulated industries",
+      "local_file": "assets/music/documentary-top.mp3",
+      "local_file_note": "Fetched via search URL fallback — direct page URL hit a Pixabay sticky-player quirk that returned an off-vibe preview. Search URL gave a clean documentary track from the search keywords list. Verify vibe match before relying on this in production."
     },
     {
       "slug": "emotional-cinematic-documentary-nature-ambient-piano",

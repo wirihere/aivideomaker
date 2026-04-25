@@ -995,6 +995,32 @@ The parking lot in §8 is the project's roadmap, not a wishlist. Every session, 
 
 The 2026-04-25 streamline pass closed 19 parking-lot items in one extended session AND surfaced 18+ new ones (composition versioning, render progress, animation lint, asset tracker, voice library, render farm, WCAG audit, telemetry, AI-assisted comp, etc.). Both directions matter — the lot grows even as it shrinks.
 
+### Recursive supervisor agents (2026-04-26 — proven at scale)
+For complex domains (URL→video pipeline, vertical-template library, effect-combination work), dispatch a **supervisor** agent that owns a charter end-to-end and is given explicit permission to spawn its own workers. The supervisor coordinates internally — main thread sees one self-contained result.
+
+**Architecture:**
+```
+ME (vision + integration + final QA)
+  └─ SUPERVISORS (own a domain end-to-end, may spawn workers)
+       └─ WORKERS (focused tasks, return to supervisor)
+```
+
+**Verified 2026-04-26:** The streamline session dispatched 13 supervisors in parallel waves — 5 base (copy + assets + music + scaffolders + orchestrator), 6 verticals (e-commerce, trades, real estate, SaaS, hospitality, wellness), 1 effect combinator, plus a follow-up batch of 4 (README, lint sweep, baselines, music pre-fetch). Each shipped a coherent unit. Main thread did integration + QA only.
+
+**How to brief a supervisor (vs a single-task worker):**
+- Give a CHARTER, not a task ("you own X end-to-end" vs "do Y").
+- List acceptance criteria + verification command.
+- Explicitly grant spawning authority ("you may spawn sub-agents for...").
+- Provide enough context that the supervisor can make judgment calls (template list, project conventions, existing primitives).
+- Define failure modes ("if a worker returns sparse output, re-dispatch with...").
+
+**File-conflict rule for fan-outs:**
+- Each supervisor's deliverables should target NON-OVERLAPPING files (different scripts, different folders).
+- `package.json` is shared — instruct each agent to add only its own npm script, never re-format the file.
+- `index.html` is hot — supervisors that swap+restore must use try/finally; main thread restores from `archive/.queue-backup-*.html` if anything escapes.
+
+The Effect Combinator was the deepest test: it ran a 7-phase internal pipeline (audit → plan → 3 implementor workers in parallel → demo → catalog → bundle → docs) and returned a single self-contained increment. The pattern scales.
+
 ### Always use as many subagents as possible (standing directive — 2026-04-25)
 For multi-step or multi-file work, default to **parallel general-purpose subagents** rather than driving everything from main thread. The 2026-04-25 streamline pass shipped 8 streamlines in one turn — 5 from main thread, 3 from agents running concurrently — because each agent had a self-contained brief with non-overlapping target files.
 
@@ -1462,22 +1488,6 @@ Open ideas that aren't blocked but haven't been done. Move into a real task list
 - ✅ **Visual regression in smoke test** → `npm run smoke:diff` + `npm run smoke:baseline` (late night)
 - ✅ **Effects catalog page** → agent-shipped `npm run catalog` (late night)
 - ✅ **Standalone preview page replacing studio iframe** → agent-shipped `npm run preview:simple` (late night)
-- ✅ **Pre-render visual smoke test** → `npm run smoke` / `npm run check` (night)
-- ✅ **Templates × modules library** → 4 base templates + 6+4+3 modules (night)
-- ✅ **Audio-reactive visuals integration** → `ampBind()` helper + scene scaffold (evening)
-- ✅ **Cinematic post-pass** → `scripts/render.mjs` auto-grades by default (evening)
-- ✅ **Procedural sound-design library** → `scripts/gen-sfx.mjs` 12 ffmpeg-synthesized presets (evening)
-
-### Recently closed (2026-04-25 streamline pass)
-
-- ✅ **Module bundle file** → `npm run build:bundle` produces `design/modules/all.{js,css}` (late night)
-- ✅ **Brand auto-extract → tokens-<brand>.css** → `npm run new:comp -- <url>` (late night)
-- ✅ **Headless browser brand extraction** → `npm run new:comp -- <url> --mode=headless` Playwright + `getComputedStyle` sampling (late night)
-- ✅ **`.scene` 1080×1920 portrait override trap** → `cards.css` now `100% × 100%` (late night)
-- ✅ **GSAP CDN dependency** → vendored at `design/vendor/gsap.min.js` (late night)
-- ✅ **Visual regression in smoke test** → `npm run smoke:diff` + `npm run smoke:baseline` (late night)
-- ✅ **Effects catalog page** → see agent-shipped `npm run catalog` (late night, agent-fanned)
-- ✅ **Standalone preview page replacing studio iframe** → see agent-shipped `npm run preview:simple` (late night, agent-fanned)
 - ✅ **Pre-render visual smoke test** → `npm run smoke` / `npm run check` (night)
 - ✅ **Templates × modules library** → 4 base templates + 6+4+3 modules (night)
 - ✅ **Audio-reactive visuals integration** → `ampBind()` helper + scene scaffold (evening)

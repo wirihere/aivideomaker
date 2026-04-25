@@ -415,41 +415,45 @@
   const tl = gsap.timeline({ paused: true });
   window.__timelines["case-study-60s"] = tl;
 
-  // ---- Scene 1: 0–12s — cinemagraph + cascade ------------------------
-  effectFx.cinemagraphRotate(tl, "#s1-cg", {
-    at: 0.0, duration: 12.0, turns: 0.5, ease: "none"
+  // ---- Scene 1: 0–12s — dreamSequence problem state -----------------
+  // upgraded: cinemagraphRotate + cascade → comboFx.dreamSequence
+  // (rotating cinemagraph + ambient glitter + fall + cool grade — sets a
+  //  reflective tone for the "here's what's broken" beat)
+  comboFx.dreamSequence(tl, "#s1", {
+    at: 0.0, duration: 11.0,
+    cinemagraph: "#s1-cg", headline: "#s1-headline",
+    intensity: 0.85, seed: 13
   });
   tl.fromTo("#s1 .scene__kicker",
     { y: 16, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
     0.6);
-  textFx.cascade(tl, "#s1-headline", { at: 1.2, duration: 0.9, stagger: 0.10 });
   tl.fromTo("#s1-supporting",
     { y: 30, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
     3.4);
 
-  // ---- Scene 2: 12–30s — multiplane reveal + ink-bleed + bullets -----
-  effectFx.multiplaneDolly(tl, "#s2-stage", {
-    at: 12.0, duration: 8.0, from: -240, to: 40, ease: "power2.out"
-  });
+  // ---- Scene 2: 12–30s — cinematicReveal of solution headline -------
+  // upgraded: multiplaneDolly + ink-bleed + headline fade → comboFx.cinematicReveal
   tl.fromTo("#s2-kicker",
     { y: 16, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
     12.6);
-  tl.fromTo("#s2-headline",
-    { y: 32, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
-    13.0);
-  effectFx.inkBleed(tl, "#s2-headline", { at: 13.0, duration: 1.1, from: 70, to: 0 });
+  comboFx.cinematicReveal(tl, "#s2-stage", {
+    at: 12.8, duration: 2.4, headline: "#s2-headline",
+    intensity: 0.95, seed: 17
+  });
   tl.fromTo(["#s2-b1", "#s2-b2", "#s2-b3"],
     { x: -32, opacity: 0 },
     { x: 0, opacity: 1, duration: 0.7, stagger: 0.16, ease: "power2.out" },
-    14.6);
+    15.2);
 
-  // ---- Scene 3: 30–46s — stat counters + ambient glitter --------------
+  // ---- Scene 3: 30–46s — outcome metrics, lead with superImpact -----
+  // upgraded: scale-in + counter on the headline metric → comboFx.superImpact
+  // (other two cells keep simple counter for variety — only the lead stat
+  //  gets the full impact treatment)
   glitterFx.ambient(tl, "#s3-glitter-host", {
-    at: 30.0, count: 50, duration: 16.0, seed: 17
+    at: 30.0, count: 50, duration: 16.0, seed: 19
   });
   tl.fromTo("#s3-kicker",
     { y: 16, opacity: 0 },
@@ -459,17 +463,22 @@
     { y: 50, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.8, stagger: 0.22, ease: "power3.out" },
     31.0);
-  textFx.counter(tl, "#s3-m1-num", { at: 32.0, duration: 1.6, from: 0, ease: "power2.out" });
-  textFx.counter(tl, "#s3-m2-num", { at: 32.4, duration: 1.6, from: 0, ease: "power2.out" });
-  textFx.counter(tl, "#s3-m3-num", { at: 32.8, duration: 1.8, from: 0, ease: "power2.out" });
+  comboFx.superImpact(tl, "#s3-m1-num", {
+    at: 32.0, duration: 2.2, intensity: 1.0, seed: 21, from: 0
+  });
+  textFx.counter(tl, "#s3-m2-num", { at: 32.6, duration: 1.6, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s3-m3-num", { at: 33.0, duration: 1.8, from: 0, ease: "power2.out" });
 
-  // ---- Scene 4: 46–58s — quote with long-shadow + stagger -------------
+  // ---- Scene 4: 46–58s — quote pull-out via cinematicReveal ---------
+  // upgraded: scale + stagger → comboFx.cinematicReveal (depth + ink + letter pop)
   tl.fromTo("#s4-quote-mark",
     { scale: 0.6, opacity: 0 },
     { scale: 1, opacity: 1, duration: 0.9, ease: "back.out(1.4)" },
     46.4);
-  textFx.stagger(tl, "#s4-quote",
-    { at: 47.2, duration: 0.6, stagger: 0.012, rotation: -4, fromY: 12 });
+  comboFx.cinematicReveal(tl, "#s4", {
+    at: 47.0, duration: 2.4, headline: "#s4-quote",
+    intensity: 0.7, seed: 29, stagger: 0.012
+  });
   tl.fromTo("#s4-attrib",
     { y: 22, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },

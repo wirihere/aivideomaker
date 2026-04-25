@@ -19,7 +19,8 @@
       "bpm": 60,
       "tags": ["ambient", "piano", "minimal", "peaceful", "cinematic"],
       "character": "Minimal felt-piano with peaceful calm air, cinematic but understated",
-      "best_for": "Default Quiet Premium bed; luxury, hospitality, fashion"
+      "best_for": "Default Quiet Premium bed; luxury, hospitality, fashion",
+      "local_file": "assets/music/quiet-premium-top.mp3"
     },
     {
       "slug": "ambient-grand-piano-solo-meditation",

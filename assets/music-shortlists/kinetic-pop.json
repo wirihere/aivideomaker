@@ -19,7 +19,9 @@
       "bpm": 120,
       "tags": ["electronic", "pop", "tropical", "motivational", "inspirational"],
       "character": "Tropical-electronic pop with confident kick, scroll-native energy",
-      "best_for": "Default Kinetic Pop bed; DTC and lifestyle brands"
+      "best_for": "Default Kinetic Pop bed; DTC and lifestyle brands",
+      "local_file": "assets/music/kinetic-pop-top.mp3",
+      "local_file_note": "Fetched 90s from Pixabay (likely a preview cut; JSON claims 126s for the full track). Plays cleanly at 256 kbps. Re-fetch if you need the full duration."
     },
     {
       "slug": "upbeat-energetic-pop",
