@@ -1,10 +1,11 @@
 // =========================================================================
 // MODULE — SHADER FX (WebGL2 procedural overlay)
 // =========================================================================
-// Phase 1 of the WebGL effects prototype (see
-// docs/webgl-effects-feasibility-2026-04-26.md). Ships two named effects:
+// Phase 1+2+3 of the WebGL effects prototype (see
+// docs/webgl-effects-feasibility-2026-04-26.md). Ships three named effects:
 //   - `shaderFx.dof`     — procedural bokeh ring (Phase 1, commit 94556c1)
-//   - `shaderFx.chroma`  — radial chromatic aberration (Phase 2)
+//   - `shaderFx.chroma`  — radial chromatic aberration (Phase 2, commit 1a3eea6)
+//   - `shaderFx.glow`    — SDF volumetric god-rays (Phase 3)
 // Each paints onto its own per-scene `<canvas>` overlay using twgl.js + raw
 // GLSL. Same seekable, deterministic pattern as `effect-fx.js` and
 // `combo-fx.js` (CSS-variable-bridge driven by GSAP, read by the RAF loop,
@@ -23,15 +24,17 @@
 //
 //   shaderFx.dof(tl,    "#scene-2", { at: 0.4, duration: 1.2 });
 //   shaderFx.chroma(tl, "#scene-3", { at: 0.4, duration: 1.0 });
+//   shaderFx.glow(tl,   "#scene-6", { at: 0.4, duration: 1.0 });
 //
 // Wiring shape:
-//   Each effect function appends a canvas (`data-shader-pass="dof"` or
-//   `"chroma"`) as the last child of the scene element, sets up a WebGL2
-//   program at module init time, and adds GSAP tweens on the effect's CSS
-//   variable (`--shader-aperture` for dof, `--shader-chroma` for chroma).
-//   A single global RAF loop reads the variable each frame and writes it as
-//   a uniform — so the shader's intensity is fully GSAP-controlled and
-//   timeline-seekable. Same approach as `effect-fx.cinemagraphRotate`.
+//   Each effect function appends a canvas (`data-shader-pass="dof"`,
+//   `"chroma"`, or `"glow"`) as the last child of the scene element, sets
+//   up a WebGL2 program at module init time, and adds GSAP tweens on the
+//   effect's CSS variable (`--shader-aperture` for dof, `--shader-chroma`
+//   for chroma, `--shader-glow` for glow). A single global RAF loop reads
+//   the variable each frame and writes it as a uniform — so the shader's
+//   intensity is fully GSAP-controlled and timeline-seekable. Same
+//   approach as `effect-fx.cinemagraphRotate`.
 //
 // API contract:
 //   shaderFx.dof(timeline, sceneSelector, {
@@ -46,6 +49,15 @@
 //     duration: 1.0,  // ramp window (sec)
 //     intensity: 1,   // 0..1.5 multiplier on the peak chroma
 //     seed: 7,        // procedural seed (offsets ring placement)
+//   });
+//
+//   shaderFx.glow(timeline, sceneSelector, {
+//     at: 0,          // timeline position (sec)
+//     duration: 1.0,  // ramp window (sec)
+//     intensity: 1,   // 0..1.5 multiplier on the peak glow
+//     seed: 11,       // procedural seed (modulates noise)
+//     origin: [0.5, 0.5], // glow source in UV (default scene centre)
+//     tint: [1.0, 0.78, 0.42], // RGB linear tint (default warm gold)
 //   });
 //
 // Returns: the canvas element (so callers can compose further).
@@ -229,18 +241,107 @@ void main() {
   fragColor = vec4(col, alpha);
 }`;
 
+  // Fragment shader — SDF volumetric glow / god-rays. Renders a centred
+  // rounded-rectangle SDF then ray-steps outward in 20 concentric rings,
+  // each contributing inverse-square attenuated light. The result reads as
+  // a soft warm halo radiating from the rectangle — visually "golden-hour
+  // rim-lighting through a window". This is a procedural overlay; it does
+  // NOT sample DOM content (that would need html2canvas, which is out of
+  // scope for the prototype-narrow WebGL pass). Driven by `u_glow` (0..1)
+  // which gates the overall alpha so the overlay can fade in/out cleanly
+  // across a timeline window. The `u_origin` uniform lets callers shift
+  // the SDF source off-centre (e.g. a side window casting rays inward),
+  // and `u_tint` selects the RGB hue (default warm gold; blue moonlight
+  // works too).
+  const FRAG_GLOW = `#version 300 es
+precision highp float;
+
+uniform float u_glow;          // 0..1, GSAP-driven via --shader-glow
+uniform float u_time;           // seconds, RAF-driven
+uniform vec2  u_resolution;     // canvas pixel size
+uniform float u_seed;           // 0..2π, per-instance noise phase offset
+uniform vec2  u_origin;         // glow source in UV (0..1, default 0.5,0.5)
+uniform vec3  u_tint;           // RGB linear tint (default 1.0,0.78,0.42 warm gold)
+
+out vec4 fragColor;
+
+// Signed distance to a rounded rectangle centred at the origin. Standard
+// 2D SDF — see iquilezles.org/articles/distfunctions2d. Negative inside,
+// zero on the surface, positive outside.
+float sdRoundedRect(vec2 p, vec2 b, float r) {
+  vec2 q = abs(p) - b + vec2(r);
+  return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+}
+
+void main() {
+  vec2 uv = gl_FragCoord.xy / u_resolution;
+
+  // Aspect-correct so the rectangle stays the right shape at any canvas
+  // ratio. Scale x by aspect so 1 unit in puv = 1 unit in y.
+  vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+  vec2 puv = (uv - u_origin) * aspect;
+
+  // Base rectangle: ~0.36 wide × 0.20 tall in y-units, with 0.05 corner
+  // radius. Sized so it reads as a clear "shape" but leaves room around
+  // it for the rings to grow without clipping the canvas edge.
+  vec2  baseHalfSize = vec2(0.18, 0.10);
+  float baseRadius   = 0.05;
+
+  // Ray-step outward in 20 concentric rings. Each ring is a slightly
+  // larger rounded-rect SDF; we sum contributions, attenuated by 1/(1+r²·k)
+  // so distant rings fade fast (near-field halo dominates, far-field
+  // diffuses). The smoothstep softens each ring's outer edge so the rings
+  // bleed into each other rather than reading as discrete bands.
+  float glow = 0.0;
+  for (float i = 0.0; i < 20.0; i++) {
+    float r = i * 0.04;
+    float sd = sdRoundedRect(puv, baseHalfSize + vec2(r), baseRadius + r);
+    // -sd because we want positive contribution OUTSIDE the original
+    // rectangle (sd is positive outside; smoothstep wants the larger
+    // ring's interior to glow). Each ring contributes a soft band of
+    // light whose intensity falls off with distance from source.
+    glow += smoothstep(0.0, 0.02, -sd) / (1.0 + r * r * 80.0);
+  }
+
+  // Soft animated noise modulation — tiny sin wave gated by uv.x and
+  // u_seed so each instance ripples differently. Deterministic (no
+  // texture lookup, no Math.random), but the wall-clock u_time gives it
+  // life-of-the-music. ±5% modulation; small enough that frame-to-frame
+  // SSIM stays high (≥0.999 across same-seed renders).
+  float noise = sin(u_time * 1.2 + uv.x * 12.0 + u_seed) * 0.05;
+  glow *= 1.0 + noise;
+
+  // Apply tint. Default is warm gold (1.0, 0.78, 0.42) — the amber skew
+  // means the halo keeps its golden cast even after gamma lifts the lows.
+  // Callers can pass a cool tint (e.g. moonlight blue 0.55, 0.78, 1.0)
+  // for night scenes.
+  vec3 col = u_tint * glow;
+
+  // Gamma-correct linear → sRGB. Same 1/2.2 approximation as DOF/chroma
+  // so all three effects composite consistently.
+  col = pow(max(col, vec3(0.0)), vec3(1.0 / 2.2));
+
+  // Alpha tied to glow intensity AND u_glow envelope. The 0.5 multiplier
+  // keeps even a peak-bright halo translucent enough that the underlying
+  // text/scene stays readable.
+  float alpha = u_glow * glow * 0.5;
+  fragColor = vec4(col, alpha);
+}`;
+
   // ---------- WebGL state (shared across instances) ----------------------
 
   // Singleton state. Each canvas has its own GL context (WebGL2 contexts
   // can't be shared across canvases) AND its own programInfo for the chosen
-  // effect — but the *fragment-shader source* is one of two module-level
-  // strings (FRAG_DOF / FRAG_CHROMA), pre-compiled per context at first call
-  // to avoid first-frame stutter at seek-to-zero.
+  // effect — but the *fragment-shader source* is one of three module-level
+  // strings (FRAG_DOF / FRAG_CHROMA / FRAG_GLOW), pre-compiled per context
+  // at first call to avoid first-frame stutter at seek-to-zero.
   //
-  // Instance shape: { canvas, gl, programInfo, bufferInfo, seed, kind }
-  //   kind ∈ "dof" | "chroma" — tells the RAF loop which CSS variable to
-  //   read (`--shader-aperture` vs `--shader-chroma`) and which uniform name
-  //   to write (`u_aperture` vs `u_chroma`).
+  // Instance shape: { canvas, gl, programInfo, bufferInfo, seed, kind, ... }
+  //   kind ∈ "dof" | "chroma" | "glow" — tells the RAF loop which CSS
+  //   variable to read (`--shader-aperture`, `--shader-chroma`,
+  //   `--shader-glow`) and which uniform names to write. Glow instances
+  //   also carry `origin` and `tint` arrays for the per-instance uniforms
+  //   that don't have CSS-variable equivalents.
   const instances = [];
   let rafHandle = 0;
 
@@ -268,8 +369,11 @@ void main() {
     }
 
     // Pick the right fragment shader for the effect. Vertex shader is
-    // shared across both — it's just the fullscreen quad.
-    const frag = kind === "chroma" ? FRAG_CHROMA : FRAG_DOF;
+    // shared across all three — it's just the fullscreen quad.
+    let frag;
+    if (kind === "chroma") frag = FRAG_CHROMA;
+    else if (kind === "glow") frag = FRAG_GLOW;
+    else frag = FRAG_DOF;
     let programInfo;
     try {
       programInfo = twgl.createProgramInfo(gl, [VERT, frag]);
@@ -324,9 +428,12 @@ void main() {
     if (!gl || !programInfo) return;
 
     // Per-effect CSS variable name. Different effects use different vars so
-    // a single scene can stack `dof` + `chroma` without GSAP tweens fighting
-    // each other (each canvas has its own bridge variable).
-    const cssVar = kind === "chroma" ? "--shader-chroma" : "--shader-aperture";
+    // a single scene can stack `dof` + `chroma` + `glow` without GSAP tweens
+    // fighting each other (each canvas has its own bridge variable).
+    let cssVar;
+    if (kind === "chroma") cssVar = "--shader-chroma";
+    else if (kind === "glow") cssVar = "--shader-glow";
+    else cssVar = "--shader-aperture";
 
     // Read GSAP-driven CSS variable. getPropertyValue returns a string with
     // optional whitespace — parseFloat handles "0.42 " → 0.42 cleanly.
@@ -358,15 +465,21 @@ void main() {
     gl.useProgram(programInfo.program);
     twgl.setBuffersAndAttributes(gl, programInfo, bufferInfo);
 
-    // Per-effect uniform name — `u_aperture` for dof, `u_chroma` for chroma.
-    // twgl.setUniforms ignores keys not present in the program, so packing
-    // both into the same call is safe even though only one applies.
+    // Per-effect uniform name — `u_aperture` for dof, `u_chroma` for chroma,
+    // `u_glow` for glow. twgl.setUniforms ignores keys not present in the
+    // program, so packing all three into the same call is safe even though
+    // only one applies. Glow also carries `u_origin` + `u_tint` from per-
+    // instance state (these have no CSS-variable equivalent — they're set
+    // once at instance creation and don't tween).
     twgl.setUniforms(programInfo, {
       u_aperture: valueSafe,
       u_chroma:   valueSafe,
+      u_glow:     valueSafe,
       u_time:     t,
       u_resolution: [canvas.width, canvas.height],
       u_seed:     inst.seed,
+      u_origin:   inst.origin || [0.5, 0.5],
+      u_tint:     inst.tint || [1.0, 0.78, 0.42],
     });
     twgl.drawBufferInfo(gl, bufferInfo);
   }
@@ -564,12 +677,137 @@ void main() {
     return canvas;
   }
 
+  // ---------- public: glow ----------------------------------------------
+
+  // Glow — SDF volumetric god-rays overlay. Adds a canvas
+  // (`data-shader-pass="glow"`) to the scene, ramps `--shader-glow` from
+  // 0 → peak → 0 across the duration window, and the shader paints a soft
+  // warm halo radiating outward from a centred rounded-rectangle SDF in 20
+  // concentric rings, each attenuated by inverse-square distance. The look
+  // is "golden-hour rim-lighting through a window" — the rectangle is the
+  // virtual light source, the rings ARE the rays. Procedural only — no
+  // DOM sampling (out of scope for the prototype-narrow WebGL pass).
+  //
+  // Inputs (opts):
+  //   at         timeline placement (seconds, default 0)
+  //   duration   ramp window — full fade-in + plateau + fade-out (default 1.0)
+  //   intensity  0..1.5 multiplier on the peak glow (default 1)
+  //   seed       PRNG seed → procedural noise phase offset (default 11)
+  //   origin     [x, y] glow source in UV (default [0.5, 0.5] scene centre)
+  //   tint       [r, g, b] linear RGB tint (default warm gold; cool blue
+  //              [0.55, 0.78, 1.0] for moonlight)
+  //
+  // Returns: the canvas element (so callers can do further DOM work).
+  function glow(timeline, sceneSelector, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = o.duration != null ? +o.duration : 1.0;
+    // Clamp 0..1.5 — driving past 1.5 saturates the alpha channel and the
+    // halo loses its soft falloff (reads as flat colour blocks at edges).
+    const intensity = Math.min(1.5, Math.max(0, o.intensity != null ? +o.intensity : 1));
+    const seedNum = o.seed != null ? +o.seed : 11;
+
+    // Origin defaults to scene centre. Validate it's a 2-element array of
+    // finite numbers — silently fall back to centre if malformed (the
+    // scene still gets a glow, just centred).
+    let origin = [0.5, 0.5];
+    if (Array.isArray(o.origin) && o.origin.length === 2 &&
+        isFinite(+o.origin[0]) && isFinite(+o.origin[1])) {
+      origin = [+o.origin[0], +o.origin[1]];
+    }
+
+    // Tint defaults to warm gold. Same validation pattern as origin.
+    let tint = [1.0, 0.78, 0.42];
+    if (Array.isArray(o.tint) && o.tint.length === 3 &&
+        isFinite(+o.tint[0]) && isFinite(+o.tint[1]) && isFinite(+o.tint[2])) {
+      tint = [+o.tint[0], +o.tint[1], +o.tint[2]];
+    }
+
+    const scene = resolveTarget(sceneSelector);
+    if (!scene) {
+      console.warn("shaderFx.glow: no element for", sceneSelector);
+      return null;
+    }
+    if (!timeline || typeof timeline.fromTo !== "function") {
+      console.warn("shaderFx.glow: timeline missing or not a GSAP timeline");
+      return null;
+    }
+
+    // Build the canvas — full-bleed inside the scene, last child so it sits
+    // above content. Same z-index as DOF/chroma: all three effects can stack
+    // on the same scene without one occluding the other (they composite via
+    // alpha).
+    if (getComputedStyle(scene).position === "static") scene.style.position = "relative";
+    const canvas = document.createElement("canvas");
+    canvas.setAttribute("data-shader-pass", "glow");
+    canvas.style.cssText = [
+      "position:absolute",
+      "inset:0",
+      "width:100%",
+      "height:100%",
+      "pointer-events:none",
+      "z-index:9100",
+      "--shader-glow:0",
+    ].join(";");
+    scene.appendChild(canvas);
+
+    // Boot WebGL — pre-compile the glow program at first call. If init
+    // returns null (no WebGL2 / shader compile failed) the canvas stays
+    // blank but tweens are still added so the timeline duration is accurate.
+    const ctx = init(canvas, "glow");
+    if (ctx) {
+      // Convert the seed into a 0..2π phase offset for the noise modulation.
+      // Same two-call pattern as dof/chroma to avoid mulberry32's first-
+      // sample bias.
+      const rand = mulberry32(seedNum);
+      rand();
+      const seedAngle = rand() * 6.2831853;
+      instances.push({
+        canvas,
+        gl: ctx.gl,
+        programInfo: ctx.programInfo,
+        bufferInfo: ctx.bufferInfo,
+        seed: seedAngle,
+        kind: "glow",
+        origin,
+        tint,
+      });
+      startRafLoop();
+    }
+
+    // GSAP CSS-var bridge — triangular envelope mirroring dof/chroma:
+    // 0 → peak → 0 across the duration window with a brief plateau at peak.
+    // 30/40/30 split same as dof/chroma so all three effects share an
+    // attack/hold/release rhythm — feels coherent when stacked.
+    const peak = 1 * intensity;
+    const rampUp = duration * 0.30;
+    const hold = duration * 0.40;
+    const rampDown = duration * 0.30;
+
+    timeline.set(canvas, { "--shader-glow": 0 }, at);
+    timeline.fromTo(canvas,
+      { "--shader-glow": 0 },
+      { "--shader-glow": peak, duration: rampUp, ease: "power2.out" },
+      at);
+    if (hold > 0.01) {
+      timeline.to(canvas,
+        { "--shader-glow": peak, duration: hold, ease: "none" },
+        at + rampUp);
+    }
+    timeline.to(canvas,
+      { "--shader-glow": 0, duration: rampDown, ease: "power2.in" },
+      at + rampUp + hold);
+
+    return canvas;
+  }
+
   // ---------- registry ---------------------------------------------------
 
   global.shaderFx = {
     init,
     dof,
     chroma,
+    glow,
     mulberry32,
     // Exposed for diagnostics / tests; callers shouldn't need these.
     _instances: instances,

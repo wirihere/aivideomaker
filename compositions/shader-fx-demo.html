@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>shader-fx demo · Phases 1 + 2 (DOF bokeh + chromatic aberration)</title>
+<title>shader-fx demo · Phases 1 + 2 + 3 (DOF + chroma + SDF glow)</title>
 
 <link rel="stylesheet" href="../design/cards.css">
 <link rel="stylesheet" href="../design/templates/documentary.css">
@@ -145,17 +145,55 @@
     letter-spacing: -0.02em;
   }
 
-  /* Scene 6 — outro / wrap with logo lockup. */
-  .scene-6 .outro-stack { display: flex; flex-direction: column; align-items: center; gap: 24px; }
-  .scene-6 .outro-mark { font-family: var(--card-font-display); font-weight: 700; font-size: 180px; color: #FBF9F6; letter-spacing: -0.03em; }
-  .scene-6 .outro-tag { font-family: var(--card-font-mono); font-size: 30px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(251, 249, 246, 0.6); }
+  /* Scene 6 — SDF glow active, warm gold-hour tint. Stage uses a deep
+     amber-shifted indigo so the warm halo radiates against a complementary
+     cool base — reads like late-afternoon sun through a window. */
+  .scene-6 {
+    background: radial-gradient(ellipse at center, #1a1530 0%, #0a0818 70%, #050410 100%);
+  }
+  .scene-6 .glow-stage { display: flex; flex-direction: column; align-items: center; gap: 32px; z-index: 1; }
+  .scene-6 .glow-text {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 220px;
+    color: #FBF9F6;
+    letter-spacing: -0.03em;
+    text-shadow: 0 8px 30px rgba(0,0,0,0.55);
+  }
+  .scene-6 .glow-sub {
+    font-family: var(--card-font-mono);
+    font-size: 28px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255, 200, 130, 0.85);
+  }
+
+  /* Scene 7 — SDF glow at low intensity with cool moonlight tint. Stage
+     is deep midnight blue so the cool halo reads as moonlight rather than
+     a second sun. Lets QA see the same shader adapt to a different palette. */
+  .scene-7 {
+    background: radial-gradient(ellipse at center, #0e1830 0%, #060a18 70%, #03050c 100%);
+  }
+  .scene-7 .glow-stage { display: flex; flex-direction: column; align-items: center; gap: 32px; z-index: 1; }
+  .scene-7 .glow-text {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 180px;
+    color: #FBF9F6;
+    letter-spacing: -0.02em;
+  }
+
+  /* Scene 8 — outro / wrap with logo lockup. */
+  .scene-8 .outro-stack { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .scene-8 .outro-mark { font-family: var(--card-font-display); font-weight: 700; font-size: 180px; color: #FBF9F6; letter-spacing: -0.03em; }
+  .scene-8 .outro-tag { font-family: var(--card-font-mono); font-size: 30px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(251, 249, 246, 0.6); }
 </style>
 </head>
 <body>
 <div id="demo" class="demo clip"
      data-composition-id="shader-fx-demo"
      data-width="1920" data-height="1080"
-     data-start="0" data-duration="18" data-track-index="0">
+     data-start="0" data-duration="24" data-track-index="0">
 
   <!-- ===== Scene 1 — control / baseline A (0–3s) ===== -->
   <div id="scene-1" class="scene scene-1 clip"
@@ -202,13 +240,32 @@
     </div>
   </div>
 
-  <!-- ===== Scene 6 — outro (15–18s) ===== -->
+  <!-- ===== Scene 6 — SDF glow ACTIVE, warm gold-hour (15–18s) ===== -->
   <div id="scene-6" class="scene scene-6 clip"
        data-start="15" data-duration="3" data-track-index="1">
-    <div class="label-chip">scene 6 · outro</div>
-    <div id="s6-stack" class="outro-stack">
-      <div id="s6-mark" class="outro-mark">shaderFx</div>
-      <div id="s6-tag" class="outro-tag">dof bokeh · chroma aberration</div>
+    <div class="label-chip">scene 6 · shaderFx.glow · ACTIVE</div>
+    <div id="s6-stage" class="glow-stage">
+      <div id="s6-text" class="glow-text">Glow</div>
+      <div id="s6-sub" class="glow-sub">sdf god-rays · phase 3</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 7 — SDF glow ACTIVE, cool moonlight (18–21s) ===== -->
+  <div id="scene-7" class="scene scene-7 clip"
+       data-start="18" data-duration="3" data-track-index="1">
+    <div class="label-chip">scene 7 · shaderFx.glow · moonlight</div>
+    <div id="s7-stage" class="glow-stage">
+      <div id="s7-text" class="glow-text">Moonlight</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 8 — outro (21–24s) ===== -->
+  <div id="scene-8" class="scene scene-8 clip"
+       data-start="21" data-duration="3" data-track-index="1">
+    <div class="label-chip">scene 8 · outro</div>
+    <div id="s8-stack" class="outro-stack">
+      <div id="s8-mark" class="outro-mark">shaderFx</div>
+      <div id="s8-tag" class="outro-tag">dof · chroma · glow</div>
     </div>
   </div>
 
@@ -290,16 +347,52 @@
     { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
     12.2);
 
-  // Scene 6 — outro stack. No shader — just clean cascade so the wrap reads
-  // calm after the bokeh moments.
-  tl.fromTo("#s6-mark",
+  // Scene 6 — SDF volumetric glow at peak intensity, warm gold (default
+  // tint). The shader paints a centred rounded-rectangle SDF that radiates
+  // outward in 20 concentric rings, attenuated by inverse-square — reads
+  // as golden-hour rim-light through a window. Headline sits in the heart
+  // of the halo.
+  shaderFx.glow(tl, "#scene-6", {
+    at: 15.4,
+    duration: 1.8,
+    intensity: 1.0,
+    seed: 11,
+  });
+  tl.fromTo("#s6-text",
+    { y: 50, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    15.2);
+  tl.fromTo("#s6-sub",
+    { letterSpacing: "0.6em", opacity: 0 },
+    { letterSpacing: "0.32em", opacity: 1, duration: 0.6, ease: "power2.out" },
+    15.6);
+
+  // Scene 7 — SDF glow at low intensity with cool moonlight tint. Same
+  // shader, different `tint` uniform — proves the effect adapts cleanly
+  // from warm to cool palettes without code changes. Different seed so
+  // the procedural noise modulation reads visibly different from scene 6.
+  shaderFx.glow(tl, "#scene-7", {
+    at: 18.4,
+    duration: 1.6,
+    intensity: 0.7,
+    seed: 29,
+    tint: [0.55, 0.78, 1.0], // moonlight blue
+  });
+  tl.fromTo("#s7-text",
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    18.2);
+
+  // Scene 8 — outro stack. No shader — clean cascade so the wrap reads
+  // calm after the bokeh + chroma + glow moments.
+  tl.fromTo("#s8-mark",
     { y: 60, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
-    15.2);
-  tl.fromTo("#s6-tag",
+    21.2);
+  tl.fromTo("#s8-tag",
     { letterSpacing: "0.6em", opacity: 0 },
     { letterSpacing: "0.32em", opacity: 1, duration: 0.7, ease: "power2.out" },
-    15.7);
+    21.7);
 
   // Standalone autoplay guard — only when loaded directly in a top-level
   // browser tab. Studio + renderer wrap us in an iframe and drive seek
