@@ -4,6 +4,7 @@
 // Concatenation of: amp-bind.js, text-fx.js, effect-fx.js, glitter-fx.js, combo-fx.js
 // Edit the source files, then `npm run build:bundle` to regenerate.
 // Globals exposed: window.ampBind, window.textFx, window.effectFx, window.glitterFx, window.comboFx.
+// Opt-in shaderFx (WebGL bokeh) loads via separate <script src="design/modules/shader-fx.js">.
 // =========================================================================
 
 

@@ -33,6 +33,12 @@ const jsSources = [
   path.join(modulesDir, "glitter-fx.js"),
   // combo-fx depends on the three above being registered already.
   path.join(modulesDir, "combo-fx.js"),
+  // NOTE: shader-fx.js is intentionally NOT bundled. It's opt-in per
+  // composition because (a) it requires twgl.min.js as a separate vendor
+  // script, and (b) compositions that don't use WebGL effects shouldn't
+  // pay the parse cost. Wire it up in your comp's <head> directly:
+  //   <script src="../design/vendor/twgl.min.js"></script>
+  //   <script src="../design/modules/shader-fx.js"></script>
 ];
 
 const bannerCss = `/* =========================================================================
@@ -48,6 +54,7 @@ const bannerJs = `// ===========================================================
 // Concatenation of: amp-bind.js, text-fx.js, effect-fx.js, glitter-fx.js, combo-fx.js
 // Edit the source files, then \`npm run build:bundle\` to regenerate.
 // Globals exposed: window.ampBind, window.textFx, window.effectFx, window.glitterFx, window.comboFx.
+// Opt-in shaderFx (WebGL bokeh) loads via separate <script src="design/modules/shader-fx.js">.
 // =========================================================================
 `;
 
