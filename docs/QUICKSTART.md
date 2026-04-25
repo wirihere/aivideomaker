@@ -231,37 +231,46 @@ authoritative list. Highlights:
 ## 10. npm script reference
 
 Every script in `package.json`. Run `npm run` with no args to list them.
+**This table is regenerated from source comments by `npm run help -- --md`** —
+edit the script's leading-comment block to update its description, not the
+table here.
 
-| Script             | What it does                                                    |
-| ------------------ | --------------------------------------------------------------- |
-| `video`            | Hero command. URL → MP4 in 7 stages. `npm run video -- <url>`.  |
-| `check`            | Lint + smoke. Run after every edit.                             |
-| `lint`             | `npx hyperframes lint` — composition validation.                |
-| `smoke`            | Playwright smoke test — loads comp, seeks scenes, checks errors.|
-| `smoke:shots`      | Smoke + write per-scene PNG to `smoke/`.                        |
-| `smoke:diff`       | Smoke + pixel-diff each scene against `smoke/.baseline/`.       |
-| `smoke:baseline`   | Promote current screenshots to baseline.                        |
-| `smoke:contrast`   | Smoke + WCAG contrast check on text vs background.              |
-| `render`           | Render + auto-grade (default `pop` LUT). Pass-through via `--`. |
-| `render:queue`     | Batch-render multiple comps. `npm run render:queue -- <comps>`. |
-| `preview`          | Studio editor. Flaky — prefer `preview:simple`.                 |
-| `preview:simple`   | Zero-dep static server on :3003 with play/pause/scrub UI.       |
-| `build:bundle`     | Concat `design/modules/{text,effect,glitter,combo,amp}-fx`      |
-|                    | into `design/modules/all.{js,css}`. Run after any module edit.  |
-| `watch:bundle`     | Auto-rebuild bundle on save (200ms debounce, no chokidar).      |
-| `catalog`          | Render 23 recipe thumbnails + `docs/effects-catalog.html`.      |
-| `new:comp`         | Brand extract from URL → `design/tokens-<slug>.css` + scaffold. |
-| `new:scene`        | Generate a TTS-first scene with `--narration` + `--beats`.      |
-| `new:copy`         | Extract scene-by-scene copy plan from a brief.                  |
-| `comp:write`       | Write `compositions/<slug>.meta.json` (template + tokens used). |
-| `comp:check`       | Verify all comp manifests are current.                          |
-| `comp:list`        | List all known compositions + their meta.                       |
-| `fix`              | Dry-run of common-pitfall auto-fixer (read-only).               |
-| `fix:apply`        | Apply auto-fixer changes (use after dry-run review).            |
-| `cache:stats`      | Show `assets/.cache/` size + LRU info.                          |
-| `cache:clear`      | Empty `assets/.cache/`.                                         |
-| `pull:assets`      | Fetch stock photos / video / icons for a brief.                 |
-| `pick:music`       | Shortlist Pixabay music tracks for a vibe.                      |
+| Script | Group | Description |
+| ------ | ----- | ----------- |
+| `build:bundle` | build | Build a single-file bundle of every design module — text-fx, effect-fx, |
+| `watch:bundle` | build | Watch design/modules/ + scripts/lib/ and rebuild the bundle on save. |
+| `new:comp` | new | Scaffolder — turn a URL into a working HyperFrames composition in one shot. |
+| `new:copy` | new | Copy generation supervisor — turns a URL + template into a video-ready |
+| `new:scene` | new | TTS-first scene scaffolder. |
+| `preview` | preview | hyperframes preview (vendor CLI) |
+| `preview:simple` | preview | Standalone preview server — a minimal alternative to `npx hyperframes preview`. |
+| `smoke` | preview | Smoke test — fast pre-render sanity check for the active composition. |
+| `smoke:baseline` | preview | (smoke + `--update-baseline`) |
+| `smoke:contrast` | preview | (smoke + `--contrast`) |
+| `smoke:diff` | preview | (smoke + `--diff`) |
+| `smoke:shots` | preview | (smoke + `--screenshots`) |
+| `render` | render | Render wrapper — runs `hyperframes render`, then auto-applies post-grade, |
+| `render:queue` | render | Render queue — sequentially render multiple composition files to MP4. |
+| `render:vite` | render | Custom renderer (Phase 1 + 2 + 3) — Playwright frame capture + ffmpeg encode |
+| `renders:list` | renders | renders-prune.mjs — list / dry-run / prune MP4s in renders/. (`--list`) |
+| `renders:prune` | renders | renders-prune.mjs — list / dry-run / prune MP4s in renders/. |
+| `video` | video | Master pipeline orchestrator — turn a URL into a rendered MP4 in one command. |
+| `cache:clear` | cache | Content-addressed cache for fetched assets. (`clear`) |
+| `cache:stats` | cache | Content-addressed cache for fetched assets. (`stats`) |
+| `pick:music` | fetch | Music auto-pick supervisor — reads a curated shortlist JSON for a given template |
+| `pull:assets` | fetch | Brand asset puller — given a URL + slug, downloads the brand's reusable |
+| `check` | lint | chains: lint + lint:strict + check:heads + smoke |
+| `fix` | lint | fix.mjs — auto-fix scanner for HyperFrames compositions. |
+| `fix:apply` | lint | fix.mjs — auto-fix scanner (`--apply`). |
+| `lint` | lint | hyperframes lint (vendor CLI) |
+| `lint:strict` | lint | lint-strict.mjs — CI-gateable strict linter for the recurring §4 pitfalls. |
+| `catalog` | catalog | Build a visual reference catalog of every GSAP recipe in design/modules/. |
+| `comp:check` | catalog | Composition versioning manifest. (`check`) |
+| `comp:list` | catalog | Composition versioning manifest. (`list`) |
+| `comp:write` | catalog | Composition versioning manifest. (`write`) |
+| `check:heads` | other | Composition versioning manifest. (`heads` — drift-detects the 25 head fragments) |
+| `copy:gen` | other | Copy generation supervisor — Anthropic-API-driven framework copy gen. |
+| `help` | other | Self-documenting help for `npm run <script>`. |
 
 For deep usage of any script, run `node scripts/<name>.mjs --help` or skim
 the file's leading comment block — every script in `scripts/` has a
