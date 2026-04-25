@@ -178,7 +178,8 @@ export function report() {
 }
 
 // --- CLI mode (node scripts/lib/usage.mjs report) ----------------------------
-if (import.meta.url === `file://${process.argv[1].replace(/\\/g, "/")}`) {
+// fileURLToPath handles Windows file:///C:/... triple-slash correctly.
+if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? "")) {
   const cmd = process.argv[2];
   if (cmd === "report" || cmd === "show" || !cmd) {
     report();

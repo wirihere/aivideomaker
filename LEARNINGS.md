@@ -161,7 +161,7 @@ fs.writeFileSync(outPath, body);
 **Verified 2026-04-25:** photo fetcher cold-run = 11.6s, warm-run (cache hit) = 0.44s end-to-end (3ms inside the cache lib + ~430ms Node startup + import resolution). 96% of latency was Playwright launch + page navigation, all skipped on hit.
 
 **Watch out for:**
-- `import.meta.url === "file://" + argv[1].replace(/\\/g,"/")` (the CLI guard pattern in `usage.mjs`) is **broken on Windows** — `file:///C:/...` has three slashes, the comparison constructs two. Use `fileURLToPath(import.meta.url) === path.resolve(process.argv[1])` instead. (Side-effect: `node scripts/lib/usage.mjs report` is silently a no-op on Windows. Easy fix when next touched.)
+- ✅ **(fixed 2026-04-26)** The `import.meta.url === "file://" + argv[1].replace(/\\/g,"/")` CLI-guard pattern was broken on Windows (`file:///C:/...` has three slashes). Now uses `fileURLToPath(import.meta.url) === path.resolve(process.argv[1])`. Use that pattern in any future CLI-guard.
 - The cache key is the **user intent** (search URL + index), not the asset URL. This is intentional: we want `node scripts/fetch-pixabay-photo.mjs "blue sky"` to hit cache without a network round-trip to resolve the actual `cdn.pixabay.com/...` URL first. Trade-off: if Pixabay reranks results, the cached image will reflect what was first-place when first cached, not now. Run `npm run cache:clear -- --force` to refresh.
 
 ### Brand asset puller — `scripts/pull-assets.mjs`

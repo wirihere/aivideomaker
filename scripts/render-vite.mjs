@@ -1,4 +1,5 @@
-// Custom renderer (Phase 1 + 2) — Playwright frame capture + ffmpeg encode + audio mux.
+// Custom renderer (Phase 1 + 2 + 3) — Playwright frame capture + ffmpeg encode
+// + audio mux + parallel BrowserContext worker pool.
 //
 // Why this exists alongside `npx hyperframes render`:
 //   The vendor renderer is a black box. This script is an in-repo proof of
@@ -11,15 +12,23 @@
 //     <audio data-start data-duration [data-volume]> elements, position each
 //     with adelay, level via volume filter, sum with amix, then mux onto the
 //     untouched libx264 video with -c:v copy.
-//   Phase 3 will move to parallel BrowserContexts. See docs/render-vite-roadmap.md.
+//   Phase 3 scope (DONE): parallel BrowserContexts. Single Chromium launch,
+//     N contexts × N pages all bound to the same composition. Each worker
+//     handles a contiguous frame range; ffmpeg's frame-%06d.png glob is
+//     deterministic regardless of write order. Default N = min(6, cpus()).
+//     Override with `--workers=N`. `--workers=1` falls back to the Phase 1
+//     single-page sequential loop (still goes through the worker function;
+//     no separate code path) for debugging or low-memory machines.
 //
 // Usage:
-//   node scripts/render-vite.mjs <composition-path> [--out <mp4-path>] [--fps 30] [--no-audio]
+//   node scripts/render-vite.mjs <composition-path> [--out <mp4-path>] [--fps 30] [--no-audio] [--workers=N]
 //
 // Examples:
 //   node scripts/render-vite.mjs compositions/text-fx-demo.html
 //   node scripts/render-vite.mjs compositions/text-fx-demo.html --out renders/text-fx-vite.mp4
 //   node scripts/render-vite.mjs compositions/text-fx-demo.html --fps 60
+//   node scripts/render-vite.mjs compositions/text-fx-demo.html --workers=6
+//   node scripts/render-vite.mjs compositions/text-fx-demo.html --workers=1   # debug / low-mem
 //   node scripts/render-vite.mjs compositions/kindred-production-30s.html --no-audio
 //
 // Output:
