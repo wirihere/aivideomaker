@@ -1,10 +1,16 @@
 // Copy generation supervisor — turns a URL + template into a video-ready
 // `<slug>.copy.json` document the orchestrator can drop into a composition.
 //
-// Usage:
+// Usage (URL mode — deterministic, offline):
 //   node scripts/extract-copy.mjs <url>
 //   node scripts/extract-copy.mjs <url> --template=warm-community --seconds=30
 //   node scripts/extract-copy.mjs <url> --template=kinetic-pop --seconds=15 --name=acme
+//
+// Usage (framework mode — AI-assisted, calls Anthropic API):
+//   node scripts/extract-copy.mjs --framework=AIDA --brand="Local cafe with rotating brunch menu"
+//   node scripts/extract-copy.mjs --framework=STAR --brand="…" --vibe=documentary --duration=60
+//   node scripts/extract-copy.mjs --framework=PAS  --brand="…" --dry-run
+//   node scripts/extract-copy.mjs --framework=FAB  --brand="…" --out=copy.json
 //
 // Templates (set tone + lexical bias):
 //   warm-community  — warm/grounded, "we" pronouns, no jargon
@@ -17,7 +23,7 @@
 //    30  → 60–90 words,   4 beats   (matches hero-promo-30s.html)
 //    60  → 120–160 words, 5 beats   (matches case-study-60s.html)
 //
-// What it does (deterministic, offline-friendly — no LLM call):
+// What URL mode does (deterministic, offline-friendly — no LLM call):
 //   1. scrapeWorker      — curl the URL, extract title, meta description, h1/h2/h3,
 //                          first body paragraphs, primary CTA URL.
 //   2. summarizeWorker   — distill raw copy to ~target-length narration.
@@ -25,6 +31,15 @@
 //   4. toneTuningWorker  — light rewrites per template's voice.
 //   5. ttsSafetyWorker   — strip Māori words, expand numbers, strike invented stats,
 //                          enforce English place names. (LEARNINGS §4.)
+//
+// What framework mode does (AI-assisted, requires ANTHROPIC_API_KEY):
+//   1. Reads docs/copy-playbook.md as the source-of-truth for framework rules.
+//   2. Builds a strict prompt with: framework structure, word caps, ban list,
+//      Tier 1 verb-first CTA rule, brand brief.
+//   3. Calls Claude (default `claude-sonnet-4-6`, temperature 0.4) and parses
+//      the JSON response into the same COPY_SCHEMA shape URL mode emits, so
+//      downstream consumers (compose-from-template.mjs, copy-apply flow) are
+//      drop-in compatible.
 //
 // Output: compositions/<slug>.copy.json (schema documented in COPY_SCHEMA below).
 
@@ -48,11 +63,39 @@ const flags = Object.fromEntries(
   })
 );
 
+// =====================================================================
+// Framework mode branch — AI-assisted copy generation from a brand brief.
+//
+// Triggers when --framework=<name> is passed. This is independent of the
+// URL pipeline below: no scrape, no deterministic distillation. Calls
+// Claude with a playbook-aware prompt, parses the JSON response into the
+// same COPY_SCHEMA shape. Bails out before the rest of the file runs.
+// =====================================================================
+const SUPPORTED_FRAMEWORKS = [
+  "AIDA",
+  "PAS",
+  "FAB",
+  "STAR",
+  "BAB",
+  "Heros-Journey",
+  "Transformation",
+  "Q-Payoff",
+  "Sensory",
+];
+
+if (flags.framework) {
+  await runFrameworkMode({ flags, projectRoot });
+  // runFrameworkMode never returns — it process.exits.
+}
+
 const url = positional[0];
 if (!url || !/^https?:\/\//.test(url)) {
-  console.error("Usage: node scripts/extract-copy.mjs <https://example.com> [--template=warm-community] [--seconds=30] [--name=<slug>]");
-  console.error("Templates: warm-community | kinetic-pop | documentary | quiet-premium");
-  console.error("Seconds:   15 | 30 | 60");
+  console.error("Usage:");
+  console.error("  URL mode:       node scripts/extract-copy.mjs <https://example.com> [--template=warm-community] [--seconds=30] [--name=<slug>]");
+  console.error("  Framework mode: node scripts/extract-copy.mjs --framework=<name> --brand=\"<one-line description>\" [--vibe=kinetic-pop] [--duration=30] [--dry-run] [--out=path]");
+  console.error("Templates:  warm-community | kinetic-pop | documentary | quiet-premium");
+  console.error("Seconds:    15 | 30 | 60");
+  console.error(`Frameworks: ${SUPPORTED_FRAMEWORKS.join(" | ")}`);
   process.exit(1);
 }
 
@@ -674,4 +717,293 @@ console.log(`  beats: ${beats.length} · cta: "${cta.verb}" → ${cta.url}`);
 if (COPY_SCHEMA.meta.wordCount < preset.narrLow) {
   console.warn(`⚠ narration is ${COPY_SCHEMA.meta.wordCount} words — below floor of ${preset.narrLow}. Source page may be too thin; re-run with a content-richer URL or hand-edit the JSON.`);
   process.exitCode = 2;
+}
+
+// =====================================================================
+// Framework mode implementation
+// =====================================================================
+//
+// AI-assisted copy generation. Reads the live copy-playbook.md so framework
+// rules stay in lock-step with the doc — no hard-coded list of constraints
+// inside the script. The user provides a brand brief; Claude returns a
+// strict-JSON document matching COPY_SCHEMA.
+async function runFrameworkMode({ flags, projectRoot }) {
+  const framework = flags.framework;
+  const brand = flags.brand;
+  const vibe = flags.vibe ?? "kinetic-pop";
+  const duration = parseInt(flags.duration ?? "30", 10);
+  const model = flags.model ?? "claude-sonnet-4-6";
+  const temperature = flags.temperature !== undefined
+    ? parseFloat(flags.temperature)
+    : 0.4;
+  const isDryRun = flags["dry-run"] === true;
+  const outFlag = flags.out;
+
+  // 1. Validate framework name.
+  if (!SUPPORTED_FRAMEWORKS.includes(framework)) {
+    console.error(`✗ Unknown framework: "${framework}". Pick from: ${SUPPORTED_FRAMEWORKS.join(", ")}`);
+    process.exit(1);
+  }
+
+  // 2. Validate brand brief.
+  if (typeof brand !== "string" || brand.length < 8) {
+    console.error("✗ --brand=\"<one-line description>\" is required (min 8 chars).");
+    console.error(`  e.g. node scripts/extract-copy.mjs --framework=${framework} --brand="Local cafe with rotating brunch menu, walk-up only, weekends busiest"`);
+    process.exit(1);
+  }
+
+  // 3. Validate vibe.
+  const VIBES = ["warm-community", "kinetic-pop", "documentary", "quiet-premium"];
+  if (!VIBES.includes(vibe)) {
+    console.error(`✗ Unknown vibe: "${vibe}". Pick from: ${VIBES.join(", ")}`);
+    process.exit(1);
+  }
+
+  // 4. Validate duration.
+  const DURATIONS = [15, 20, 30, 45, 60];
+  if (!DURATIONS.includes(duration)) {
+    console.error(`✗ Unknown duration: ${duration}. Pick from: ${DURATIONS.join(", ")}`);
+    process.exit(1);
+  }
+
+  // Per-duration narration band + beat count (matches the URL-mode PRESETS
+  // for 15/30/60; 20s and 45s borrow neighbouring bands).
+  const FW_PRESETS = {
+    15: { narrLow: 25,  narrHigh: 40,  beatCount: 4 },
+    20: { narrLow: 35,  narrHigh: 55,  beatCount: 4 },
+    30: { narrLow: 60,  narrHigh: 90,  beatCount: 4 },
+    45: { narrLow: 90,  narrHigh: 130, beatCount: 5 },
+    60: { narrLow: 120, narrHigh: 160, beatCount: 5 },
+  };
+  const preset = FW_PRESETS[duration];
+
+  // 5. Read copy-playbook.md so framework rules come from a single source.
+  const playbookPath = path.join(projectRoot, "docs", "copy-playbook.md");
+  if (!fs.existsSync(playbookPath)) {
+    console.error(`✗ docs/copy-playbook.md not found at ${playbookPath}`);
+    process.exit(1);
+  }
+  const playbookText = fs.readFileSync(playbookPath, "utf8");
+
+  // 6. Slug — derive from brand brief if --name not given.
+  const slug = (flags.name
+    ? String(flags.name)
+    : brand.toLowerCase().split(/\s+/).slice(0, 3).join("-")
+  ).toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "brand";
+
+  // 7. Build the prompt.
+  const prompt = buildFrameworkPrompt({
+    framework,
+    brand,
+    vibe,
+    duration,
+    preset,
+    playbookText,
+    slug,
+  });
+
+  if (isDryRun) {
+    console.log("▶ extract-copy [framework mode · DRY RUN] — prompt below, no API call");
+    console.log(`  framework: ${framework} · vibe: ${vibe} · duration: ${duration}s · model: ${model} · temp: ${temperature}`);
+    console.log(`  brand: ${brand}`);
+    console.log("─".repeat(72));
+    console.log(prompt);
+    console.log("─".repeat(72));
+    process.exit(0);
+  }
+
+  // 8. Auth check.
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.error("✗ ANTHROPIC_API_KEY is not set in the environment.");
+    console.error("  Set it (e.g. `set ANTHROPIC_API_KEY=sk-ant-...` on Windows, `export` on bash) and re-run.");
+    console.error("  Or use --dry-run to preview the prompt without calling the API.");
+    process.exit(1);
+  }
+
+  console.log(`▶ extract-copy [framework mode] — ${framework} for "${brand.slice(0, 60)}${brand.length > 60 ? "…" : ""}"`);
+  console.log(`  vibe: ${vibe} · duration: ${duration}s · target ${preset.narrLow}-${preset.narrHigh} words · ${preset.beatCount} beats`);
+  console.log(`  model: ${model} · temperature: ${temperature}`);
+
+  // 9. Call the Anthropic Messages API.
+  const data = await callAnthropic({ apiKey, model, prompt, temperature });
+
+  // 10. Parse the JSON response.
+  const copyDoc = parseModelJson(data, { framework, brand, vibe, duration, slug, preset });
+
+  // 11. Write or print.
+  const json = JSON.stringify(copyDoc, null, 2) + "\n";
+  if (outFlag === true) {
+    console.error("✗ --out= requires a path (e.g. --out=copy.json)");
+    process.exit(1);
+  }
+  if (typeof outFlag === "string" && outFlag.length > 0) {
+    const outPath = path.isAbsolute(outFlag) ? outFlag : path.join(projectRoot, outFlag);
+    const outDirAbs = path.dirname(outPath);
+    if (!fs.existsSync(outDirAbs)) fs.mkdirSync(outDirAbs, { recursive: true });
+    fs.writeFileSync(outPath, json, "utf8");
+    console.log(`✓ wrote ${path.relative(projectRoot, outPath).replace(/\\/g, "/")}`);
+    console.log(`  narration: ${copyDoc.meta.wordCount} words · beats: ${copyDoc.beats.length} · cta: "${copyDoc.cta.verb}"`);
+  } else {
+    process.stdout.write(json);
+  }
+  process.exit(0);
+}
+
+function buildFrameworkPrompt({ framework, brand, vibe, duration, preset, playbookText, slug }) {
+  // Trim playbook to the load-bearing sections to keep the prompt focused.
+  // Sections 2 (frameworks), 4 (per-line rules), 6 (vibes), 9 (lint), 10
+  // (earned word + big idea) are mandatory.
+  return [
+    "You are HyperFrames' copy supervisor. Generate a strict-JSON copy document",
+    "for one short-form video, obeying the playbook below. Do not invent facts",
+    "about the brand beyond what the brief explicitly states. If a slot would",
+    "require an invented stat, use a sensory image or a brand-truth instead.",
+    "",
+    "INPUTS",
+    `- Framework: ${framework}`,
+    `- Vibe: ${vibe}`,
+    `- Duration: ${duration} seconds`,
+    `- Slug: ${slug}`,
+    `- Narration target: ${preset.narrLow}-${preset.narrHigh} words across ${preset.beatCount} beats`,
+    `- Brand brief: ${brand}`,
+    "",
+    "HARD CONSTRAINTS (every line must obey)",
+    "- Hook ≤ 7 words. Single clause. No brand name unless brand IS the hook.",
+    "- Headline ≤ 12 words. Active voice. One non-substitutable word.",
+    "- Body ≤ 18 words per line. One idea per line. One sentence.",
+    "- CTA: 2-5 words. MUST start with a Tier 1 verb: Book, Call, Get, Start,",
+    "  Open, See, Visit. (Also OK: Try, Shop, Save, Read, Watch, Join.)",
+    "- Banned phrases: \"Click here\", \"Learn more\" alone, \"Submit\",",
+    "  \"Find out more\", \"Discover more\".",
+    "- Banned jargon: leverage, utilise, synergy, ecosystem, solutions,",
+    "  stakeholders, world-class, cutting-edge, best-in-class, innovative,",
+    "  premium-as-adjective, holistic.",
+    "- No invented stats, awards, customer names, or quotes about the brand.",
+    "- Narration: no Māori words (Edge TTS mispronounces). English equivalents only.",
+    "- Kicker: 1-3 words, ALL CAPS. Categorical, not promotional. Distinct per scene.",
+    "",
+    "OUTPUT — return ONE JSON object, no prose, no markdown fences. Schema:",
+    "{",
+    `  "slug": "${slug}",`,
+    `  "framework": "${framework}",`,
+    `  "vibe": "${vibe}",`,
+    `  "duration": ${duration},`,
+    "  \"bigIdea\": \"<≤15-word sentence — the strategic insight this video carries>\",",
+    "  \"earnedWord\": \"<single word the video is teaching; CTA must include it or pre-load it>\",",
+    "  \"narration\": \"<spoken-track copy, sentences end with periods, target word band met>\",",
+    `  "beats": [ { "kicker": "...", "headline": "...", "body": "..." }, ... ${preset.beatCount} entries ],`,
+    "  \"cta\": { \"verb\": \"<verb-first 2-5 word CTA>\", \"url\": \"<placeholder URL or brand domain if obvious from brief>\", \"tagline\": \"<≤80 chars, the why-now line>\" },",
+    "  \"meta\": { \"generatedAt\": \"<YYYY-MM-DD>\", \"wordCount\": <int>, \"beatCount\": <int>, \"sourcedFrom\": { \"brief\": true } }",
+    "}",
+    "",
+    "PLAYBOOK (source of truth — sections 2, 4, 6, 8, 9, 10):",
+    "─".repeat(72),
+    playbookText,
+    "─".repeat(72),
+    "",
+    "Now generate the copy document. JSON only. No commentary.",
+  ].join("\n");
+}
+
+async function callAnthropic({ apiKey, model, prompt, temperature }) {
+  const body = {
+    model,
+    max_tokens: 2048,
+    temperature,
+    messages: [{ role: "user", content: prompt }],
+  };
+
+  let res;
+  try {
+    res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    console.error(`✗ network error calling Anthropic API: ${err.message}`);
+    process.exit(1);
+  }
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    console.error(`✗ Anthropic API ${res.status} ${res.statusText}`);
+    if (text) console.error(`  ${text.slice(0, 600)}`);
+    process.exit(1);
+  }
+
+  const data = await res.json().catch((err) => {
+    console.error(`✗ Anthropic API returned non-JSON: ${err.message}`);
+    process.exit(1);
+  });
+
+  return data;
+}
+
+function parseModelJson(apiResponse, ctx) {
+  // Pull the assistant's first text block.
+  const blocks = Array.isArray(apiResponse?.content) ? apiResponse.content : [];
+  const text = blocks
+    .filter((b) => b && b.type === "text" && typeof b.text === "string")
+    .map((b) => b.text)
+    .join("\n")
+    .trim();
+
+  if (!text) {
+    console.error("✗ Anthropic API returned no text content.");
+    console.error(`  raw: ${JSON.stringify(apiResponse).slice(0, 400)}`);
+    process.exit(1);
+  }
+
+  // Strip markdown fences if the model added them despite the instruction.
+  let cleaned = text;
+  const fenceMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fenceMatch) cleaned = fenceMatch[1].trim();
+
+  // If the model wrapped the JSON in prose, find the first { and last }.
+  const firstBrace = cleaned.indexOf("{");
+  const lastBrace = cleaned.lastIndexOf("}");
+  if (firstBrace > 0 || lastBrace < cleaned.length - 1) {
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+    }
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(cleaned);
+  } catch (err) {
+    console.error(`✗ Anthropic response was not valid JSON: ${err.message}`);
+    console.error("  first 600 chars of returned text:");
+    console.error(text.slice(0, 600));
+    process.exit(1);
+  }
+
+  // Light shape-fix: ensure required fields, derive meta if the model dropped it.
+  const narration = typeof parsed.narration === "string" ? parsed.narration.trim() : "";
+  const wordCount = narration.split(/\s+/).filter(Boolean).length;
+  const beats = Array.isArray(parsed.beats) ? parsed.beats : [];
+
+  return {
+    slug: parsed.slug || ctx.slug,
+    framework: parsed.framework || ctx.framework,
+    vibe: parsed.vibe || ctx.vibe,
+    duration: parsed.duration || ctx.duration,
+    bigIdea: parsed.bigIdea || "",
+    earnedWord: parsed.earnedWord || "",
+    narration,
+    beats,
+    cta: parsed.cta || { verb: "", url: "", tagline: "" },
+    meta: {
+      generatedAt: (parsed.meta && parsed.meta.generatedAt) || new Date().toISOString().slice(0, 10),
+      wordCount: (parsed.meta && parsed.meta.wordCount) || wordCount,
+      beatCount: (parsed.meta && parsed.meta.beatCount) || beats.length,
+      sourcedFrom: { brief: true, framework: ctx.framework },
+    },
+  };
 }

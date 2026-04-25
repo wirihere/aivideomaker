@@ -23,6 +23,8 @@
 //   font-var              §4 font-family: var(--*-font-*) skips deterministic embedding (HTML <style> + design/**/*.css)
 //   audio-no-clip         §4 <audio data-start> without class="clip" — framework can't gate visibility
 //   subcomp-currentscript §4 document.currentScript is null inside sub-comp wrappers
+//   video-bleed-guard     §4 <video> inside class="clip" data-start ancestor without inline opacity:0 + tl.set gate pair
+//   repeat-no-final-set   §4 GSAP tween with `repeat: N` (no yoyo) on opacity/scale without a tl.set landing keyframe
 //
 // What it WON'T do:
 //   - Rewrite tl.from() → tl.fromTo() (semantics differ, end values are ambiguous).
@@ -642,6 +644,225 @@ function detectSubcompCurrentscript(text) {
   return findings;
 }
 
+// --- video-bleed-guard: <video> autoplays from t=0 and bypasses class="clip"
+// visibility gating, bleeding through earlier scenes (§4). Require inline
+// opacity:0 + matching tl.set('#<id>',{opacity:1},...) AND tl.set('#<id>',
+// {opacity:0},...) pairs in the file's inline <script>. Fires when the
+// <video>'s nearest ancestor carrying `data-start` ALSO has `class*="clip"`
+// (the production pattern, e.g. <div id="bg-3" class="clip bg" data-start="...">).
+// Sub-comp wrapper files like compositions/backgrounds/video-bg.html — whose
+// own root has no data-start — are NOT flagged here; they get gated at the
+// embedder's clip wrapper (which is where this rule applies).
+// Opt-out: `<!-- video-bleed-ok -->` comment immediately before the <video>.
+function detectVideoBleedGuard(text) {
+  const findings = [];
+  // Locate every <video ...> opening tag (self-closed or paired).
+  const videoRe = /<video\b([^>]*?)\/?>/gi;
+  // Pre-extract inline-script bodies for tl.set lookups.
+  const blocks = extractInlineScripts(text);
+  const scriptBodies = blocks.map(b => b.body).join("\n\n");
+
+  let m;
+  while ((m = videoRe.exec(text)) !== null) {
+    const tagStart = m.index;
+    const tagEnd = m.index + m[0].length;
+    const attrs = m[1] || "";
+
+    // Opt-out marker on the line(s) immediately preceding the <video> tag.
+    // Look back at most 200 chars for `<!-- video-bleed-ok -->`.
+    const lookback = text.slice(Math.max(0, tagStart - 200), tagStart);
+    if (/<!--\s*video-bleed-ok\s*-->/i.test(lookback)) continue;
+
+    // Find the clipping context: nearest still-open ancestor with both
+    // class*="clip" AND data-start. Sub-comp wrappers (data-composition-id
+    // alone) are excluded — they're gated by their embedder's clip wrapper.
+    const before = text.slice(0, tagStart);
+    if (!hasClipDataStartAncestor(before)) continue;
+
+    // Check the requirements.
+    const id = attrValue(attrs, "id");
+    const styleAttr = attrValue(attrs, "style") || "";
+    const hasOpacity0 = /\bopacity\s*:\s*0\b/i.test(styleAttr);
+
+    // Lookup tl.set pairs in inline script bodies if we have an id.
+    let hasGateOn = false;
+    let hasGateOff = false;
+    if (id) {
+      const sel = `#${id}`;
+      // Match any `tl.set("#id", {opacity: 1, ...}, ...)` or 0 variant.
+      // Use a forgiving pattern so trailing arg whitespace is tolerated.
+      const escId = escapeForRegex(sel);
+      const reOn  = new RegExp(`\\.set\\s*\\(\\s*["'\\\`]${escId}["'\\\`]\\s*,\\s*\\{[^}]*\\bopacity\\s*:\\s*1\\b[^}]*\\}`, "i");
+      const reOff = new RegExp(`\\.set\\s*\\(\\s*["'\\\`]${escId}["'\\\`]\\s*,\\s*\\{[^}]*\\bopacity\\s*:\\s*0\\b[^}]*\\}`, "i");
+      hasGateOn  = reOn.test(scriptBodies);
+      hasGateOff = reOff.test(scriptBodies);
+    }
+
+    const ok = id && hasOpacity0 && hasGateOn && hasGateOff;
+    if (ok) continue;
+
+    const idLabel = id ? `#${id}` : "(no id)";
+    findings.push({
+      id: "video-bleed-guard",
+      severity: "error",
+      line: lineOf(text, tagStart),
+      message: `<video ${idLabel}> not opacity-gated — autoplays from t=0 and bleeds (§4). Add inline style="opacity:0" + tl.set pairs at sceneStart/sceneEnd.`,
+      suggestion: "give it id=\"...\", inline style=\"opacity:0;\", and tl.set('#<id>',{opacity:1},sceneStart) + tl.set('#<id>',{opacity:0},sceneEnd) pairs (or add a <!-- video-bleed-ok --> comment if it's a deliberate background)",
+      fixable: false,
+    });
+    // Avoid sliding into a nested match within the same tag.
+    videoRe.lastIndex = tagEnd;
+  }
+  return findings;
+}
+
+// Walk backwards through HTML to determine if any still-open ancestor has
+// BOTH class*="clip" (whole-token, not "clipboard") AND data-start.
+// Heuristic: not a real DOM parser — we scan all opening tags with both
+// attributes appearing before idx, then verify each is still unclosed at idx.
+function hasClipDataStartAncestor(htmlBefore) {
+  // Match opening tags carrying BOTH class= and data-start= in either order.
+  const reClipOpen = /<([a-z][\w-]*)\b([^>]*\bclass\s*=\s*("[^"]*"|'[^']*')[^>]*\bdata-start\s*=|[^>]*\bdata-start\s*=[^>]*\bclass\s*=\s*("[^"]*"|'[^']*'))[^>]*>/gi;
+  const candidates = [];
+  let m;
+  reClipOpen.lastIndex = 0;
+  while ((m = reClipOpen.exec(htmlBefore)) !== null) {
+    const fullTag = m[0];
+    const tagName = m[1].toLowerCase();
+    const cls = fullTag.match(/\bclass\s*=\s*("([^"]*)"|'([^']*)')/i);
+    const clsVal = cls ? (cls[2] ?? cls[3] ?? "") : "";
+    // Whole-token check: avoids false-positives on `class="clipboard"`.
+    if (!/(^|\s)clip(\s|$)/.test(clsVal)) continue;
+    candidates.push({ idx: m.index, tagName });
+  }
+  if (candidates.length === 0) return false;
+  for (const cand of candidates) {
+    if (isStillOpen(htmlBefore, cand.idx, cand.tagName)) return true;
+  }
+  return false;
+}
+
+// True when the open tag at openIdx (of name tagName) has no matching close
+// tag in htmlBefore. Counts nested same-name opens to handle siblings.
+function isStillOpen(htmlBefore, openIdx, tagName) {
+  const after = htmlBefore.slice(openIdx);
+  const nameEsc = escapeForRegex(tagName);
+  const reOpen = new RegExp(`<${nameEsc}\\b[^>]*?(?<!/)>`, "gi");
+  const reClose = new RegExp(`</${nameEsc}\\s*>`, "gi");
+  let depth = 0;
+  let i = 0;
+  // Walk forward through `after`, counting opens and closes.
+  while (i < after.length) {
+    reOpen.lastIndex = i;
+    reClose.lastIndex = i;
+    const oM = reOpen.exec(after);
+    const cM = reClose.exec(after);
+    if (!cM) {
+      // No more close tags — anything still open stays open.
+      return depth > 0 || i === 0; // i===0 means the original open with no close
+    }
+    if (oM && oM.index < cM.index) {
+      depth++;
+      i = oM.index + oM[0].length;
+    } else {
+      depth--;
+      i = cM.index + cM[0].length;
+      if (depth === 0) return false; // matched the original opener
+    }
+  }
+  return depth > 0;
+}
+
+function escapeForRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// --- repeat-no-final-set: GSAP tween with `repeat: N` on opacity/scale and
+// no `yoyo: true` may end on a hidden keyframe. Look ahead within the same
+// inline <script> for a matching tl.set("<selector>", { opacity: 1 ...} | { scale: 1 ...} ).
+// Opt-out: `// pulse-end-handled` comment on the tween line.
+function detectRepeatNoFinalSet(text) {
+  const findings = [];
+  const blocks = extractInlineScripts(text);
+  for (const blk of blocks) {
+    // Tween call shape: `<ident>.to(<selector>, { ... repeat: N ... })`.
+    // We allow tl|timeline|t plus arbitrary identifiers; restrict to .to() / .fromTo()
+    // because .from() / .set() don't take repeat in the same way and tend to
+    // overlap with from-opacity already.
+    const tweenRe = /\b([A-Za-z_$][\w$]*)\.(to|fromTo)\s*\(\s*("([^"]+)"|'([^']+)'|`([^`]+)`|\[[^\]]+\])\s*,([\s\S]*?)\)\s*[,;\n]/g;
+    let m;
+    while ((m = tweenRe.exec(blk.body)) !== null) {
+      const method = m[2];
+      const selectorRaw = m[4] ?? m[5] ?? m[6] ?? m[3]; // string or array literal
+      const argsTail = m[7] || "";
+      // For .fromTo, the vars object is the LAST {...}. For .to, it's the second arg.
+      // We just look at the whole tail and pull the LAST {...} block.
+      const lastBraceStart = argsTail.lastIndexOf("{");
+      const lastBraceEnd   = argsTail.lastIndexOf("}");
+      if (lastBraceStart < 0 || lastBraceEnd < lastBraceStart) continue;
+      const vars = argsTail.slice(lastBraceStart, lastBraceEnd + 1);
+
+      const repeatMatch = vars.match(/\brepeat\s*:\s*(\d+)\b/);
+      if (!repeatMatch) continue;
+      const repeatN = parseInt(repeatMatch[1], 10);
+      if (repeatN < 1) continue;
+
+      // yoyo: true (or non-zero) exempts.
+      if (/\byoyo\s*:\s*true\b/.test(vars)) continue;
+
+      // Must animate opacity or scale (the two pulse properties from §4).
+      const animatesOpacity = /\bopacity\s*:/.test(vars);
+      const animatesScale   = /\bscale\s*:/.test(vars);
+      if (!animatesOpacity && !animatesScale) continue;
+
+      // Locate the absolute file index of this tween for line + opt-out check.
+      const tweenAbs = blk.bodyStart + m.index;
+      const tweenLine = lineOf(text, tweenAbs);
+
+      // Opt-out: `// pulse-end-handled` anywhere on the line(s) spanning the
+      // full tween call (start of tween's first line through end of its last line).
+      const lineStart = text.lastIndexOf("\n", tweenAbs - 1) + 1;
+      const tweenEndAbs = blk.bodyStart + m.index + m[0].length;
+      const lineEnd = text.indexOf("\n", tweenEndAbs);
+      const tweenSrc = text.slice(lineStart, lineEnd === -1 ? text.length : lineEnd);
+      if (/\/\/[^\n]*\bpulse-end-handled\b/.test(tweenSrc)) continue;
+
+      // Look-ahead in the same script body for a tl.set(selector, { opacity: 1 ... }) or { scale: 1 ... }.
+      // Selector may be a string literal or an array — only string literals can be matched cheaply.
+      let selectorLiteral = null;
+      if (typeof selectorRaw === "string" && !selectorRaw.startsWith("[")) {
+        selectorLiteral = selectorRaw;
+      }
+      let landingFound = false;
+      if (selectorLiteral) {
+        const escSel = escapeForRegex(selectorLiteral);
+        // Search the rest of the script body after this tween call.
+        const tail = blk.body.slice(m.index + m[0].length);
+        const reLanding = animatesOpacity
+          ? new RegExp(`\\.set\\s*\\(\\s*["'\\\`]${escSel}["'\\\`]\\s*,\\s*\\{[^}]*\\bopacity\\s*:\\s*1\\b[^}]*\\}`, "i")
+          : new RegExp(`\\.set\\s*\\(\\s*["'\\\`]${escSel}["'\\\`]\\s*,\\s*\\{[^}]*\\bscale\\s*:\\s*1\\b[^}]*\\}`, "i");
+        landingFound = reLanding.test(tail);
+      }
+      if (landingFound) continue;
+
+      const selectorLabel = selectorLiteral || "<computed>";
+      const propLabel = animatesOpacity ? "opacity" : "scale";
+      const landingExample = animatesOpacity
+        ? `tl.set("${selectorLabel}",{opacity:1}, sceneEnd-0.01)`
+        : `tl.set("${selectorLabel}",{scale:1}, sceneEnd-0.01)`;
+      findings.push({
+        id: "repeat-no-final-set",
+        severity: "warn",
+        line: tweenLine,
+        message: `Pulse tween (repeat: ${repeatN}, no yoyo) on '${selectorLabel}' may end hidden (§4). Add ${landingExample}.`,
+        suggestion: `add a ${propLabel} landing keyframe via tl.set("${selectorLabel}", { ${propLabel}: 1 }, sceneEnd-0.01) — or add yoyo:true — or annotate the tween line with \`// pulse-end-handled\` if the landing state is intentional`,
+        fixable: false,
+      });
+    }
+  }
+  return findings;
+}
+
 const DETECTORS = [
   { id: "script-close",          fn: detectScriptCloseInComments, kinds: ["html"] },
   { id: "from-opacity",          fn: detectFromOpacity,           kinds: ["html"] },
@@ -655,6 +876,8 @@ const DETECTORS = [
   { id: "font-var",              fn: detectFontVar,               kinds: ["html", "css"] },
   { id: "audio-no-clip",         fn: detectAudioWithoutClip,      kinds: ["html"] },
   { id: "subcomp-currentscript", fn: detectSubcompCurrentscript,  kinds: ["html"] },
+  { id: "video-bleed-guard",     fn: detectVideoBleedGuard,       kinds: ["html"] },
+  { id: "repeat-no-final-set",   fn: detectRepeatNoFinalSet,      kinds: ["html"] },
 ];
 
 const FIX_APPLIERS = {
