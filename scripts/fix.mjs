@@ -96,14 +96,19 @@ function listTargets() {
 }
 
 function listCssTargets() {
-  // CSS targets: design/**/*.css excluding design/tokens-*.css (token source of truth).
-  // Used by `font-var` only.
+  // CSS targets: design/**/*.css excluding token sources (where var(--card-font-*)
+  // is *defined*, not consumed). Token sources: design/tokens-*.css, design/cards.css,
+  // design/templates/*.css. Used by `font-var` only.
   const designDir = path.join(projectRoot, "design");
   return walkDir(designDir, (full, name) => {
     if (!name.endsWith(".css")) return false;
-    // Skip token files at any depth — they are the var(--font-*) source of truth.
     const rel = path.relative(designDir, full).split(path.sep).join("/");
+    // Skip token files at any depth.
     if (/(^|\/)tokens-[^/]*\.css$/i.test(rel)) return false;
+    // Skip cards.css (default card-font-* definitions) at the root.
+    if (rel === "cards.css") return false;
+    // Skip templates/*.css (vibe overrides — also legitimate token source).
+    if (/^templates\/[^/]+\.css$/i.test(rel)) return false;
     return true;
   });
 }
