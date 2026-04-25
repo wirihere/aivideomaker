@@ -68,6 +68,9 @@ smoke/
 # Test artifacts from new-comp / pull-assets verification runs
 compositions/*.backup-*
 
+# scripts/suggest-comp.mjs — template-scan cache, rebuilt on mtime change
+.suggest-cache.json
+
 # Claude Code per-user / runtime state — not portable across machines
 .claude/scheduled_tasks.lock
 .claude/settings.local.json

@@ -16,6 +16,7 @@
     "catalog": "node scripts/build-catalog.mjs",
     "new:comp": "node scripts/new-comp.mjs",
     "new:scene": "node scripts/new-scene.mjs",
+    "suggest:comp": "node scripts/suggest-comp.mjs",
     "new:copy": "node scripts/extract-copy.mjs",
     "copy:gen": "node scripts/extract-copy.mjs",
     "comp:write": "node scripts/comp-manifest.mjs write",

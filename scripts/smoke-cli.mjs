@@ -138,6 +138,13 @@ const TESTS = [
     // the diamond bullet that prefixes either case.
     expect: /(no snapshots|snapshots? in \.backups)/i,
   },
+  {
+    name: "scripts/suggest-comp.mjs --list",
+    cmd: nodeBin,
+    args: [path.join(projectRoot, "scripts", "suggest-comp.mjs"), "--list"],
+    // List mode dumps every template + a "<n> templates scanned." tail.
+    expect: /\d+ templates scanned\./,
+  },
 ];
 
 // --- runner ---------------------------------------------------------------
