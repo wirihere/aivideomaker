@@ -661,39 +661,60 @@ async function main() {
   // safe-to-pull baseline). Hero/product can fail without breaking the run.
   const order = ["logo", "favicon", "hero", "product"];
   const manifestAssets = [];
-  let downloaded = 0;
-  let logoBuf = null;
-  let logoInfo = null;
-  let logoCandidate = null;
 
+  // Fan out the kinds whose downloads are independent. logo/hero/product are
+  // fully independent — three separate networks of candidate URLs that don't
+  // share state. favicon has a fallback path that mirrors logo's buffer when
+  // its own candidates all fail, so we kick favicon's candidate walk off in
+  // parallel too and only consult the mirror fallback after logo resolves.
+  //
+  // Each `downloadFirstValid` keeps its own sequential candidate-walk inside
+  // (first valid wins), so per-kind ordering / retry semantics are preserved.
+  // Cross-kind concurrency is what we gain here. The cache layer
+  // (lib/asset-cache.mjs) writes via tempfile+rename so concurrent puts are
+  // race-safe.
+  const settled = await Promise.allSettled(
+    order.map((kind) => downloadFirstValid(kind, candidates[kind], finalUrl)),
+  );
+  // Convert allSettled output to the same { ok, ... } shape downloadFirstValid
+  // returns. A rejected promise (unexpected throw inside fetcher) becomes
+  // `{ ok: false, reason: ... }` so the per-kind "skipped" logging below works
+  // uniformly.
+  const resultsByKind = Object.fromEntries(
+    order.map((kind, i) => {
+      const s = settled[i];
+      if (s.status === "fulfilled") return [kind, s.value];
+      return [kind, { ok: false, reason: `unexpected error: ${s.reason?.message || s.reason}` }];
+    }),
+  );
+
+  // Apply favicon-mirror fallback now that logo's result is known. This used
+  // to live inside the loop; pulling it out of the parallel batch keeps the
+  // semantics identical (favicon mirrors logo only when its own walk failed).
+  if (!resultsByKind.favicon.ok && resultsByKind.logo.ok) {
+    const lr = resultsByKind.logo;
+    console.log(`  [favicon] no valid candidate — mirroring logo`);
+    resultsByKind.favicon = {
+      ok: true,
+      buf: lr.buf,
+      info: lr.info,
+      candidate: { ...lr.candidate, note: `mirrored from logo (${lr.candidate.note})` },
+    };
+  }
+
+  // Process in priority order (logo → favicon → hero → product) so the --max
+  // cap honours the same precedence as the original sequential loop. Disk
+  // writes stay sequential — no benefit from parallelizing them and it keeps
+  // the per-asset log lines in a deterministic order.
+  let downloaded = 0;
   for (const kind of order) {
     if (downloaded >= max) break;
-    let result = await downloadFirstValid(kind, candidates[kind], finalUrl);
-
-    // Favicon fallback: if no separate favicon is reachable, mirror the logo.
-    // The contract requires logo + favicon at minimum; a brand's logo is
-    // always a valid stand-in for its tab icon.
-    if (!result.ok && kind === "favicon" && logoBuf) {
-      console.log(`  [favicon] no valid candidate — mirroring logo`);
-      result = {
-        ok: true,
-        buf: logoBuf,
-        info: logoInfo,
-        candidate: { ...logoCandidate, note: `mirrored from logo (${logoCandidate.note})` },
-      };
-    }
-
+    const result = resultsByKind[kind];
     if (!result.ok) {
       console.log(`  [${kind}] skipped (${result.reason || "no valid candidate"})`);
       continue;
     }
 
-    // Stash the logo for the favicon-mirror path above.
-    if (kind === "logo") {
-      logoBuf = result.buf;
-      logoInfo = result.info;
-      logoCandidate = result.candidate;
-    }
     const { buf, info, candidate } = result;
     const filename = `${kind}${info.ext}`;
     const outPath = path.join(outDir, filename);
