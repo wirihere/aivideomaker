@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>shader-fx demo · Phase 1 (DOF bokeh)</title>
+<title>shader-fx demo · Phases 1 + 2 (DOF bokeh + chromatic aberration)</title>
 
 <link rel="stylesheet" href="../design/cards.css">
 <link rel="stylesheet" href="../design/templates/documentary.css">
@@ -95,8 +95,27 @@
     color: rgba(255, 215, 130, 0.85);
   }
 
-  /* Scene 3 — control / no shader (still no canvas, baseline B) */
-  .scene-3 .ctl-text { font-family: var(--card-font-display); font-weight: 600; font-size: 200px; color: rgba(251, 249, 246, 0.92); letter-spacing: -0.025em; }
+  /* Scene 3 — chromatic aberration active. Cool teal/indigo gradient so
+     the warm-R / cool-B fringes split cleanly against a neutral midtone. */
+  .scene-3 {
+    background: radial-gradient(ellipse at center, #1d2f4a 0%, #0a1320 70%, #050810 100%);
+  }
+  .scene-3 .chroma-stage { display: flex; flex-direction: column; align-items: center; gap: 32px; z-index: 1; }
+  .scene-3 .chroma-text {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 220px;
+    color: #FBF9F6;
+    letter-spacing: -0.03em;
+    text-shadow: 0 8px 30px rgba(0,0,0,0.55);
+  }
+  .scene-3 .chroma-sub {
+    font-family: var(--card-font-mono);
+    font-size: 28px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(180, 220, 255, 0.85);
+  }
 
   /* Scene 4 — DOF active again, lower intensity. Lets the QA reviewer see
      that the same effect adapts to a different scene with different copy. */
@@ -112,8 +131,19 @@
     letter-spacing: -0.02em;
   }
 
-  /* Scene 5 — control / no shader (final baseline) */
-  .scene-5 .ctl-text { font-family: var(--card-font-display); font-weight: 600; font-size: 200px; color: rgba(251, 249, 246, 0.92); letter-spacing: -0.025em; }
+  /* Scene 5 — chromatic aberration again, lower intensity. Neutral charcoal
+     stage so QA can see the same effect adapt to a different copy + scene. */
+  .scene-5 {
+    background: radial-gradient(ellipse at center, #2a2532 0%, #14111c 70%, #07050d 100%);
+  }
+  .scene-5 .chroma-stage { display: flex; flex-direction: column; align-items: center; gap: 32px; z-index: 1; }
+  .scene-5 .chroma-text {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 180px;
+    color: #FBF9F6;
+    letter-spacing: -0.02em;
+  }
 
   /* Scene 6 — outro / wrap with logo lockup. */
   .scene-6 .outro-stack { display: flex; flex-direction: column; align-items: center; gap: 24px; }
@@ -144,11 +174,14 @@
     </div>
   </div>
 
-  <!-- ===== Scene 3 — control / baseline B (6–9s) ===== -->
+  <!-- ===== Scene 3 — chromatic aberration ACTIVE (6–9s) ===== -->
   <div id="scene-3" class="scene scene-3 clip"
        data-start="6" data-duration="3" data-track-index="1">
-    <div class="label-chip">scene 3 · control · no shader</div>
-    <div id="s3-text" class="ctl-text">Plain text</div>
+    <div class="label-chip">scene 3 · shaderFx.chroma · ACTIVE</div>
+    <div id="s3-stage" class="chroma-stage">
+      <div id="s3-text" class="chroma-text">Chroma</div>
+      <div id="s3-sub" class="chroma-sub">radial aberration · phase 2</div>
+    </div>
   </div>
 
   <!-- ===== Scene 4 — DOF bokeh active again (9–12s) ===== -->
@@ -160,11 +193,13 @@
     </div>
   </div>
 
-  <!-- ===== Scene 5 — control / baseline C (12–15s) ===== -->
+  <!-- ===== Scene 5 — chromatic aberration ACTIVE again (12–15s) ===== -->
   <div id="scene-5" class="scene scene-5 clip"
        data-start="12" data-duration="3" data-track-index="1">
-    <div class="label-chip">scene 5 · control · no shader</div>
-    <div id="s5-text" class="ctl-text">Just CSS</div>
+    <div class="label-chip">scene 5 · shaderFx.chroma · low intensity</div>
+    <div id="s5-stage" class="chroma-stage">
+      <div id="s5-text" class="chroma-text">Vintage</div>
+    </div>
   </div>
 
   <!-- ===== Scene 6 — outro (15–18s) ===== -->
@@ -173,7 +208,7 @@
     <div class="label-chip">scene 6 · outro</div>
     <div id="s6-stack" class="outro-stack">
       <div id="s6-mark" class="outro-mark">shaderFx</div>
-      <div id="s6-tag" class="outro-tag">phase 1 · dof bokeh</div>
+      <div id="s6-tag" class="outro-tag">dof bokeh · chroma aberration</div>
     </div>
   </div>
 
@@ -210,11 +245,23 @@
     { letterSpacing: "0.32em", opacity: 1, duration: 0.6, ease: "power2.out" },
     3.6);
 
-  // Scene 3 — control again.
+  // Scene 3 — radial chromatic aberration. The shader paints a soft ring
+  // near the frame edge with R / G / B sampled at radially-offset positions.
+  // Magnitude grows with r² so the centre stays clean, edges fringe hardest.
+  shaderFx.chroma(tl, "#scene-3", {
+    at: 6.4,
+    duration: 1.8,
+    intensity: 1.0,
+    seed: 7,
+  });
   tl.fromTo("#s3-text",
-    { y: 30, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    { y: 50, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
     6.2);
+  tl.fromTo("#s3-sub",
+    { letterSpacing: "0.6em", opacity: 0 },
+    { letterSpacing: "0.32em", opacity: 1, duration: 0.6, ease: "power2.out" },
+    6.6);
 
   // Scene 4 — DOF at 0.7 intensity, different seed so the ring rotates
   // visibly differently from scene 2 (but deterministically across renders).
@@ -229,10 +276,18 @@
     { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
     9.2);
 
-  // Scene 5 — control C.
+  // Scene 5 — chromatic aberration at 0.7 intensity, different seed so the
+  // procedural striations rotate visibly differently from scene 3 (but
+  // deterministically across renders).
+  shaderFx.chroma(tl, "#scene-5", {
+    at: 12.4,
+    duration: 1.6,
+    intensity: 0.7,
+    seed: 19,
+  });
   tl.fromTo("#s5-text",
-    { y: 30, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
     12.2);
 
   // Scene 6 — outro stack. No shader — just clean cascade so the wrap reads
