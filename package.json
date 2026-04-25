@@ -38,6 +38,8 @@
     "pick:music": "node scripts/pick-music.mjs",
     "renders:list": "node scripts/renders-prune.mjs --list",
     "renders:prune": "node scripts/renders-prune.mjs",
+    "usage": "node scripts/usage.mjs",
+    "usage:unused": "node scripts/usage.mjs --unused",
     "help": "node scripts/help.mjs"
   },
   "keywords": [],
