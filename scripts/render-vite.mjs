@@ -101,6 +101,34 @@ if (!Number.isFinite(fps) || fps <= 0 || fps > 240) {
   process.exit(2);
 }
 
+// --workers: parallel BrowserContext count. Default min(6, cpus()) keeps
+// memory pressure manageable on a 16 GB box; each context is ~150–250 MB
+// resident. --workers=1 deliberately falls back to a single-page run for
+// debugging or low-memory machines (still routed through the worker fn).
+const cpuCount = os.cpus().length || 1;
+const DEFAULT_WORKERS = Math.min(6, cpuCount);
+let workers = flags.workers !== undefined ? Number(flags.workers) : DEFAULT_WORKERS;
+if (!Number.isFinite(workers) || workers <= 0 || workers > 32) {
+  console.error(`invalid --workers: ${flags.workers}`);
+  process.exit(2);
+}
+workers = Math.floor(workers);
+
+// Memory clamp — if the requested worker count would have N × ~250 MB exceed
+// 75 % of total system RAM, dial back. Chromium contexts are heavier than
+// pure Node worker threads (each spins up a browser-side process tree).
+const PER_WORKER_MB = 250;
+const totalMemMb = os.totalmem() / (1024 * 1024);
+const memBudgetMb = totalMemMb * 0.75;
+const maxWorkersByMem = Math.max(1, Math.floor(memBudgetMb / PER_WORKER_MB));
+if (workers > maxWorkersByMem) {
+  console.warn(
+    `  ⚠ memory clamp: --workers=${workers} would need ~${(workers * PER_WORKER_MB / 1024).toFixed(1)} GiB; ` +
+    `total RAM ${(totalMemMb / 1024).toFixed(1)} GiB → reducing to ${maxWorkersByMem}`,
+  );
+  workers = maxWorkersByMem;
+}
+
 const compBase = path.basename(compPath, path.extname(compPath));
 const ts = new Date()
   .toISOString()
@@ -271,58 +299,220 @@ if (audioScan.length) {
   console.log(`  audio:    none`);
 }
 
-// Resize viewport to match the composition's authored dimensions so
-// screenshots come out at native resolution.
+// Resize the probe page's viewport now too — we'll use it as worker 0 so it
+// avoids a redundant context spin-up.
 await page.setViewportSize({ width: probe.width, height: probe.height });
 
 const totalFrames = Math.ceil(duration * fps);
 console.log(`  frames:   ${totalFrames}  (≈${(totalFrames / fps).toFixed(2)}s wall-clock minimum)`);
-console.log(`▶ render-vite: capturing ${totalFrames} frames`);
 
 // PNG temp dir — keep it inside renders/ so it shares a volume with the
 // final output (faster ffmpeg input, easier cleanup if interrupted).
 const tmpDir = fs.mkdtempSync(path.join(rendersDir, ".vite-frames-"));
 
-// --- frame loop -----------------------------------------------------------
-
+// --- parallel frame capture (Phase 3) -------------------------------------
+//
+// Strategy:
+//   - Single Chromium launch (already done above for the probe).
+//   - N BrowserContexts; each gets one page navigated to the same file://
+//     URL, viewport sized to (data-width, data-height).
+//   - Worker 0 reuses the probe page (already loaded, viewport already set)
+//     so we don't pay for a redundant context+nav.
+//   - Frame range split: ceil(F/N), worker k handles [k*per, min((k+1)*per, F)).
+//   - Filenames are zero-padded by absolute frame index (frame-NNNNNN.png),
+//     so ffmpeg's `-i frame-%06d.png` glob is deterministic regardless of
+//     write order across workers.
+//   - Determinism: each worker calls `tl.pause(); tl.time(t)` per frame —
+//     no wall-clock or rAF dependency — so worker boundaries don't change
+//     pixel output. Verified by spot-comparing a frame at t=2.0s rendered
+//     by worker 0 vs worker N-1 between --workers=1 and --workers=6 runs.
+//
+// Worker count clamp: if F < workers (very short comps), drop excess
+// workers so each must do >= 1 frame.
 const tlKey = probe.tlKey;
+const effectiveWorkers = Math.max(1, Math.min(workers, totalFrames));
+const perWorker = Math.ceil(totalFrames / effectiveWorkers);
+const ranges = [];
+for (let k = 0; k < effectiveWorkers; k++) {
+  const start = k * perWorker;
+  const end = Math.min(start + perWorker, totalFrames);
+  if (start >= end) break;
+  ranges.push({ workerIdx: k, start, end });
+}
+
+console.log(`▶ render-vite: ${ranges.length} worker${ranges.length === 1 ? "" : "s"} · frame range split [0, ${totalFrames})`);
+for (const r of ranges) {
+  console.log(`    worker ${r.workerIdx}: frames [${r.start}, ${r.end})  (${r.end - r.start} frames)`);
+}
+
+// Shared progress counter — all workers increment after each successful
+// page.screenshot(). Single-threaded JS in the parent, so no atomics
+// required; this is a plain Number bumped from awaited continuations.
+let framesDone = 0;
 const captureStart = Date.now();
-let progressLastLog = captureStart;
 
-for (let i = 0; i < totalFrames; i++) {
-  const t = i / fps;
-  // Seek + pause the timeline, then sync `.clip` visibility to t.
-  await page.evaluate(
-    ({ key, time, applyVisFnSrc }) => {
+// Heartbeat interval — render the consolidated bar from the parent. We
+// stop the interval once all workers settle. \r keeps it on a single
+// rewriting row, matching Phase 1's progress style.
+const progressTimer = setInterval(() => {
+  if (framesDone === 0) return;
+  const pct = ((framesDone / totalFrames) * 100).toFixed(1);
+  const elapsed = (Date.now() - captureStart) / 1000;
+  const fpsActual = framesDone / elapsed;
+  const eta = framesDone > 0 ? elapsed * (totalFrames / framesDone - 1) : 0;
+  const etaStr = eta > 0
+    ? `ETA ${eta < 60 ? Math.round(eta) + "s" : Math.floor(eta / 60) + "m" + String(Math.round(eta % 60)).padStart(2, "0") + "s"}`
+    : "ETA …";
+  process.stdout.write(`  capture: ${framesDone}/${totalFrames} (${pct}%)  ${fpsActual.toFixed(1)} fps · ${etaStr}\r`);
+}, 500);
+
+// Per-worker setup: navigate, install applyClipVis, set viewport. The probe
+// page already did all of this for worker 0; the helper below skips the
+// nav step when handed a pre-loaded page.
+async function preparePage(workerPage, alreadyLoaded) {
+  if (!alreadyLoaded) {
+    await workerPage.setViewportSize({ width: probe.width, height: probe.height });
+    // `load` fires after all blocking scripts finish executing, which is the
+    // earliest reliable point at which the inline timeline-registration
+    // script has run. networkidle is more conservative but adds dead-time
+    // on file:// (no real network); domcontentloaded fires too early under
+    // multi-context contention (gsap.min.js + modules/all.js are blocking
+    // but still in flight). 30s timeout covers cold-start of N parallel navs.
+    await workerPage.goto(fileUrl, { waitUntil: "load", timeout: 30000 });
+    // Defensive: belt-and-braces waitForFunction in case any comp registers
+    // its timeline asynchronously (shouldn't happen with current authoring,
+    // but cheap insurance). The 30s timeout matches the goto budget.
+    // Predicate returns a boolean primitive — NOT the timeline object —
+    // because Playwright serializes the result back to Node, and GSAP's
+    // timeline contains circular refs + DOM nodes that hang serialization.
+    // (Verified by toggling between `!!window.__timelines[key]` and the
+    // raw `window.__timelines[key]`: only the boolean form returns.)
+    await workerPage.waitForFunction(
+      (key) => !!(window.__timelines && window.__timelines[key]),
+      tlKey,
+      { timeout: 30000 },
+    );
+    // Lock the timeline before the standalone-autoplay setTimeout fires.
+    // The frame loop also pauses+seeks per frame, so this is belt-and-braces.
+    await workerPage.evaluate((key) => {
       const tl = window.__timelines && window.__timelines[key];
-      if (tl) {
-        tl.pause();
-        tl.time(time);
-      }
-      // Eval the visibility function in the page context.
-      // eslint-disable-next-line no-new-func
-      const fn = new Function(`return ${applyVisFnSrc}`)();
-      fn(time);
-    },
-    { key: tlKey, time: t, applyVisFnSrc: APPLY_CLIP_VIS_FN },
+      if (tl) { tl.pause(); tl.time(0); }
+    }, tlKey);
+  }
+  // Pause CSS animations + zero out transitions. Without this, wall-clock-
+  // driven keyframe animations (e.g. .fx-typeon-cursor blink, glitter loops)
+  // sample at different phases per worker, producing non-deterministic pixel
+  // diffs at the same `t`. Same trick scripts/smoke.mjs uses for baseline-
+  // stable screenshots — applying it here makes single- vs multi-worker
+  // output byte-comparable per frame. Worker 0 (the probe page) also gets
+  // this treatment so single-worker runs match multi-worker runs exactly.
+  await workerPage.addStyleTag({
+    content: `*, *::before, *::after {
+      animation-play-state: paused !important;
+      transition-duration: 0s !important;
+    }`,
+  });
+  // Inject applyClipVis once per page — saves one eval-string roundtrip per
+  // frame compared to passing the function source through page.evaluate.
+  await workerPage.evaluate(
+    `window.__applyClipVis = ${APPLY_CLIP_VIS_FN};`,
   );
+}
 
-  const framePath = path.join(tmpDir, `frame-${String(i).padStart(6, "0")}.png`);
-  await page.screenshot({ path: framePath, type: "png", fullPage: false });
-
-  const now = Date.now();
-  if (now - progressLastLog > 1500 || i === totalFrames - 1) {
-    const pct = (((i + 1) / totalFrames) * 100).toFixed(1);
-    const elapsed = (now - captureStart) / 1000;
-    const fpsActual = (i + 1) / elapsed;
-    process.stdout.write(`  capture: ${i + 1}/${totalFrames} (${pct}%)  ${fpsActual.toFixed(1)} fps\r`);
-    progressLastLog = now;
+// One worker = one page; captures every frame in [start, end). Increments
+// the shared framesDone counter after each screenshot. Throws on any page
+// error so Promise.all can short-circuit the whole pool.
+async function runWorker(workerPage, range) {
+  for (let i = range.start; i < range.end; i++) {
+    const t = i / fps;
+    await workerPage.evaluate(
+      ({ key, time }) => {
+        const tl = window.__timelines && window.__timelines[key];
+        if (tl) {
+          tl.pause();
+          tl.time(time);
+        }
+        // applyClipVis was installed once at preparePage time.
+        if (typeof window.__applyClipVis === "function") {
+          window.__applyClipVis(time);
+        }
+      },
+      { key: tlKey, time: t },
+    );
+    const framePath = path.join(tmpDir, `frame-${String(i).padStart(6, "0")}.png`);
+    await workerPage.screenshot({ path: framePath, type: "png", fullPage: false });
+    framesDone++;
   }
 }
-process.stdout.write("\n");
 
-const captureSecs = ((Date.now() - captureStart) / 1000).toFixed(1);
-console.log(`✓ frames captured (${captureSecs}s)`);
+// Build N pages: worker 0 reuses the already-navigated probe page; workers
+// 1..N-1 each get a fresh context+page. All extra navs run in parallel so
+// the total setup cost is roughly max(prep_per_page).
+const workerPages = [page];
+const workerContexts = [null]; // probe context owned by main flow
+
+const extraSetupStart = Date.now();
+const extraSetupPromises = [preparePage(page, true).then(() => null)];
+for (let k = 1; k < ranges.length; k++) {
+  const idx = k;
+  extraSetupPromises.push((async () => {
+    const ctx = await browser.newContext({ viewport: { width: probe.width, height: probe.height } });
+    const p = await ctx.newPage();
+    p.on("pageerror", (err) => consoleErrors.push(`[w${idx}] ${err.message}`));
+    p.on("console", (msg) => {
+      if (msg.type() === "error") consoleErrors.push(`[w${idx}] ${msg.text()}`);
+    });
+    await preparePage(p, false);
+    return { ctx, page: p };
+  })());
+}
+
+const setupResults = await Promise.all(extraSetupPromises);
+// setupResults[0] is null (worker 0 prep already complete); slots 1..N are {ctx,page}.
+for (let k = 1; k < setupResults.length; k++) {
+  workerPages.push(setupResults[k].page);
+  workerContexts.push(setupResults[k].ctx);
+}
+const extraSetupSecs = ((Date.now() - extraSetupStart) / 1000).toFixed(2);
+if (ranges.length > 1) {
+  console.log(`  ${ranges.length - 1} extra context${ranges.length === 2 ? "" : "s"} ready (${extraSetupSecs}s)`);
+}
+
+// Fan out. Promise.all rejects on first failure; we still want to clean up
+// the temp dir even if a worker errors, so wrap in try/finally.
+let captureSecs;
+try {
+  await Promise.all(ranges.map((r, idx) => runWorker(workerPages[idx], r)));
+  process.stdout.write("\n");
+  captureSecs = ((Date.now() - captureStart) / 1000).toFixed(1);
+  const totalElapsed = parseFloat(captureSecs);
+  const aggFps = totalElapsed > 0 ? (framesDone / totalElapsed).toFixed(1) : "—";
+  console.log(`✓ frames captured (${captureSecs}s · ${aggFps} fps aggregate across ${ranges.length} worker${ranges.length === 1 ? "" : "s"})`);
+} catch (err) {
+  process.stdout.write("\n");
+  clearInterval(progressTimer);
+  console.error(`✗ worker error: ${err.message}`);
+  // Clean up: close any extra contexts, kill the browser, drop the frame
+  // tmpdir, then bail. A partial frame set is useless to ffmpeg.
+  for (let k = 1; k < workerContexts.length; k++) {
+    if (workerContexts[k]) {
+      try { await workerContexts[k].close(); } catch { /* best effort */ }
+    }
+  }
+  try { await browser.close(); } catch { /* best effort */ }
+  try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch { /* best effort */ }
+  process.exit(1);
+} finally {
+  clearInterval(progressTimer);
+}
+
+// Close extra worker contexts in parallel before the browser teardown — the
+// probe context is closed implicitly by browser.close().
+const closeTasks = [];
+for (let k = 1; k < workerContexts.length; k++) {
+  if (workerContexts[k]) closeTasks.push(workerContexts[k].close().catch(() => {}));
+}
+if (closeTasks.length) await Promise.all(closeTasks);
 
 await browser.close();
 
