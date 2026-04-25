@@ -136,6 +136,8 @@ const REF_PATTERNS = [
   // import "..." / import x from "..."
   /\bimport\s+(?:[^"';]+\s+from\s+)?["']([^"']+)["']/g,
   /\bimport\(\s*["']([^"']+)["']\s*\)/g,
+  // fetch("...") — runtime JSON/text loads (e.g., ampBind reading amp/*.json)
+  /\bfetch\(\s*["']([^"']+)["']\s*[,)]/g,
 ];
 
 function extractRefs(text) {
