@@ -171,27 +171,90 @@ multi-pass compositing). Always uses the bundled ffmpeg via
 - File delta: `scripts/render-vite.mjs` +169 lines (header docs +
   `runWorker` rewrite + per-worker CDP plumbing), no new dependencies.
 
-## Phase 6 — perf (DEFERRED until a real opt-in comp justifies it)
+## Phase 6 — perf (DONE — scaffold, experimental)
 
-- **Strategy B: raw-RGBA pipe to ffmpeg stdin**. The brief's preferred
-  path: comps opt in by authoring a fullscreen `<canvas data-render-canvas>`
-  element that mirrors the visible composition. Each frame, the worker
-  reads `canvas.getContext("2d").getImageData(0, 0, W, H).data`
-  (Uint8ClampedArray of RGBA bytes) and writes the buffer directly to a
-  single ffmpeg's stdin: `-f rawvideo -pixel_format rgba -video_size WxH
-  -framerate FPS -i pipe:0`. Skips both the JPEG/PNG encode pass AND the
-  disk-write pass — the bytes go GPU → JS → ffmpeg in one hop.
-  - Why deferred: every existing comp DOM-composites (text + overlays +
-    sub-comps + shaders), not canvas-paints. Implementing the raw-RGBA
-    pipe before any comp opts in produces unrun code. The Phase 6 work is
-    cheap to add when the first canvas-backed comp lands — the CDP session
-    plumbing from Phase 5 is reusable.
-  - Concurrency: a single stdin pipe is sequential. Either single-worker
-    only, or N parallel ffmpegs writing tile mp4s + a final concat pass
-    (already prototyped in the brief).
-- Optional GPU encode: `-c:v h264_nvenc -preset p4 -cq 19` on NVIDIA hosts.
-  Speeds up the *encode* pass (currently ~11s of a 89s run on kindred-recut
-  with JPEG) — bigger relative win now that capture is saturated.
+- **Strategy B: raw-RGBA pipe to ffmpeg stdin**. Comp opts in by adding
+  `data-render-canvas` to a fullscreen `<canvas>` element whose pixel
+  dimensions match the comp's `data-width`/`data-height`. The renderer
+  detects the attribute during the probe pass and switches to a different
+  capture path:
+  1. ffmpeg is spawned **before** the capture loop with
+     `-f rawvideo -pixel_format rgba -video_size WxH -framerate FPS -i pipe:0`,
+     reading from stdin instead of an image-sequence demuxer. The encode
+     args (libx264 crf 18 preset slow yuv420p) match every other phase
+     bit-for-bit.
+  2. For each frame, the worker calls `tl.pause(); tl.time(t); applyClipVis(t)`
+     (same as Phase 5), then `evaluate(() => { canvas.getContext("2d")
+     .getImageData(0, 0, w, h); btoa(...); })` to read RGBA bytes and
+     base64-encode them in-page. The base64 hop is the cheapest portable
+     way to round-trip a Uint8ClampedArray through Playwright's CDP wire
+     (a quoted-array JSON would be ~3-4× larger; raw binary needs custom
+     CDP plumbing).
+  3. `Buffer.from(b64, "base64")` decodes in Node, then `ffmpegStdin.write(buf)`
+     pushes bytes downstream. `write()` returning `false` triggers an
+     `await once("drain")` so the V8 heap stays bounded on long renders.
+  4. After the loop, `ffmpegStdin.end()` signals EOF; we `await rawRgbaExit`
+     for libx264 to finish flushing the moov atom.
+- **Single-worker only.** Multi-worker into one stdin needs N intermediate
+  raw segments + concat (or N stdin pipes via `pipe:N`). Both are cheap to
+  wire when a real comp benefits — the scaffold doesn't speculate on a
+  pattern we have no consumer for. `--workers=N` is silently clamped to 1
+  with a warning when `--frame-format=raw-rgba` is set.
+- **Comp-author opt-in shape.** A canvas-backed comp looks like:
+  ```html
+  <div id="root" class="clip" data-composition-id="my-comp"
+       data-width="1280" data-height="720" data-start="0" data-duration="2">
+    <canvas data-render-canvas width="1280" height="720"></canvas>
+  </div>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    window.__timelines["my-comp"] = tl;
+    const ctx = document.querySelector("[data-render-canvas]").getContext("2d");
+    function redraw() { /* paint canvas using state.* */ }
+    tl.to(state, { /* animate */, onUpdate: redraw }, 0);
+    redraw();
+  </script>
+  ```
+  The canvas's `width`/`height` attributes (the pixel dims, not the CSS
+  size) **must** match `data-width`/`data-height` on the root, or ffmpeg's
+  `-video_size` won't line up with the byte stream and the renderer aborts.
+- **Error path.** Running `--frame-format=raw-rgba` against a comp without
+  `[data-render-canvas]` prints a clear multi-line message pointing at the
+  fix, deletes the spawned browser, and exits non-zero. The default
+  (`--frame-format=jpeg`) and `--frame-format=png` paths are untouched.
+- **Determinism + visual verification.** Synthetic test comp
+  (`compositions/__test__/raw-rgba-test.html`, deleted after verification):
+  fullscreen `<canvas data-render-canvas width="1280" height="720">` with a
+  GSAP-driven moving square + hue-cycling background. Rendered twice via
+  `--frame-format=raw-rgba --no-audio`; the two output mp4s had matching
+  md5 hashes (`2d6629e3...`) and ffmpeg's SSIM filter reported `All:1.000000
+  (inf)` — bit-identical, far above the 0.999 acceptance bar. The mp4
+  played cleanly via ffprobe (h264, yuv420p, 1280×720, 30fps, 2.00s).
+- **Wall-clock.** Not measured against a real comp because no real comp
+  authors a canvas mirror. The synthetic 60-frame test ran in ~6s
+  end-to-end; meaningful speedup numbers will land when a production comp
+  opts in.
+- **Constraints honored.** Phase 5 default (`--frame-format=jpeg`) is
+  byte-for-byte unchanged (`text-fx-demo.html` regression-rendered to
+  identical mp4 size + console output). `--frame-format=png` continues
+  working. Phase 1–4 audio mux + parallel workers + `--no-audio` paths
+  all preserved. No new npm dependencies.
+- **File delta:** `scripts/render-vite.mjs` +~270 lines (header docs +
+  arg validation + probe canvas detection + early ffmpeg spawn block +
+  `runWorkerRawRgba` + dispatch branch + cleanup conditional), no new
+  dependencies.
+
+## Phase 7 — future (parked)
+
+- **Multi-worker raw-rgba.** Two viable shapes: (a) N parallel ffmpegs
+  each writing a tile mp4, then a `concat` demuxer pass; or (b) a single
+  ffmpeg with N stdin pipes via `pipe:N` and a `concat` filter graph.
+  (a) is simpler and reuses Phase 1's "two ffmpegs in series" pattern.
+  Worth wiring once a comp benefits.
+- **GPU encode.** `-c:v h264_nvenc -preset p4 -cq 19` on NVIDIA hosts.
+  Speeds up the *encode* pass (~11s of a 89s kindred-recut JPEG run);
+  orthogonal to the capture-side wins above.
 
 ## Out of scope
 

@@ -1,6 +1,7 @@
-// Custom renderer (Phase 1 + 2 + 3 + 4 + 5) — Playwright frame capture + ffmpeg
-// encode + audio mux + parallel BrowserContext worker pool + JPEG intermediate
-// + CDP-direct screenshots with pipelined disk writes.
+// Custom renderer (Phase 1 + 2 + 3 + 4 + 5 + 6) — Playwright frame capture +
+// ffmpeg encode + audio mux + parallel BrowserContext worker pool + JPEG
+// intermediate + CDP-direct screenshots with pipelined disk writes + opt-in
+// raw-RGBA stdin pipe (experimental, Phase 6 scaffold).
 //
 // Why this exists alongside `npx hyperframes render`:
 //   The vendor renderer is a black box. This script is an in-repo proof of
@@ -52,11 +53,30 @@
 //     same Chromium HeadlessFrameSink so the JPEG/PNG bytes match exactly
 //     (verified: SSIM 1.000 on frames 30/60/120 between Phase 4 and Phase 5).
 //     Strategy B (raw RGBA pipe to ffmpeg stdin via [data-render-canvas]
-//     opt-in) is deferred to Phase 6 — it requires comp authoring changes,
-//     whereas the CDP path works for every existing comp transparently.
+//     opt-in) shipped in Phase 6 (below) — but only as a scaffold, since no
+//     existing comp authors a `<canvas data-render-canvas>` mirror to read
+//     pixels from. The CDP path remains the default for every comp.
+//   Phase 6 scope (SCAFFOLD — experimental): `--frame-format=raw-rgba` opt-in.
+//     Skips both the encode-intermediate AND the disk-write hops by piping
+//     raw RGBA byte buffers straight to ffmpeg's stdin (`-f rawvideo
+//     -pixel_format rgba -video_size WxH -framerate FPS -i pipe:0`). Per-
+//     frame pixels are read via `canvas.getContext("2d").getImageData(...)`
+//     from a comp-authored `[data-render-canvas]` element and serialized
+//     through CDP as a base64 string → Buffer → ffmpeg stdin in order.
+//     Fundamental requirement: the comp must paint its final visual into a
+//     fullscreen `<canvas data-render-canvas>` because Playwright/CDP can't
+//     read the DOM-composited Chromium framebuffer as raw pixels without
+//     going through PNG encode (which would reverse the savings). Most
+//     comps today DOM-composite, so this path errors with a clear message
+//     unless the comp opts in. Single-worker only — multi-worker into one
+//     stdin pipe needs N intermediate raw segments + concat, which we'll
+//     wire when a real comp justifies it. Determinism: same comp + same
+//     flag → same bytes (verified via SSIM 1.000 on a synthetic canvas
+//     comp render-twice). Speedup deferred until a real comp benefits;
+//     the scaffold lays the groundwork.
 //
 // Usage:
-//   node scripts/render-vite.mjs <composition-path> [--out <mp4-path>] [--fps 30] [--no-audio] [--workers=N] [--frame-format=jpeg|png]
+//   node scripts/render-vite.mjs <composition-path> [--out <mp4-path>] [--fps 30] [--no-audio] [--workers=N] [--frame-format=jpeg|png|raw-rgba]
 //
 // Examples:
 //   node scripts/render-vite.mjs compositions/text-fx-demo.html
@@ -65,6 +85,7 @@
 //   node scripts/render-vite.mjs compositions/text-fx-demo.html --workers=6
 //   node scripts/render-vite.mjs compositions/text-fx-demo.html --workers=1   # debug / low-mem
 //   node scripts/render-vite.mjs compositions/text-fx-demo.html --frame-format=png  # lossless intermediate
+//   node scripts/render-vite.mjs compositions/canvas-comp.html --frame-format=raw-rgba  # experimental, requires [data-render-canvas]
 //   node scripts/render-vite.mjs compositions/kindred-production-30s.html --no-audio
 //
 // Output:
@@ -118,7 +139,7 @@ for (let i = 0; i < argv.length; i++) {
 
 const compArg = positional[0];
 if (!compArg) {
-  console.error("usage: node scripts/render-vite.mjs <composition-path> [--out <mp4>] [--fps 30] [--no-audio] [--workers=N] [--frame-format=jpeg|png]");
+  console.error("usage: node scripts/render-vite.mjs <composition-path> [--out <mp4>] [--fps 30] [--no-audio] [--workers=N] [--frame-format=jpeg|png|raw-rgba]");
   process.exit(2);
 }
 
@@ -130,7 +151,12 @@ const skipAudio = flags["no-audio"] === true || flags["no-audio"] === "true";
 // encode than png and roughly halves disk bytes; libx264 decodes both
 // losslessly to YUV at the encode step so the *final* mp4 codec settings are
 // unchanged (still libx264 crf 18 preset slow). PNG is preserved as an opt-
-// out for archival/lossless paranoia.
+// out for archival/lossless paranoia. raw-rgba (Phase 6, experimental) skips
+// the per-frame encode AND disk-write entirely and pipes raw pixel bytes to
+// ffmpeg's stdin — but requires the comp to author a fullscreen
+// `<canvas data-render-canvas>` mirror because we have to read pixels via
+// the Canvas2D API; reading them from the DOM-composited framebuffer would
+// require a PNG round-trip that defeats the optimization.
 const FRAME_FORMAT_DEFAULT = "jpeg";
 // JPEG q=95 chosen empirically:
 //   - Frames 30/60 of kindred-recut: SSIM ≥0.998 (passes the 0.997 target).
@@ -147,10 +173,14 @@ const FRAME_FORMAT_DEFAULT = "jpeg";
 const JPEG_QUALITY = 95;
 let frameFormat = (flags["frame-format"] !== undefined ? String(flags["frame-format"]) : FRAME_FORMAT_DEFAULT).toLowerCase();
 if (frameFormat === "jpg") frameFormat = "jpeg";
-if (frameFormat !== "jpeg" && frameFormat !== "png") {
-  console.error(`invalid --frame-format: ${flags["frame-format"]} (expected jpeg or png)`);
+if (frameFormat === "rgba" || frameFormat === "rawrgba" || frameFormat === "raw") frameFormat = "raw-rgba";
+if (frameFormat !== "jpeg" && frameFormat !== "png" && frameFormat !== "raw-rgba") {
+  console.error(`invalid --frame-format: ${flags["frame-format"]} (expected jpeg, png, or raw-rgba)`);
   process.exit(2);
 }
+// raw-rgba (Phase 6 scaffold) bypasses the per-frame disk path entirely; the
+// frameExt is unused in that branch. jpeg → jpg, png → png otherwise.
+const isRawRgba = frameFormat === "raw-rgba";
 const frameExt = frameFormat === "jpeg" ? "jpg" : "png";
 
 const compPath = path.resolve(projectRoot, compArg);
@@ -191,6 +221,15 @@ if (workers > maxWorkersByMem) {
     `total RAM ${(totalMemMb / 1024).toFixed(1)} GiB → reducing to ${maxWorkersByMem}`,
   );
   workers = maxWorkersByMem;
+}
+// Phase 6: raw-rgba pipes a single ordered byte stream into ffmpeg's stdin.
+// Multi-worker into one stdin requires either N intermediate raw segments +
+// concat or N stdin pipes via `pipe:N` — both non-trivial, neither worth
+// wiring until a real comp benefits. Force single-worker for the scaffold
+// and warn if the caller asked for more.
+if (isRawRgba && workers > 1) {
+  console.warn(`  ⚠ --frame-format=raw-rgba is single-worker only (scaffold); ignoring --workers=${workers}`);
+  workers = 1;
 }
 
 const compBase = path.basename(compPath, path.extname(compPath));
@@ -234,8 +273,11 @@ const APPLY_CLIP_VIS_FN = `(t) => {
 // --- main -----------------------------------------------------------------
 
 const t0 = Date.now();
-const fmtTag = frameFormat === "jpeg" ? `jpeg q=${JPEG_QUALITY}` : "png";
-console.log(`▶ render-vite: ${path.relative(projectRoot, compPath)} @ ${fps}fps · frames=${fmtTag} · capture=cdp+pipelined`);
+const fmtTag = isRawRgba
+  ? "raw-rgba (experimental)"
+  : (frameFormat === "jpeg" ? `jpeg q=${JPEG_QUALITY}` : "png");
+const captureTag = isRawRgba ? "canvas-getImageData → ffmpeg stdin" : "cdp+pipelined";
+console.log(`▶ render-vite: ${path.relative(projectRoot, compPath)} @ ${fps}fps · frames=${fmtTag} · capture=${captureTag}`);
 
 // Load the composition in headless Chromium via file:// URL.
 const fileUrl = pathToFileURL(compPath).href;
@@ -253,13 +295,15 @@ page.on("console", (msg) => {
 
 await page.goto(fileUrl, { waitUntil: "networkidle", timeout: 30000 });
 
-// Probe for dimensions, duration, timeline key.
+// Probe for dimensions, duration, timeline key. Also detect the optional
+// [data-render-canvas] element used by the Phase 6 raw-RGBA pipe path.
 const probe = await page.evaluate(() => {
   const root = document.querySelector("[data-composition-id]");
   if (!root) return { ok: false, reason: "no [data-composition-id] root" };
   const tlKey = window.__timelines ? Object.keys(window.__timelines)[0] : null;
   const tl = tlKey ? window.__timelines[tlKey] : null;
   const dataDuration = parseFloat(root.dataset.duration);
+  const renderCanvas = document.querySelector("[data-render-canvas]");
   return {
     ok: true,
     tlKey,
@@ -268,6 +312,10 @@ const probe = await page.evaluate(() => {
     dataDuration: Number.isFinite(dataDuration) ? dataDuration : null,
     tlDuration: tl && typeof tl.duration === "function" ? tl.duration() : null,
     tlChildren: tl && typeof tl.getChildren === "function" ? tl.getChildren().length : 0,
+    hasRenderCanvas: !!renderCanvas,
+    renderCanvasTag: renderCanvas ? renderCanvas.tagName.toLowerCase() : null,
+    renderCanvasWidth: renderCanvas ? renderCanvas.width || null : null,
+    renderCanvasHeight: renderCanvas ? renderCanvas.height || null : null,
   };
 });
 
@@ -296,6 +344,41 @@ if (!duration || duration <= 0) {
 
 console.log(`  comp:     ${probe.tlKey}  ${probe.width}×${probe.height}  ${duration.toFixed(2)}s`);
 console.log(`  timeline: ${probe.tlChildren} tweens`);
+
+// Phase 6: --frame-format=raw-rgba is gated on the comp authoring a fullscreen
+// `<canvas data-render-canvas>` element — without one, there's nothing to read
+// raw pixels from (Chromium's DOM-composited framebuffer requires a PNG/JPEG
+// round-trip via CDP `Page.captureScreenshot` to extract, which would defeat
+// the entire optimization). Fail fast with a clear error pointing at the fix.
+if (isRawRgba) {
+  if (!probe.hasRenderCanvas) {
+    console.error("");
+    console.error(`✗ --frame-format=raw-rgba requires a [data-render-canvas] element in the composition.`);
+    console.error(`  This is an experimental opt-in path: the comp must paint its final visual into a`);
+    console.error(`  fullscreen <canvas data-render-canvas width="${probe.width}" height="${probe.height}">`);
+    console.error(`  so the renderer can read raw RGBA pixels via getImageData() and pipe them straight`);
+    console.error(`  to ffmpeg's stdin. Most comps DOM-composite — for those, use --frame-format=jpeg`);
+    console.error(`  (default) or --frame-format=png. See docs/render-vite-roadmap.md Phase 6.`);
+    console.error("");
+    await browser.close();
+    process.exit(1);
+  }
+  if (probe.renderCanvasTag !== "canvas") {
+    console.error(`✗ --frame-format=raw-rgba: [data-render-canvas] must be on a <canvas> element (found <${probe.renderCanvasTag}>)`);
+    await browser.close();
+    process.exit(1);
+  }
+  // Canvas pixel dimensions must match the comp's reported size — otherwise
+  // ffmpeg's `-video_size` flag won't match the byte stream and we get
+  // sheared/corrupted output. Authors must set width/height attrs on the
+  // canvas to match data-width/data-height on the root.
+  if (probe.renderCanvasWidth !== probe.width || probe.renderCanvasHeight !== probe.height) {
+    console.error(`✗ --frame-format=raw-rgba: canvas dimensions (${probe.renderCanvasWidth}×${probe.renderCanvasHeight}) must match comp dimensions (${probe.width}×${probe.height})`);
+    await browser.close();
+    process.exit(1);
+  }
+  console.log(`  raw-rgba: experimental — canvas ${probe.renderCanvasWidth}×${probe.renderCanvasHeight}, single-worker pipe to ffmpeg stdin`);
+}
 
 // --- audio scan ---------------------------------------------------------
 //
@@ -373,9 +456,67 @@ await page.setViewportSize({ width: probe.width, height: probe.height });
 const totalFrames = Math.ceil(duration * fps);
 console.log(`  frames:   ${totalFrames}  (≈${(totalFrames / fps).toFixed(2)}s wall-clock minimum)`);
 
-// PNG temp dir — keep it inside renders/ so it shares a volume with the
-// final output (faster ffmpeg input, easier cleanup if interrupted).
-const tmpDir = fs.mkdtempSync(path.join(rendersDir, ".vite-frames-"));
+// Decide the encoder output target up front so the raw-rgba path can spawn
+// ffmpeg before the capture loop starts. Whether we mux audio later doesn't
+// change the *first* libx264 output — when audio exists, libx264 writes a
+// .video.mp4 sidecar that the mux pass `-c:v copy`s to outPath.
+const willMux = !skipAudio && audioTracks.length > 0;
+const videoOnlyPath = willMux
+  ? path.join(path.dirname(outPath), `${path.basename(outPath, path.extname(outPath))}.video.mp4`)
+  : outPath;
+
+// PNG/JPG temp dir — keep it inside renders/ so it shares a volume with the
+// final output (faster ffmpeg input, easier cleanup if interrupted). Skipped
+// for raw-rgba (no per-frame files; bytes go straight to ffmpeg stdin).
+const tmpDir = isRawRgba ? null : fs.mkdtempSync(path.join(rendersDir, ".vite-frames-"));
+
+// Phase 6: spawn ffmpeg up front for raw-rgba so the capture loop has a stdin
+// to write into. Single ffmpeg process consumes a contiguous RGBA byte stream
+// (W*H*4 bytes per frame, exactly `totalFrames` frames in order) and emits
+// libx264 mp4 with the same crf 18 / preset slow / yuv420p settings as every
+// other path. We hold a reference to its exit promise so cleanup can `await`
+// it after stdin.end(). Spawn lazily — non-raw-rgba never touches ffmpegBin
+// until the standard encode block below.
+let rawRgbaProc = null;
+let rawRgbaExit = null;
+let rawRgbaStderrBuf = "";
+if (isRawRgba) {
+  const ffmpegBinEarly = await getFfmpegPath();
+  // -f rawvideo + -pixel_format rgba + -video_size + -framerate tells ffmpeg
+  // exactly how to demux the byte stream we'll write. -i pipe:0 reads stdin.
+  // Encode args mirror the standard libx264 path (bit-identical settings).
+  const rawArgs = [
+    "-y",
+    "-f", "rawvideo",
+    "-pixel_format", "rgba",
+    "-video_size", `${probe.width}x${probe.height}`,
+    "-framerate", String(fps),
+    "-i", "pipe:0",
+    "-c:v", "libx264",
+    "-pix_fmt", "yuv420p",
+    "-crf", "18",
+    "-preset", "slow",
+    "-movflags", "+faststart",
+    videoOnlyPath,
+  ];
+  console.log(`▶ render-vite: spawning ffmpeg (raw-rgba pipe → ${path.relative(projectRoot, videoOnlyPath)})`);
+  rawRgbaProc = spawn(ffmpegBinEarly, rawArgs, { stdio: ["pipe", "inherit", "pipe"] });
+  rawRgbaProc.stderr.on("data", (chunk) => {
+    rawRgbaStderrBuf += chunk.toString();
+    process.stderr.write(chunk);
+  });
+  rawRgbaExit = new Promise((resolve, reject) => {
+    rawRgbaProc.on("error", reject);
+    rawRgbaProc.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`ffmpeg (raw-rgba) exited ${code}\n${rawRgbaStderrBuf.slice(-2000)}`));
+    });
+  });
+  // EPIPE on stdin happens when ffmpeg dies before we finish writing — convert
+  // the synchronous error to a rejection on rawRgbaExit. Without this handler
+  // Node would crash with an uncaughtException.
+  rawRgbaProc.stdin.on("error", () => { /* swallow; rawRgbaExit will reject */ });
+}
 
 // --- parallel frame capture (Phase 3) -------------------------------------
 //
@@ -556,6 +697,66 @@ async function runWorker(workerPage, cdp, range) {
   if (pendingWrites.length) await Promise.all(pendingWrites);
 }
 
+// Phase 6 raw-rgba worker. Single-worker only (caller forces workers=1) so we
+// can write frames in monotonic order to ffmpeg's stdin — multi-worker would
+// scramble the byte stream. Per-frame steps:
+//   1. evaluate(): seek timeline + applyClipVis (same as the CDP path)
+//   2. evaluate(): look up [data-render-canvas] inside the page, call
+//      getContext("2d").getImageData(0, 0, w, h), and base64-encode the
+//      resulting Uint8ClampedArray. We base64 in-page because Playwright's
+//      JSON serializer expands a Uint8Array as a quoted-array (~3-4 chars
+//      per byte over the CDP wire) which pegs the JSON parser at this size.
+//      base64 is the smallest portable encoding Playwright round-trips
+//      cleanly (~1.33× expansion vs raw bytes).
+//   3. Buffer.from(b64, "base64") in Node mirrors the CDP screenshot path.
+//   4. ffmpegStdin.write(buf) with backpressure: if write() returns false
+//      we await "drain" before queuing the next frame, keeping V8 heap
+//      bounded even on long renders.
+async function runWorkerRawRgba(workerPage, range, ffmpegStdin) {
+  const expectedBytes = probe.width * probe.height * 4;
+  for (let i = range.start; i < range.end; i++) {
+    const t = i / fps;
+    await workerPage.evaluate(
+      ({ key, time }) => {
+        const tl = window.__timelines && window.__timelines[key];
+        if (tl) {
+          tl.pause();
+          tl.time(time);
+        }
+        if (typeof window.__applyClipVis === "function") {
+          window.__applyClipVis(time);
+        }
+      },
+      { key: tlKey, time: t },
+    );
+    const b64 = await workerPage.evaluate(() => {
+      const canvas = document.querySelector("[data-render-canvas]");
+      if (!canvas) throw new Error("[data-render-canvas] disappeared mid-render");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("getContext('2d') returned null on [data-render-canvas]");
+      const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      // String.fromCharCode.apply blows the call stack on large arrays; chunk
+      // into 0x8000-byte slices before btoa.
+      let bin = "";
+      const data = img.data;
+      const chunk = 0x8000;
+      for (let off = 0; off < data.length; off += chunk) {
+        bin += String.fromCharCode.apply(null, data.subarray(off, off + chunk));
+      }
+      return btoa(bin);
+    });
+    const buf = Buffer.from(b64, "base64");
+    if (buf.length !== expectedBytes) {
+      throw new Error(`raw-rgba frame ${i}: got ${buf.length} bytes, expected ${expectedBytes} (W*H*4)`);
+    }
+    const ok = ffmpegStdin.write(buf);
+    if (!ok) {
+      await new Promise((resolve) => ffmpegStdin.once("drain", resolve));
+    }
+    framesDone++;
+  }
+}
+
 // Build N pages: worker 0 reuses the already-navigated probe page; workers
 // 1..N-1 each get a fresh context+page. All extra navs run in parallel so
 // the total setup cost is roughly max(prep_per_page). Each entry's CDP
@@ -594,28 +795,47 @@ if (ranges.length > 1) {
 }
 
 // Fan out. Promise.all rejects on first failure; we still want to clean up
-// the temp dir even if a worker errors, so wrap in try/finally.
+// the temp dir even if a worker errors, so wrap in try/finally. Raw-rgba
+// uses the single-worker variant + pre-spawned ffmpeg stdin pipe.
 let captureSecs;
 try {
-  await Promise.all(ranges.map((r, idx) => runWorker(workerPages[idx], workerCdps[idx], r)));
+  if (isRawRgba) {
+    // Single-worker only — ranges is guaranteed to have one entry because
+    // we forced workers=1 above. Pipe directly into the pre-spawned ffmpeg.
+    await runWorkerRawRgba(workerPages[0], ranges[0], rawRgbaProc.stdin);
+    // Closing stdin signals EOF to ffmpeg; the close handler resolves
+    // rawRgbaExit when libx264 finishes flushing the moov atom.
+    rawRgbaProc.stdin.end();
+    await rawRgbaExit;
+  } else {
+    await Promise.all(ranges.map((r, idx) => runWorker(workerPages[idx], workerCdps[idx], r)));
+  }
   process.stdout.write("\n");
   captureSecs = ((Date.now() - captureStart) / 1000).toFixed(1);
   const totalElapsed = parseFloat(captureSecs);
   const aggFps = totalElapsed > 0 ? (framesDone / totalElapsed).toFixed(1) : "—";
-  console.log(`✓ frames captured (${captureSecs}s · ${aggFps} fps aggregate across ${ranges.length} worker${ranges.length === 1 ? "" : "s"})`);
+  const captureLabel = isRawRgba
+    ? `✓ frames captured + encoded (${captureSecs}s · ${aggFps} fps · raw-rgba pipe)`
+    : `✓ frames captured (${captureSecs}s · ${aggFps} fps aggregate across ${ranges.length} worker${ranges.length === 1 ? "" : "s"})`;
+  console.log(captureLabel);
 } catch (err) {
   process.stdout.write("\n");
   clearInterval(progressTimer);
   console.error(`✗ worker error: ${err.message}`);
-  // Clean up: close any extra contexts, kill the browser, drop the frame
-  // tmpdir, then bail. A partial frame set is useless to ffmpeg.
+  // Clean up: kill any in-flight raw-rgba ffmpeg, close extra contexts,
+  // drop the frame tmpdir (if any), then bail.
+  if (rawRgbaProc && rawRgbaProc.exitCode === null) {
+    try { rawRgbaProc.kill("SIGKILL"); } catch { /* best effort */ }
+  }
   for (let k = 1; k < workerContexts.length; k++) {
     if (workerContexts[k]) {
       try { await workerContexts[k].close(); } catch { /* best effort */ }
     }
   }
   try { await browser.close(); } catch { /* best effort */ }
-  try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch { /* best effort */ }
+  if (tmpDir) {
+    try { fs.rmSync(tmpDir, { recursive: true, force: true }); } catch { /* best effort */ }
+  }
   process.exit(1);
 } finally {
   clearInterval(progressTimer);
@@ -637,49 +857,47 @@ if (consoleErrors.length) {
 }
 
 // --- encode ---------------------------------------------------------------
+//
+// Phase 6 raw-rgba: ffmpeg already consumed the byte stream from stdin during
+// the capture loop and produced videoOnlyPath. Skip the image-sequence encode
+// pass entirely. willMux/videoOnlyPath were lifted to before the capture loop
+// so the raw-rgba ffmpeg spawn could write to the same target.
 
 const ffmpegBin = await getFfmpegPath();
 
-// Decide whether we'll do a mux pass. If yes, libx264 writes to a temp
-// .video.mp4 and the mux pass `-c:v copy`s it to the final outPath. If no,
-// libx264 writes directly to outPath (preserving the Phase 1 path bit-for-
-// bit when no audio is desired).
-const willMux = !skipAudio && audioTracks.length > 0;
-const videoOnlyPath = willMux
-  ? path.join(path.dirname(outPath), `${path.basename(outPath, path.extname(outPath))}.video.mp4`)
-  : outPath;
+if (!isRawRgba) {
+  const encodeStart = Date.now();
+  console.log(`▶ render-vite: encoding video → ${path.relative(projectRoot, videoOnlyPath)}`);
 
-const encodeStart = Date.now();
-console.log(`▶ render-vite: encoding video → ${path.relative(projectRoot, videoOnlyPath)}`);
+  // libx264's image-sequence demuxer accepts both .png and .jpg via the same
+  // `-i frame-%06d.<ext>` glob — the codec is detected from the file header,
+  // not the extension, so the only thing that changes between png and jpeg
+  // runs is the path glob. The libx264 encode itself is unchanged: still
+  // crf 18, preset slow, yuv420p — bit-identical settings as Phase 1/2/3.
+  const ffmpegArgs = [
+    "-y",
+    "-framerate", String(fps),
+    "-i", path.join(tmpDir, `frame-%06d.${frameExt}`),
+    "-c:v", "libx264",
+    "-pix_fmt", "yuv420p",
+    "-crf", "18",
+    "-preset", "slow",
+    "-movflags", "+faststart",
+    videoOnlyPath,
+  ];
 
-// libx264's image-sequence demuxer accepts both .png and .jpg via the same
-// `-i frame-%06d.<ext>` glob — the codec is detected from the file header,
-// not the extension, so the only thing that changes between png and jpeg
-// runs is the path glob. The libx264 encode itself is unchanged: still
-// crf 18, preset slow, yuv420p — bit-identical settings as Phase 1/2/3.
-const ffmpegArgs = [
-  "-y",
-  "-framerate", String(fps),
-  "-i", path.join(tmpDir, `frame-%06d.${frameExt}`),
-  "-c:v", "libx264",
-  "-pix_fmt", "yuv420p",
-  "-crf", "18",
-  "-preset", "slow",
-  "-movflags", "+faststart",
-  videoOnlyPath,
-];
+  try {
+    await spawnAsync(ffmpegBin, ffmpegArgs);
+  } catch (err) {
+    console.error(`✗ ffmpeg failed: ${err.message}`);
+    // Leave temp frames in place for debugging on failure.
+    console.error(`  temp frames preserved at: ${tmpDir}`);
+    process.exit(1);
+  }
 
-try {
-  await spawnAsync(ffmpegBin, ffmpegArgs);
-} catch (err) {
-  console.error(`✗ ffmpeg failed: ${err.message}`);
-  // Leave temp frames in place for debugging on failure.
-  console.error(`  temp frames preserved at: ${tmpDir}`);
-  process.exit(1);
+  const encodeSecs = ((Date.now() - encodeStart) / 1000).toFixed(1);
+  console.log(`✓ video encoded (${encodeSecs}s)`);
 }
-
-const encodeSecs = ((Date.now() - encodeStart) / 1000).toFixed(1);
-console.log(`✓ video encoded (${encodeSecs}s)`);
 
 // --- mux audio ------------------------------------------------------------
 //
@@ -823,10 +1041,12 @@ if (willMux) {
 
 // --- cleanup --------------------------------------------------------------
 
-try {
-  fs.rmSync(tmpDir, { recursive: true, force: true });
-} catch (err) {
-  console.warn(`  cleanup warning: ${err.message} (temp dir: ${tmpDir})`);
+if (tmpDir) {
+  try {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  } catch (err) {
+    console.warn(`  cleanup warning: ${err.message} (temp dir: ${tmpDir})`);
+  }
 }
 
 const outStat = fs.statSync(outPath);
