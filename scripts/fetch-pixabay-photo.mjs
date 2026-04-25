@@ -11,6 +11,7 @@ import { chromium } from "playwright";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cachePut, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -53,6 +54,18 @@ const orientationParam = opts.orientation ? `?orientation=${opts.orientation}` :
 const searchUrl = `https://pixabay.com/images/search/${encodeURIComponent(opts.term)}/${orientationParam}`;
 console.log(`[fetch] Search: ${searchUrl}`);
 console.log(`[fetch] Out:    ${outPath}`);
+
+// Cache lookup keyed on the user-facing intent (search URL + index). Same
+// command twice ⇒ second run skips Playwright entirely.
+const intentKey = cacheKey(`${searchUrl}#index=${opts.index}`);
+const hit = await cacheGet(intentKey);
+if (hit) {
+  fs.copyFileSync(hit, outPath);
+  const stats = fs.statSync(outPath);
+  console.log(`[fetch] cache hit ${intentKey.slice(0, 12)}…`);
+  console.log(`[fetch] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+  process.exit(0);
+}
 
 const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({
@@ -130,6 +143,13 @@ try {
   if (!response.ok()) throw new Error(`HTTP ${response.status()} ${response.statusText()}`);
   const body = await response.body();
   fs.writeFileSync(outPath, body);
+
+  // Cache the bytes content-addressed. Use the file extension we picked for
+  // outPath so OS preview tools recognise the cached file.
+  const ext = path.extname(outPath) || ".jpg";
+  const cachedPath = await cachePut(intentKey, body, ext);
+  console.log(`[fetch] cached at ${path.basename(cachedPath)}`);
+
   const stats = fs.statSync(outPath);
   console.log(`[fetch] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
 } catch (err) {

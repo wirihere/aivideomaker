@@ -12,6 +12,7 @@ import { chromium } from "playwright";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cachePut, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -29,6 +30,16 @@ const startUrl = isDirectUrl
   : `https://pixabay.com/sound-effects/search/${encodeURIComponent(term)}/`;
 console.log(`[sfx] ${isDirectUrl ? "Direct" : "Search"}: ${startUrl}`);
 console.log(`[sfx] Out:    ${outPath}`);
+
+const intentKey = cacheKey(startUrl);
+const hit = await cacheGet(intentKey);
+if (hit) {
+  fs.copyFileSync(hit, outPath);
+  const stats = fs.statSync(outPath);
+  console.log(`[sfx] cache hit ${intentKey.slice(0, 12)}…`);
+  console.log(`[sfx] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+  process.exit(0);
+}
 
 const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({
@@ -118,6 +129,10 @@ try {
   }
   const body = await response.body();
   fs.writeFileSync(outPath, body);
+
+  const cachedPath = await cachePut(intentKey, body, ".mp3");
+  console.log(`[sfx] cached at ${path.basename(cachedPath)}`);
+
   const stats = fs.statSync(outPath);
   console.log(`[sfx] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
 } catch (err) {

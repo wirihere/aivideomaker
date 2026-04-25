@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "hyperframes-preview",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["hyperframes", "preview"],
+      "port": 3002
+    }
+  ]
+}

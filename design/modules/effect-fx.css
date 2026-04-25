@@ -1,0 +1,28 @@
+/* =========================================================================
+   MODULE — EFFECT FX (supporting CSS)
+   =========================================================================
+   Loaded alongside design/modules/effect-fx.js. Most rules required by the
+   recipes already live in design/effects-batch-08.css — this file only adds
+   small bridges that the JS depends on.
+   ========================================================================= */
+
+/* The `transform: rotate(var(--cg-rotation))` rule used by cinemagraphRotate
+   is injected into <head> by the JS on first call (so loading this CSS file
+   is optional for that recipe). It's listed here as well in case you want
+   to set the variable from CSS keyframes instead of via GSAP. */
+.fx-cinemagraph-bg::before {
+  transform: rotate(var(--cg-rotation, 0deg));
+}
+
+/* For inkBleed: the filter URL gets set from JS at the right moment, but
+   the element should reserve the displacement headroom or the bleed pixels
+   clip at the bounding box. Add this class to the bleed target. */
+.fx-bleed-ready {
+  /* Padding that won't add visible space if the parent has overflow:hidden,
+     but gives the displaced glyphs room to escape during the warped frames. */
+  padding: 0.4em 0.6em;
+  margin: -0.4em -0.6em;
+}
+
+/* For glitchBurst: the shake animation lives in design/templates/*.css
+   (template-aware) or design/modules/text-fx.css (baseline). No add'l rules. */

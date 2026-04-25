@@ -1,0 +1,151 @@
+/* =========================================================================
+   MODULE — COMBO FX (supporting CSS)
+   =========================================================================
+   Loaded alongside design/modules/combo-fx.js. Most of the styling each
+   combo needs is already provided by:
+
+     - design/effects-batch-08.css   (multiplane, displacement, grades, scanlines, jitter)
+     - design/effects-batch-07.css   (radio-wave / concentric-pulse / end-card / holo-sticker)
+     - design/modules/text-fx.css    (.fx-piece per-char styling)
+     - design/modules/glitter-fx.css (.glitter-particle styling)
+
+   This file ships only the small additional bridges:
+   - the `.combo-fx-*` overlay classes the JS toggles via tl.set/tl.fromTo
+     against CSS custom properties (--combo-noir / --combo-scan / --combo-glow)
+   - a deterministic .combo-fx-radio-ring that signalPulse spawns/teardowns
+   - a .combo-fx-holo-host bridge so any rectangle becomes a holo-drift surface
+     (paired with `background: linear-gradient(115deg, …)` on the element)
+
+   Authors don't normally need to touch these — the JS injects an inline
+   <style> bridge on first call as a belt-and-braces for cases where this
+   stylesheet isn't loaded explicitly. Loading this file just lets the bridge
+   participate in the cascade alongside other rules.
+   ========================================================================= */
+
+
+/* ---------- shared host token surface ---------------------------------- */
+
+/* Default tints used by some combos when the brand hasn't set --brand-* on
+   the document root. Anything that calls `var(--brand-*)` in this file will
+   pick these up unless the composition overrides them. Intentionally muted —
+   real compositions should always set their own brand vars. */
+:root {
+  --combo-fx-tint-1: #ffd66e;
+  --combo-fx-tint-2: #ffffff;
+  --combo-fx-tint-3: #ffc07a;
+  --combo-fx-tint-4: #ffe9c2;
+}
+
+
+/* ---------- combo-fx-noir-flash (used by slamCut) ---------------------- */
+/* The pseudo-element is positioned at z 9500 (above .scene__overlay 9000 so
+   it covers grades, below most card-marks at z 1200 so callouts still float).
+   Driven by `--combo-noir` (0..1). */
+
+.combo-fx-noir-flash { position: relative; }
+.combo-fx-noir-flash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 9500;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.30), rgba(0,0,0,0.30));
+  opacity: var(--combo-noir, 0);
+}
+
+
+/* ---------- combo-fx-scanlines-overlay (used by hyperGlitch) ---------- */
+/* Higher than .scene__overlay's 9000 (so it draws above grades), but below
+   noir-flash so a slamCut layered on a glitch still wins. */
+
+.combo-fx-scanlines-overlay { position: relative; }
+.combo-fx-scanlines-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 9300;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg,
+    transparent 0, transparent 2px,
+    rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 3px);
+  mix-blend-mode: multiply;
+  opacity: var(--combo-scan, 0);
+}
+
+
+/* ---------- combo-fx-glow-pulse (utility, unused by default) --------- */
+/* Drive `--combo-glow` from a tween to flash a halo. Provided for one-off
+   integrations; combos in combo-fx.js currently use direct filter tweens. */
+
+.combo-fx-glow-pulse {
+  box-shadow:
+    0 0 calc(40px * var(--combo-glow, 0))
+    rgba(255, 255, 255, calc(0.10 + 0.40 * var(--combo-glow, 0)));
+}
+
+
+/* ---------- combo-fx-radio-ring (used by signalPulse) ---------------- */
+/* Each ring is spawned, animated, and removed by the JS — keep CSS minimal:
+   use `currentColor` so a host with `color: var(--card-warn)` (or any brand
+   colour) automatically tints the rings. */
+
+.combo-fx-radio-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: width, height, opacity;
+}
+
+
+/* ---------- combo-fx-confetti-rule (used by confettiFinale, optional) - */
+/* Drop-in horizontal divider line if the composition doesn't already supply
+   one. Authors can use any element with `transform-origin: center` instead. */
+
+.combo-fx-confetti-rule {
+  display: block;
+  height: 3px;
+  background: currentColor;
+  transform-origin: center;
+  transform: scaleX(0);
+  width: 60%;
+}
+
+
+/* ---------- combo-fx-holo-host (used by holoFlash) ------------------ */
+/* Pair with a CSS rule that sets `background: linear-gradient(115deg, …)` on
+   the element. The JS animates `backgroundPositionX` from 0% → ~250% so the
+   gradient drifts across the visible area for the iridescent effect. */
+
+.combo-fx-holo-host {
+  position: relative;
+  background-size: 300% 300%;
+  background-position: 0% 50%;
+  will-change: background-position, transform;
+}
+
+
+/* ---------- Z-INDEX cheat sheet --------------------------------------- */
+/*
+   Combo overlays slot into the existing scene-scaffold z-stack:
+
+     0      — .scene__bg (cinemagraph blob, photo, video plate)
+     100    — .scene__stage (cards, content)
+     1200   — .card-mark (corner chips, callouts)
+     9000   — .scene__overlay / .fx-grade-* (LUT + grain)
+     9300   — .combo-fx-scanlines-overlay::after (hyperGlitch)
+     9500   — .combo-fx-noir-flash::before (slamCut)
+
+   Particles created by glitterFx attach as direct children of their host
+   container — by default they sit at the host's natural z-index, so they
+   read above the host's content unless the host gives them an explicit
+   z-index. For most uses (.scene root or a card containing the lockup)
+   that's the desired layering.
+*/

@@ -10,6 +10,7 @@ import { chromium } from "playwright";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cachePut, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -56,6 +57,16 @@ const startUrl = isDirectUrl
   : `https://pixabay.com/videos/search/${encodeURIComponent(opts.term)}/`;
 console.log(`[fetch] ${isDirectUrl ? "Direct" : "Search"}: ${startUrl}`);
 console.log(`[fetch] Out:    ${outPath}`);
+
+const intentKey = cacheKey(`${startUrl}#index=${opts.index}`);
+const hit = await cacheGet(intentKey);
+if (hit) {
+  fs.copyFileSync(hit, outPath);
+  const stats = fs.statSync(outPath);
+  console.log(`[fetch] cache hit ${intentKey.slice(0, 12)}…`);
+  console.log(`[fetch] Saved: ${outPath} (${(stats.size / 1024 / 1024).toFixed(2)} MB)`);
+  process.exit(0);
+}
 
 const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({
@@ -164,6 +175,10 @@ try {
   if (!response.ok()) throw new Error(`HTTP ${response.status()}`);
   const body = await response.body();
   fs.writeFileSync(outPath, body);
+
+  const cachedPath = await cachePut(intentKey, body, ".mp4");
+  console.log(`[fetch] cached at ${path.basename(cachedPath)}`);
+
   const stats = fs.statSync(outPath);
   console.log(`[fetch] Saved: ${outPath} (${(stats.size / 1024 / 1024).toFixed(2)} MB)`);
 } catch (err) {

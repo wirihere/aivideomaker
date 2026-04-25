@@ -1,0 +1,55 @@
+/* =========================================================================
+   MODULE — TEXT FX (supporting CSS)
+   =========================================================================
+   Loaded alongside design/modules/text-fx.js. Provides the per-piece
+   <span> styling so transforms apply correctly during entry/exit anims,
+   and a default `vibe-shake` keyframe in case the active template hasn't
+   defined its own.
+   ========================================================================= */
+
+/* Each split piece — char or word. inline-block is required so transforms
+   take effect (transforms don't apply to inline elements). */
+.fx-piece {
+  display: inline-block;
+  will-change: transform, opacity;
+  transform-origin: 50% 60%;     /* slightly below center reads more "weighty" */
+}
+
+/* If the parent has a hover/scale, kill it on pieces (we control transform). */
+.fx-piece:hover { transform: none; }
+
+/* ---- Screen-shake fallback --------------------------------------------- */
+/* Templates can override .vibe-shake with their own duration/easing. This
+   is the baseline if no template is loaded. */
+@keyframes vibe-shake-baseline {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20%      { transform: translate3d(-5px, 2px, 0); }
+  40%      { transform: translate3d(4px, -2px, 0); }
+  60%      { transform: translate3d(-2px, 3px, 0); }
+  80%      { transform: translate3d(3px, -1px, 0); }
+}
+.vibe-shake { animation: vibe-shake-baseline 0.18s steps(8) 1 both; }
+
+/* ---- Optional: cursor for typeOn --------------------------------------- */
+/* Add .fx-typeon-cursor to the target element to render a blinking caret
+   appended after the text. Only visible while the type-on is in progress. */
+.fx-typeon-cursor::after {
+  content: "▌";
+  display: inline-block;
+  margin-left: 0.05em;
+  animation: fx-typeon-blink 0.6s steps(1) infinite;
+  opacity: 0.85;
+}
+@keyframes fx-typeon-blink {
+  0%, 49%   { opacity: 0.85; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ---- Counter — fixed-width digits avoid jitter as values increment ------ */
+/* Apply .fx-counter to any element that textFx.counter() will animate; the
+   tabular-nums variant keeps each digit column the same width so the layout
+   doesn't shift while the number climbs. */
+.fx-counter {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}

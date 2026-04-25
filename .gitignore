@@ -6,6 +6,12 @@ renders/
 assets/music/
 assets/videos/
 
+# Content-addressed asset cache (sha256-keyed copies of fetched URLs).
+# Regenerable on demand. Subdirs like assets/.cache/luts/ are still tracked
+# because they're hand-curated — only loose hash-named files are ignored.
+assets/.cache/*.*
+!assets/.cache/luts/
+
 # HyperFrames runtime / cache
 .hyperframes/
 
@@ -42,6 +48,18 @@ desktop.ini
 *.tmp
 *.temp
 *.log
+*.backup-*
+.video-orchestrator.index.bak
+.queue-backup-*.html
+
+# Playwright MCP debug artifacts (screenshots, traces, accessibility snapshots)
+.playwright-mcp/
+
+# Smoke baselines + screenshots — regenerable via `npm run smoke:baseline`
+smoke/
+
+# Test artifacts from new-comp / pull-assets verification runs
+compositions/*.backup-*
 
 # Claude Code per-user / runtime state — not portable across machines
 .claude/scheduled_tasks.lock

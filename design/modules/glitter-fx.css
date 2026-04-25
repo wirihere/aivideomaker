@@ -1,0 +1,84 @@
+/* =========================================================================
+   MODULE — GLITTER FX (supporting CSS)
+   =========================================================================
+   Particle styling for design/modules/glitter-fx.js. Each particle is a
+   <span class="glitter-particle"> with two CSS custom properties driving
+   its visual: `--p-tint` (color) and `--p-size` (px width/height).
+   ========================================================================= */
+
+.glitter-particle {
+  position: absolute;
+  top: 0; left: 0;
+  width: var(--p-size, 8px);
+  height: var(--p-size, 8px);
+  pointer-events: none;
+  border-radius: 50%;
+  /* Soft radial sparkle — bright center fading to transparent. */
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--p-tint, #FFD66E) 0%,
+    var(--p-tint, #FFD66E) 12%,
+    color-mix(in srgb, var(--p-tint, #FFD66E) 60%, transparent) 35%,
+    transparent 70%
+  );
+  /* Center transform-origin so scale pulses outward. */
+  transform-origin: 50% 50%;
+  /* Glow halo + soft drop for depth. */
+  box-shadow:
+    0 0 calc(var(--p-size, 8px) * 0.8) color-mix(in srgb, var(--p-tint, #FFD66E) 70%, transparent),
+    0 0 calc(var(--p-size, 8px) * 1.6) color-mix(in srgb, var(--p-tint, #FFD66E) 30%, transparent);
+  /* Tell the browser these are constantly transforming. */
+  will-change: transform, opacity;
+  /* No initial transition — GSAP handles all motion. */
+  transition: none;
+}
+
+/* Cross-shaped sparkle — twin orthogonal bars over the dot for a 4-point star.
+   Half the particles get this for variety. */
+.glitter-particle--cross::before,
+.glitter-particle--cross::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 50%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--p-tint, #FFD66E) 30%,
+    var(--p-tint, #FFD66E) 70%,
+    transparent 100%
+  );
+  transform-origin: 50% 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.glitter-particle--cross::before {
+  width: calc(var(--p-size, 8px) * 2.4);
+  height: calc(var(--p-size, 8px) * 0.18);
+}
+.glitter-particle--cross::after {
+  width: calc(var(--p-size, 8px) * 0.18);
+  height: calc(var(--p-size, 8px) * 2.4);
+}
+
+/* Optional: scope tints per scene by setting these custom properties on the
+   container (or document root for global). The JS reads them via getComputedStyle.
+   Defaults shown. */
+:root {
+  --glitter-tint-1: #FFD66E;   /* warm gold */
+  --glitter-tint-2: #FFFFFF;   /* white */
+  --glitter-tint-3: #FFC07A;   /* amber */
+  --glitter-tint-4: #FFE9C2;   /* cream */
+}
+
+/* Ambient pulse — driven by CSS animation, not GSAP. Each particle reads
+   `--p-period` (sec) and `--p-delay` (sec, negative for offset phase) from
+   inline style. The renderer evaluates CSS animations at frame time, so this
+   stays deterministic without bloating the GSAP timeline. */
+@keyframes glitter-pulse {
+  0%, 100% { opacity: 0.0; transform: var(--p-base, none) scale(0.6); }
+  50%      { opacity: 1.0; transform: var(--p-base, none) scale(1.2); }
+}
+.glitter-particle--ambient {
+  animation: glitter-pulse var(--p-period, 1.6s) ease-in-out infinite;
+  animation-delay: var(--p-delay, 0s);
+}

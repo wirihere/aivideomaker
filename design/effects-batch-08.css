@@ -1,0 +1,380 @@
+/* =========================================================================
+   EFFECTS — BATCH 08 (CINEMATIC PRIMITIVES)
+   =========================================================================
+   Outside-the-box additions discovered in 2026-04-25 deep-research pass.
+   Five primitives that lift production value disproportionately to effort:
+
+   1. .fx-multiplane          — CSS perspective + preserve-3d "camera" stage
+   2. .fx-displace-*          — SVG feDisplacementMap filters (liquid / ink)
+   3. .fx-chromatic           — RGB-shift/scanline glitch (use sparingly)
+   4. .fx-grade-*             — final-pass LUT-style color grade overlays
+   5. .fx-cinemagraph-bg      — perpetual-motion blob background
+
+   All filters are inert until applied. Pair with GSAP for entry/exit timing.
+   Filters MUST live in an inline <svg> at the bottom of <body> (filters need
+   a real document root) — see HOW-TO at the end of this file.
+   ========================================================================= */
+
+
+/* ----- 1. MULTIPLANE CAMERA -------------------------------------------- */
+/* Wrap any scene with .fx-multiplane and tag children with .plane-N to get
+   parallaxed depth. Animate `.fx-multiplane > .stage` translateZ to dolly. */
+
+.fx-multiplane {
+  perspective: 1500px;
+  perspective-origin: 50% 50%;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.fx-multiplane > .stage {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.fx-multiplane .plane {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, filter, opacity;
+}
+/* Six depth presets — z-distance + compensating scale so each plane fills
+   the camera frame at its depth. Scale = (1500 + |z|) / 1500. */
+.fx-multiplane .plane-bg   { transform: translateZ(-600px) scale(1.40); filter: blur(2px); }
+.fx-multiplane .plane-far  { transform: translateZ(-400px) scale(1.27); }
+.fx-multiplane .plane-mid  { transform: translateZ(-200px) scale(1.13); }
+.fx-multiplane .plane-base { transform: translateZ(0)      scale(1.00); }
+.fx-multiplane .plane-near { transform: translateZ(150px)  scale(0.90); }
+.fx-multiplane .plane-fg   { transform: translateZ(300px)  scale(0.80); filter: blur(0.5px); }
+
+/* Depth-of-field variants — move focus plane by overriding blur per scene. */
+.fx-multiplane[data-focus="far"]  .plane-near,
+.fx-multiplane[data-focus="far"]  .plane-fg   { filter: blur(8px); }
+.fx-multiplane[data-focus="near"] .plane-bg,
+.fx-multiplane[data-focus="near"] .plane-far  { filter: blur(8px); }
+
+
+/* ----- 2. SVG DISPLACEMENT FILTERS ------------------------------------- */
+/* Apply via filter: url(#fx-liquid) etc. The <filter> defs go in the inline
+   <svg> at the bottom of <body> — see HOW-TO. */
+
+.fx-displace-liquid  { filter: url(#fx-liquid); }
+.fx-displace-ink     { filter: url(#fx-ink); }
+.fx-displace-ripple  { filter: url(#fx-ripple); }
+.fx-displace-glass   {
+  filter: url(#fx-glass);
+  backdrop-filter: blur(12px) saturate(1.15);
+  -webkit-backdrop-filter: blur(12px) saturate(1.15);
+}
+
+
+/* ----- 3. GLITCH / CHROMATIC ABERRATION -------------------------------- */
+/* Use for impact moments only — sub-second bursts. Continuous glitch reads
+   amateur. Apply on a class that GSAP toggles for ~180ms via tl.set. */
+
+.fx-chromatic {
+  position: relative;
+  filter: url(#fx-rgb-shift);
+}
+.fx-scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 3px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
+.fx-vhs-jitter {
+  animation: fx-vhs-jitter 0.18s steps(8) 1 both;
+}
+@keyframes fx-vhs-jitter {
+  0%   { transform: translate3d(0, 0, 0); }
+  20%  { transform: translate3d(-3px, 1px, 0); }
+  40%  { transform: translate3d(2px, -1px, 0); }
+  60%  { transform: translate3d(-1px, 2px, 0); }
+  80%  { transform: translate3d(3px, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+
+/* ----- 4. LUT-STYLE COLOR GRADE OVERLAYS ------------------------------- */
+/* Drop one of these as the topmost element of a scene to unify the look.
+   Tints push toward broadcast-grade palettes. Pair with the post-render
+   LUT pass (scripts/post-grade.mjs) for the strongest effect. */
+
+.fx-grade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  mix-blend-mode: overlay;
+  opacity: 0.35;
+}
+.fx-grade-teal-orange {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 168, 92,  0.22) 0%,
+    rgba(255, 168, 92,  0.06) 30%,
+    rgba(36, 132, 156,  0.06) 70%,
+    rgba(20, 80, 110,   0.22) 100%
+  );
+}
+.fx-grade-warm {
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    rgba(255, 218, 168, 0.18) 0%,
+    rgba(255, 168, 96,  0.10) 60%,
+    rgba(120, 60,  40,  0.16) 100%
+  );
+}
+.fx-grade-cool {
+  background: radial-gradient(
+    ellipse at 50% 65%,
+    rgba(168, 218, 255, 0.16) 0%,
+    rgba(96,  140, 200, 0.08) 60%,
+    rgba(20,  40,  80,  0.20) 100%
+  );
+}
+.fx-grade-noir {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.30) 100%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.35) 100%);
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+/* Contrast / saturation lift applied to the SCENE root, not the overlay. */
+.fx-grade-pop  { filter: contrast(1.08) saturate(1.10) brightness(1.02); }
+.fx-grade-soft { filter: contrast(0.96) saturate(0.92) brightness(1.04); }
+
+
+/* ----- 4b. PER-SCENE LUT VIA data-scene-grade -------------------------- */
+/* Declarative grade per scene — no extra DOM. The pseudo-element ::before
+   reproduces the .fx-grade overlay (mix-blend-mode tint), and pop/soft
+   apply a filter pass to the scene root.
+   Usage:
+     <div class="scene clip" data-scene-grade="warm">…</div>
+   Supported values: teal-orange | warm | cool | noir | pop | soft.
+   Coexists with the standalone .fx-grade-* classes — both still work. */
+
+[data-scene-grade] { position: relative; }
+
+[data-scene-grade]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  mix-blend-mode: overlay;
+  opacity: 0.35;
+}
+
+[data-scene-grade="teal-orange"]::before {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 168, 92,  0.22) 0%,
+    rgba(255, 168, 92,  0.06) 30%,
+    rgba(36, 132, 156,  0.06) 70%,
+    rgba(20, 80, 110,   0.22) 100%
+  );
+}
+[data-scene-grade="warm"]::before {
+  background: radial-gradient(
+    ellipse at 50% 35%,
+    rgba(255, 218, 168, 0.18) 0%,
+    rgba(255, 168, 96,  0.10) 60%,
+    rgba(120, 60,  40,  0.16) 100%
+  );
+}
+[data-scene-grade="cool"]::before {
+  background: radial-gradient(
+    ellipse at 50% 65%,
+    rgba(168, 218, 255, 0.16) 0%,
+    rgba(96,  140, 200, 0.08) 60%,
+    rgba(20,  40,  80,  0.20) 100%
+  );
+}
+[data-scene-grade="noir"]::before {
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.30) 100%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.35) 100%);
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+/* pop / soft are filter passes on the scene root, no overlay needed —
+   suppress the pseudo-element so it doesn't paint a transparent box. */
+[data-scene-grade="pop"]::before,
+[data-scene-grade="soft"]::before { content: none; }
+[data-scene-grade="pop"]  { filter: contrast(1.08) saturate(1.10) brightness(1.02); }
+[data-scene-grade="soft"] { filter: contrast(0.96) saturate(0.92) brightness(1.04); }
+
+
+/* ----- 5. CINEMAGRAPH BACKGROUND --------------------------------------- */
+/* Slow rotating gradient blob behind frosted glass — apple.com hero pattern.
+   Place inside any scene as the first child; subsequent siblings sit above. */
+
+.fx-cinemagraph-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.fx-cinemagraph-bg::before {
+  content: "";
+  position: absolute;
+  width: 140%;
+  height: 140%;
+  left: -20%;
+  top: -20%;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    var(--brand-primary,   #1a9e8f) 0%,
+    var(--brand-secondary, #f5d35a) 25%,
+    var(--brand-accent,    #ff5cb1) 50%,
+    var(--brand-tertiary,  #5cb6ff) 75%,
+    var(--brand-primary,   #1a9e8f) 100%
+  );
+  filter: blur(120px) saturate(1.4);
+  opacity: 0.55;
+  will-change: transform;
+  /* Animate via GSAP — keep finite for deterministic capture:
+     gsap.to('.fx-cinemagraph-bg::before', {rotation:360, duration:scene_dur, ease:'none'})
+     Or via inline finite @keyframes wrapped in scene timing. */
+}
+.fx-cinemagraph-bg::after {
+  /* frosted-glass overlay sits between blob and content */
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(60px) saturate(1.1);
+  -webkit-backdrop-filter: blur(60px) saturate(1.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+
+/* ----- 6. SECONDARY-MOTION HELPERS ------------------------------------- */
+/* Apply a soft drop-shadow that arrives 60-120ms behind its parent.
+   Pair with GSAP stagger on .fx-shadow-trail children to get studio-grade
+   "weight" on entrances. */
+
+.fx-shadow-soft {
+  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.18))
+          drop-shadow(0 4px 8px  rgba(0, 0, 0, 0.10));
+}
+.fx-shadow-hard {
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.85));
+}
+/* Long-shadow extrusion (faux 3D from text). Use sparingly — looks "design-y"
+   but very effective on hero numbers / wordmarks. Generate at build time
+   in HTML if you need brand-specific colors. */
+.fx-long-shadow {
+  text-shadow:
+    1px 1px 0 rgba(0,0,0,0.55),
+    2px 2px 0 rgba(0,0,0,0.50),
+    3px 3px 0 rgba(0,0,0,0.46),
+    5px 5px 0 rgba(0,0,0,0.42),
+    8px 8px 0 rgba(0,0,0,0.36),
+    12px 12px 0 rgba(0,0,0,0.30),
+    18px 18px 0 rgba(0,0,0,0.22),
+    28px 28px 0 rgba(0,0,0,0.14),
+    44px 44px 0 rgba(0,0,0,0.06);
+}
+
+
+/* ----- 7. AUDIO-REACTIVE BINDINGS -------------------------------------- */
+/* Animate elements based on CSS custom properties driven from a baked
+   amplitude envelope (scripts/extract-amp.mjs → audio-amp.json). Set
+   --amp-bass / --amp-mid / --amp-high on .scene from GSAP at render-time
+   keyframes computed from the JSON. */
+
+.fx-amp-scale  { transform: scale(calc(1 + var(--amp-bass, 0) * 0.08)); }
+.fx-amp-glow   {
+  box-shadow: 0 0 calc(20px + var(--amp-mid, 0) * 60px)
+              rgba(255, 255, 255, calc(0.2 + var(--amp-mid, 0) * 0.5));
+}
+.fx-amp-wobble { transform: rotate(calc(var(--amp-high, 0) * 1.5deg)); }
+
+
+/* =========================================================================
+   HOW-TO: SVG FILTER DEFS (paste at bottom of <body>, ONCE per composition)
+   =========================================================================
+   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+     <defs>
+       <!-- LIQUID GLASS — smooth waves, mild distortion -->
+       <filter id="fx-liquid" x="-20%" y="-20%" width="140%" height="140%">
+         <feTurbulence type="turbulence" baseFrequency="0.008 0.012"
+                       numOctaves="2" seed="3" />
+         <feDisplacementMap in="SourceGraphic" scale="14" />
+       </filter>
+
+       <!-- INK BLEED — animate scale 0 → 60 with GSAP for ink-reveal entrance -->
+       <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+         <feTurbulence type="fractalNoise" baseFrequency="0.02"
+                       numOctaves="2" seed="7" />
+         <feDisplacementMap in="SourceGraphic" scale="0" />
+         <feGaussianBlur stdDeviation="0.4" />
+       </filter>
+
+       <!-- WATER RIPPLE — gentle, looped via GSAP attr animation on seed -->
+       <filter id="fx-ripple" x="-15%" y="-15%" width="130%" height="130%">
+         <feTurbulence type="turbulence" baseFrequency="0.025 0.04"
+                       numOctaves="3" seed="5" />
+         <feDisplacementMap in="SourceGraphic" scale="6" />
+       </filter>
+
+       <!-- REFRACTIVE GLASS — pair with backdrop-filter:blur in CSS -->
+       <filter id="fx-glass" x="-10%" y="-10%" width="120%" height="120%">
+         <feTurbulence type="turbulence" baseFrequency="0.015"
+                       numOctaves="1" seed="2" />
+         <feDisplacementMap in="SourceGraphic" scale="10" />
+         <feGaussianBlur stdDeviation="0.6" />
+       </filter>
+
+       <!-- CHROMATIC ABERRATION — split RGB by ±2-3px -->
+       <filter id="fx-rgb-shift">
+         <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+           values="1 0 0 0 0
+                   0 0 0 0 0
+                   0 0 0 0 0
+                   0 0 0 1 0" />
+         <feOffset in="r" dx="3" dy="0" result="r-shift" />
+         <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+           values="0 0 0 0 0
+                   0 0 0 0 0
+                   0 0 1 0 0
+                   0 0 0 1 0" />
+         <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+         <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+           values="0 0 0 0 0
+                   0 1 0 0 0
+                   0 0 0 0 0
+                   0 0 0 1 0" />
+         <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+         <feBlend in="rg"      in2="b-shift" mode="screen" />
+       </filter>
+
+       <!-- BARREL DISTORTION — fake camera lens curvature -->
+       <filter id="fx-barrel" x="-5%" y="-5%" width="110%" height="110%">
+         <feTurbulence type="turbulence" baseFrequency="0.001"
+                       numOctaves="1" seed="1" />
+         <feDisplacementMap in="SourceGraphic" scale="6" />
+       </filter>
+     </defs>
+   </svg>
+
+   ANIMATING DISPLACEMENT WITH GSAP:
+     gsap.fromTo('#fx-ink feDisplacementMap',
+       { attr: { scale: 0  } },
+       { attr: { scale: 60 }, duration: 1.2, ease: 'power2.out' }
+     );
+   ========================================================================= */

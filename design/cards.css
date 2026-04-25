@@ -420,3 +420,164 @@
 .card-mark--top-left     { top: 56px;  left: 60px; }
 .card-mark--bottom-right { bottom: 56px; right: 60px; }
 .card-mark--bottom-left  { bottom: 56px; left: 60px; }
+
+
+/* =========================================================================
+   SCENE SCAFFOLDS — cinematic primitives wired into the card system
+   =========================================================================
+   These are scene-level wrappers, not cards. A scene typically holds one or
+   more cards plus background/overlay layers. The scaffolds give every scene
+   the same structural slots so effects from effects-batch-08.css can apply
+   without reauthoring the scene each time.
+
+   Drop-in HTML pattern (every scene):
+
+     <div class="scene scene--multiplane" data-start="0" data-duration="6.5">
+       <div class="scene__bg">         <!-- background plate -->
+         <div class="fx-cinemagraph-bg"></div>
+       </div>
+       <div class="scene__stage">      <!-- multiplane camera stage -->
+         <div class="plane plane-far">  <!-- far layer (parallax 1.27x) -->
+           <img src="..." />
+         </div>
+         <div class="plane plane-base"> <!-- main content -->
+           <div class="card card--dark-glass">...</div>
+         </div>
+         <div class="plane plane-fg">   <!-- foreground accents -->
+           <div class="card-mark card-mark--bottom-right">01</div>
+         </div>
+       </div>
+       <div class="scene__overlay">    <!-- vignette / grain / grade -->
+         <div class="fx-grade fx-grade-teal-orange"></div>
+       </div>
+       <div class="scene__sfx">        <!-- sound design slots -->
+         <audio src="assets/sfx/whoosh-up.wav" data-start="0"
+                data-duration="0.4" data-track-index="3" data-volume="0.45"></audio>
+         <audio src="assets/sfx/tick.wav" data-start="2.1"
+                data-duration="0.08" data-track-index="3" data-volume="0.35"></audio>
+       </div>
+     </div>
+
+   The four named slots (`bg`, `stage`, `overlay`, `sfx`) are the convention.
+   Authoring tools / agents can fill them mechanically.
+   ========================================================================= */
+
+
+/* ---------- Scene root (wrapper for one timeline segment) -------------- */
+
+.scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Scenes fill their parent composition wrapper. The wrapper (.comp or
+     similar) declares the actual canvas size — landscape or portrait — via
+     `width` + `height` matching the root's `data-width`/`data-height`. This
+     replaces the old hardcoded 1080×1920 portrait default which silently
+     mis-sized landscape comps. z-index choreography is per-composition. */
+}
+
+
+/* ---------- .scene__bg — background plate ------------------------------ */
+/* Sits behind the multiplane stage. Holds cinemagraph blobs, ken-burns
+   image, video plates, paper grain, etc. */
+
+.scene__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+
+/* ---------- .scene__stage — content layer ------------------------------ */
+/* Where cards live. If the scene has the .scene--multiplane modifier, this
+   becomes the multiplane camera stage (depth via translateZ on .plane-N). */
+
+.scene__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scene--multiplane {
+  perspective: 1500px;
+  perspective-origin: 50% 50%;
+}
+.scene--multiplane > .scene__stage {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+/* Child planes inherit the multiplane depth presets from effects-batch-08.css
+   (.plane-bg/.plane-far/.plane-mid/.plane-base/.plane-near/.plane-fg). When
+   a scene isn't .scene--multiplane, .plane-* still sets z-translation but
+   without `preserve-3d` it collapses to 2D — safe fallback. */
+
+
+/* ---------- .scene__overlay — vignette / grain / grade ----------------- */
+/* Topmost passive layer for atmospheric depth. Hosts vignette gradients,
+   film grain, .fx-grade-* color overlays, light-beam sweeps. Never holds
+   primary content — overlay must not block readability. */
+
+.scene__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+
+/* ---------- .scene__sfx — sound-design slot ---------------------------- */
+/* Convention: every scene reserves one container for procedural SFX. Each
+   <audio> element gets:
+     - a unique `id` attribute (the renderer needs it to discover media)
+     - a unique `data-track-index` (one track = one channel — overlapping
+       clips on the same track cause render conflicts; each SFX must have
+       its own track even if they don't visually overlap, because adjacent
+       scene boundaries always overlap by ~150ms during transitions).
+     - `data-volume` between 0.18 (pad bed) and 0.50 (impact)
+
+   Reserved track ranges in this project:
+     0–7    scene clip tracks (background/overlay/content)
+     8      music bed
+     9      narration
+     10     persistent brand header
+     13     full-comp film grain
+     20+    SFX — one per audio element, sequential
+
+   Visually invisible — display:none ensures the <audio> doesn't take layout. */
+
+.scene__sfx { display: none; }
+
+
+/* ---------- Suggested SFX wiring per scene type ----------------------- */
+/*
+   STAT REVEAL scene (1 hero number + 1 sub-line):
+     0.00s — whoosh-up           (transition in)
+     0.65s — impact              (the number lands)
+     1.20s — tick                (sub-line appears)
+
+   FEATURE-ROW scene (3 stacked rows):
+     0.00s — whoosh-soft         (transition in)
+     0.70s — tick-soft           (row 1)
+     1.30s — tick-soft           (row 2)
+     1.90s — tick-soft           (row 3)
+
+   QUOTE scene (long pull-quote):
+     0.00s — whoosh-soft         (transition in)
+     0.50s — pad-warm            (background pad, fades out before scene end)
+
+   END-CARD scene (logo + tagline):
+     0.00s — sweep-rise          (build-up to logo land)
+     1.20s — impact-deep         (logo land — 0.8s tail)
+     2.30s — ding                (tagline tonal punctuation)
+
+   These are starting recipes — adjust to narration timing. Every scene
+   transition gets at least one whoosh; that single addition is the biggest
+   sound-design upgrade per minute of authoring time. */
