@@ -40,6 +40,7 @@
     "renders:prune": "node scripts/renders-prune.mjs",
     "usage": "node scripts/usage.mjs",
     "usage:unused": "node scripts/usage.mjs --unused",
+    "voices:preview": "node scripts/preview-voices.mjs",
     "help": "node scripts/help.mjs"
   },
   "keywords": [],
