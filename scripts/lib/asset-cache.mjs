@@ -130,6 +130,14 @@ export async function cacheGet(key) {
 }
 
 /**
+ * Write a UTF-8 string into the cache (sugar over cachePut for text payloads
+ * like .vtt/.srt captions or .svg sources). Same return contract as cachePut.
+ */
+export async function cacheText(key, text, ext = "") {
+  return cachePut(key, Buffer.from(String(text), "utf8"), ext);
+}
+
+/**
  * Write a buffer into the cache under `<key><ext>` and return the absolute
  * path. `ext` should include the leading dot (".jpg"). Empty ext is allowed.
  * After writing, enforces the 500 MB cap.

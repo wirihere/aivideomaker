@@ -11,6 +11,7 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cachePut, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -62,6 +63,17 @@ const url =
 console.log(`[tts] Voice: ${opts.voice}`);
 console.log(`[tts] Out:   ${outPath}`);
 
+// Cache lookup — StreamElements TTS is deterministic in (voice|text).
+const intentKey = cacheKey(`stream|${opts.voice}|${opts.text}`);
+const hit = await cacheGet(intentKey);
+if (hit) {
+  fs.copyFileSync(hit, outPath);
+  const stats = fs.statSync(outPath);
+  console.log(`[tts] cache hit ${intentKey.slice(0, 12)}…`);
+  console.log(`[tts] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+  process.exit(0);
+}
+
 try {
   const res = await fetch(url, {
     headers: {
@@ -73,6 +85,7 @@ try {
   if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
   const buf = Buffer.from(await res.arrayBuffer());
   fs.writeFileSync(outPath, buf);
+  await cachePut(intentKey, buf, ".mp3");
   console.log(`[tts] Saved: ${outPath} (${(buf.length / 1024).toFixed(1)} KB)`);
 } catch (err) {
   console.error(`[tts] FAILED: ${err.message}`);

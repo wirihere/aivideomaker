@@ -604,4 +604,22 @@ function report() {
 }
 
 report();
+
+// Disk-hygiene footer: surface renders/ bloat before it becomes a problem.
+// Non-blocking — never fails smoke. See `npm run renders:list` for details.
+try {
+  const rendersDir = path.join(projectRoot, "renders");
+  if (fs.existsSync(rendersDir)) {
+    let totalBytes = 0;
+    for (const name of fs.readdirSync(rendersDir)) {
+      if (!name.toLowerCase().endsWith(".mp4")) continue;
+      try { totalBytes += fs.statSync(path.join(rendersDir, name)).size; } catch {}
+    }
+    const totalMB = totalBytes / (1024 * 1024);
+    if (totalMB > 200) {
+      console.warn(`  ⚠ renders/ is ${totalMB.toFixed(0)} MB — run \`npm run renders:list\` and consider \`npm run renders:prune\``);
+    }
+  }
+} catch {}
+
 process.exit(fails.length === 0 ? 0 : 1);

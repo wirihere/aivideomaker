@@ -11,15 +11,18 @@
 //   node scripts/fix.mjs --json              # machine-readable output
 //
 // Pitfall ids (use with --ignore):
-//   script-close   §4 "</script>" literal in JS comments breaks inline-bundled scripts
-//   from-opacity   §4 GSAP tl.from() stuck at "from" state on paused/seek timelines (suggest only)
-//   scene-override §4 cards.css portrait override now redundant — bare .scene { width:1080px; height:1920px }
-//   autoplay-guard §3 Standalone autoplay guard missing
-//   cdn            §3 GSAP from CDN — prefer design/vendor/gsap.min.js
-//   bundle         §3 4+ individual module <link> tags — prefer design/modules/all.css
-//   audio-id       §4 <audio> without id is silently dropped by the renderer
-//   audio-track    §4 overlapping <audio> on the same data-track-index
-//   gsap-set-loop  §4 discretized GSAP set() per particle bloats timeline (suggest only)
+//   script-close          §4 "</script>" literal in JS comments breaks inline-bundled scripts
+//   from-opacity          §4 GSAP tl.from() stuck at "from" state on paused/seek timelines (suggest only)
+//   scene-override        §4 cards.css portrait override now redundant — bare .scene { width:1080px; height:1920px }
+//   autoplay-guard        §3 Standalone autoplay guard missing
+//   cdn                   §3 GSAP from CDN — prefer design/vendor/gsap.min.js
+//   bundle                §3 4+ individual module <link> tags — prefer design/modules/all.css
+//   audio-id              §4 <audio> without id is silently dropped by the renderer
+//   audio-track           §4 overlapping <audio> on the same data-track-index
+//   gsap-set-loop         §4 discretized GSAP set() per particle bloats timeline (suggest only)
+//   font-var              §4 font-family: var(--*-font-*) skips deterministic embedding (HTML <style> + design/**/*.css)
+//   audio-no-clip         §4 <audio data-start> without class="clip" — framework can't gate visibility
+//   subcomp-currentscript §4 document.currentScript is null inside sub-comp wrappers
 //
 // What it WON'T do:
 //   - Rewrite tl.from() → tl.fromTo() (semantics differ, end values are ambiguous).
@@ -61,17 +64,43 @@ const c = {
 };
 
 // --- file discovery ---------------------------------------------------------
+function walkDir(dir, accept) {
+  const out = [];
+  if (!fs.existsSync(dir)) return out;
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, ent.name);
+    if (ent.isDirectory()) {
+      out.push(...walkDir(full, accept));
+    } else if (ent.isFile() && accept(full, ent.name)) {
+      out.push(full);
+    }
+  }
+  return out;
+}
+
 function listTargets() {
+  // HTML targets: index.html + compositions/**/*.html (recursive — sub-comp
+  // detectors need to see compositions/{backgrounds,overlays,templates,verticals}/*.html).
+  // archive/ stays out of scope intentionally — it's the historical untouched state.
   const targets = [];
   const root = path.join(projectRoot, "index.html");
   if (fs.existsSync(root)) targets.push(root);
   const compDir = path.join(projectRoot, "compositions");
-  if (fs.existsSync(compDir)) {
-    for (const name of fs.readdirSync(compDir)) {
-      if (name.endsWith(".html")) targets.push(path.join(compDir, name));
-    }
-  }
+  targets.push(...walkDir(compDir, (_full, name) => name.endsWith(".html")));
   return targets;
+}
+
+function listCssTargets() {
+  // CSS targets: design/**/*.css excluding design/tokens-*.css (token source of truth).
+  // Used by `font-var` only.
+  const designDir = path.join(projectRoot, "design");
+  return walkDir(designDir, (full, name) => {
+    if (!name.endsWith(".css")) return false;
+    // Skip token files at any depth — they are the var(--font-*) source of truth.
+    const rel = path.relative(designDir, full).split(path.sep).join("/");
+    if (/(^|\/)tokens-[^/]*\.css$/i.test(rel)) return false;
+    return true;
+  });
 }
 
 // --- script-block extraction ------------------------------------------------
@@ -478,16 +507,154 @@ function detectGsapSetLoop(text) {
   return findings;
 }
 
+// --- font-var: font-family: var(--...font...) skips deterministic embedding (§4) ---
+// Scans inline <style> blocks in HTML *and* project-relative *.css files.
+// Skips @font-face blocks (a var() inside a @font-face descriptor is itself the
+// embedding target — flagging it would be circular) and design/tokens-*.css
+// (the token source of truth — those declarations are what the *consumers*
+// resolve at compile time).
+const FONT_VAR_RE = /font-family\s*:\s*var\(\s*--[\w-]*font[\w-]*/i;
+const FONT_VAR_RE_G = /font-family\s*:\s*var\(\s*--[\w-]*font[\w-]*/gi;
+const FONT_VAR_MESSAGE = "font-family uses var(--...) — compiler skips deterministic embedding (§4). Use a direct font name (nunito, jetbrains-mono, inter) or add @font-face.";
+
+// Build a sorted index of @font-face block intervals [start, end) for a CSS body.
+function fontFaceRanges(css) {
+  const ranges = [];
+  const re = /@font-face\b[^{]*\{/gi;
+  let m;
+  while ((m = re.exec(css)) !== null) {
+    // Find the matching closing brace by depth-counting from the opening one.
+    let depth = 1;
+    let i = m.index + m[0].length;
+    while (i < css.length && depth > 0) {
+      const ch = css[i];
+      if (ch === "{") depth++;
+      else if (ch === "}") depth--;
+      i++;
+    }
+    ranges.push([m.index, i]);
+  }
+  return ranges;
+}
+
+function inAnyRange(ranges, idx) {
+  for (const [s, e] of ranges) {
+    if (idx >= s && idx < e) return true;
+  }
+  return false;
+}
+
+function scanFontVarInCss(cssBody, baseAbsIdx, fullText) {
+  const findings = [];
+  const skipRanges = fontFaceRanges(cssBody);
+  let m;
+  // Reset regex state per call (global regex retains lastIndex).
+  FONT_VAR_RE_G.lastIndex = 0;
+  while ((m = FONT_VAR_RE_G.exec(cssBody)) !== null) {
+    if (inAnyRange(skipRanges, m.index)) continue;
+    const absIdx = baseAbsIdx + m.index;
+    findings.push({
+      id: "font-var",
+      severity: "warn",
+      line: lineOf(fullText, absIdx),
+      message: FONT_VAR_MESSAGE,
+      suggestion: "replace var(--*-font*) with a direct font-family name, or add an @font-face rule that bakes the var() into a real font",
+      fixable: false,
+    });
+  }
+  return findings;
+}
+
+function detectFontVar(text, filePath) {
+  // CSS files: scan whole body (caller filters out tokens-*.css).
+  if (filePath && filePath.toLowerCase().endsWith(".css")) {
+    return scanFontVarInCss(text, 0, text);
+  }
+  // HTML files: scan each inline <style>...</style> block.
+  const findings = [];
+  const blocks = extractInlineStyles(text);
+  for (const blk of blocks) {
+    findings.push(...scanFontVarInCss(blk.body, blk.bodyStart, text));
+  }
+  return findings;
+}
+
+// --- audio-no-clip: <audio data-start> must have class~="clip" so the framework
+// gates visibility/audio at scene boundaries (§4 companion to audio-id).
+function detectAudioWithoutClip(text) {
+  const findings = [];
+  const tags = extractAudioTags(text);
+  for (const t of tags) {
+    const hasStart = /\bdata-start\s*=/.test(t.attrs);
+    if (!hasStart) continue;
+    const cls = attrValue(t.attrs, "class") || "";
+    // Match a whole-token "clip" — `class="clip"`, `class="bg-clip clip"`,
+    // `class="clip foo"`. Avoid false-positives on `class="clipboard"`.
+    if (/(^|\s)clip(\s|$)/.test(cls)) continue;
+    const id = attrValue(t.attrs, "id");
+    const idLabel = id ? `id="${id}"` : "id=<unset>";
+    findings.push({
+      id: "audio-no-clip",
+      severity: "error",
+      line: lineOf(text, t.idx),
+      message: `<audio ${idLabel}> with data-start lacks class="clip" — framework won't gate visibility, audio may persist after scene exit.`,
+      suggestion: 'add `class="clip"` (or append "clip" to the existing class list) so HyperFrames toggles visibility/audio at scene boundaries',
+      fixable: false,
+    });
+  }
+  return findings;
+}
+
+// --- subcomp-currentscript: document.currentScript is null inside a sub-comp
+// wrapper (the script ran during template parsing, not when the wrapper inserted).
+// Multi-instance use also collides on window.__timelines[id].
+function detectSubcompCurrentscript(text) {
+  // Opt-out marker — file is only used as a copy-paste reference, not embedded.
+  if (/\/\/\s*inline-only-reference\b/.test(text)) return [];
+
+  const isSubcomp = /<template\s+id\s*=\s*["'][^"']+["']/i.test(text)
+                 || /\bdata-composition-id\s*=\s*["'][^"']+["']/i.test(text);
+  if (!isSubcomp) return [];
+
+  const findings = [];
+  // Try to recover the composition id for a more actionable message.
+  let compId = "";
+  const idMatch = text.match(/\bdata-composition-id\s*=\s*("([^"]+)"|'([^']+)')/i);
+  if (idMatch) compId = idMatch[2] ?? idMatch[3] ?? "";
+
+  const blocks = extractInlineScripts(text);
+  for (const blk of blocks) {
+    const re = /document\.currentScript\.closest\s*\(/g;
+    let m;
+    while ((m = re.exec(blk.body)) !== null) {
+      const absIdx = blk.bodyStart + m.index;
+      const idHint = compId ? `'[data-composition-id="${compId}"]'` : `'[data-composition-id="<id>"]'`;
+      findings.push({
+        id: "subcomp-currentscript",
+        severity: "warn",
+        line: lineOf(text, absIdx),
+        message: `document.currentScript inside a sub-comp wrapper returns null (§4). Use document.querySelector(${idHint}) or inline this comp.`,
+        suggestion: "replace `document.currentScript.closest(...)` with `document.querySelector('[data-composition-id=\"<id>\"]')`, or add a `// inline-only-reference` comment if this file is never embedded",
+        fixable: false,
+      });
+    }
+  }
+  return findings;
+}
+
 const DETECTORS = [
-  { id: "script-close",   fn: detectScriptCloseInComments },
-  { id: "from-opacity",   fn: detectFromOpacity },
-  { id: "scene-override", fn: detectSceneOverride },
-  { id: "autoplay-guard", fn: detectMissingAutoplayGuard },
-  { id: "cdn",            fn: detectCdnGsap },
-  { id: "bundle",         fn: detectIndividualModuleLinks },
-  { id: "audio-id",       fn: detectAudioWithoutId },
-  { id: "audio-track",    fn: detectAudioTrackOverlap },
-  { id: "gsap-set-loop",  fn: detectGsapSetLoop },
+  { id: "script-close",          fn: detectScriptCloseInComments, kinds: ["html"] },
+  { id: "from-opacity",          fn: detectFromOpacity,           kinds: ["html"] },
+  { id: "scene-override",        fn: detectSceneOverride,         kinds: ["html"] },
+  { id: "autoplay-guard",        fn: detectMissingAutoplayGuard,  kinds: ["html"] },
+  { id: "cdn",                   fn: detectCdnGsap,               kinds: ["html"] },
+  { id: "bundle",                fn: detectIndividualModuleLinks, kinds: ["html"] },
+  { id: "audio-id",              fn: detectAudioWithoutId,        kinds: ["html"] },
+  { id: "audio-track",           fn: detectAudioTrackOverlap,     kinds: ["html"] },
+  { id: "gsap-set-loop",         fn: detectGsapSetLoop,           kinds: ["html"] },
+  { id: "font-var",              fn: detectFontVar,               kinds: ["html", "css"] },
+  { id: "audio-no-clip",         fn: detectAudioWithoutClip,      kinds: ["html"] },
+  { id: "subcomp-currentscript", fn: detectSubcompCurrentscript,  kinds: ["html"] },
 ];
 
 const FIX_APPLIERS = {
@@ -497,13 +664,15 @@ const FIX_APPLIERS = {
 };
 
 // --- runner -----------------------------------------------------------------
-function scanFile(filePath) {
+function scanFile(filePath, kind = "html") {
   const text = fs.readFileSync(filePath, "utf8");
   const all = [];
   for (const det of DETECTORS) {
     if (ignored.has(det.id)) continue;
+    const kinds = det.kinds || ["html"];
+    if (!kinds.includes(kind)) continue;
     try {
-      const out = det.fn(text);
+      const out = det.fn(text, filePath);
       if (Array.isArray(out)) all.push(...out);
     } catch (err) {
       // Detector bug shouldn't kill the run.
@@ -547,7 +716,7 @@ function applyFixesToFile(filePath, text, findings) {
     if (ignored.has(id)) continue;
     const det = DETECTORS.find(d => d.id === id);
     if (!det) continue;
-    const fresh = det.fn(scanText).filter(f => f.fixable);
+    const fresh = det.fn(scanText, filePath).filter(f => f.fixable);
     if (fresh.length === 0) continue;
     const applier = FIX_APPLIERS[id];
     updated = applier(scanText, fresh, filePath);
@@ -567,7 +736,8 @@ function applyFixesToFile(filePath, text, findings) {
 }
 
 function run() {
-  const targets = listTargets();
+  const htmlTargets = listTargets();
+  const cssTargets = listCssTargets();
   const result = { files: [], totals: { error: 0, warn: 0, info: 0, fixable: 0 } };
 
   if (!wantJson) {
@@ -577,12 +747,12 @@ function run() {
   let totalFindings = 0;
   let filesWithIssues = 0;
 
-  for (const filePath of targets) {
+  function processOne(filePath, kind) {
     const rel = path.relative(projectRoot, filePath).split(path.sep).join("/");
-    const { text, findings } = scanFile(filePath);
+    const { text, findings } = scanFile(filePath, kind);
     let entry = { file: rel, findings, applied: null };
 
-    if (apply) {
+    if (apply && kind === "html") {
       const out = applyFixesToFile(filePath, text, findings);
       entry.applied = out;
     }
@@ -618,6 +788,9 @@ function run() {
     }
     result.files.push(entry);
   }
+
+  for (const filePath of htmlTargets) processOne(filePath, "html");
+  for (const filePath of cssTargets)  processOne(filePath, "css");
 
   if (wantJson) {
     process.stdout.write(JSON.stringify(result, null, 2) + "\n");

@@ -314,7 +314,7 @@
   </section>
 
   <section style="margin-top: 56px;">
-    <h2 class="section-title">Combos <span class="section-count">10</span></h2>
+    <h2 class="section-title">Combos <span class="section-count">16</span></h2>
     <p class="section-desc">Choreographed multi-primitive recipes — each combo composes 3-5 primitives into a single named "moment". See <code>design/modules/combo-fx.js</code>.</p>
     <div class="grid">
 
@@ -427,11 +427,77 @@
         <pre class="card-api"><code>comboFx.holoFlash(tl, &quot;#sticker&quot;, { at: 0, duration: 1.4, lockup: &quot;#mark&quot; })</code></pre>
       </div>
     </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-glitchStamp.png" alt="comboFx.glitchStamp preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.glitchStamp</h3>
+        <p class="card-desc">Stamp + 1–3 glitch beats — the most-repeated &#39;stamp this with snap&#39; moment in one named call.</p>
+        <pre class="card-api"><code>comboFx.glitchStamp(tl, &quot;#word&quot;, { at: 0, duration: 0.9, bursts: 2 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-pricePop.png" alt="comboFx.pricePop preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.pricePop</h3>
+        <p class="card-desc">Price reveal: currency slides in, strikethrough wipes &#39;was&#39; price, stamp + glitch + glitter on &#39;now&#39;.</p>
+        <pre class="card-api"><code>comboFx.pricePop(tl, &quot;#now&quot;, { at: 0, currency: &quot;#cur&quot;, strikethrough: &quot;#was&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-testimonialReveal.png" alt="comboFx.testimonialReveal preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.testimonialReveal</h3>
+        <p class="card-desc">Avatar + name cascade + role typewriter + per-letter quote stagger + ambient rim shimmer.</p>
+        <pre class="card-api"><code>comboFx.testimonialReveal(tl, &quot;#scene&quot;, { at: 0, avatar: &quot;#a&quot;, name: &quot;#n&quot;, role: &quot;#r&quot;, quote: &quot;#q&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-focusPull.png" alt="comboFx.focusPull preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.focusPull</h3>
+        <p class="card-desc">Rack focus: background defocuses while foreground sharpens — the &#39;lens locked on subject&#39; moment.</p>
+        <pre class="card-api"><code>comboFx.focusPull(tl, &quot;#stage&quot;, { at: 0, foreground: &quot;#fg&quot;, background: &quot;#bg&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-statGroup.png" alt="comboFx.statGroup preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.statGroup</h3>
+        <p class="card-desc">Stat-grid moment: 3–5 counters tick up staggered with shared ambient glitter + glitch on the last.</p>
+        <pre class="card-api"><code>comboFx.statGroup(tl, &quot;#grid&quot;, { at: 0, stats: [&quot;#a&quot;, &quot;#b&quot;, &quot;#c&quot;] })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-spotlight.png" alt="comboFx.spotlight preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.spotlight</h3>
+        <p class="card-desc">Circular vignette on a key word: radial mask opens, host dims, stamp + glitch lock the subject.</p>
+        <pre class="card-api"><code>comboFx.spotlight(tl, &quot;#word&quot;, { at: 0, host: &quot;#host&quot;, auto: true })</code></pre>
+      </div>
+    </article>
     </div>
   </section>
 </main>
 <footer>
-  <p>23 recipes shown (13 primitives + 10 combos) · auto-generated from <code>scripts/build-catalog.mjs</code> · 2026-04-25</p>
+  <p>29 recipes shown (13 primitives + 16 combos) · auto-generated from <code>scripts/build-catalog.mjs</code> · 2026-04-25</p>
 </footer>
 </body>
 </html>

@@ -322,6 +322,102 @@ const recipes = [
     needsFilters: true,
     isCombo: true,
   },
+  {
+    id: "combo-fx-glitchStamp",
+    name: "comboFx.glitchStamp",
+    description: "Stamp + 1–3 glitch beats — the most-repeated 'stamp this with snap' moment in one named call.",
+    apiCall: 'comboFx.glitchStamp(tl, "#word", { at: 0, duration: 0.9, bursts: 2 })',
+    peak: 0.55,
+    body: `<div id="gs-scene" class="combo-scene"><div id="gs-host" class="stamp-host"><span id="gs-text" class="combo-stamp-text">BOLD</span></div></div>`,
+    tweens: `comboFx.glitchStamp(tl, "#gs-text", { at: 0.0, duration: 0.9, intensity: 1.1, seed: 111, fromScale: 1.6, bursts: 3, burstSpacing: 0.22, glitter: true, particleHost: "#gs-host" });`,
+    needsFilters: true,
+    isCombo: true,
+  },
+  {
+    id: "combo-fx-pricePop",
+    name: "comboFx.pricePop",
+    description: "Price reveal: currency slides in, strikethrough wipes 'was' price, stamp + glitch + glitter on 'now'.",
+    apiCall: 'comboFx.pricePop(tl, "#now", { at: 0, currency: "#cur", strikethrough: "#was" })',
+    peak: 0.85,
+    body: `<div id="pp-scene" class="combo-scene">
+      <div class="price-stack">
+        <span id="pp-was" class="price-was">$79</span>
+        <div class="price-row">
+          <span id="pp-currency" class="price-currency">$</span>
+          <span id="pp-now" class="price-now">49</span>
+        </div>
+        <div class="price-label">Launch price</div>
+      </div>
+    </div>`,
+    tweens: `comboFx.pricePop(tl, "#pp-now", { at: 0.0, duration: 1.2, intensity: 1.1, seed: 121, currency: "#pp-currency", strikethrough: "#pp-was" });`,
+    needsFilters: true,
+    isCombo: true,
+  },
+  {
+    id: "combo-fx-testimonialReveal",
+    name: "comboFx.testimonialReveal",
+    description: "Avatar + name cascade + role typewriter + per-letter quote stagger + ambient rim shimmer.",
+    apiCall: 'comboFx.testimonialReveal(tl, "#scene", { at: 0, avatar: "#a", name: "#n", role: "#r", quote: "#q" })',
+    peak: 1.2,
+    body: `<div id="tr-scene" class="combo-scene">
+      <div id="tr-host" class="test-stack">
+        <div id="tr-avatar" class="test-avatar"></div>
+        <div id="tr-name" class="test-name">Maya Patel</div>
+        <div id="tr-role" class="test-role">Director of Design</div>
+        <div id="tr-quote" class="test-quote">"Changed how we ship."</div>
+      </div>
+    </div>`,
+    tweens: `comboFx.testimonialReveal(tl, "#tr-host", { at: 0.0, duration: 1.8, intensity: 1.0, seed: 131, avatar: "#tr-avatar", name: "#tr-name", role: "#tr-role", quote: "#tr-quote", ambient: true });`,
+    isCombo: true,
+  },
+  {
+    id: "combo-fx-focusPull",
+    name: "comboFx.focusPull",
+    description: "Rack focus: background defocuses while foreground sharpens — the 'lens locked on subject' moment.",
+    apiCall: 'comboFx.focusPull(tl, "#stage", { at: 0, foreground: "#fg", background: "#bg" })',
+    peak: 0.9,
+    body: `<div id="fp-scene" class="combo-scene">
+      <div id="fp-stage" class="focus-stage">
+        <div id="fp-bg" class="focus-bg">ATMOSPHERE</div>
+        <div id="fp-fg" class="focus-fg">FOCUS</div>
+      </div>
+    </div>`,
+    tweens: `tl.set("#fp-fg", { filter: "blur(12px)" }, 0);
+             comboFx.focusPull(tl, "#fp-stage", { at: 0.0, duration: 1.4, intensity: 1.1, foreground: "#fp-fg", background: "#fp-bg", fromBlur: 0, toBlur: 10, dolly: true });`,
+    isCombo: true,
+  },
+  {
+    id: "combo-fx-statGroup",
+    name: "comboFx.statGroup",
+    description: "Stat-grid moment: 3–5 counters tick up staggered with shared ambient glitter + glitch on the last.",
+    apiCall: 'comboFx.statGroup(tl, "#grid", { at: 0, stats: ["#a", "#b", "#c"] })',
+    peak: 1.4,
+    body: `<div id="sg-scene" class="combo-scene">
+      <div id="sg-grid" class="stat-grid">
+        <div class="stat-cell"><div id="sg-c1" class="stat-num-sm">12500</div><div class="stat-lbl">Customers</div></div>
+        <div class="stat-cell"><div id="sg-c2" class="stat-num-sm">89</div><div class="stat-lbl">Retention %</div></div>
+        <div class="stat-cell"><div id="sg-c3" class="stat-num-sm">4.9</div><div class="stat-lbl">Rating</div></div>
+      </div>
+    </div>`,
+    tweens: `comboFx.statGroup(tl, "#sg-grid", { at: 0.0, duration: 2.0, intensity: 1.1, seed: 151, stats: ["#sg-c1", "#sg-c2", "#sg-c3"], stagger: 0.22, ambient: true, punchLast: true });`,
+    needsFilters: true,
+    isCombo: true,
+  },
+  {
+    id: "combo-fx-spotlight",
+    name: "comboFx.spotlight",
+    description: "Circular vignette on a key word: radial mask opens, host dims, stamp + glitch lock the subject.",
+    apiCall: 'comboFx.spotlight(tl, "#word", { at: 0, host: "#host", auto: true })',
+    peak: 1.0,
+    body: `<div id="sl-scene" class="combo-scene">
+      <div id="sl-host" class="spot-host">
+        <div class="spot-line">The answer is <span id="sl-target" class="spot-target">THIS</span>.</div>
+      </div>
+    </div>`,
+    tweens: `comboFx.spotlight(tl, "#sl-target", { at: 0.0, duration: 1.6, intensity: 1.1, seed: 161, host: "#sl-host", auto: true, radius: 28, feather: 22, dim: true, dimAmount: 0.7 });`,
+    needsFilters: true,
+    isCombo: true,
+  },
 ];
 
 // ---------- comp HTML template --------------------------------------------
@@ -521,6 +617,112 @@ function buildComp(recipe) {
   .finale-stack { display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 2; position: relative; }
   .finale-mark  { font-weight: 700; font-style: italic; font-size: 56px; color: #FBF9F6; letter-spacing: -0.03em; line-height: 1; text-shadow: 0 4px 20px rgba(0,0,0,0.55); }
   .finale-tag   { font-weight: 500; font-size: 22px; color: #FBF9F6; letter-spacing: -0.01em; }
+
+  /* glitchStamp */
+  .stamp-host {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%;
+  }
+  .combo-stamp-text {
+    font-weight: 800; font-size: 80px; color: #ffd66e;
+    letter-spacing: -0.04em; line-height: 1;
+  }
+
+  /* pricePop */
+  .price-stack { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .price-was {
+    display: inline-block;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 20px; color: rgba(251, 249, 246, 0.55);
+    font-variant-numeric: tabular-nums;
+  }
+  .price-row {
+    display: flex; align-items: baseline; gap: 4px;
+    font-weight: 700; color: #1A9E8F;
+    letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
+  }
+  .price-currency { font-size: 50px; line-height: 1; }
+  .price-now      { font-size: 88px; line-height: 1; }
+  .price-label {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.75); margin-top: 6px;
+  }
+
+  /* testimonialReveal */
+  .test-stack {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    max-width: 440px; padding: 0 16px;
+  }
+  .test-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #ffd66e, #ff8eb4 60%, #5b8cc7 100%);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.45), inset 0 0 12px rgba(255,255,255,0.18);
+    border: 1px solid rgba(251, 249, 246, 0.32);
+  }
+  .test-name {
+    font-weight: 600; font-size: 22px; color: #FBF9F6;
+    letter-spacing: -0.01em; line-height: 1;
+  }
+  .test-role {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.7);
+  }
+  .test-quote {
+    font-style: italic; font-weight: 500; font-size: 22px;
+    color: #FBF9F6; letter-spacing: -0.01em; line-height: 1.2;
+    text-align: center; margin-top: 4px;
+  }
+
+  /* focusPull */
+  .focus-stage {
+    position: relative; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .focus-bg {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-weight: 700; font-size: 92px;
+    color: rgba(91, 140, 199, 0.45);
+    letter-spacing: -0.04em; white-space: nowrap; z-index: 1;
+  }
+  .focus-fg {
+    position: relative; z-index: 2;
+    font-weight: 800; font-size: 64px; color: #ffd66e;
+    letter-spacing: -0.04em;
+    text-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  }
+
+  /* statGroup */
+  .stat-grid {
+    display: flex; align-items: flex-start; justify-content: center; gap: 36px;
+  }
+  .stat-cell { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .stat-num-sm {
+    font-weight: 700; font-size: 56px; line-height: 1;
+    color: #1A9E8F; letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-lbl {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.7);
+  }
+
+  /* spotlight */
+  .spot-host {
+    position: relative; width: 92%;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px 16px;
+  }
+  .spot-line {
+    font-weight: 600; font-size: 32px; color: #FBF9F6;
+    letter-spacing: -0.02em; line-height: 1.15; text-align: center;
+  }
+  .spot-target {
+    color: #ffd66e;
+    text-shadow: 0 4px 14px rgba(255, 214, 110, 0.4);
+  }
 
   /* holo */
   .holo-host {

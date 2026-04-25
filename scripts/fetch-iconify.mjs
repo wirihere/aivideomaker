@@ -17,6 +17,7 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cacheText, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -131,10 +132,19 @@ for (const ref of icons) {
   const outPath = path.join(setDir, `${name}.svg`);
 
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-    if (!text.includes("<svg")) throw new Error(`not an SVG`);
+    const intentKey = cacheKey(url);
+    const hit = await cacheGet(intentKey);
+    let text;
+    if (hit) {
+      text = fs.readFileSync(hit, "utf8");
+      console.log(`[cache hit] ${ref}`);
+    } else {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      text = await res.text();
+      if (!text.includes("<svg")) throw new Error(`not an SVG`);
+      await cacheText(intentKey, text, ".svg");
+    }
     fs.writeFileSync(outPath, text, "utf8");
     console.log(`[ok]   ${ref}  →  ${path.relative(projectRoot, outPath)}`);
     ok++;

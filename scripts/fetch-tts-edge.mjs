@@ -18,6 +18,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { EdgeTTS, createVTT, createSRT } from "edge-tts-universal";
 import { check, record } from "./lib/usage.mjs";
+import { cacheGet, cachePut, cacheText, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -112,6 +113,24 @@ console.log(`[tts] Voice: ${opts.voice}  rate=${opts.rate}  pitch=${opts.pitch}`
 console.log(`[tts] Text:  ${opts.text.length} chars`);
 console.log(`[tts] Out:   ${outPath}`);
 
+// Cache lookup — TTS is deterministic in (voice|text|rate|pitch|volume).
+// Captions cached under a sibling key. Identical args ⇒ no network call.
+const audioKey = cacheKey(`edge|${opts.voice}|${opts.rate}|${opts.pitch}|${opts.volume}|${opts.text}`);
+const capKey = cacheKey(`edge-cap|${opts.voice}|${opts.rate}|${opts.pitch}|${opts.volume}|${opts.text}|${opts.srt ? "srt" : "vtt"}`);
+{
+  const audioHit = await cacheGet(audioKey);
+  if (audioHit) {
+    fs.copyFileSync(audioHit, outPath);
+    const capHit = await cacheGet(capKey);
+    if (capHit) fs.copyFileSync(capHit, captionPath);
+    const stats = fs.statSync(outPath);
+    console.log(`[tts] cache hit ${audioKey.slice(0, 12)}…`);
+    console.log(`[tts] Saved audio: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+    if (capHit) console.log(`[tts] Saved captions: ${captionPath}`);
+    process.exit(0);
+  }
+}
+
 try {
   const tts = new EdgeTTS(opts.text, opts.voice, {
     rate: opts.rate,
@@ -130,12 +149,14 @@ try {
     audioBuf = Buffer.from(result.audio);
   }
   fs.writeFileSync(outPath, audioBuf);
+  await cachePut(audioKey, audioBuf, ".mp3");
   console.log(`[tts] Saved audio: ${outPath} (${(audioBuf.length / 1024).toFixed(1)} KB)`);
 
   // Captions (word-level boundaries)
   if (result.subtitle?.length) {
     const cap = opts.srt ? createSRT(result.subtitle) : createVTT(result.subtitle);
     fs.writeFileSync(captionPath, cap, "utf8");
+    await cacheText(capKey, cap, opts.srt ? ".srt" : ".vtt");
     console.log(`[tts] Saved captions: ${captionPath} (${result.subtitle.length} words)`);
   }
 

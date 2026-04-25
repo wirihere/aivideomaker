@@ -157,13 +157,137 @@
     color: #fff; letter-spacing: -0.02em;
     text-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   }
+
+  /* Scene 11 — glitchStamp */
+  .scene-11 .stamp-host { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+  .scene-11 .stamp-text {
+    font-family: var(--card-font-display);
+    font-weight: 800; font-size: 320px;
+    color: #ffd66e; letter-spacing: -0.04em;
+  }
+
+  /* Scene 12 — pricePop */
+  .scene-12 .price-stack { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .scene-12 .price-was {
+    display: inline-block;
+    font-family: var(--card-font-mono);
+    font-size: 56px;
+    color: rgba(251, 249, 246, 0.55);
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .scene-12 .price-row {
+    display: flex; align-items: baseline; gap: 12px;
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    color: #1A9E8F;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .scene-12 .price-currency { font-size: 160px; line-height: 1; }
+  .scene-12 .price-now      { font-size: 280px; line-height: 1; }
+  .scene-12 .price-label {
+    font-family: var(--card-font-mono);
+    font-size: 28px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.75);
+    margin-top: 14px;
+  }
+
+  /* Scene 13 — testimonialReveal */
+  .scene-13 .test-stack {
+    display: flex; flex-direction: column; align-items: center; gap: 26px;
+    max-width: 1200px;
+  }
+  .scene-13 .test-avatar {
+    width: 180px; height: 180px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #ffd66e, #ff8eb4 60%, #5b8cc7 100%);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45), inset 0 0 30px rgba(255,255,255,0.18);
+    border: 2px solid rgba(251, 249, 246, 0.32);
+  }
+  .scene-13 .test-name {
+    font-family: var(--card-font-display);
+    font-weight: 600; font-size: 64px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.01em;
+  }
+  .scene-13 .test-role {
+    font-family: var(--card-font-mono);
+    font-size: 28px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.7);
+  }
+  .scene-13 .test-quote {
+    font-family: var(--card-font-display);
+    font-weight: 500; font-style: italic; font-size: 72px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.01em;
+    line-height: 1.18;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  /* Scene 14 — focusPull */
+  .scene-14 .focus-stage { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .scene-14 .focus-bg {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: var(--card-font-display);
+    font-weight: 700; font-size: 380px;
+    color: rgba(91, 140, 199, 0.40);
+    letter-spacing: -0.04em;
+    white-space: nowrap;
+    z-index: 1;
+  }
+  .scene-14 .focus-fg {
+    position: relative; z-index: 2;
+    font-family: var(--card-font-display);
+    font-weight: 800; font-size: 240px;
+    color: #ffd66e; letter-spacing: -0.04em;
+    text-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Scene 15 — statGroup */
+  .scene-15 .stat-grid {
+    display: flex; align-items: flex-start; justify-content: center;
+    gap: 120px;
+  }
+  .scene-15 .stat-cell { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .scene-15 .stat-cell .num {
+    font-family: var(--card-font-display);
+    font-weight: 700; font-size: 200px; line-height: 1;
+    color: #1A9E8F; letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .scene-15 .stat-cell .lbl {
+    font-family: var(--card-font-mono);
+    font-size: 24px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.7);
+  }
+
+  /* Scene 16 — spotlight */
+  .scene-16 .spot-host {
+    position: relative;
+    width: 1400px; min-height: 360px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 80px;
+  }
+  .scene-16 .spot-line {
+    font-family: var(--card-font-display);
+    font-weight: 600; font-size: 140px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-align: center;
+  }
+  .scene-16 .spot-target {
+    color: #ffd66e;
+    text-shadow: 0 8px 30px rgba(255, 214, 110, 0.4);
+  }
 </style>
 </head>
 <body>
 <div id="demo" class="demo clip"
      data-composition-id="combo-fx-demo"
      data-width="1920" data-height="1080"
-     data-start="0" data-duration="30" data-track-index="0">
+     data-start="0" data-duration="48" data-track-index="0">
 
   <!-- ===== Scene 1 — superImpact (0–3s) ===== -->
   <div id="scene-1" class="scene scene-1 clip"
@@ -282,6 +406,84 @@
     </div>
   </div>
 
+  <!-- ===== Scene 11 — glitchStamp (30–33s) ===== -->
+  <div id="scene-11" class="scene scene-11 clip"
+       data-start="30" data-duration="3" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="label-chip">glitchStamp · word stamp</div>
+    <div id="s11-host" class="stamp-host">
+      <div id="s11-text" class="stamp-text">BOLD</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 12 — pricePop (33–36s) ===== -->
+  <div id="scene-12" class="scene scene-12 clip"
+       data-start="33" data-duration="3" data-track-index="1">
+    <div class="label-chip">pricePop · price reveal</div>
+    <div class="price-stack">
+      <span id="s12-was" class="price-was">$79</span>
+      <div class="price-row">
+        <span id="s12-currency" class="price-currency">$</span>
+        <span id="s12-now" class="price-now">49</span>
+      </div>
+      <div class="price-label">Launch price</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 13 — testimonialReveal (36–39s) ===== -->
+  <div id="scene-13" class="scene scene-13 clip"
+       data-start="36" data-duration="3" data-track-index="1">
+    <div class="label-chip">testimonialReveal · quote</div>
+    <div id="s13-host" class="test-stack">
+      <div id="s13-avatar" class="test-avatar"></div>
+      <div id="s13-name" class="test-name">Maya Patel</div>
+      <div id="s13-role" class="test-role">Director of Design</div>
+      <div id="s13-quote" class="test-quote">"It changed how our team ships."</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 14 — focusPull (39–42s) ===== -->
+  <div id="scene-14" class="scene scene-14 clip"
+       data-start="39" data-duration="3" data-track-index="1"
+       data-scene-grade="teal-orange">
+    <div class="label-chip">focusPull · rack focus</div>
+    <div id="s14-stage" class="focus-stage">
+      <div id="s14-bg" class="focus-bg">ATMOSPHERE</div>
+      <div id="s14-fg" class="focus-fg">FOCUS</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 15 — statGroup (42–45s) ===== -->
+  <div id="scene-15" class="scene scene-15 clip"
+       data-start="42" data-duration="3" data-track-index="1">
+    <div class="label-chip">statGroup · stat grid</div>
+    <div id="s15-grid" class="stat-grid">
+      <div class="stat-cell">
+        <div id="s15-c1" class="num">12500</div>
+        <div class="lbl">Customers</div>
+      </div>
+      <div class="stat-cell">
+        <div id="s15-c2" class="num">89</div>
+        <div class="lbl">Retention %</div>
+      </div>
+      <div class="stat-cell">
+        <div id="s15-c3" class="num">4.9</div>
+        <div class="lbl">Rating</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 16 — spotlight (45–48s) ===== -->
+  <div id="scene-16" class="scene scene-16 clip"
+       data-start="45" data-duration="3" data-track-index="1">
+    <div class="label-chip">spotlight · key word</div>
+    <div id="s16-host" class="spot-host">
+      <div class="spot-line">
+        The answer is <span id="s16-target" class="spot-target">THIS</span>.
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- SVG filter defs required by combos using inkBleed / glitchBurst -->
@@ -385,6 +587,57 @@
   comboFx.holoFlash(tl, "#s10-host", {
     at: 27.2, duration: 2.4, intensity: 1.1, seed: 101,
     lockup: "#s10-mark",
+  });
+
+  // Scene 11 — glitchStamp on a hero word; 3 bursts + glitter dust.
+  comboFx.glitchStamp(tl, "#s11-text", {
+    at: 30.4, duration: 1.8, intensity: 1.1, seed: 111,
+    fromScale: 1.6, bursts: 3, burstSpacing: 0.32,
+    glitter: true, particleHost: "#s11-host",
+  });
+
+  // Scene 12 — pricePop with $ symbol + strikethrough on $79.
+  comboFx.pricePop(tl, "#s12-now", {
+    at: 33.4, duration: 1.8, intensity: 1.1, seed: 121,
+    currency: "#s12-currency",
+    strikethrough: "#s12-was",
+  });
+
+  // Scene 13 — testimonialReveal: avatar, name, role, quote.
+  comboFx.testimonialReveal(tl, "#s13-host", {
+    at: 36.2, duration: 2.5, intensity: 1.0, seed: 131,
+    avatar: "#s13-avatar",
+    name: "#s13-name",
+    role: "#s13-role",
+    quote: "#s13-quote",
+    ambient: true,
+  });
+
+  // Scene 14 — focusPull: bg ATMOSPHERE blurs, fg FOCUS sharpens.
+  comboFx.focusPull(tl, "#s14-stage", {
+    at: 39.4, duration: 2.0, intensity: 1.1,
+    foreground: "#s14-fg",
+    background: "#s14-bg",
+    fromBlur: 0, toBlur: 10,
+    dolly: true,
+  });
+  // Pre-position foreground blurred so the rack-in is felt.
+  tl.set("#s14-fg", { filter: "blur(12px)" }, 39.0);
+
+  // Scene 15 — statGroup with 3 counters.
+  comboFx.statGroup(tl, "#s15-grid", {
+    at: 42.3, duration: 2.4, intensity: 1.1, seed: 151,
+    stats: ["#s15-c1", "#s15-c2", "#s15-c3"],
+    stagger: 0.22, ambient: true, punchLast: true,
+  });
+
+  // Scene 16 — spotlight on the key word "THIS"; auto-centers on the target.
+  comboFx.spotlight(tl, "#s16-target", {
+    at: 45.3, duration: 2.2, intensity: 1.1, seed: 161,
+    host: "#s16-host",
+    auto: true,
+    radius: 28, feather: 22,
+    dim: true, dimAmount: 0.7,
   });
 
   // Standalone autoplay — only when loaded directly in a top-level browser tab.

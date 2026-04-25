@@ -1,5 +1,5 @@
-// scripts/render-queue.mjs
 // Render queue — sequentially render multiple composition files to MP4.
+// (This file is scripts/render-queue.mjs.)
 //
 // Usage:
 //   npm run render:queue -- compositions/text-fx-demo.html compositions/effect-fx-demo.html

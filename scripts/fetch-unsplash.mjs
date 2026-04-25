@@ -14,6 +14,7 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cachePut, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -68,6 +69,18 @@ if (opts.orientation) params.set("orientation", opts.orientation);
 const searchUrl = `https://api.unsplash.com/search/photos?${params.toString()}`;
 console.log(`[fetch] Search: ${searchUrl}`);
 
+// Cache lookup keyed on user intent (term+orientation+index). Same args twice
+// ⇒ second run skips the API call AND the byte download.
+const intentKey = cacheKey(`unsplash|${opts.term}|${opts.orientation || ""}|${opts.index}`);
+const hit = await cacheGet(intentKey);
+if (hit) {
+  fs.copyFileSync(hit, outPath);
+  const stats = fs.statSync(outPath);
+  console.log(`[fetch] cache hit ${intentKey.slice(0, 12)}…`);
+  console.log(`[fetch] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+  process.exit(0);
+}
+
 try {
   const searchRes = await fetch(searchUrl, {
     headers: {
@@ -98,6 +111,7 @@ try {
   if (!imgRes.ok) throw new Error(`Image HTTP ${imgRes.status}`);
   const buf = Buffer.from(await imgRes.arrayBuffer());
   fs.writeFileSync(outPath, buf);
+  await cachePut(intentKey, buf, path.extname(outPath) || ".jpg");
 
   // Save attribution sidecar
   const credit = `Photo by ${photo.user.name} (https://unsplash.com/@${photo.user.username}) on Unsplash`;

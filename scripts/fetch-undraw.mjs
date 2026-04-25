@@ -16,6 +16,7 @@ import { chromium } from "playwright";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cacheText, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -48,6 +49,24 @@ an illustration ends in /<slug>.`);
 }
 
 fs.mkdirSync(outDir, { recursive: true });
+
+// Cache lookup keyed on the user-facing intent (slug-or-search + recolor).
+// SVG body changes when --color changes, so colour MUST be in the key.
+const intentKey = cacheKey(
+  `undraw|${opts.slug || `search:${opts.search}`}|color:${opts.color}`
+);
+{
+  const hit = await cacheGet(intentKey);
+  if (hit) {
+    const body = fs.readFileSync(hit, "utf8");
+    const outName = opts.name || `${opts.slug || "undraw"}.svg`;
+    const outPath = path.join(outDir, outName.endsWith(".svg") ? outName : `${outName}.svg`);
+    fs.writeFileSync(outPath, body, "utf8");
+    console.log(`[fetch] cache hit ${intentKey.slice(0, 12)}…`);
+    console.log(`[fetch] Saved: ${path.relative(projectRoot, outPath)} (${(body.length / 1024).toFixed(1)} KB)`);
+    process.exit(0);
+  }
+}
 
 const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({
@@ -133,6 +152,7 @@ try {
   const outName = opts.name || `${opts.slug || "undraw"}.svg`;
   const outPath = path.join(outDir, outName.endsWith(".svg") ? outName : `${outName}.svg`);
   fs.writeFileSync(outPath, body, "utf8");
+  await cacheText(intentKey, body, ".svg");
   console.log(`[fetch] Saved: ${path.relative(projectRoot, outPath)} (${(body.length / 1024).toFixed(1)} KB)`);
 } catch (err) {
   console.error(`[fetch] FAILED: ${err.message}`);

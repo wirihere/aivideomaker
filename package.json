@@ -24,6 +24,7 @@
     "lint": "npx hyperframes lint",
     "lint:strict": "node scripts/lint-strict.mjs",
     "render": "node scripts/render.mjs",
+    "render:vite": "node scripts/render-vite.mjs",
     "render:queue": "node scripts/render-queue.mjs",
     "video": "node scripts/video.mjs",
     "check": "npm run lint && npm run lint:strict && npm run smoke",
@@ -32,7 +33,10 @@
     "cache:stats": "node scripts/lib/asset-cache.mjs stats",
     "cache:clear": "node scripts/lib/asset-cache.mjs clear",
     "pull:assets": "node scripts/pull-assets.mjs",
-    "pick:music": "node scripts/pick-music.mjs"
+    "pick:music": "node scripts/pick-music.mjs",
+    "renders:list": "node scripts/renders-prune.mjs --list",
+    "renders:prune": "node scripts/renders-prune.mjs",
+    "help": "node scripts/help.mjs"
   },
   "keywords": [],
   "author": "",

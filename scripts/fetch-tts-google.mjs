@@ -13,6 +13,7 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cachePut, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -47,6 +48,20 @@ if (!opts.name) opts.name = "narration.mp3";
 
 fs.mkdirSync(outDir, { recursive: true });
 const outPath = path.join(outDir, opts.name);
+
+// Cache lookup — gTTS is deterministic in (lang|text). Identical args ⇒
+// skip the chunked download loop entirely.
+const intentKey = cacheKey(`gtts|${opts.lang}|${opts.text}`);
+{
+  const hit = await cacheGet(intentKey);
+  if (hit) {
+    fs.copyFileSync(hit, outPath);
+    const stats = fs.statSync(outPath);
+    console.log(`[tts] cache hit ${intentKey.slice(0, 12)}…`);
+    console.log(`[tts] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+    process.exit(0);
+  }
+}
 
 // --- Chunking ----------------------------------------------------------------
 // gTTS limits each request to ~200 chars. Split on sentence boundaries first,
@@ -121,4 +136,5 @@ for (let i = 0; i < chunks.length; i++) {
 
 const merged = Buffer.concat(buffers);
 fs.writeFileSync(outPath, merged);
+await cachePut(intentKey, merged, ".mp3");
 console.log(`[tts] Saved: ${outPath} (${(merged.length / 1024).toFixed(1)} KB)`);

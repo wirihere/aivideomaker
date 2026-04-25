@@ -671,6 +671,32 @@ Loaded automatically through [design/modules/all.js](design/modules/all.js). Pla
 
 Demo composition: [compositions/combo-fx-demo.html](compositions/combo-fx-demo.html) (1920×1080, 30s — one combo per 3-second scene with label-chip).
 
+#### Batch-2 combos (2026-04-26) — census-driven additions
+
+After the original ten combos shipped, a 25-template usage census ([docs/combo-fx-batch-2-plan.md](docs/combo-fx-batch-2-plan.md)) revealed that 22/25 templates were still wiring 4-7 bare-primitive calls per scene that matched recurring named-moment patterns. Six combos were added to consolidate the most-repeated sequences and own moments the original ten left uncovered. Each one survived the same "≥3 templates would adopt + composes existing primitives (or surfaces a new primitive worth shipping)" gate.
+
+| Combo | Owns the moment of… | Adopters | Why distinct from existing combos |
+|---|---|---:|---|
+| `comboFx.glitchStamp(tl, "#hook", { at, duration:0.9, bursts, burstSpacing, fromScale, glitter, intensity, seed })` | "stamp the word/headline/price/date with snap-of-energy" — the most-repeated 4-call sequence in the library | 9 templates (~25 invocations) | `superImpact` requires a number; `kineticBurst` is letter-explosion; `hyperGlitch` is sub-second disruption. None is "stamp + double-glitch" exactly. |
+| `comboFx.pricePop(tl, "#price", { at, duration:1.2, currency, strikethrough, particleHost, intensity, seed })` | price reveal — currency entrance, optional strikethrough wipe on "before" price, scale + glitch + glitter on "now" | 4 templates | `superImpact` runs a counter from 0 (wrong for prices — `$49` doesn't tick up). pricePop is currency-fade + strike-wipe + stamp + glitter. |
+| `comboFx.testimonialReveal(tl, "#stage", { at, duration:1.8, avatar, name, role, quote, ambient, intensity, seed })` | name + role + avatar + quote choreography — the "real human said this" moment | 7 templates | `cinematicReveal` is one-headline; `dreamSequence` is ambient. Nothing today choreographs four element types (avatar / name-cascade / role-typeOn / quote-stagger) into one beat. |
+| `comboFx.focusPull(tl, "#stage", { at, duration:1.4, foreground, background, fromBlur, toBlur, dolly, intensity })` | depth-of-field rack from background to foreground — the "lens just refocused" moment | 5 templates | `multiplaneDolly` is Z-translation, not focus shift. `cinematicReveal` uses dolly + ink-bleed but never blur. No combo today reads as "the lens just refocused". |
+| `comboFx.statGroup(tl, "#grid", { at, duration:2.0, stats:[…], stagger, ambient, punchLast, intensity, seed })` | 3-5 stat numbers count up together with shared shimmer — the stat-grid moment | 7 templates | `superImpact` is *one* hero number. `statGroup` is N counters with staggered starts and a single ambient blanket. |
+| `comboFx.spotlight(tl, "#answer", { at, duration:1.6, host, radius, feather, centerX, centerY, auto, dim, dimAmount, intensity, seed })` | circular vignette focus on a key element while dimming everything else — the "this is the answer" moment | 4 templates | No combo today owns "isolate one element with a soft halo + dim siblings". `signalPulse` is rings; `dreamSequence` is cool grade — neither isolates a single element. Depends on the new `effectFx.radialMask` primitive. |
+
+Same constraints as the original ten (deterministic / `tl.fromTo` only / glitch ≤ 0.25s / filters cleared / returns `{ duration }`). Demo composition extended from 10 → 16 scenes; catalog regenerated. Two combos (`focusPull`, `spotlight`) depend on new effect-fx primitives — see next section.
+
+### New effect-fx primitives (2026-04-26) — `rackFocus` + `radialMask`
+
+Two new primitives shipped alongside batch-2 to unblock `focusPull` and `spotlight`. Both follow the same Windows-safe pattern as `effectFx.inkBleed` (lock filter at start, clear on completion). Loaded via the standard module bundle.
+
+| Primitive | API | What it does |
+|---|---|---|
+| `effectFx.rackFocus(timeline, target, { at, duration:0.6, from:8, to:0, ease:"power2.out", clearAfter:true })` | `effectFx.rackFocus(tl, el, { at, duration, from, to, ease, clearAfter })` | Tweens `filter: blur(<from>px → <to>px)` on the target. Drops the filter on completion to free render cost and prevent stacked blurs bleeding into later tweens. Used by `focusPull` (sharp→blurred on bg, blurred→sharp on fg). |
+| `effectFx.radialMask(timeline, target, { at, duration:0.5, from:0, to:50, centerX:50, centerY:50, feather:8, ease, clearAfter:true })` | `effectFx.radialMask(tl, el, { at, duration, from, to, centerX, centerY, feather, ease, clearAfter })` | Opens a soft-edged spotlight mask on the target by tweening `--rm-radius` (consumed by an injected `mask-image: radial-gradient(...)` rule). Center + feather pinned with `tl.set(...)` at `at` so overlapping calls don't fight. Cleans up the host class on completion. Used by `spotlight` (open then close). |
+
+Both are pure CSS-variable bridges (no DOM mutation per frame), so they're cheap and seek-safe. `radialMask` injects its rule once via `ensureRadialMaskRule()` mirroring the `cinemagraphRotate` / `inkBleed` pattern.
+
 ### CSS animation budget — use `@keyframes` for repetitive motion, GSAP for state changes
 The studio iframe hangs around ~1000-2000 GSAP timeline children. The renderer itself is fine with thousands, but eager script execution in the studio's iframe wrapper is the bottleneck. **Rule of thumb:**
 - **Use GSAP** for: scene entries/exits, one-shot reveals, slide-on tweens, anything timeline-relative or position-aware.
@@ -1111,6 +1137,26 @@ Don't treat music as a pure capability-agent task. The user has taste on music a
 
 ---
 
+### 2026-04-26 · Combo-fx batch-2 — 6 combos + 2 primitives
+- **What:** Shipped the second wave of `comboFx.*` recipes after a 25-template usage census revealed that 22/25 templates still wired 4-7 bare-primitive calls per scene that matched recurring named-moment patterns. Six new combos (`glitchStamp`, `pricePop`, `testimonialReveal`, `focusPull`, `statGroup`, `spotlight`) and two new effect-fx primitives (`rackFocus`, `radialMask`) that unblocked `focusPull` and `spotlight`. Plan + verdict in [docs/combo-fx-batch-2-plan.md](docs/combo-fx-batch-2-plan.md). `5 files changed, 1335 insertions(+), 3 deletions(-)`.
+- **Outcome:** done — combo-fx-demo composition extended 10→16 scenes (one combo per ~3-second scene with label-chip), [docs/effects-catalog.html](docs/effects-catalog.html) regenerated via `npm run catalog`, lint clean.
+- **Worked:**
+  - **Census-driven prioritisation.** The combo with the highest adoption (`glitchStamp` — 9 templates / ~25 invocations) wasn't on the prior gap doc at all; it surfaced from grepping bare-primitive sequences across `compositions/templates/*.html`. The two highest-adoption combos in batch-2 (`glitchStamp` and `statGroup`, 7+ adopters each) both came from the census, not the gap doc. Lesson: when shipping a batch of combos, run the bare-primitive grep before drafting the candidate list — usage density beats armchair gap analysis.
+  - **Primitive-first sequencing.** `rackFocus` and `radialMask` shipped before any combo that depended on them, so each combo could be developed against a working primitive instead of stubs. Took ~90 minutes for both primitives (close to the 30+60min plan estimate).
+  - **CSS-variable bridge for `radialMask`** — same pattern as `cinemagraphRotate` (inject a `.fx-radial-mask { mask-image: radial-gradient(circle at var(--rm-cx) var(--rm-cy), transparent var(--rm-radius), black calc(...)); }` rule once on first call, then tween `--rm-radius` via `tl.fromTo`). Pinning the static positioning vars (`--rm-cx`, `--rm-cy`, `--rm-feather`) with `tl.set(...)` at `at` so overlapping calls on the same host don't fight each other.
+  - **Auto-center for `spotlight`** — `opts.auto: true` reads target + host bounding rects and computes `centerX`/`centerY` as % of host. Lets templates spotlight an element without hand-measuring positions.
+- **Friction:**
+  - **Latent `pick()` bug found mid-batch.** Several existing combos called `pick(o, "duration", default)` — the helper returned the default even when `o.duration` was a number (truthy-check vs `!= null`). Caught when `pricePop` was passing `1.2` and the helper still applied the inner default `0.9`. Fixed inline (now `o[key] != null ? o[key] : default`); affects all sixteen combos so worth a regression sweep next render. Filing under §3 (pick-helper semantics).
+  - **`statGroup` API requires `opts.stats` as an array of selectors** — early dev pass had it traverse `target.querySelectorAll(".stat-num")` automatically; reverted to explicit selectors so templates with mixed-purpose grids don't accidentally animate non-stat children. Console-warns with a clear message when missing.
+- **Next time:**
+  - **Run the bare-primitive grep before the next combo batch.** `grep -rE "textFx\.\w+\(|effectFx\.\w+\(|glitterFx\.\w+\(" compositions/templates/` partitions the call sites; group by 2-3-call windows to surface candidate combos. Use the gap doc as a sanity check, not a primary source.
+  - **Smoke-test combos against 2 templates each before declaring done** — the plan's Day-3 step (retrofit the bare-primitive sequence to the combo call, render, diff) is the real validation. Skipping it means the combo "works" in the demo but might miss a quirk only real-template scenes hit. Park as a follow-up.
+  - **When a combo depends on a new primitive, ship the primitive first** with a unit demo in `compositions/effect-fx-demo.html`. Saves the "is this combo bug or primitive bug?" question.
+- **Promoted to §4 / §3?** Yes — §3 updated with the batch-2 combos table + the new `rackFocus` / `radialMask` primitives section. No new §4 pitfall (the `pick()` bug is fixed; documenting the option-default-helper semantics in §3 is enough).
+- **Parking-lot updates:** see §8 "Recently closed (2026-04-26)" — combo-fx batch-2 closes the gap-doc / batch-2 work item; eight Tier-2/Tier-3 candidates from the gap doc explicitly deferred-with-reason.
+
+---
+
 ### 2026-04-25 (late night) · Tech-stack streamline pass — 8 wins shipped (4 main + 3 agent-fanned + 1 follow-up)
 - **What:** Massive streamline pass triggered by user direct ask "do all you can auto mode" + "use as many subagents as possible". Combined main-thread work with 3 parallel general-purpose agents touching non-overlapping files. Eight deliverables:
 
@@ -1497,6 +1543,44 @@ Open ideas that aren't blocked but haven't been done. Move into a real task list
 - **Remotion or Motion Canvas evaluation** — alternative tech stacks captured 2026-04-25 evening. Current HyperFrames stack works but if friction grows, these are credible exits.
 - **Telemetry for renders** — track which effects are used, which fail, which combinations produce the best visual results. Foundation for "auto-suggest effect for scene type".
 - **AI-assisted composition** — feed a brief, get back a populated index.html with template + module choices. The current building blocks (templates, modules, scaffolders) are the substrate; this is the layer above.
+
+### Recently closed (2026-04-26)
+
+- ✅ **Copy-apply across all 25 templates** → 8 structural + 17 vertical templates each carry a `<!-- Copy framework: <name> · applied 2026-04-26 -->` breadcrumb and rewritten copy (hooks/headlines/body/captions/CTA) under the playbook word caps + Tier 1 verb-first CTA rule. Layout DOM, IDs, GSAP calls, scene timing, fonts, palette tokens **untouched**. `npx hyperframes lint --json` `ok:true` (0/0/0). Frameworks applied: AIDA, PAS, FAB, STAR, BAB, Hero's Journey, Transformation, Q-Payoff, Sensory (and combos). Summary table in [docs/copy-apply-2026-04-26.md](docs/copy-apply-2026-04-26.md).
+- ✅ **Wave-C streamline + lint detector implementations** — 4 ships: (1) `scripts/renders-prune.mjs` + `npm run renders:list/prune` with `.keep` sentinels and ffprobe via `getFfmpegPath`. Smoke prints a footer warning when `renders/` exceeds 200 MB. (2) `scripts/help.mjs` + `npm run help` — discovers all `package.json` scripts, opens each `node scripts/X.mjs` for the first comment, groups by inferred category, `--md` flag emits QUICKSTART. (3) Asset cache extended through 8 fetchers (`pexels`, `iconify`, `undraw`, `unsplash`, 4× TTS) via `cacheText()` helper for UTF-8 payloads (captions, SVG sources). All wires mirror the existing Pixabay pattern (`cacheKey` → early-exit on hit → `cachePut` after write). (4) 3 lint detectors added to `scripts/fix.mjs`: `font-var` (warn, 482 hits — `font-family: var(--…)` in HTML inline `<style>` + `design/**/*.css` excluding `tokens-*` and `@font-face` blocks), `audio-no-clip` (error, 0 hits — production all clean), `subcomp-currentscript` (warn, 9 hits — sub-comps use `<template>` + `document.currentScript`). `lint:strict` gating preserved.
+- ✅ **Combo-fx batch-2 — combo-gap follow-up shipped** → commit `8395c9b` "Combo-fx batch-2: 6 new combos + fix latent pick() bug". 6 new `comboFx.*` recipes (`glitchStamp`, `pricePop`, `testimonialReveal`, `focusPull`, `statGroup`, `spotlight`) + 2 new `effectFx.*` primitives (`rackFocus`, `radialMask`) that unblocked `focusPull` and `spotlight`. Demo composition extended 10→16 scenes; effects catalog regenerated. Plan + verdict in [docs/combo-fx-batch-2-plan.md](docs/combo-fx-batch-2-plan.md); §3 + §6 updated.
+
+### Parked with verdicts (2026-04-26 wave-B feasibility audits)
+
+These items were evaluated this session and parked with explicit verdicts so future sessions don't relitigate without new signal. Each links to the full audit doc.
+
+- 🟡 **Bun runtime swap** → **WAIT until Q3 2026.** Playwright + Windows + Bun is broken upstream (oven-sh/bun#13543). `npm run check` speedup ceiling is ~100ms (not ~800ms — bulk of `check` time is real work). Revisit after upstream fix. See [docs/bun-feasibility-2026-04-26.md](docs/bun-feasibility-2026-04-26.md).
+- 🟡 **TypeScript for `scripts/`** → **JSDOC-CHECKJS, defer full migration.** 11.5k LOC across 38 .mjs files; full rename is 25–40h. JSDoc + `tsconfig.json` w/ `allowJs` + `checkJs` is ~4h and covers the one real type-shaped contract (`fix.mjs` ↔ `lint-strict.mjs`). See [docs/typescript-scripts-feasibility-2026-04-26.md](docs/typescript-scripts-feasibility-2026-04-26.md).
+- 🟡 **WebCodecs frame capture** → **WAIT for Vite-renderer Phase 3 plateau.** Realistic speedup is ~2× wall-clock, but Phase 3 (raw RGBA pipe + parallel BrowserContexts) gets there without the 12h migration. Re-prototype on `text-fx-demo.html` only if Phase 3 plateaus. See [docs/webcodecs-feasibility-2026-04-26.md](docs/webcodecs-feasibility-2026-04-26.md).
+- 🟢 **WebGL/WebGPU effects** → **PROTOTYPE-NARROW.** 2 effects (DOF bokeh + radial chromatic aberration) read visibly fake under CSS filters. Build with `twgl.js` (~30KB) as additive procedural canvas overlay (no `html2canvas` snapshot). 16–20h for both. The other CSS-filter effects read designed-on-purpose. See [docs/webgl-effects-feasibility-2026-04-26.md](docs/webgl-effects-feasibility-2026-04-26.md).
+- ✅ **HyperFrames CLI bump** → **NO-OP — already on 0.4.26.** `npx` resolved `latest` when 0.4.26 published 2026-04-25 15:16 UTC. 0.4.25 + 0.4.26 are both pure patch + irrelevant to our use cases. 0.5.0-alpha.2 is a 20+ commit Studio-shell rewrite — wait for stable 0.5.0. Optional pin: `npm i -D hyperframes@0.4.26`. See [docs/hyperframes-upgrade-2026-04-26.md](docs/hyperframes-upgrade-2026-04-26.md).
+- ✅ **Smoke parallel-scene speedup** → **DONE in `ca4b666`.** `smoke` 0.9–1.0s; `smoke:diff` floors at ~2.0s (Chromium launch + probe nav). Lower than that needs architectural change. See [docs/smoke-speedup-audit.md](docs/smoke-speedup-audit.md).
+
+### Streamline + lint detector proposals (2026-04-26)
+
+Two scout passes produced ranked proposals, with the top items dispatched as wave-C implementers. The proposals docs themselves are the parking-lot entries for un-shipped items.
+
+- 5 streamline proposals — see [docs/streamline-proposals-2026-04-26.md](docs/streamline-proposals-2026-04-26.md). Wave C in flight: #3 `npm run help`, #4 `renders-prune`, #5 asset-cache extension. #1 (render progress reporting) and #2 (compose-from-template head fragment) are dispatch-ready next session.
+- 5 lint detector proposals — see [docs/lint-detector-proposals-2026-04-26.md](docs/lint-detector-proposals-2026-04-26.md). Wave C in flight: top 3 (`font-var`, `audio-no-clip`, `subcomp-currentscript`). #4 `video-bleed-guard` (M-effort, nearest-ancestor check) and #5 `repeat-no-final-set` (M-effort, look-ahead) are dispatch-ready next session.
+
+### Stale baselines flagged 2026-04-26
+
+- ⚠ `npm run smoke:diff` reports 4 scenes at 25.20% pixel-changed — stale baselines, unrelated to the speedup. Refresh with `npm run smoke:baseline` next session.
+
+**Deferred from the batch-2 plan (won't ship — won't reconsider unless adoption changes):** the plan's "Dropped from gap doc" table flagged 8 candidate combos as not worth shipping. Captured here so a future session doesn't relitigate them:
+- ⏸ **`marqueeScroll`** — only 1 template (faq-quick-30s) needs it; inline 5 lines of `tl.fromTo` translateX.
+- ⏸ **`fadeMontage`** — no current template wires it; speculative until adoption appears.
+- ⏸ **`countdown`** — only 1-2 templates (event-special, feature-launch); existing `textFx.counter` + `textFx.stamp` chain handles it well enough.
+- ⏸ **`urgencyFlash`** — only 1 template (trades-service-callout-20s); inline 5 lines of red-tint + `glitchBurst`.
+- ⏸ **`brandLockup`** — `confettiFinale` already covers this with `intensity: 0.4`.
+- ⏸ **`statBurst`** — subsumed by the shipped `statGroup`.
+- ⏸ **`pulseGroup`** — `glitterFx.ambient` + manual stagger handles this; not worth a combo wrapper.
+- ⏸ **`textTwist`** — speculative; no current template adopters.
 
 ### Recently closed (2026-04-25 streamline pass)
 

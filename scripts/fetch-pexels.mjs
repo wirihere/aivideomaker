@@ -17,6 +17,7 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { cacheGet, cachePut, cacheKey } from "./lib/asset-cache.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -84,6 +85,18 @@ const apiUrl =
 console.log(`[fetch] Search: ${apiUrl}`);
 console.log(`[fetch] Out:    ${outPath}`);
 
+// Cache lookup keyed on user intent (kind+term+orientation+index). Same args
+// twice ⇒ second run skips the API call AND the byte download.
+const intentKey = cacheKey(`pexels|${kind}|${opts.term}|${opts.orientation || ""}|${opts.index}`);
+const hit = await cacheGet(intentKey);
+if (hit) {
+  fs.copyFileSync(hit, outPath);
+  const stats = fs.statSync(outPath);
+  console.log(`[fetch] cache hit ${intentKey.slice(0, 12)}…`);
+  console.log(`[fetch] Saved: ${outPath} (${(stats.size / 1024).toFixed(1)} KB)`);
+  process.exit(0);
+}
+
 try {
   const res = await fetch(apiUrl, {
     headers: { Authorization: KEY },
@@ -101,6 +114,7 @@ try {
     if (!imgRes.ok) throw new Error(`Image HTTP ${imgRes.status}`);
     const buf = Buffer.from(await imgRes.arrayBuffer());
     fs.writeFileSync(outPath, buf);
+    await cachePut(intentKey, buf, path.extname(outPath) || ".jpg");
 
     const credit = `Photo by ${item.photographer} on Pexels (${item.url})`;
     fs.writeFileSync(outPath + ".credit.txt", credit + "\n");
@@ -122,6 +136,7 @@ try {
     if (!vidRes.ok) throw new Error(`Video HTTP ${vidRes.status}`);
     const buf = Buffer.from(await vidRes.arrayBuffer());
     fs.writeFileSync(outPath, buf);
+    await cachePut(intentKey, buf, path.extname(outPath) || ".mp4");
 
     const credit = `Video by ${item.user.name} on Pexels (${item.url})`;
     fs.writeFileSync(outPath + ".credit.txt", credit + "\n");
