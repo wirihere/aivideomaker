@@ -27,12 +27,15 @@
     background: #0E0E12;
   }
 
-  /* Each scene clip — framework hides inactive ones via class="clip". */
+  /* Each scene clip — framework hides inactive ones via class="clip". The
+     dark base background is pinned per-scene so cards.css's paper-tone
+     :root tokens can't bleed through on control panels. */
   .scene {
     position: absolute; inset: 0;
     display: flex; align-items: center; justify-content: center;
     text-align: center;
     overflow: hidden;
+    background: #0E0E12;
   }
 
   /* Label chip — identifies the scene on every panel. */
