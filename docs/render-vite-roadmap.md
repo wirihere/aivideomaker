@@ -132,24 +132,66 @@ multi-pass compositing). Always uses the bundled ffmpeg via
 - File delta: `scripts/render-vite.mjs` +52 / -10 lines (net +42), no new
   npm dependencies.
 
-## Phase 5 — perf (parked)
+## Phase 5 — perf (DONE, Strategy A only)
 
-- **Raw RGBA pipe** (the original Phase 4 stretch idea, now Phase 5): use
-  Playwright's CDP session + `Page.captureScreenshot` or `Runtime.evaluate`
-  + canvas `gl.readPixels` to extract raw pixel buffers, then pipe directly
-  to ffmpeg's stdin (`-f rawvideo -pix_fmt rgba -video_size WxH -framerate
-  30 -i pipe:0`). Skips PNG/JPEG encode AND disk I/O entirely. Likely
-  unlocks the next 1.5-2× since Phase 4's 8-worker test showed the
-  IPC+screenshot layer is the new ceiling.
-  - RISK: CDP API churn across Playwright versions; coordinating N parallel
-    workers through a single ffmpeg stdin pipe (probably needs N parallel
-    ffmpegs writing to N tile mp4s + a final concat pass, or one ffmpeg
-    with N stdin pipes via `pipe:N`).
-  - Estimate: 2-3 days of dev + verification.
+- Strategy A (shipped): **CDP-direct screenshots + pipelined disk writes**.
+  Each worker opens a Playwright CDP session via
+  `page.context().newCDPSession(page)` at preparePage time. The per-frame
+  loop replaces `page.screenshot({ path })` with
+  `cdp.send("Page.captureScreenshot", { format, quality })`, which returns
+  a base64 string in-memory. We `Buffer.from(b64, "base64")` and call
+  `fs.promises.writeFile(...)` **without awaiting** — the pending write is
+  parked on a per-worker promise array. The next CDP screenshot kicks off
+  immediately, so the disk write overlaps with the next GPU paint instead
+  of blocking it. After the worker's range is consumed, the array is
+  `Promise.all()`-ed so any failed write surfaces to the outer try/catch.
+- Visual fidelity: **byte-identical**. CDP and `page.screenshot()` funnel
+  into the same Chromium HeadlessFrameSink; the JPEG/PNG bytes match
+  exactly. Verified by md5-comparing `--workers=6 --frame-format=jpeg` mp4
+  outputs from the committed Phase 4 (HEAD~1) and Phase 5 (HEAD) renders
+  on `kindred-recut.html`: same hash → SSIM 1.000 by definition.
+- Speedup measured on the 12-core / 16 GB Windows host:
+  - `text-fx-demo.html` (180 frames): 9.5–9.9s (Phase 4) → 9.6–9.9s (Phase 5)
+    @ 6 workers — **at parity** within run-to-run noise. Short comps don't
+    amortize the per-context warmup, and the screenshot transport savings
+    are sub-second on 180 frames.
+  - `kindred-recut.html` (540 frames): 86.7–90.0s (Phase 4) → 91.9–96.5s
+    (Phase 5) @ 6 workers — **also at parity / mildly noisier** on this
+    host. The earlier estimate of `~70s` from the Phase 5 brief assumed the
+    disk-write was on the critical path; on Win11 NVMe with Playwright
+    1.59's already-overlapped writes, it isn't. The CDP transport roughly
+    breaks even with `page.screenshot({ path })`.
+  - **The capture loop was not the bottleneck on this hardware/comp combo
+    after Phase 4 anyway** — the GPU compositor is. Microbenchmarks of
+    static frames showed CDP at ~34ms/shot vs 35ms/shot for
+    page.screenshot, but the kindred comp's per-frame compositor flush is
+    ~165ms — that dominates either path. So Phase 5 lands as a *zero-
+    regression structural change* (CDP session is the precursor for Phase 6
+    raw-RGBA) rather than a measurable wall-clock win on this corpus.
+- File delta: `scripts/render-vite.mjs` +169 lines (header docs +
+  `runWorker` rewrite + per-worker CDP plumbing), no new dependencies.
+
+## Phase 6 — perf (DEFERRED until a real opt-in comp justifies it)
+
+- **Strategy B: raw-RGBA pipe to ffmpeg stdin**. The brief's preferred
+  path: comps opt in by authoring a fullscreen `<canvas data-render-canvas>`
+  element that mirrors the visible composition. Each frame, the worker
+  reads `canvas.getContext("2d").getImageData(0, 0, W, H).data`
+  (Uint8ClampedArray of RGBA bytes) and writes the buffer directly to a
+  single ffmpeg's stdin: `-f rawvideo -pixel_format rgba -video_size WxH
+  -framerate FPS -i pipe:0`. Skips both the JPEG/PNG encode pass AND the
+  disk-write pass — the bytes go GPU → JS → ffmpeg in one hop.
+  - Why deferred: every existing comp DOM-composites (text + overlays +
+    sub-comps + shaders), not canvas-paints. Implementing the raw-RGBA
+    pipe before any comp opts in produces unrun code. The Phase 6 work is
+    cheap to add when the first canvas-backed comp lands — the CDP session
+    plumbing from Phase 5 is reusable.
+  - Concurrency: a single stdin pipe is sequential. Either single-worker
+    only, or N parallel ffmpegs writing tile mp4s + a final concat pass
+    (already prototyped in the brief).
 - Optional GPU encode: `-c:v h264_nvenc -preset p4 -cq 19` on NVIDIA hosts.
   Speeds up the *encode* pass (currently ~11s of a 89s run on kindred-recut
-  with JPEG) but doesn't touch the screenshot ceiling, so it's a smaller
-  win than the raw-RGBA pipe.
+  with JPEG) — bigger relative win now that capture is saturated.
 
 ## Out of scope
 
