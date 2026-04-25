@@ -37,14 +37,16 @@ const argv = process.argv.slice(2);
 const subcommand = argv[0];
 const positional = argv.slice(1).filter(a => !a.startsWith("--"));
 
-const VALID_SUBCOMMANDS = ["write", "check", "list"];
+const VALID_SUBCOMMANDS = ["write", "check", "list", "heads"];
 if (!VALID_SUBCOMMANDS.includes(subcommand)) {
-  console.error("Usage: node scripts/comp-manifest.mjs <write|check|list> [slug]");
+  console.error("Usage: node scripts/comp-manifest.mjs <write|check|list|heads> [slug]");
   console.error("");
   console.error("Subcommands:");
   console.error("  write <slug>   write compositions/<slug>.meta.json with current shared-resource hashes");
   console.error("  check <slug>   compare current hashes against manifest, exit 1 on drift");
   console.error("  list           table of all manifests with drift status");
+  console.error("  heads          verify every templates/*.html + verticals/*.html HEAD-INCLUDE");
+  console.error("                 block matches design/compose-head.html. Exit 1 on drift.");
   process.exit(1);
 }
 
@@ -354,8 +356,111 @@ function cmdList() {
   process.exit(anyDrift ? 1 : 0);
 }
 
+// --- subcommand: heads ----------------------------------------------------
+// Verify every compositions/templates/*.html + compositions/verticals/*.html
+// HEAD-INCLUDE block matches design/compose-head.html exactly. Mirrors the
+// hydrate logic in scripts/build-bundle.mjs — if the comparison fails it
+// means a template was hand-edited inside the marker block (or the fragment
+// changed without `npm run build:bundle` being re-run).
+
+function stripLeadingDocComment(text) {
+  const m = text.match(/^\s*<!--[\s\S]*?-->\s*/);
+  return m ? text.slice(m[0].length) : text;
+}
+
+function listHtml(dir) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter((name) => name.endsWith(".html"))
+    .map((name) => path.join(dir, name))
+    .sort();
+}
+
+function extractHydratedBody(html) {
+  const openRe = /<!--\s*HEAD-INCLUDE\s*-->/;
+  const closeRe = /<!--\s*\/HEAD-INCLUDE\s*-->/g;
+  const openMatch = openRe.exec(html);
+  if (!openMatch) return null;
+  const openEnd = openMatch.index + openMatch[0].length;
+  let lastCloseIdx = -1;
+  closeRe.lastIndex = openEnd;
+  let cm;
+  while ((cm = closeRe.exec(html))) lastCloseIdx = cm.index;
+  if (lastCloseIdx < 0) return null;
+  return html.slice(openEnd, lastCloseIdx);
+}
+
+function cmdHeads() {
+  const fragmentPath = path.join(projectRoot, "design", "compose-head.html");
+  if (!fs.existsSync(fragmentPath)) {
+    console.error("✗ design/compose-head.html missing");
+    process.exit(1);
+  }
+  const fragmentRaw = fs.readFileSync(fragmentPath, "utf8");
+  const fragmentBody = stripLeadingDocComment(fragmentRaw).trim();
+  // Match what build-bundle inserts: leading + trailing newline around body.
+  const expectedBody = `\n${fragmentBody}\n`;
+
+  const targets = [
+    ...listHtml(path.join(projectRoot, "compositions", "templates")),
+    ...listHtml(path.join(projectRoot, "compositions", "verticals")),
+  ];
+
+  const drift = [];
+  let skipped = 0;
+  let nomarker = 0;
+  let ok = 0;
+
+  for (const file of targets) {
+    const html = fs.readFileSync(file, "utf8");
+
+    // Honour skip opt-out. The skip marker only counts when there's no
+    // hydrated block (mirrors build-bundle.mjs).
+    const body = extractHydratedBody(html);
+    if (body == null) {
+      if (/<!--\s*HEAD-INCLUDE:\s*skip\s*-->/i.test(html)) {
+        skipped++;
+        continue;
+      }
+      nomarker++;
+      drift.push({
+        file,
+        kind: "no-marker",
+        msg: "HEAD-INCLUDE marker not found",
+      });
+      continue;
+    }
+    if (body !== expectedBody) {
+      drift.push({
+        file,
+        kind: "drift",
+        msg: "HEAD-INCLUDE body differs from design/compose-head.html",
+      });
+      continue;
+    }
+    ok++;
+  }
+
+  const total = targets.length;
+  if (drift.length === 0) {
+    console.log(`✓ ${ok}/${total} HEAD-INCLUDE blocks match design/compose-head.html`);
+    if (skipped) console.log(`  ${skipped} file(s) opted out via <!-- HEAD-INCLUDE: skip -->`);
+    process.exit(0);
+  }
+
+  console.log(`✗ ${drift.length} HEAD-INCLUDE drift detected (of ${total} templates)`);
+  for (const d of drift) {
+    const rel = path.relative(projectRoot, d.file).replace(/\\/g, "/");
+    console.log(`  ${d.kind === "no-marker" ? "✗" : "✗"} ${rel} — ${d.msg}`);
+  }
+  console.log("");
+  console.log("  Re-hydrate with `npm run build:bundle` after editing design/compose-head.html.");
+  process.exit(1);
+}
+
 // --- dispatch -------------------------------------------------------------
 
 if (subcommand === "write") cmdWrite(positional[0]);
 else if (subcommand === "check") cmdCheck(positional[0]);
 else if (subcommand === "list") cmdList();
+else if (subcommand === "heads") cmdHeads();

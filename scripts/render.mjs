@@ -13,6 +13,7 @@
 //   node scripts/render.mjs --no-grade                   # skip grade
 //   node scripts/render.mjs -- --gpu -w 4                # forward args to hyperframes
 //   node scripts/render.mjs --replace                    # replace original with graded
+//   node scripts/render.mjs --no-progress                # silent (legacy); also: RENDER_PROGRESS=off
 //
 // Watermark flags (post-grade pass; off by default):
 //   --watermark                       # stamp default text "aivideomaker"
@@ -48,6 +49,7 @@ import fs from "fs";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
+import { parseRootDuration, runWithProgress } from "./lib/render-progress.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -70,6 +72,9 @@ const lut       = flags.lut ?? "pop";
 const strength  = parseFloat(flags.strength ?? "1.0");
 const skipGrade = flags["no-grade"] === true;
 const replace   = flags.replace === true;
+// --no-progress reverts to the silent inherit-stdio behaviour. Same effect
+// as RENDER_PROGRESS=off (deterministic for tests / CI).
+const noProgress = flags["no-progress"] === true;
 
 // Watermark: --no-watermark wins; otherwise enabled iff --watermark present.
 const wmDisabled  = flags["no-watermark"] === true;
@@ -346,10 +351,29 @@ console.log("▶ render: hyperframes render", passThrough.join(" "));
 
 const before = listMp4sBefore();
 
+// Read total frames from the root composition so the progress bar can
+// compute % and ETA. Falls back to indeterminate (frame counter only) if
+// data-duration is unparseable. fps is fixed at 30 unless the user passed
+// `--fps NN` through `--`.
+const fpsFromArgs = (() => {
+  const i = passThrough.findIndex(a => a === "--fps" || a === "-f");
+  if (i >= 0 && passThrough[i + 1]) return parseInt(passThrough[i + 1], 10);
+  const eq = passThrough.find(a => a.startsWith("--fps="));
+  if (eq) return parseInt(eq.split("=")[1], 10);
+  return 30;
+})();
+const indexHtml = path.join(projectRoot, "index.html");
+const meta = parseRootDuration(indexHtml, fpsFromArgs);
+const totalFrames = meta?.totalFrames ?? null;
+
 // On Windows, npx is npx.cmd. Use shell:true so PATH lookup finds it.
-await run("npx", ["hyperframes", "render", ...passThrough], {
+await runWithProgress("npx", ["hyperframes", "render", ...passThrough], {
   cwd: projectRoot,
   shell: true,
+}, {
+  totalFrames,
+  label: "render",
+  progressEnabled: !noProgress,
 });
 
 const rendered = newestMp4Since(before);

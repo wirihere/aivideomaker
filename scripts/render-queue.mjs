@@ -68,6 +68,7 @@ const FORWARDED_FLAGS = new Set([
   "watermark", "watermark-text", "watermark-pos", "watermark-opacity",
   "watermark-font", "no-watermark",
   "lut", "strength", "no-grade", "replace",
+  "no-progress",
 ]);
 const QUEUE_OWN_FLAGS = new Set(["dry-run", "list"]);
 

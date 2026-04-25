@@ -70,3 +70,107 @@ const cssBytes = Buffer.byteLength(cssOut);
 const jsBytes = Buffer.byteLength(jsOut);
 console.log(`✓ design/modules/all.css  ${(cssBytes / 1024).toFixed(1)} KB`);
 console.log(`✓ design/modules/all.js   ${(jsBytes / 1024).toFixed(1)} KB`);
+
+// -------------------------------------------------------------------------
+// HEAD-INCLUDE hydrate pass
+// -------------------------------------------------------------------------
+// Replaces `<!-- HEAD-INCLUDE -->` (or an existing
+// `<!-- HEAD-INCLUDE -->...<!-- /HEAD-INCLUDE -->` block) in every
+// template/vertical HTML with the contents of `design/compose-head.html`.
+// Files containing `<!-- HEAD-INCLUDE: skip -->` are left alone.
+//
+// Idempotent: running twice produces identical output. The hydrated form is
+// matched on re-run so we replace the inner contents only — no marker creep.
+hydrateHeadIncludes();
+
+function hydrateHeadIncludes() {
+  const fragmentPath = path.join(projectRoot, "design", "compose-head.html");
+  if (!fs.existsSync(fragmentPath)) {
+    console.warn("[hydrate] design/compose-head.html missing — skipping head hydrate.");
+    return;
+  }
+  const fragmentRaw = fs.readFileSync(fragmentPath, "utf8");
+  // Strip the leading file-level <!-- ... --> doc block (first comment only)
+  // so the hydrated head doesn't carry the fragment's own README into every
+  // template. Subsequent comments inside the boilerplate are preserved.
+  const fragment = stripLeadingDocComment(fragmentRaw).trim();
+
+  const targets = [
+    ...listHtml(path.join(projectRoot, "compositions", "templates")),
+    ...listHtml(path.join(projectRoot, "compositions", "verticals")),
+  ];
+
+  let updated = 0;
+  let skipped = 0;
+  let unchanged = 0;
+  let nomarker = 0;
+
+  for (const file of targets) {
+    const before = fs.readFileSync(file, "utf8");
+
+    const hydratedBlock =
+      `<!-- HEAD-INCLUDE -->\n${fragment}\n<!-- /HEAD-INCLUDE -->`;
+
+    const markerRe = /<!--\s*HEAD-INCLUDE\s*-->/;
+    const closeAllRe = /<!--\s*\/HEAD-INCLUDE\s*-->/g;
+
+    // Detect the hydrated form via first-open + LAST-close positions, not a
+    // non-greedy match. Defends against accidental `<!-- /HEAD-INCLUDE -->`
+    // text in payload comments terminating the match early.
+    const openIdx = before.search(markerRe);
+    let lastCloseEnd = -1;
+    if (openIdx >= 0) {
+      let cm;
+      closeAllRe.lastIndex = openIdx;
+      while ((cm = closeAllRe.exec(before))) lastCloseEnd = cm.index + cm[0].length;
+    }
+    const isHydrated = openIdx >= 0 && lastCloseEnd > openIdx;
+
+    let after;
+    if (isHydrated) {
+      // Re-hydrate — replace whole open-to-last-close span. Skip flag ignored:
+      // a file that's already hydrated is opted IN.
+      after = before.slice(0, openIdx) + hydratedBlock + before.slice(lastCloseEnd);
+    } else {
+      // First-hydrate path. Skip flag only meaningful before the marker
+      // is materialised (so leaked text from a prior bad run can't spoof it).
+      if (/<!--\s*HEAD-INCLUDE:\s*skip\s*-->/i.test(before)) {
+        skipped++;
+        continue;
+      }
+      if (markerRe.test(before)) {
+        after = before.replace(markerRe, hydratedBlock);
+      } else {
+        nomarker++;
+        continue;
+      }
+    }
+
+    if (after === before) {
+      unchanged++;
+    } else {
+      fs.writeFileSync(file, after);
+      updated++;
+    }
+  }
+
+  const summaryParts = [`${updated} updated`];
+  if (unchanged) summaryParts.push(`${unchanged} already current`);
+  if (skipped) summaryParts.push(`${skipped} skipped`);
+  if (nomarker) summaryParts.push(`${nomarker} without marker`);
+  console.log(`[hydrate] ${targets.length} templates · ${summaryParts.join(", ")}`);
+}
+
+function listHtml(dir) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter((name) => name.endsWith(".html"))
+    .map((name) => path.join(dir, name));
+}
+
+// Strip the first top-of-file `<!-- ... -->` block plus its trailing whitespace.
+// Used so the fragment's own doc-comment doesn't leak into every template.
+function stripLeadingDocComment(text) {
+  const m = text.match(/^\s*<!--[\s\S]*?-->\s*/);
+  return m ? text.slice(m[0].length) : text;
+}

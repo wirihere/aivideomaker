@@ -444,6 +444,11 @@ try {
       return { output: `skipped (--no-render)`, soft: true };
     }
     const beforeFiles = listRendersDir();
+    // The render child emits its own progress bar (via render-progress.mjs).
+    // Drop a newline first so the bar gets its own row instead of clobbering
+    // the stage runner's `[7/7] render` label. The closing `→ output (Xs)`
+    // lands on a fresh row because the bar's done() ends with \n.
+    process.stdout.write("\n");
     const r = runNpm("render", ["--watermark"], { quiet: false });
     if (r.status !== 0) {
       throw new Error(`render failed (exit ${r.status})`);

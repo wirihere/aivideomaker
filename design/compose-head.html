@@ -1,0 +1,30 @@
+<!--
+  COMPOSE HEAD FRAGMENT — single source of truth for the shared <head>
+  boilerplate across compositions/templates/*.html and compositions/verticals/*.html.
+
+  Hydrated into each template by `node scripts/build-bundle.mjs`: it replaces
+  the HEAD-INCLUDE marker (and the matching closing marker on rehydrate) with
+  the link/script tags below. Edit here, then run `npm run build:bundle` to
+  fan the change out across all 25 templates.
+
+  Per-template lines that stay OUTSIDE this fragment (because they vary per
+  template/brand):
+    1. design/templates/<vibe>.css   — vibe varies (kinetic-pop, documentary,
+                                       quiet-premium, warm-community).
+    2. design/tokens-<brand>.css     — token file is brand-specific.
+
+  Opt-out: a template containing the HEAD-INCLUDE skip marker is left
+  untouched by the hydrate pass.
+
+  IMPORTANT: keep this comment free of the literal HTML close-comment
+  sequence — that sequence terminates THIS comment early and causes the
+  hydrate pass to leak its own README into every template.
+-->
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
