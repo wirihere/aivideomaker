@@ -36,19 +36,41 @@ If anything in §1–§5 conflicts with what you're seeing, **trust what you obs
 node    >= 22
 npm     >= 9
 
-# FFmpeg (Windows): installed via winget but NOT on default PATH for new shells
-# It lives at:
-C:\Users\wirihere\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_*\ffmpeg-8.1-full_build\bin\ffmpeg.exe
+# FFmpeg: bundled via @ffmpeg-installer/ffmpeg (npm dep, ~80 MB) since 2026-04-26.
+# Every project script that shells out (post-grade, extract-amp, gen-sfx, render
+# watermark) routes through scripts/lib/ffmpeg-path.mjs which prefers the
+# bundled binary, falls back to system PATH if the package fails to load.
+# No PATH munging required for fresh sessions. See §3 "Bundled ffmpeg".
 
-# Quick prepend in bash:
+# Historical (still works as a fallback):
+# winget install puts ffmpeg.exe NOT on default PATH for new bash shells. It lives at:
+C:\Users\wirihere\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_*\ffmpeg-8.1-full_build\bin\ffmpeg.exe
+# Override the bundled binary by setting FFMPEG=<path> in env, or prepend on PATH:
 export PATH="/c/Users/wirihere/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.1-full_build/bin:$PATH"
 ```
 
-The HyperFrames CLI also looks at `process.env.PATH` only — `where ffmpeg` from cmd.exe will find it, but bash sessions launched fresh do not inherit Windows PATH updates. **Always export the path before running `npx hyperframes render`.**
+The HyperFrames CLI itself still looks at `process.env.PATH` only — bundled binary covers project scripts, but `npx hyperframes render` uses whatever ffmpeg PATH resolves to. If the HyperFrames render step ever reports "FFmpeg not found", the PATH-export fallback above still applies.
 
 ---
 
 ## 3. Patterns that work
+
+### Bundled ffmpeg via `@ffmpeg-installer/ffmpeg`
+Project scripts no longer depend on a system ffmpeg install. `@ffmpeg-installer/ffmpeg` (~80 MB, in `dependencies` so renders work post-`npm install`) ships a platform-detected `ffmpeg.exe` at `node_modules/@ffmpeg-installer/<platform>-<arch>/`. On Windows that's `node_modules/@ffmpeg-installer/win32-x64/ffmpeg.exe`.
+
+Every script routes through [scripts/lib/ffmpeg-path.mjs](scripts/lib/ffmpeg-path.mjs):
+
+```js
+import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
+const ffmpeg = await getFfmpegPath();
+spawn(ffmpeg, args, { cwd: projectRoot });   // §4 path-colon trick still applies
+```
+
+Resolution order: `process.env.FFMPEG` (override) → bundled binary → literal `"ffmpeg"` (system PATH fallback). The bundled lookup catches its own errors so a missing/broken install silently falls through — every script still works on a machine with system ffmpeg only.
+
+**Consumers** (all updated 2026-04-26): [scripts/post-grade.mjs](scripts/post-grade.mjs) (LUT pass), [scripts/extract-amp.mjs](scripts/extract-amp.mjs) (astats per-band amplitude), [scripts/gen-sfx.mjs](scripts/gen-sfx.mjs) (procedural SFX), [scripts/render.mjs](scripts/render.mjs) (watermark stage). Verify the resolved path with `node scripts/lib/ffmpeg-path.mjs` — should print the bundled `ffmpeg.exe` path on a vanilla install.
+
+What this fixes: §4's "FFmpeg not on bash PATH after winget install" is now mitigated structurally — fresh Claude Code sessions never hit it. The §4 entry is marked RESOLVED but kept as historical context for the HyperFrames CLI itself, which still uses `process.env.PATH` and isn't routed through the helper.
 
 ### TTS — `edge-tts-universal` is the right choice
 - High-quality Azure neural voices, free, no API key.
@@ -548,8 +570,11 @@ Same pattern works for any vendored runtime. ~73 KB of gsap min is a small price
 ### Pre-render smoke test via Playwright — `npm run check` catches runtime bugs in <1s
 [scripts/smoke.mjs](scripts/smoke.mjs) runs the active composition in headless Playwright and verifies: page loads, timeline registered with non-zero children, expected module globals present (`textFx`, `effectFx`, `glitterFx`, `ampBind`), root dims match `data-width`/`data-height`, no console/runtime errors. Fails non-zero so it can gate a render. Optional `--screenshots` saves a PNG of each scene midpoint to `smoke/`. Optional `--contrast` runs a WCAG AA audit per scene midpoint.
 
+`npm run check` now runs **three** stages — `lint` (HyperFrames CLI) → `lint:strict` (the §4 detectors from [scripts/fix.mjs](scripts/fix.mjs)) → `smoke` (Playwright). [scripts/lint-strict.mjs](scripts/lint-strict.mjs) wraps `fix.mjs --json` and exits non-zero on any **error-severity** finding only (warn/info still allow the gate through), so CI gets the deterministic catches (`</script>` in JS comments, audio without `id`, audio-track overlap) without warning noise from advisory pitfalls (`tl.from(opacity:0)`, redundant `.scene` overrides). Runs in <0.1s on top of the existing chain.
+
 ```
-npm run check           # lint + smoke (3.2s typical)
+npm run check           # lint + lint:strict + smoke (~5s typical)
+npm run lint:strict     # strict §4 detectors only (<0.1s, error-gated)
 npm run smoke           # smoke only (0.9s typical)
 npm run smoke:shots     # smoke + per-scene PNGs
 npm run smoke:contrast  # smoke + WCAG AA contrast audit per scene
@@ -578,9 +603,12 @@ The Kindred recut tripped the same teal-on-cream trap §4 captured: brand `#1A9E
 ### Auto-fix common pitfalls — `npm run fix` scans for the §4 patterns we keep tripping over
 [scripts/fix.mjs](scripts/fix.mjs) is a static scanner that walks `index.html` + `compositions/*.html` looking for the recurring pitfalls captured in §4. Dry-run by default — prints findings with line numbers and suggestions. `--apply` writes the safe mechanical rewrites with timestamped backups (`<file>.backup-<iso-ts>`).
 
+The detectors are now part of the standard `npm run check` gate via [scripts/lint-strict.mjs](scripts/lint-strict.mjs) — that wrapper runs `fix.mjs --json` and exits non-zero only on **error-severity** findings (the deterministic ones: `script-close`, `audio-id`, `audio-track`). Warn/info findings stay advisory and don't block CI. When strict fails, the output points at `npm run fix:apply` for the auto-fixable ones (`script-close`, `autoplay-guard`, `cdn`).
+
 ```
 npm run fix           # dry-run report (errors + advisories)
 npm run fix:apply     # write fixes (creates .backup-<ts>)
+npm run lint:strict   # CI-gateable strict pass — error-severity only, <0.1s
 node scripts/fix.mjs --ignore=cdn,bundle    # skip specific pitfall ids
 node scripts/fix.mjs --json                 # machine-readable for CI
 ```
@@ -754,11 +782,11 @@ Verified 2026-04-25 — single round of 4 parallel agents (Explore + 3 general-p
 - **Fix:** Use `a[href^="/photos/"]:visible` plus a slug filter (URL must contain `-` and end with `/`). See [scripts/fetch-pixabay-photo.mjs](scripts/fetch-pixabay-photo.mjs).
 - **Status:** Fixed 2026-04-24.
 
-### ❌ FFmpeg not on bash PATH after winget install
+### ❌ FFmpeg not on bash PATH after winget install — RESOLVED 2026-04-26
 - **Symptom:** `npx hyperframes render` reports "FFmpeg not found".
 - **Cause:** winget updates the Windows user PATH, but bash sessions inherit the parent process env. Newer cmd.exe shells see it; bash often doesn't.
-- **Fix:** Either (a) export the full path each session — see §2 — or (b) symlink ffmpeg.exe into `~/bin` or `/usr/local/bin` once.
-- **Status:** Workaround documented 2026-04-24. Permanent fix would be a `direnv`-style auto-load.
+- **Fix:** Project scripts now use `@ffmpeg-installer/ffmpeg` via [scripts/lib/ffmpeg-path.mjs](scripts/lib/ffmpeg-path.mjs) — the binary ships in `node_modules/`, no PATH dependency (§3 "Bundled ffmpeg"). The HyperFrames CLI itself still uses system PATH; if it complains, the PATH-export workaround in §2 still applies as a fallback (or `npm run render` via `scripts/render.mjs` which also handles its own ffmpeg shell-out via the bundled binary).
+- **Status:** Resolved by bundling 2026-04-26. Original workaround (export PATH each session) preserved in §2 as fallback. Historical context for any future sessions that hit it via a non-routed path.
 
 ### ❌ ffmpeg filter parser breaks on Windows `C:\` absolute paths
 - **Symptom:** `[AVFilterGraph] No option name near '/Users/...'` then `Error parsing filterchain`. Hits any filter that takes a path arg — `lut3d=path`, `ametadata=file=path`, `movie=filename`, etc.
@@ -1447,7 +1475,6 @@ Open ideas that aren't blocked but haven't been done. Move into a real task list
 
 **Near-term (ready to ship next session):**
 - **Asset cache layer** — content-addressed (`assets/.cache/<hash>`) so re-runs of the same fetch don't re-hit the network.
-- **Bundled ffmpeg via `@ffmpeg-installer/ffmpeg`** — drops the winget PATH workaround in §2. ~80 MB of node_modules buys "FFmpeg not found" never again.
 - **WCAG contrast audit script** — extends `npm run smoke` to sample text-vs-background contrast at every scene midpoint, fail if below 3:1 (large) or 4.5:1 (body). Caught manually too many times.
 - **Real-time render progress reporting** — current `scripts/render.mjs` runs silent for 5+ min. Tail `hyperframes render` stdout, parse "Frame N/M", emit a progress bar.
 - **Composition versioning manifest** — write `compositions/<slug>.meta.json` with template/tokens/modules + version of cards.css used. Lets you re-render an old comp without surprise drift.
@@ -1473,6 +1500,7 @@ Open ideas that aren't blocked but haven't been done. Move into a real task list
 
 ### Recently closed (2026-04-25 streamline pass)
 
+- ✅ **Bundled ffmpeg via `@ffmpeg-installer/ffmpeg`** → 2026-04-26. `dependencies` install ships `node_modules/@ffmpeg-installer/win32-x64/ffmpeg.exe`; all 4 ffmpeg-using scripts route through `scripts/lib/ffmpeg-path.mjs` with system-PATH fallback. Fresh Claude Code sessions no longer hit "FFmpeg not found" (§3 / §4 entries updated).
 - ✅ **Render-time overlay watermark** → `node scripts/render.mjs --watermark` (drawtext default, image overlay, 4 corners, opacity, font override, queue forwards flags)
 - ✅ **TTS-first scene scaffolder** → agent-shipped `npm run new:scene -- --narration="..." --beats=4` (late night)
 - ✅ **Per-scene LUT overlay scaffold** → agent-shipped `data-scene-grade="warm|cool|noir|teal-orange|pop|soft"` declarative attribute (late night)

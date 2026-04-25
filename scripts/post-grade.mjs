@@ -26,6 +26,7 @@ import path from "path";
 import fs from "fs";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
+import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -157,12 +158,6 @@ function ensureLutFile(name) {
   return out;
 }
 
-function ffmpegPath() {
-  // Prefer environment, fall back to known winget install location (LEARNINGS.md §2)
-  if (process.env.FFMPEG) return process.env.FFMPEG;
-  return "ffmpeg";
-}
-
 function run(cmd, args, opts = {}) {
   return new Promise((resolve, reject) => {
     const p = spawn(cmd, args, { stdio: "inherit", ...opts });
@@ -230,5 +225,5 @@ console.log(`▶ grading ${path.basename(input)} with "${lutName}" @ strength=${
 console.log(`  LUT cube:  ${lutPath}`);
 console.log(`  output:    ${output}`);
 
-await run(ffmpegPath(), args, { cwd: projectRoot });
+await run(await getFfmpegPath(), args, { cwd: projectRoot });
 console.log(`✓ done — ${output}`);

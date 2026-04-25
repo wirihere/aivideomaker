@@ -49,6 +49,33 @@
     document.head.appendChild(style);
   }
 
+  // Inject the radial-mask CSS-var rule once per document. The mask cuts a
+  // soft-edged disc out of the target so the visible region appears
+  // "spotlit" while the rest is feathered out. We tween a `--rm-radius`
+  // variable that the mask-image consumes, plus center / feather knobs.
+  function ensureRadialMaskRule() {
+    if (document.getElementById("__effect-fx-rm")) return;
+    const style = document.createElement("style");
+    style.id = "__effect-fx-rm";
+    style.textContent = `.fx-radial-mask {
+  --rm-radius: 0%;
+  --rm-cx: 50%;
+  --rm-cy: 50%;
+  --rm-feather: 8%;
+  -webkit-mask-image: radial-gradient(circle at var(--rm-cx) var(--rm-cy),
+    rgba(0,0,0,1) var(--rm-radius),
+    rgba(0,0,0,0) calc(var(--rm-radius) + var(--rm-feather)));
+          mask-image: radial-gradient(circle at var(--rm-cx) var(--rm-cy),
+    rgba(0,0,0,1) var(--rm-radius),
+    rgba(0,0,0,0) calc(var(--rm-radius) + var(--rm-feather)));
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+}`;
+    document.head.appendChild(style);
+  }
+
   // ---------- recipes ----------------------------------------------------
 
   // MULTIPLANE DOLLY — translate the .stage along Z to push toward / pull
@@ -154,5 +181,81 @@
     return { from, to, duration };
   }
 
-  global.effectFx = { multiplaneDolly, inkBleed, glitchBurst, cinemagraphRotate };
+  // RACK FOCUS — animate a CSS `filter: blur(...)` on the target. Pairs with
+  // the cinematographer's "rack focus" — the lens shifts focus from one
+  // depth to another, so out-of-focus planes go soft and the new subject
+  // becomes crisp. Same Windows-safe pattern as `inkBleed` (locks the
+  // filter on at the start, clears it on completion to free render cost).
+  function rackFocus(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 0.6);
+    const from = o.from != null ? +o.from : 8;
+    const to   = o.to   != null ? +o.to   : 0;
+    const ease = o.ease || "power2.out";
+    const clearAfter = o.clearAfter !== false;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("effectFx.rackFocus: no element for", target); return; }
+
+    timeline.fromTo(el,
+      { filter: `blur(${from}px)` },
+      { filter: `blur(${to}px)`, duration, ease },
+      at);
+
+    // Drop the filter when the rack completes — saves render cost on later
+    // frames and prevents stacked blur filters bleeding into other tweens.
+    if (clearAfter) {
+      timeline.set(el, { filter: "none" }, at + duration);
+    }
+
+    return { duration, from, to };
+  }
+
+  // RADIAL MASK — open a soft-edged spotlight on the target by animating a
+  // CSS variable (`--rm-radius`) that an injected mask-image rule consumes.
+  // The mask is a radial-gradient at (centerX, centerY) with a feathered
+  // edge of `feather` width. Default goes 0% → 50% (closed → open
+  // spotlight covering most of the host). Use with siblings dimmed for
+  // "isolate this element" moments.
+  function radialMask(timeline, target, opts) {
+    const o = opts || {};
+    const at = +o.at || 0;
+    const duration = +pick(o, "duration", 0.5);
+    const from = o.from != null ? +o.from : 0;
+    const to   = o.to   != null ? +o.to   : 50;
+    const centerX = o.centerX != null ? +o.centerX : 50;
+    const centerY = o.centerY != null ? +o.centerY : 50;
+    const feather = o.feather != null ? +o.feather : 8;
+    const ease = o.ease || "power2.out";
+    const clearAfter = o.clearAfter !== false;
+
+    const el = resolveTarget(target);
+    if (!el) { console.warn("effectFx.radialMask: no element for", target); return; }
+    ensureRadialMaskRule();
+    el.classList.add("fx-radial-mask");
+
+    // Set static positioning vars once at `at` so the mask is anchored
+    // correctly even if multiple radialMask calls overlap on the same host.
+    timeline.set(el, {
+      "--rm-cx": `${centerX}%`,
+      "--rm-cy": `${centerY}%`,
+      "--rm-feather": `${feather}%`,
+    }, at);
+
+    timeline.fromTo(el,
+      { "--rm-radius": `${from}%` },
+      { "--rm-radius": `${to}%`, duration, ease },
+      at);
+
+    // Drop the mask class when the spotlight completes — otherwise the
+    // mask-image sticks around and clips later content.
+    if (clearAfter) {
+      timeline.call(() => el.classList.remove("fx-radial-mask"), [], at + duration);
+    }
+
+    return { duration, from, to };
+  }
+
+  global.effectFx = { multiplaneDolly, inkBleed, glitchBurst, cinemagraphRotate, rackFocus, radialMask };
 })(typeof window !== "undefined" ? window : this);

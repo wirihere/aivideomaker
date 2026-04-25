@@ -35,6 +35,7 @@ import path from "path";
 import fs from "fs";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
+import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -44,11 +45,6 @@ const BANDS = {
   mid:  { low: 250,   high: 4000 },
   high: { low: 4000,  high: 16000 },
 };
-
-function ffmpegPath() {
-  if (process.env.FFMPEG) return process.env.FFMPEG;
-  return "ffmpeg";
-}
 
 function runCapture(cmd, args, opts = {}) {
   return new Promise((resolve, reject) => {
@@ -66,7 +62,7 @@ function runCapture(cmd, args, opts = {}) {
 
 // Get audio duration (seconds) via ffprobe-style ffmpeg call.
 async function audioDuration(file) {
-  const { stderr } = await runCapture(ffmpegPath(), [
+  const { stderr } = await runCapture(await getFfmpegPath(), [
     "-i", file, "-hide_banner", "-f", "null", "-",
   ]);
   // ffmpeg prints `Duration: HH:MM:SS.xx,` to stderr.
@@ -96,7 +92,7 @@ async function extractBand(file, low, high, fps) {
     `ametadata=mode=print:key=lavfi.astats.Overall.RMS_level:file=${tmpName}`;
   // Resolve input file to absolute since cwd is now cacheDir.
   const absInput = path.resolve(file);
-  await runCapture(ffmpegPath(), [
+  await runCapture(await getFfmpegPath(), [
     "-y", "-i", absInput,
     "-af", filter,
     "-f", "null", "-",

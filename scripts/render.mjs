@@ -47,6 +47,7 @@ import path from "path";
 import fs from "fs";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
+import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -127,10 +128,10 @@ function run(cmd, args, opts = {}) {
   });
 }
 
-function ffmpegPath() {
-  if (process.env.FFMPEG) return process.env.FFMPEG;
-  return "ffmpeg";
-}
+// Resolved once at startup (see top-level await below) and threaded into
+// buildWatermarkSpawn(). Bundled binary preferred via @ffmpeg-installer/ffmpeg
+// with a fall-through to system PATH; see scripts/lib/ffmpeg-path.mjs.
+const ffmpegBin = await getFfmpegPath();
 
 // Resolve a font file path for drawtext. On Windows, ffmpeg's drawtext
 // segfaults when font=Arial is requested without fontconfig (gyan/winget
@@ -283,7 +284,7 @@ function buildWatermarkSpawn({ input, output, isImage, imagePathAbs, text, pos, 
     output,
   );
 
-  return { cmd: ffmpegPath(), args, cwd: projectRoot };
+  return { cmd: ffmpegBin, args, cwd: projectRoot };
 }
 
 // --- main -----------------------------------------------------------------

@@ -34,6 +34,7 @@ import path from "path";
 import fs from "fs";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
+import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -194,11 +195,6 @@ const PRESETS = {
 
 // --- Helpers --------------------------------------------------------------
 
-function ffmpegPath() {
-  if (process.env.FFMPEG) return process.env.FFMPEG;
-  return "ffmpeg";
-}
-
 function run(cmd, args) {
   return new Promise((resolve, reject) => {
     const p = spawn(cmd, args, { stdio: ["ignore", "pipe", "pipe"] });
@@ -229,7 +225,7 @@ async function generate(name) {
     "-t", String(duration),
     out,
   ];
-  await run(ffmpegPath(), args);
+  await run(await getFfmpegPath(), args);
   const sz = fs.statSync(out).size;
   console.log(`  ✓ ${name.padEnd(14)} ${duration.toFixed(2)}s   ${(sz/1024).toFixed(1)} KB`);
 }

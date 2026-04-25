@@ -264,8 +264,35 @@ page.on("console", msg => { if (msg.type() === "error") consoleErrors.push(msg.t
 
 const previewUrl = `http://localhost:${port}/api/projects/${path.basename(projectRoot)}/preview`;
 
+// Pre-warm: when we'll need scene contexts anyway, start creating them in
+// parallel with the probe nav. Their navs overlap with the probe's, so the
+// total nav time becomes max(probe, scene-context-create+nav) instead of
+// probe + scene-context-create+nav. Saves 400-500ms when --screenshots/--contrast.
+//
+// We only pre-warm if --screenshots or --contrast is set. The non-screenshot
+// path uses route-stubbed page (line 252) and can't share the asset-stubbed
+// context anyway.
+//
+// Pre-warm count: we don't yet know scene count, so assume up to 5 extra
+// contexts (probe page itself will serve scene 1, so we cap total at 6).
+// Most comps have 4-6 scenes. Unused prewarmed contexts get closed cheaply.
+const prewarming = (wantScreenshots || wantContrast);
+let prewarmedContexts = null;
+if (prewarming) {
+  const PREWARM_COUNT = 5;
+  prewarmedContexts = Array.from({ length: PREWARM_COUNT }, async () => {
+    const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
+    const p = await ctx.newPage();
+    // Start nav immediately — don't await yet; wait happens later.
+    const navPromise = p.goto(previewUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
+    return { ctx, page: p, navPromise };
+  });
+}
+
+const tProbeStart = Date.now();
 try {
   await page.goto(previewUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
+  if (process.env.SMOKE_TIMING) console.log(`[timing] probe nav ${Date.now() - tProbeStart}ms`);
   pass("page loaded");
 } catch (err) {
   fail(`page navigation failed: ${err.message}`);
@@ -333,7 +360,10 @@ if (consoleErrors.length === 0) pass("no console/runtime errors");
 else { for (const e of consoleErrors) fail(`console error: ${e.slice(0, 140)}`); }
 
 // Optional scene-midpoint actions: screenshots and/or WCAG contrast audit.
-// Both share the same seek-each-scene loop so we don't pay for two passes.
+// Each scene runs in its own BrowserContext in parallel — the probe page
+// already proved the comp is structurally sound, so the per-scene work is
+// independent and safe to fan out. Cap at 6 contexts (memory pressure on
+// 16 GB box, and Chromium-context-create is ~200ms each).
 if ((wantScreenshots || wantContrast) && probe.sceneIds.length) {
   const dir = path.join(projectRoot, "smoke");
   const baselineDir = path.join(dir, ".baseline");
@@ -341,77 +371,176 @@ if ((wantScreenshots || wantContrast) && probe.sceneIds.length) {
     fs.mkdirSync(dir, { recursive: true });
     if (wantUpdateBaseline) fs.mkdirSync(baselineDir, { recursive: true });
   }
-  await page.evaluate(`window.__applyClipVis = ${APPLY_CLIP_VIS_FN};`);
-  if (wantContrast) {
-    await page.evaluate(`window.__auditContrast = ${CONTRAST_AUDIT_FN};`);
-  }
 
-  // Get each scene's midpoint time
+  // Get each scene's midpoint time from the probe page (already loaded).
   const scenes = await page.evaluate(() => Array.from(document.querySelectorAll(".scene")).map(s => ({
     id: s.id,
     mid: (parseFloat(s.dataset.start) || 0) + (parseFloat(s.dataset.duration) || 0) / 2,
   })));
 
-  // Pause all CSS animations + transitions so screenshots are deterministic
-  // across runs. Glitter sparkle, cinemagraph rotation, and any other CSS
-  // keyframe animations would otherwise drift by capture-timing jitter (1-5%
-  // pixel diff between identical runs). Paused state is whatever the browser
-  // happened to be at when this rule applied — crucially, the same across
-  // back-to-back runs because rule injection happens at the same render frame.
-  await page.addStyleTag({
-    content: `*, *::before, *::after {
-      animation-play-state: paused !important;
-      transition-duration: 0s !important;
-    }`,
-  });
+  // CSS rule injected on each parallel page to pause all CSS animations and
+  // zero out transitions. Without this, glitter / sparkle / cinemagraph
+  // animations drift by capture timing (1-5% pixel diff between identical
+  // runs). Same string used in every context — defining it here keeps the
+  // per-scene worker clean.
+  const PAUSE_CSS = `*, *::before, *::after {
+    animation-play-state: paused !important;
+    transition-duration: 0s !important;
+  }`;
 
-  for (const sc of scenes) {
-    await page.evaluate(({ t, ids }) => {
-      const tl = window.__timelines[Object.keys(window.__timelines)[0]];
-      tl.pause(); tl.seek(t);
-      window.__applyClipVis(t);
-    }, { t: sc.mid, ids: probe.sceneIds });
-    await page.waitForTimeout(80);   // allow paint
+  const MAX_PARALLEL = 6;
+  const concurrency = Math.min(scenes.length, MAX_PARALLEL);
 
-    if (wantScreenshots) {
-      const file = path.join(dir, `${sc.id}-t${sc.mid.toFixed(1)}.png`);
-      const buf = await page.screenshot({ path: file, type: "png" });
-      pass(`screenshot ${path.relative(projectRoot, file)}`);
+  // Per-scene worker: own context, own page, own diff. Returns a list of
+  // {kind, msg} reports so the main thread can emit them in scene order
+  // (stable output despite parallel completion).
+  //
+  // Three input modes for the page:
+  //   - reusedPage:    use this already-loaded page (the probe page)
+  //   - prewarmed:     {ctx, page, navPromise} from the pre-warm pool — nav
+  //                    started in parallel with probe nav, just await it
+  //   - null:          create a fresh context+nav (fallback when pool empty)
+  const runScene = async (sc, reusedPage = null, prewarmed = null) => {
+    const reports = [];
+    const tStart = Date.now();
+    let ctx, p;
+    let tCtxReady;
+    let isReused = false;
+    if (reusedPage) {
+      p = reusedPage;
+      ctx = null; // don't close — owned by caller
+      tCtxReady = tStart;
+      isReused = true;
+    } else if (prewarmed) {
+      ctx = prewarmed.ctx;
+      p = prewarmed.page;
+      tCtxReady = Date.now();
+    } else {
+      ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
+      p = await ctx.newPage();
+      tCtxReady = Date.now();
+    }
+    let tNav = tCtxReady;
+    try {
+      if (prewarmed) {
+        await prewarmed.navPromise;
+        tNav = Date.now();
+        await p.waitForFunction(() => window.__timelines && Object.keys(window.__timelines).length > 0, { timeout: 5000 });
+      } else if (!reusedPage) {
+        await p.goto(previewUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
+        tNav = Date.now();
+        // Wait for timeline registration — the comp's inline script registers
+        // window.__timelines synchronously after gsap loads, so by the time
+        // domcontentloaded fires it's usually there. Poll briefly to be safe.
+        await p.waitForFunction(() => window.__timelines && Object.keys(window.__timelines).length > 0, { timeout: 5000 });
+      }
 
-      if (wantUpdateBaseline) {
-        const baselineFile = path.join(baselineDir, `${sc.id}.png`);
-        fs.copyFileSync(file, baselineFile);
-        pass(`baseline updated ${path.relative(projectRoot, baselineFile)}`);
-      } else if (wantDiff) {
-        const baselineFile = path.join(baselineDir, `${sc.id}.png`);
-        if (!fs.existsSync(baselineFile)) {
-          warn(`no baseline for ${sc.id} — run \`npm run smoke:baseline\` to create`);
-        } else {
-          const baselineBuf = fs.readFileSync(baselineFile);
-          try {
-            const result = await diffPngs(page, buf, baselineBuf);
-            const pct = (result.ratio * 100).toFixed(2);
-            if (result.dimMismatch) {
-              fail(`diff ${sc.id}: dimension mismatch (current ${result.curW}×${result.curH} vs baseline ${result.baseW}×${result.baseH})`);
-            } else if (result.ratio > diffThreshold) {
-              fail(`diff ${sc.id}: ${pct}% pixels changed (threshold ${(diffThreshold * 100).toFixed(2)}%, ${result.changed}/${result.total})`);
-            } else {
-              pass(`diff ${sc.id}: ${pct}% pixels changed (within ${(diffThreshold * 100).toFixed(2)}%)`);
+      await p.evaluate(`window.__applyClipVis = ${APPLY_CLIP_VIS_FN};`);
+      if (wantContrast) {
+        await p.evaluate(`window.__auditContrast = ${CONTRAST_AUDIT_FN};`);
+      }
+      await p.addStyleTag({ content: PAUSE_CSS });
+
+      await p.evaluate((t) => {
+        const tl = window.__timelines[Object.keys(window.__timelines)[0]];
+        tl.pause(); tl.seek(t);
+        window.__applyClipVis(t);
+      }, sc.mid);
+      await p.waitForTimeout(80);   // allow paint
+
+      const tBeforeShot = Date.now();
+      if (wantScreenshots) {
+        const file = path.join(dir, `${sc.id}-t${sc.mid.toFixed(1)}.png`);
+        const buf = await p.screenshot({ path: file, type: "png" });
+        const tAfterShot = Date.now();
+        if (process.env.SMOKE_TIMING) console.log(`[timing] scene ${sc.id} shot=${tAfterShot - tBeforeShot}ms`);
+        reports.push({ kind: "pass", msg: `screenshot ${path.relative(projectRoot, file)}` });
+
+        if (wantUpdateBaseline) {
+          const baselineFile = path.join(baselineDir, `${sc.id}.png`);
+          fs.copyFileSync(file, baselineFile);
+          reports.push({ kind: "pass", msg: `baseline updated ${path.relative(projectRoot, baselineFile)}` });
+        } else if (wantDiff) {
+          const baselineFile = path.join(baselineDir, `${sc.id}.png`);
+          if (!fs.existsSync(baselineFile)) {
+            reports.push({ kind: "warn", msg: `no baseline for ${sc.id} — run \`npm run smoke:baseline\` to create` });
+          } else {
+            const baselineBuf = fs.readFileSync(baselineFile);
+            try {
+              const tDiff = Date.now();
+              const result = await diffPngs(p, buf, baselineBuf);
+              if (process.env.SMOKE_TIMING) console.log(`[timing] scene ${sc.id} diff=${Date.now() - tDiff}ms`);
+              const pct = (result.ratio * 100).toFixed(2);
+              if (result.dimMismatch) {
+                reports.push({ kind: "fail", msg: `diff ${sc.id}: dimension mismatch (current ${result.curW}×${result.curH} vs baseline ${result.baseW}×${result.baseH})` });
+              } else if (result.ratio > diffThreshold) {
+                reports.push({ kind: "fail", msg: `diff ${sc.id}: ${pct}% pixels changed (threshold ${(diffThreshold * 100).toFixed(2)}%, ${result.changed}/${result.total})` });
+              } else {
+                reports.push({ kind: "pass", msg: `diff ${sc.id}: ${pct}% pixels changed (within ${(diffThreshold * 100).toFixed(2)}%)` });
+              }
+            } catch (err) {
+              reports.push({ kind: "fail", msg: `diff ${sc.id}: comparison failed — ${err.message}` });
             }
-          } catch (err) {
-            fail(`diff ${sc.id}: comparison failed — ${err.message}`);
           }
         }
       }
-    }
 
-    if (wantContrast) {
-      const audit = await page.evaluate((t) => window.__auditContrast(t), sc.mid);
-      if (audit.passes.length) pass(`contrast ${sc.id}: ${audit.passes.length} elements ≥ threshold`);
-      if (audit.skipped.length) warn(`contrast ${sc.id}: ${audit.skipped.length} element${audit.skipped.length === 1 ? "" : "s"} no background detected (skipped)`);
-      for (const f of audit.fails) {
-        fail(`contrast ${sc.id}: ${f.selector} ${f.ratio.toFixed(2)}:1 < ${f.threshold}:1 (${f.kind} text)`);
+      if (wantContrast) {
+        const audit = await p.evaluate((t) => window.__auditContrast(t), sc.mid);
+        if (audit.passes.length) reports.push({ kind: "pass", msg: `contrast ${sc.id}: ${audit.passes.length} elements ≥ threshold` });
+        if (audit.skipped.length) reports.push({ kind: "warn", msg: `contrast ${sc.id}: ${audit.skipped.length} element${audit.skipped.length === 1 ? "" : "s"} no background detected (skipped)` });
+        for (const f of audit.fails) {
+          reports.push({ kind: "fail", msg: `contrast ${sc.id}: ${f.selector} ${f.ratio.toFixed(2)}:1 < ${f.threshold}:1 (${f.kind} text)` });
+        }
       }
+    } catch (err) {
+      reports.push({ kind: "fail", msg: `scene ${sc.id}: ${err.message}` });
+    } finally {
+      if (ctx) await ctx.close();
+    }
+    if (process.env.SMOKE_TIMING) {
+      const tag = isReused ? " (reused)" : (prewarmed ? " (prewarmed)" : "");
+      console.log(`[timing] scene ${sc.id}: ctx=${tCtxReady - tStart}ms nav=${tNav - tCtxReady}ms total=${Date.now() - tStart}ms${tag}`);
+    }
+    return reports;
+  };
+
+  // Resolve pre-warm pool now (the array is Promises returning {ctx, page, navPromise}).
+  // The contexts were created in parallel with probe nav — by now they should be ready.
+  const pool = prewarmedContexts ? await Promise.all(prewarmedContexts) : [];
+
+  // Fan out — bounded if scenes > MAX_PARALLEL (currently 4 scenes, but the
+  // bound future-proofs against larger comps). Scene 1 reuses the probe page
+  // (already loaded — saves a full nav). Scenes 2..N pull from the pre-warmed
+  // pool (their navs ran in parallel with probe nav).
+  const tFanOut = Date.now();
+  const allReports = [];
+  let poolIdx = 0;
+  for (let i = 0; i < scenes.length; i += concurrency) {
+    const batch = scenes.slice(i, i + concurrency);
+    const batchReports = await Promise.all(batch.map((sc, idx) => {
+      const isFirst = i === 0 && idx === 0;
+      if (isFirst) return runScene(sc, page, null);
+      const prewarmed = poolIdx < pool.length ? pool[poolIdx++] : null;
+      return runScene(sc, null, prewarmed);
+    }));
+    allReports.push(...batchReports);
+  }
+  if (process.env.SMOKE_TIMING) console.log(`[timing] fanOut ${Date.now() - tFanOut}ms (${scenes.length} scenes)`);
+  // Close any pre-warmed contexts we didn't use (e.g. comp had fewer scenes
+  // than we pre-warmed). Cheap fire-and-forget.
+  for (let j = poolIdx; j < pool.length; j++) {
+    pool[j].ctx.close().catch(() => {});
+  }
+  // Probe context kept alive for first-scene reuse; close it now.
+  await context.close();
+
+  // Emit reports in scene order (matches sequential output ordering).
+  for (const reports of allReports) {
+    for (const r of reports) {
+      if (r.kind === "pass") pass(r.msg);
+      else if (r.kind === "warn") warn(r.msg);
+      else fail(r.msg);
     }
   }
 }
