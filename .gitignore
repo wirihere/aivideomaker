@@ -55,6 +55,9 @@ desktop.ini
 .video-orchestrator.index.bak
 .queue-backup-*.html
 
+# Throwaway debugging scripts (probe-*.mjs etc) — not portable, not in scope
+tmp/
+
 # Playwright MCP debug artifacts (screenshots, traces, accessibility snapshots)
 .playwright-mcp/
 
