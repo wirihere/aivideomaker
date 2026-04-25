@@ -32,7 +32,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { spawnSync } from "child_process";
+import { spawnSync, spawn } from "child_process";
 import { node as nodeBin, npmArgs } from "./lib/platform-bin.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -155,7 +155,10 @@ function relPath(p) {
 // object `{ output, soft }`.
 function makeStageRunner(total) {
   let i = 0;
-  return async function stage(label, fn) {
+  // Allow callers to skip indices that were taken by a prior parallel batch.
+  // After fanning out stages 2-4 in parallel we set `runner.i = 4` so the
+  // next sequential stage prints `[5/7]`.
+  const api = async function stage(label, fn) {
     i += 1;
     const labelText = `${label}`.padEnd(20);
     process.stdout.write(`  [${i}/${total}] ${labelText}`);
@@ -177,11 +180,63 @@ function makeStageRunner(total) {
       throw err;
     }
   };
+  Object.defineProperty(api, "i", { get: () => i, set: (v) => { i = v; } });
+  return api;
+}
+
+// Parallel-stage runner: starts every stage at once, captures its output and
+// timing without printing, then returns the collected results in stage order.
+//
+// `stages` is an array of `{ label, fn }`. `fn` is the same shape as the
+// sequential runner accepts: it may return a string, an object `{ output,
+// soft }`, or throw. Failures are returned as `{ ok: false, err }` rather
+// than rejecting — so a single broken parallel stage does NOT abort the
+// pipeline (matches `Promise.allSettled` semantics).
+//
+// Output ordering: result lines print in the original stage order (so the
+// reader's eye doesn't have to chase finish-order across runs). Each line
+// shows that stage's own elapsed wall-clock — which can be inspected to see
+// the parallelism (sum of elapsed > total batch wall-clock means overlap).
+async function runStagesInParallel(stages, { startIndex, total }) {
+  const batchT0 = Date.now();
+  console.log(`  [${startIndex + 1}-${startIndex + stages.length}/${total}] (parallel: ${stages.map(s => s.label).join(" + ")})`);
+  const settled = await Promise.allSettled(
+    stages.map(async ({ label, fn }) => {
+      const t0 = Date.now();
+      try {
+        const result = await fn();
+        const ms = Date.now() - t0;
+        const output = typeof result === "string" ? result : (result?.output ?? "");
+        const soft = typeof result === "object" && result?.soft;
+        return { label, ok: true, ms, output, soft };
+      } catch (err) {
+        const ms = Date.now() - t0;
+        return { label, ok: false, ms, err };
+      }
+    }),
+  );
+  const batchMs = Date.now() - batchT0;
+  // Print result lines in canonical stage order.
+  const results = settled.map((s, idx) => {
+    const r = s.value; // never rejects — wrapper above always returns a resolved object
+    const stageNum = startIndex + idx + 1;
+    const labelText = `${r.label}`.padEnd(20);
+    if (r.ok) {
+      const out = (r.output || "").padEnd(40);
+      console.log(`  [${stageNum}/${total}] ${labelText}→ ${out}(${fmtTime(r.ms)})`);
+    } else {
+      console.log(`  [${stageNum}/${total}] ${labelText}→ FAILED                                  (${fmtTime(r.ms)})`);
+    }
+    return r;
+  });
+  console.log(`  └─ batch wall-clock: ${fmtTime(batchMs)} (sequential would have been ${fmtTime(results.reduce((s, r) => s + r.ms, 0))})`);
+  return results;
 }
 
 // Run a child process synchronously. Returns `{ status, stdout, stderr }`.
 // We use `spawnSync` so we can capture output for failed stages without
-// printing it inline (keeps the per-stage log tidy).
+// printing it inline (keeps the per-stage log tidy). Used by sequential
+// stages where blocking the event loop is fine.
 function runNode(scriptPath, args = [], { quiet = true, env = {} } = {}) {
   const result = spawnSync(process.execPath, [scriptPath, ...args], {
     cwd: projectRoot,
@@ -204,6 +259,31 @@ function runNpm(scriptName, extraArgs = [], { quiet = true } = {}) {
     stdio: quiet ? ["ignore", "pipe", "pipe"] : "inherit",
   });
   return result;
+}
+
+// Async variant of runNode using `spawn` — required for stages we want to
+// run concurrently. `spawnSync` blocks the event loop so it can't be wrapped
+// in `Promise.all*` for real parallelism. Returns the same shape as runNode:
+// `{ status, stdout, stderr }`. We always pipe + buffer stdio so concurrent
+// stages don't interleave their child output onto our stdout (the parent
+// prints a clean per-stage line when all stages finish).
+function runNodeAsync(scriptPath, args = [], { env = {} } = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [scriptPath, ...args], {
+      cwd: projectRoot,
+      env: { ...process.env, ...env },
+      stdio: ["ignore", "pipe", "pipe"],
+      shell: false,
+    });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (d) => { stdout += d.toString("utf8"); });
+    child.stderr.on("data", (d) => { stderr += d.toString("utf8"); });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      resolve({ status: code, stdout, stderr });
+    });
+  });
 }
 
 // --- backup / restore index.html -----------------------------------------
@@ -279,105 +359,137 @@ try {
     return tokensCssRel;
   });
 
-  // ----- Stage 2: copy generate -------------------------------------------
-  // Optional — depends on extract-copy.mjs (Copy supervisor's deliverable).
-  // Falls back to using the headlines new-comp scraped, written to a
-  // <slug>.copy.json placeholder so downstream stages have a stable contract.
+  // ----- Stages 2-4: parallel fan-out -------------------------------------
+  // copy generate, asset pull, music pick — all only depend on Stage 1's
+  // output (tokens-<slug>.css). They write to disjoint paths, so we fan
+  // them out with `Promise.allSettled` for partial-failure tolerance.
+  // Each stage's deferred logging avoids interleaved stdout from concurrent
+  // children (each child's output is buffered + discarded; only the parent
+  // stage line is shown).
   const copyScript = path.join(__dirname, "extract-copy.mjs");
-  copyJsonPath = path.join(projectRoot, "compositions", `${slug}.copy.json`);
-  await stage("copy generate", () => {
-    if (!fs.existsSync(copyScript)) {
-      // Graceful degradation — synthesize copy from the brand extract output.
-      const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
-      fs.mkdirSync(path.dirname(copyJsonPath), { recursive: true });
-      fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
-      return { output: `compositions/${slug}.copy.json (placeholder)`, soft: true };
-    }
-    // extract-copy.mjs takes a vibe-style template + bucketed seconds.
-    const structural = pickTemplate({ seconds, override: flags.template });
-    const vibe = vibeForTemplate(structural);
-    const bucket = bucketSeconds(seconds);
-    const r = runNode(copyScript,
-      [url, `--template=${vibe}`, `--seconds=${bucket}`, `--name=${slug}`],
-      { quiet: true });
-    // exit 2 = "thin narration" warning — the JSON was still written. Treat
-    // as soft and continue.
-    if (r.status !== 0 && r.status !== 2) {
-      const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-5).join("\n");
-      console.warn(`\n    ⚠ extract-copy.mjs failed (exit ${r.status}); using placeholders\n${stderr}`);
-      const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
-      fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
-      return { output: `compositions/${slug}.copy.json (fallback)`, soft: true };
-    }
-    if (!fs.existsSync(copyJsonPath)) {
-      const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
-      fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
-      return { output: `compositions/${slug}.copy.json (synthesized)`, soft: true };
-    }
-    if (r.status === 2) return { output: `compositions/${slug}.copy.json (thin)`, soft: true };
-    return `compositions/${slug}.copy.json`;
-  });
-
-  // ----- Stage 3: asset pull ----------------------------------------------
-  // Optional — depends on pull-assets.mjs. Falls back to skipping (the
-  // generated tokens already include a logo URL note from new-comp).
   const assetsScript = path.join(__dirname, "pull-assets.mjs");
-  assetsDir = path.join(projectRoot, "assets", slug);
-  await stage("asset pull", () => {
-    if (!fs.existsSync(assetsScript)) {
-      return { output: `skipped (pull-assets.mjs not found)`, soft: true };
-    }
-    const r = runNode(assetsScript, [url, `--name=${slug}`], { quiet: true });
-    if (r.status !== 0) {
-      const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-3).join("\n");
-      console.warn(`\n    ⚠ pull-assets.mjs failed (exit ${r.status}); continuing without\n${stderr}`);
-      return { output: `skipped (pull-assets failed)`, soft: true };
-    }
-    if (!fs.existsSync(assetsDir)) {
-      return { output: `assets/${slug}/ (empty)`, soft: true };
-    }
-    const fileCount = walkCount(assetsDir);
-    return `assets/${slug}/ (${fileCount} files)`;
-  });
-
-  // ----- Stage 4: music pick ----------------------------------------------
-  // Optional — depends on pick-music.mjs. Without --with-music we just
-  // surface the recommended URLs; with the flag we'd actually wire them in
-  // (deferred to that script's contract once it ships).
   const musicScript = path.join(__dirname, "pick-music.mjs");
-  await stage("music pick", () => {
-    if (!fs.existsSync(musicScript)) {
-      return { output: `skipped (pick-music.mjs not found)`, soft: true };
-    }
-    // pick-music.mjs takes a vibe template + raw seconds; --json prints
-    // candidates to stdout (it doesn't write a file itself, so we capture).
-    const structural = pickTemplate({ seconds, override: flags.template });
-    const vibe = vibeForTemplate(structural);
-    const args = [`--template=${vibe}`, `--seconds=${seconds}`, `--json`];
-    if (withMusic) args.push("--download");
-    const r = runNode(musicScript, args, { quiet: true });
-    if (r.status !== 0) {
-      const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-3).join("\n");
-      console.warn(`\n    ⚠ pick-music.mjs failed (exit ${r.status})\n${stderr}`);
-      return { output: `no candidates`, soft: true };
-    }
-    // Parse JSON from stdout (pick-music.mjs --json prints a single payload).
-    const musicJsonPath = path.join(projectRoot, "compositions", `${slug}.music.json`);
-    let n = 0;
-    try {
-      const stdout = (r.stdout || "").trim();
-      // Find the JSON object — stdout may have "[pick-music] …" lines mixed in.
-      const start = stdout.indexOf("{");
-      const end = stdout.lastIndexOf("}");
-      if (start >= 0 && end > start) {
-        musicCandidates = JSON.parse(stdout.slice(start, end + 1));
-        const list = musicCandidates?.tracks ?? musicCandidates?.candidates ?? musicCandidates?.picks ?? [];
-        n = Array.isArray(list) ? list.length : 0;
-        fs.writeFileSync(musicJsonPath, JSON.stringify(musicCandidates, null, 2));
-      }
-    } catch {}
-    return `${n || "?"} candidate track${n === 1 ? "" : "s"}`;
-  });
+  copyJsonPath = path.join(projectRoot, "compositions", `${slug}.copy.json`);
+  assetsDir = path.join(projectRoot, "assets", slug);
+
+  // Pre-compute shared inputs the stage closures need.
+  const _structural = pickTemplate({ seconds, override: flags.template });
+  const _vibe = vibeForTemplate(_structural);
+  const _bucket = bucketSeconds(seconds);
+
+  // Deferred warnings — surfaced after the parallel batch finishes so they
+  // don't garble the in-flight `[N-M/7] (parallel: …)` header.
+  const deferredWarnings = [];
+
+  const parallelResults = await runStagesInParallel(
+    [
+      // ----- Stage 2: copy generate ------------------------------------
+      {
+        label: "copy generate",
+        fn: async () => {
+          if (!fs.existsSync(copyScript)) {
+            // Graceful degradation — synthesize copy from the brand extract output.
+            const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
+            fs.mkdirSync(path.dirname(copyJsonPath), { recursive: true });
+            fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
+            return { output: `compositions/${slug}.copy.json (placeholder)`, soft: true };
+          }
+          const r = await runNodeAsync(copyScript,
+            [url, `--template=${_vibe}`, `--seconds=${_bucket}`, `--name=${slug}`]);
+          // exit 2 = "thin narration" warning — the JSON was still written. Treat
+          // as soft and continue.
+          if (r.status !== 0 && r.status !== 2) {
+            const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-5).join("\n");
+            deferredWarnings.push(`extract-copy.mjs failed (exit ${r.status}); using placeholders\n${stderr}`);
+            const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
+            fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
+            return { output: `compositions/${slug}.copy.json (fallback)`, soft: true };
+          }
+          if (!fs.existsSync(copyJsonPath)) {
+            const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
+            fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
+            return { output: `compositions/${slug}.copy.json (synthesized)`, soft: true };
+          }
+          if (r.status === 2) return { output: `compositions/${slug}.copy.json (thin)`, soft: true };
+          return `compositions/${slug}.copy.json`;
+        },
+      },
+      // ----- Stage 3: asset pull ---------------------------------------
+      {
+        label: "asset pull",
+        fn: async () => {
+          if (!fs.existsSync(assetsScript)) {
+            return { output: `skipped (pull-assets.mjs not found)`, soft: true };
+          }
+          const r = await runNodeAsync(assetsScript, [url, `--name=${slug}`]);
+          if (r.status !== 0) {
+            const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-3).join("\n");
+            deferredWarnings.push(`pull-assets.mjs failed (exit ${r.status}); continuing without\n${stderr}`);
+            return { output: `skipped (pull-assets failed)`, soft: true };
+          }
+          if (!fs.existsSync(assetsDir)) {
+            return { output: `assets/${slug}/ (empty)`, soft: true };
+          }
+          const fileCount = walkCount(assetsDir);
+          return `assets/${slug}/ (${fileCount} files)`;
+        },
+      },
+      // ----- Stage 4: music pick ---------------------------------------
+      {
+        label: "music pick",
+        fn: async () => {
+          if (!fs.existsSync(musicScript)) {
+            return { output: `skipped (pick-music.mjs not found)`, soft: true };
+          }
+          const args = [`--template=${_vibe}`, `--seconds=${seconds}`, `--json`];
+          if (withMusic) args.push("--download");
+          const r = await runNodeAsync(musicScript, args);
+          if (r.status !== 0) {
+            const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-3).join("\n");
+            deferredWarnings.push(`pick-music.mjs failed (exit ${r.status})\n${stderr}`);
+            return { output: `no candidates`, soft: true };
+          }
+          const musicJsonPath = path.join(projectRoot, "compositions", `${slug}.music.json`);
+          let n = 0;
+          try {
+            const stdout = (r.stdout || "").trim();
+            const start = stdout.indexOf("{");
+            const end = stdout.lastIndexOf("}");
+            if (start >= 0 && end > start) {
+              musicCandidates = JSON.parse(stdout.slice(start, end + 1));
+              const list = musicCandidates?.tracks ?? musicCandidates?.candidates ?? musicCandidates?.picks ?? [];
+              n = Array.isArray(list) ? list.length : 0;
+              fs.writeFileSync(musicJsonPath, JSON.stringify(musicCandidates, null, 2));
+            }
+          } catch {}
+          return `${n || "?"} candidate track${n === 1 ? "" : "s"}`;
+        },
+      },
+    ],
+    { startIndex: stage.i, total: 7 },
+  );
+  // Bump the sequential counter past the parallel batch so the next stage
+  // prints `[5/7]` not `[2/7]`.
+  stage.i = stage.i + parallelResults.length;
+
+  // Surface any captured warnings from the parallel batch.
+  for (const w of deferredWarnings) {
+    console.warn(`    ⚠ ${w.split("\n").map((l, i) => i === 0 ? l : `      ${l}`).join("\n")}`);
+  }
+
+  // Hard failures (exception thrown — not just exit !=0 + soft fallback)
+  // bubble up here as `{ ok: false, err }`. Aggregate them into one error.
+  const hardFailures = parallelResults.filter(r => !r.ok);
+  if (hardFailures.length) {
+    const summary = hardFailures
+      .map(f => `  · ${f.label}: ${f.err?.message || f.err}`)
+      .join("\n");
+    const err = new Error(
+      `${hardFailures.length}/${parallelResults.length} parallel stage(s) failed:\n${summary}`,
+    );
+    err.stage = `parallel batch (${hardFailures.map(f => f.label).join(", ")})`;
+    throw err;
+  }
 
   // ----- Stage 5: composition assemble ------------------------------------
   // Pick a template, copy to index.html, rewrite paths, swap tokens, inject copy.
