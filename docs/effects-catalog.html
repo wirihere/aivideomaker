@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HyperFrames — Module Recipes Catalog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0E0E12;
+    --bg-card: #14141B;
+    --bg-thumb: #0A0A0E;
+    --paper: #FBF9F6;
+    --paper-soft: #B6B0A6;
+    --border: rgba(255, 255, 255, 0.08);
+    --accent: #1A9E8F;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--paper);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  header {
+    padding: 48px 32px 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+  header p {
+    color: var(--paper-soft);
+    margin: 0;
+    max-width: 60ch;
+  }
+  header code {
+    color: var(--accent);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+  }
+  main {
+    padding: 24px 32px 64px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-count {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    background: rgba(26, 158, 143, 0.12);
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(26, 158, 143, 0.3);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .section-desc {
+    color: var(--paper-soft);
+    margin: 0 0 16px;
+    max-width: 60ch;
+  }
+  .section-desc code {
+    color: var(--accent);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  @media (min-width: 1200px) {
+    .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (min-width: 800px) and (max-width: 1199px) {
+    .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 120ms ease, transform 120ms ease;
+  }
+  .card:hover {
+    border-color: rgba(26, 158, 143, 0.5);
+    transform: translateY(-1px);
+  }
+  .thumb {
+    background: var(--bg-thumb);
+    aspect-ratio: 480 / 270;
+    overflow: hidden;
+  }
+  .thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .meta {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+  }
+  .card-title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    letter-spacing: -0.005em;
+  }
+  .card-desc {
+    margin: 0;
+    color: var(--paper-soft);
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .card-api {
+    margin: 4px 0 0;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    line-height: 1.4;
+    color: #DDD8D0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+  }
+  .card-api code { color: inherit; }
+  footer {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px 48px;
+    color: var(--paper-soft);
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Module Recipes Catalog</h1>
+  <p>Visual reference for the GSAP recipes in <code>design/modules/</code>. Each thumbnail is a peak frame from a 5s composition. Regenerate with <code>npm run catalog</code>.</p>
+</header>
+<main>
+  <section>
+    <h2 class="section-title">Primitives <span class="section-count">13</span></h2>
+    <div class="grid">
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/text-fx-explode.png" alt="textFx.explode preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">textFx.explode</h3>
+        <p class="card-desc">Letters scatter in/out from center.</p>
+        <pre class="card-api"><code>textFx.explode(tl, &quot;#title&quot;, { at: 0, duration: 0.8 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/text-fx-stamp.png" alt="textFx.stamp preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">textFx.stamp</h3>
+        <p class="card-desc">Slam-impact scale with screen shake.</p>
+        <pre class="card-api"><code>textFx.stamp(tl, &quot;#title&quot;, { at: 0 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/text-fx-cascade.png" alt="textFx.cascade preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">textFx.cascade</h3>
+        <p class="card-desc">Words fall into place in sequence.</p>
+        <pre class="card-api"><code>textFx.cascade(tl, &quot;#body&quot;, { at: 0, stagger: 0.08 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/text-fx-stagger.png" alt="textFx.stagger preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">textFx.stagger</h3>
+        <p class="card-desc">Per-letter pop with rotation.</p>
+        <pre class="card-api"><code>textFx.stagger(tl, &quot;#title&quot;, { at: 0 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/text-fx-typeon.png" alt="textFx.typeOn preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">textFx.typeOn</h3>
+        <p class="card-desc">Character-by-character typewriter reveal.</p>
+        <pre class="card-api"><code>textFx.typeOn(tl, &quot;#caption&quot;, { at: 0, duration: 1.2 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/text-fx-counter.png" alt="textFx.counter preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">textFx.counter</h3>
+        <p class="card-desc">Number flips up to its target value.</p>
+        <pre class="card-api"><code>textFx.counter(tl, &quot;#stat&quot;, { at: 0, duration: 1.4, from: 0 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/effect-fx-multiplaneDolly.png" alt="effectFx.multiplaneDolly preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">effectFx.multiplaneDolly</h3>
+        <p class="card-desc">CSS perspective camera dollies through depth planes.</p>
+        <pre class="card-api"><code>effectFx.multiplaneDolly(tl, &quot;#stage&quot;, { at: 0, duration: 4.4 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/effect-fx-inkBleed.png" alt="effectFx.inkBleed preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">effectFx.inkBleed</h3>
+        <p class="card-desc">Headline warps then resolves crisp.</p>
+        <pre class="card-api"><code>effectFx.inkBleed(tl, &quot;#headline&quot;, { at: 0, duration: 0.7 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/effect-fx-glitchBurst.png" alt="effectFx.glitchBurst preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">effectFx.glitchBurst</h3>
+        <p class="card-desc">Brief chromatic-shift impact window.</p>
+        <pre class="card-api"><code>effectFx.glitchBurst(tl, &quot;#word&quot;, { at: 0, duration: 0.18 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/effect-fx-cinemagraphRotate.png" alt="effectFx.cinemagraphRotate preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">effectFx.cinemagraphRotate</h3>
+        <p class="card-desc">Slow rotating gradient blob behind frosted glass.</p>
+        <pre class="card-api"><code>effectFx.cinemagraphRotate(tl, &quot;#bg&quot;, { at: 0, duration: 24 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/glitter-fx-burst.png" alt="glitterFx.burst preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">glitterFx.burst</h3>
+        <p class="card-desc">Radial particle explosion from center.</p>
+        <pre class="card-api"><code>glitterFx.burst(tl, &quot;#scene&quot;, { at: 0, count: 80, duration: 1.4 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/glitter-fx-fall.png" alt="glitterFx.fall preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">glitterFx.fall</h3>
+        <p class="card-desc">Continuous downward sparkle fall.</p>
+        <pre class="card-api"><code>glitterFx.fall(tl, &quot;#scene&quot;, { at: 0, count: 60, duration: 5.0 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/glitter-fx-ambient.png" alt="glitterFx.ambient preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">glitterFx.ambient</h3>
+        <p class="card-desc">Pulsing in-place sparkle for hero shimmer.</p>
+        <pre class="card-api"><code>glitterFx.ambient(tl, &quot;#scene&quot;, { at: 0, count: 40, duration: 5.0 })</code></pre>
+      </div>
+    </article>
+    </div>
+  </section>
+
+  <section style="margin-top: 56px;">
+    <h2 class="section-title">Combos <span class="section-count">10</span></h2>
+    <p class="section-desc">Choreographed multi-primitive recipes — each combo composes 3-5 primitives into a single named "moment". See <code>design/modules/combo-fx.js</code>.</p>
+    <div class="grid">
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-superImpact.png" alt="comboFx.superImpact preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.superImpact</h3>
+        <p class="card-desc">Stat number lands: ink resolves → counter ticks → stamp impact → glitch + glitter burst.</p>
+        <pre class="card-api"><code>comboFx.superImpact(tl, &quot;#stat&quot;, { at: 0, duration: 1.2 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-cinematicReveal.png" alt="comboFx.cinematicReveal preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.cinematicReveal</h3>
+        <p class="card-desc">Camera dollies in while headline resolves: multiplane + ink + stagger + shadow trail.</p>
+        <pre class="card-api"><code>comboFx.cinematicReveal(tl, &quot;#stage&quot;, { at: 0, headline: &quot;#h&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-hyperGlitch.png" alt="comboFx.hyperGlitch preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.hyperGlitch</h3>
+        <p class="card-desc">Two-burst signal break: scanlines + jitter + double glitch + stamp re-anchor.</p>
+        <pre class="card-api"><code>comboFx.hyperGlitch(tl, &quot;#word&quot;, { at: 0, duration: 0.6 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-dreamSequence.png" alt="comboFx.dreamSequence preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.dreamSequence</h3>
+        <p class="card-desc">Ambient hero: cinemagraph rotates, shimmer-clip headline, ambient + fall sparkle.</p>
+        <pre class="card-api"><code>comboFx.dreamSequence(tl, &quot;#scene&quot;, { at: 0, duration: 4.0, headline: &quot;#h&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-kineticBurst.png" alt="comboFx.kineticBurst preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.kineticBurst</h3>
+        <p class="card-desc">Word emphasis: explode-assemble + small glitter + micro-glitch on settle.</p>
+        <pre class="card-api"><code>comboFx.kineticBurst(tl, &quot;#title&quot;, { at: 0, duration: 1.0 })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-slamCut.png" alt="comboFx.slamCut preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.slamCut</h3>
+        <p class="card-desc">Hard transition: noir flash + glitch + multiplane snap + cascade in + grade pop.</p>
+        <pre class="card-api"><code>comboFx.slamCut(tl, &quot;#scene&quot;, { at: 0, duration: 0.9, content: &quot;#words&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-signalPulse.png" alt="comboFx.signalPulse preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.signalPulse</h3>
+        <p class="card-desc">Beacon callout: 5 expanding rings + typeOn caption + ambient shimmer + counter.</p>
+        <pre class="card-api"><code>comboFx.signalPulse(tl, &quot;#beacon&quot;, { at: 0, duration: 1.6, caption: &quot;#cap&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-paperTear.png" alt="comboFx.paperTear preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.paperTear</h3>
+        <p class="card-desc">Old layer dissolves out, camera pulls back, new lockup stamps in under warm grade.</p>
+        <pre class="card-api"><code>comboFx.paperTear(tl, &quot;#scene&quot;, { at: 0, outgoing: &quot;#a&quot;, incoming: &quot;#b&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-confettiFinale.png" alt="comboFx.confettiFinale preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.confettiFinale</h3>
+        <p class="card-desc">End-card: multiplane settle + logo stamp + rule scaleX + burst+fall confetti + cinemagraph idle.</p>
+        <pre class="card-api"><code>comboFx.confettiFinale(tl, &quot;#scene&quot;, { at: 0, duration: 2.4, lockup: &quot;#logo&quot; })</code></pre>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="thumb">
+        <img src="effects/combo-fx-holoFlash.png" alt="comboFx.holoFlash preview" width="480" height="270" loading="lazy" />
+      </div>
+      <div class="meta">
+        <h3 class="card-title">comboFx.holoFlash</h3>
+        <p class="card-desc">Brand chip: holo gradient drift + multiplane near-pop + stamp + glitch + glitter + long shadow.</p>
+        <pre class="card-api"><code>comboFx.holoFlash(tl, &quot;#sticker&quot;, { at: 0, duration: 1.4, lockup: &quot;#mark&quot; })</code></pre>
+      </div>
+    </article>
+    </div>
+  </section>
+</main>
+<footer>
+  <p>23 recipes shown (13 primitives + 10 combos) · auto-generated from <code>scripts/build-catalog.mjs</code> · 2026-04-25</p>
+</footer>
+</body>
+</html>

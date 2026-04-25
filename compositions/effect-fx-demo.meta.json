@@ -1,0 +1,39 @@
+{
+  "slug": "effect-fx-demo",
+  "writtenAt": "2026-04-25T11:47:26.937Z",
+  "comp": {
+    "path": "compositions/effect-fx-demo.html",
+    "sha256": "966444d013d9ecedfe10458a37cf1d16996b88b07f408438b22148cb9729c98b"
+  },
+  "sharedResources": [
+    {
+      "path": "design/cards.css",
+      "sha256": "6de37c67e4d8c4a148233b831ee9bd9aa2e6da28ff92592c3079a30762900c3a"
+    },
+    {
+      "path": "design/effects-batch-08.css",
+      "sha256": "5cce277e8ce5658e1b63edfd3ac271d291cd41858093186a16fb24340c759ac3"
+    },
+    {
+      "path": "design/modules/all.css",
+      "sha256": "00aa94bdcfc5b76e684c8b97091f1d1c234564a72ac49d0320e4a256fb923adb"
+    },
+    {
+      "path": "design/modules/all.js",
+      "sha256": "c9bed1f4ed3a9a5140c71dcced7e492bcd21d0881934411208d4f67500a5278c"
+    },
+    {
+      "path": "design/templates/documentary.css",
+      "sha256": "283efcd75aa756f7c47f9169022c91415d903929496e31f10de20592a836ee15"
+    },
+    {
+      "path": "design/tokens-kindred.css",
+      "sha256": "ec96c3c3ae7f8e1cc8ae33c983edfad26db86b05637755df11ed08895e686a82"
+    },
+    {
+      "path": "design/vendor/gsap.min.js",
+      "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+    }
+  ],
+  "renderedAt": null
+}
