@@ -26,7 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <script>
       (function () {
-        const root = document.currentScript.closest('[data-composition-id="ken-burns"]');
+        const root = document.querySelector('[data-composition-id="ken-burns"]');
         const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
         const src = vars.src || "";
         const direction = vars.direction || "in"; // in | out

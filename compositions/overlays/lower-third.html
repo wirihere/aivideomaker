@@ -43,7 +43,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <script>
       (function () {
-        const root = document.currentScript.closest('[data-composition-id="lower-third"]');
+        const root = document.querySelector('[data-composition-id="lower-third"]');
         const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
         const text = String(vars.text || "");
         const barColor = vars.barColor || "#1f3a68";
