@@ -56,7 +56,8 @@ const log = (tag, msg) => console.log(`[fetch-assets][${tag}] ${msg}`);
 function run(cmd, cmdArgs, tag) {
   const start = Date.now();
   return new Promise((resolve) => {
-    const p = spawn(cmd, cmdArgs, { cwd: projectRoot, shell: process.platform === "win32" });
+    const resolvedCmd = cmd === "node" ? process.execPath : cmd;
+    const p = spawn(resolvedCmd, cmdArgs, { cwd: projectRoot });
     let out = "";
     let err = "";
     p.stdout.on("data", (d) => { out += d.toString(); });
