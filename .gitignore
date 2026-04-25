@@ -61,6 +61,10 @@ desktop.ini
 # Smoke baselines + screenshots — regenerable via `npm run smoke:baseline`
 smoke/
 
+# backup.mjs snapshots — local "snapshot before risky change" stash.
+# Per-machine state, not portable. Operators use git for actual commits.
+.backups/
+
 # Test artifacts from new-comp / pull-assets verification runs
 compositions/*.backup-*
 

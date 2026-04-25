@@ -44,6 +44,10 @@
     "usage:unused": "node scripts/usage.mjs --unused",
     "voices:preview": "node scripts/preview-voices.mjs",
     "audio:duck": "node scripts/audio-duck.mjs",
+    "backup:save": "node scripts/backup.mjs save",
+    "backup:list": "node scripts/backup.mjs list",
+    "backup:restore": "node scripts/backup.mjs restore",
+    "backup:prune": "node scripts/backup.mjs prune",
     "help": "node scripts/help.mjs"
   },
   "keywords": [],
