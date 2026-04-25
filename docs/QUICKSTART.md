@@ -116,14 +116,23 @@ npm run video -- https://example.com
 Stages, in order:
 
 ```
-[1/7] brand extract    → design/tokens-example.css
-[2/7] copy generate    → assets/example/copy.json    (skipped if extract-copy missing)
-[3/7] asset pull       → assets/example/             (skipped if pull-assets missing)
-[4/7] music pick       → candidate tracks            (skipped if pick-music missing)
-[5/7] assemble         → index.html
-[6/7] quality gate     → npm run check
-[7/7] render           → renders/example-<ts>-graded-wm.mp4
+[1/7] brand extract                  → design/tokens-example.css
+[2-4/7] (parallel: copy + assets + music)
+  [2/7] copy generate                → compositions/example.copy.json
+  [3/7] asset pull                   → assets/example/
+  [4/7] music pick                   → compositions/example.music.json
+  └─ batch wall-clock: ...           (sequential would have been ...)
+[5/7] assemble                       → index.html
+[6/7] quality gate                   → npm run check
+[7/7] render                         → renders/example-<ts>-graded-wm.mp4
 ```
+
+Stages 2-4 only depend on Stage 1's output (the tokens file), so they
+fan out via `Promise.allSettled` and run concurrently — the batch
+wall-clock is roughly the slowest of the three, not the sum. Each stage
+prints its own elapsed seconds; soft fallbacks (e.g., extract-copy
+missing) still work, hard exceptions abort with a per-stage error
+summary.
 
 Useful flags:
 
