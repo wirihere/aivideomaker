@@ -262,6 +262,24 @@ Adding the full polish stack roughly **5×s the render time** on this box (1m �
 
 ---
 
+## Bonus effects from Claude Design batch 07
+
+[design/effects-batch-07.css](../../design/effects-batch-07.css) ports 5 high-leverage motion effects from the Claude Design handoff bundle (E243 / E256 / E265 / E270 / E280 of 40 in batch 07). Source bundle preserved at [docs/design-bundles/consentmate/](../design-bundles/consentmate/) — the remaining 35 effects in batch 07 plus E1-E600 across the other 14 batches stay there as raw HTML reference, ready to port on demand.
+
+| Class | Effect | Best for |
+|---|---|---|
+| `.fx-holo-sticker` | Holographic rainbow brand badge with diagonal shimmer | CTA / sticker overlay / "limited" flag (kinetic-pop) |
+| `.fx-type-shimmer` | Hero text with chromatic gradient + clip-path reveal | Hero headlines (kinetic-pop, premium) |
+| `.fx-concentric-pulse` | Emphasis ring pulse from a centre node | Stat hero anchor / key reveal moment (universal) |
+| `.fx-radio-wave` | Signal rings emanating from a beacon point | "Connecting" / "live" moments (kinetic-pop, documentary) |
+| `.fx-end-card` | Reusable end-card with mark + rule + tagline | Final CTA scene replacement (universal) |
+
+Integration model: load `effects-batch-07.css` after `cards.css` and the brand tokens overlay. Drop in the markup, wire the GSAP motion per the inline comments in each effect's CSS. All effects use only `var(--card-*)` tokens (except the holo-sticker rainbow gradient — that multi-colour palette IS the effect, intentional exception).
+
+To port more effects from the bundle: read `docs/design-bundles/consentmate/project/effects/batch-XX-...html`, find the effect's CSS block, adapt: (a) replace literal hex with token vars, (b) replace `animation: foo Xs infinite` with finite-cycle GSAP via `repeat: Math.ceil(scene_dur / cycle_dur) - 1`, (c) document motion intent inline, (d) add an entry to the table above.
+
+---
+
 ## What's still missing (parking lot)
 
 - **Color grade per-scene** — slight tint shifts (cooler hook → warmer brand → neutral features → warm proof → branded CTA). Currently every scene uses the same flat palette.

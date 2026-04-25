@@ -1,0 +1,422 @@
+/* =========================================================================
+   CARDS — Design System
+   =========================================================================
+   Drop-in CSS for HyperFrames compositions. Works standalone (inline in a
+   root composition) or inside sub-composition components.
+
+   USAGE:
+     <div class="card card--dark-glass card--radius-lg card--pad-luxe">
+       <div class="card__kicker">STEP</div>
+       <div class="card__title">Upload your letter</div>
+       <div class="card__body">Takes about 30 seconds.</div>
+     </div>
+
+   PHILOSOPHY:
+     - Tokens first — radius, padding, colour, shadow are variables.
+     - Variants combine: pick one surface + one radius + one padding.
+     - Content slots (kicker, title, body, figure, label) have a typography
+       scale that scales together — don't override individually unless you
+       mean it.
+     - Every card has a `card` base class; variants layer on top.
+
+   CANVAS ASSUMPTION:
+     1080 × 1920 vertical. Numbers below are tuned for that. For landscape
+     or square, scale tokens via CSS custom properties.
+   ========================================================================= */
+
+
+/* ---------- Design tokens --------------------------------------------- */
+
+:root {
+  /* Brand palette (placeholder defaults; override per project via tokens overlay) */
+  --card-navy:       #0d1826;
+  --card-navy-deep:  #08111c;
+  --card-slate:      #1f3a68;
+  --card-slate-ink:  #4b5a6d;
+  --card-paper:      #eef1f5;
+  --card-paper-soft: #d7dce3;
+  --card-accent:     #7aa0d4;
+  --card-warn:       #d85656;
+  --card-ok:         #3a9a6a;
+
+  /* Radius scale */
+  --card-r-sm: 14px;
+  --card-r-md: 22px;
+  --card-r-lg: 28px;
+  --card-r-xl: 36px;
+
+  /* Padding scale (tight / standard / luxe) */
+  --card-p-tight-y: 28px;
+  --card-p-tight-x: 40px;
+  --card-p-std-y:   48px;
+  --card-p-std-x:   68px;
+  --card-p-luxe-y:  72px;
+  --card-p-luxe-x:  96px;
+
+  /* Shadows */
+  --card-sh-sm:    0 12px 40px rgba(0, 0, 0, 0.35);
+  --card-sh-md:    0 24px 80px rgba(0, 0, 0, 0.50);
+  --card-sh-float: 0 36px 110px rgba(0, 0, 0, 0.55);
+
+  /* Borders */
+  --card-border-light: 1.5px solid rgba(238, 241, 245, 0.22);
+  --card-border-dark:  1.5px solid rgba(13, 24, 38, 0.12);
+
+  /* Typography scale (card contents) */
+  --card-kicker-size:   26px;
+  --card-kicker-track:  0.32em;
+  --card-title-size:    54px;
+  --card-title-line:    1.14;
+  --card-body-size:     30px;
+  --card-body-line:     1.4;
+  --card-figure-size:   260px;
+  --card-figure-unit:   130px;  /* currency / unit mark adjacent to figure */
+  --card-label-size:    36px;
+  --card-label-track:   0.22em;
+
+  /* Font stack */
+  --card-font-ui:       "Inter", system-ui, sans-serif;
+  --card-font-mono:     "JetBrains Mono", ui-monospace, monospace;
+  --card-font-display:  "Instrument Serif", Georgia, serif;
+}
+
+
+/* ---------- Base card ------------------------------------------------- */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 22px;
+  box-sizing: border-box;
+  will-change: transform, opacity;
+  font-family: var(--card-font-ui);
+  color: var(--card-paper);
+}
+
+.card__kicker {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: var(--card-kicker-size);
+  letter-spacing: var(--card-kicker-track);
+  color: var(--card-accent);
+  text-transform: uppercase;
+}
+
+.card__title {
+  font-family: var(--card-font-ui);
+  font-weight: 600;
+  font-size: var(--card-title-size);
+  letter-spacing: -0.015em;
+  line-height: var(--card-title-line);
+  color: inherit;
+}
+
+.card__body {
+  font-family: var(--card-font-ui);
+  font-weight: 400;
+  font-size: var(--card-body-size);
+  line-height: var(--card-body-line);
+  color: inherit;
+  opacity: 0.88;
+}
+
+.card__figure {
+  font-family: var(--card-font-ui);
+  font-weight: 800;
+  font-size: var(--card-figure-size);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.card__figure-unit {
+  font-size: var(--card-figure-unit);
+  line-height: 1.1;
+  padding-top: 26px;
+  color: var(--card-slate);
+  font-weight: 700;
+}
+
+.card__label {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: var(--card-label-size);
+  letter-spacing: var(--card-label-track);
+  text-transform: uppercase;
+  color: var(--card-slate-ink);
+  text-align: center;
+}
+
+.card__rule {
+  width: 160px;
+  height: 4px;
+  background: var(--card-slate);
+  align-self: center;
+  transform-origin: center;
+}
+
+/* Content slots that contain text that must read over image. */
+.card__overline {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ---------- Radius variants ------------------------------------------- */
+
+.card--radius-sm { border-radius: var(--card-r-sm); }
+.card--radius-md { border-radius: var(--card-r-md); }
+.card--radius-lg { border-radius: var(--card-r-lg); }
+.card--radius-xl { border-radius: var(--card-r-xl); }
+
+
+/* ---------- Padding variants ------------------------------------------ */
+
+.card--pad-tight { padding: var(--card-p-tight-y) var(--card-p-tight-x); }
+.card--pad-std   { padding: var(--card-p-std-y)   var(--card-p-std-x);   }
+.card--pad-luxe  { padding: var(--card-p-luxe-y)  var(--card-p-luxe-x);  }
+
+
+/* ---------- Surface variants (background + border + text colour) ------ */
+
+/* Dark glass — backdrop-blur over photos. Default overlay for dark scenes. */
+.card--dark-glass {
+  background: rgba(13, 24, 38, 0.92);
+  backdrop-filter: blur(12px);
+  border: var(--card-border-light);
+  box-shadow: var(--card-sh-md);
+  color: var(--card-paper);
+}
+.card--dark-glass .card__label { color: rgba(238, 241, 245, 0.75); }
+
+/* Light paper — clean CMS-style card. Pairs with dark backgrounds as punchline. */
+.card--light-paper {
+  background: rgba(238, 241, 245, 0.96);
+  border: var(--card-border-dark);
+  box-shadow: var(--card-sh-float);
+  color: var(--card-navy);
+}
+.card--light-paper .card__kicker { color: var(--card-slate); }
+.card--light-paper .card__label  { color: var(--card-slate-ink); }
+.card--light-paper .card__figure-unit { color: var(--card-slate); }
+
+/* Brand navy — solid brand block. */
+.card--brand-navy {
+  background: var(--card-navy);
+  border: 1.5px solid rgba(122, 160, 212, 0.32);
+  box-shadow: var(--card-sh-md);
+  color: var(--card-paper);
+}
+
+/* Ghost — transparent with subtle border. For minimalist overlays. */
+.card--ghost {
+  background: rgba(13, 24, 38, 0.28);
+  backdrop-filter: blur(6px);
+  border: 2px solid rgba(238, 241, 245, 0.32);
+  color: var(--card-paper);
+}
+
+/* Image underlay — card has an image filling its bounds behind the content. */
+.card--image-underlay {
+  overflow: hidden;
+  color: var(--card-paper);
+  border: var(--card-border-light);
+  box-shadow: var(--card-sh-float);
+}
+.card--image-underlay .card__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  filter: grayscale(0.3) contrast(1.05) brightness(0.82);
+}
+.card--image-underlay .card__bg-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(13, 24, 38, 0.15) 0%, rgba(13, 24, 38, 0.78) 100%);
+}
+.card--image-underlay > *:not(.card__bg):not(.card__bg-scrim) {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ---------- Alignment variants ---------------------------------------- */
+
+.card--align-center { align-items: center; text-align: center; }
+.card--align-left   { align-items: flex-start; text-align: left; }
+
+
+/* ---------- Size variants --------------------------------------------- */
+
+/* Width presets for vertical canvas. Use one or let content size naturally. */
+.card--w-narrow { width: 680px; }
+.card--w-medium { width: 820px; }
+.card--w-wide   { width: 920px; }
+.card--w-full   { width: calc(100% - 120px); }  /* 60px margin each side */
+
+
+/* ---------- Compound card layouts ------------------------------------- */
+
+/* STAT — one big number + tiny label. Punchline cards. */
+.card--stat {
+  align-items: center;
+  text-align: center;
+  gap: 26px;
+}
+.card--stat .card__figure {
+  color: var(--card-navy);
+}
+
+/* QUOTE — pull quote with attribution. */
+.card--quote {
+  gap: 32px;
+}
+.card--quote .card__quote-mark {
+  font-family: var(--card-font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 180px;
+  line-height: 0.6;
+  color: var(--card-accent);
+  opacity: 0.45;
+  align-self: flex-start;
+}
+.card--quote .card__quote-text {
+  font-family: var(--card-font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: 58px;
+  line-height: 1.25;
+  color: inherit;
+  letter-spacing: -0.01em;
+}
+.card--quote .card__quote-by {
+  font-family: var(--card-font-mono);
+  font-size: 24px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--card-accent);
+}
+
+/* FEATURE-ROW — icon slot + title + body. Replaces step-badge. */
+.card--feature-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+}
+.card--feature-row .card__icon {
+  flex: 0 0 auto;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card--feature-row .card__icon img,
+.card--feature-row .card__icon svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.card--feature-row .card__text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* STEP — numbered step (01, 02 etc.) with label. */
+.card--step {
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+}
+.card--step .card__step-num {
+  font-family: var(--card-font-mono);
+  font-weight: 700;
+  font-size: 150px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+  flex: 0 0 auto;
+}
+
+/* HEADLINE — kicker + big title + optional body. */
+.card--headline .card__title {
+  font-size: 88px;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+/* WORDMARK — brand lockup as card content. */
+.card--wordmark .card__mark {
+  font-family: var(--card-font-mono);
+  font-weight: 700;
+  font-size: 190px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--card-paper);
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+}
+.card--wordmark .card__mark-slash {
+  color: var(--card-accent);
+  margin: 0 4px;
+}
+.card--wordmark .card__url {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: 50px;
+  color: var(--card-paper);
+  letter-spacing: 0.06em;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+}
+.card--wordmark .card__fine {
+  font-family: var(--card-font-ui);
+  font-style: italic;
+  font-size: 30px;
+  color: var(--card-paper-soft);
+  line-height: 1.4;
+  max-width: 780px;
+  text-align: center;
+  text-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+}
+
+
+/* ---------- Mark (persistent corner element) ------------------------- */
+
+.card-mark {
+  position: absolute;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  background: rgba(13, 24, 38, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(238, 241, 245, 0.20);
+  border-radius: var(--card-r-sm);
+  font-family: var(--card-font-mono);
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.015em;
+  color: var(--card-paper);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+.card-mark--top-right    { top: 56px;  right: 60px; }
+.card-mark--top-left     { top: 56px;  left: 60px; }
+.card-mark--bottom-right { bottom: 56px; right: 60px; }
+.card-mark--bottom-left  { bottom: 56px; left: 60px; }

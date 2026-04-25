@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 05 — E161–E200 · video-priority</title>
+<style>
+:root {
+  --card-navy:#1F2A3A;--card-navy-deep:#131B27;--card-slate:#4A5568;--card-slate-ink:#6B7280;
+  --card-paper:#F8F6F1;--card-paper-soft:#EFEBE2;--card-accent:#5A8FA8;--card-warn:#C97D5C;--card-ok:#4A8F70;
+  --card-font-mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --card-font-display:Georgia,"Times New Roman",serif;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--card-font-mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:820px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__lbl b{color:#f5d35a;font-weight:600;letter-spacing:.18em}
+.cell__row{display:flex;gap:12px}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06)}
+.frame--light{background:var(--card-paper)}
+.frame--dark{background:var(--card-navy)}
+.frame__safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 90px;box-sizing:border-box;z-index:5}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:20}
+.frame--light .frame__id{color:rgba(31,42,58,.4)}
+.placeholder-text{font-family:var(--card-font-display);font-weight:600;font-size:160px;line-height:1;color:var(--card-paper);text-align:center}
+.frame--light .placeholder-text{color:var(--card-navy)}
+
+/* ----- Animations (auto-loop, deterministic) ----- */
+@keyframes drift1{0%{transform:translate(-30%,-10%) rotate(0)}100%{transform:translate(20%,10%) rotate(40deg)}}
+@keyframes drift2{0%{transform:translate(20%,10%) rotate(0)}100%{transform:translate(-20%,-10%) rotate(-40deg)}}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes hueShift{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.7}}
+@keyframes rainFall{0%{transform:translateY(-100%)}100%{transform:translateY(120vh)}}
+@keyframes spin360{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes scanY{0%{transform:translateY(-110%)}100%{transform:translateY(110vh)}}
+@keyframes typeBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes orbit{from{transform:rotate(0) translateX(360px) rotate(0)}to{transform:rotate(360deg) translateX(360px) rotate(-360deg)}}
+@keyframes wave{0%,100%{transform:translateY(0)}50%{transform:translateY(-60px)}}
+@keyframes glitchA{0%,80%,100%{transform:translate(0)}82%{transform:translate(-12px,4px)}84%{transform:translate(8px,-2px)}}
+@keyframes glitchB{0%,80%,100%{transform:translate(0)}82%{transform:translate(10px,-4px)}84%{transform:translate(-6px,2px)}}
+@keyframes filmFlicker{0%,100%{opacity:1}3%{opacity:.8}6%{opacity:1}50%{opacity:.95}52%{opacity:.7}54%{opacity:1}}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+@keyframes sweep{0%{transform:translateX(-30%)}100%{transform:translateX(130%)}}
+@keyframes barRise{0%{transform:scaleY(.2)}50%{transform:scaleY(1)}100%{transform:scaleY(.2)}}
+@keyframes equalizer1{0%,100%{height:30%}50%{height:90%}}
+@keyframes ekg{0%{stroke-dashoffset:1200}100%{stroke-dashoffset:0}}
+@keyframes shake{0%,100%{transform:translate(0)}25%{transform:translate(-6px,4px)}50%{transform:translate(6px,-4px)}75%{transform:translate(-4px,-6px)}}
+@keyframes fly{0%{transform:translate(-120%,40%) rotate(-12deg)}100%{transform:translate(220%,-60%) rotate(-8deg)}}
+@keyframes ringPulse{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2);opacity:0}}
+@keyframes wipe{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0 0 0)}}
+@keyframes typewriter{0%{width:0}60%,100%{width:100%}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
+@keyframes liquid{0%,100%{border-radius:62% 38% 70% 30% / 48% 62% 38% 52%}33%{border-radius:38% 62% 30% 70% / 60% 35% 65% 40%}66%{border-radius:55% 45% 60% 40% / 35% 65% 35% 65%}}
+@keyframes auroraSlide{0%{transform:translateX(-20%) rotate(-8deg)}100%{transform:translateX(20%) rotate(-8deg)}}
+@keyframes confettiFall{0%{transform:translateY(-20%) rotate(0)}100%{transform:translateY(120vh) rotate(720deg)}}
+@keyframes scaleIn{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes loopText{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes neonFlick{0%,100%{opacity:1}97%{opacity:.4}98%{opacity:1}}
+@keyframes camPan{0%{transform:scale(1.2) translateX(-3%)}100%{transform:scale(1.2) translateX(3%)}}
+@keyframes camZoom{0%{transform:scale(1)}100%{transform:scale(1.18)}}
+@keyframes flag{0%,100%{transform:rotate(-1deg) skewY(-1deg)}50%{transform:rotate(1deg) skewY(1deg)}}
+@keyframes radar{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes letterPop{0%,80%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-60px) scale(1.15)}}
+
+/* ============= E161 Looping Marquee ============= */
+.e161{position:absolute;left:-50%;right:-50%;top:46%;height:200px;background:var(--card-navy);
+  display:flex;align-items:center;overflow:hidden;border-block:6px solid var(--card-paper);
+  font-family:var(--card-font-display);font-style:italic;font-weight:800;font-size:160px;color:var(--card-paper);white-space:nowrap;
+  transform:rotate(-2deg)}
+.e161__t{display:flex;animation:loopText 20s linear infinite}
+.e161__t span{padding:0 60px;display:inline-flex;align-items:center;gap:60px}
+.e161__t span::after{content:"★";color:var(--card-warn);font-size:120px}
+
+/* ============= E162 Animated Aurora ============= */
+.e162{position:absolute;inset:0;background:#0a0f1c;overflow:hidden}
+.e162__b{position:absolute;border-radius:50%;filter:blur(140px);opacity:.65;animation:auroraSlide 12s ease-in-out infinite alternate}
+.e162__b1{background:radial-gradient(ellipse 60% 40% at center,#4f9d8a,transparent 70%);width:1400px;height:600px;top:-100px;left:-200px}
+.e162__b2{background:radial-gradient(ellipse 60% 40% at center,#7a5fb8,transparent 70%);width:1300px;height:500px;top:300px;right:-200px;animation-duration:16s;animation-delay:-4s}
+.e162__b3{background:radial-gradient(ellipse 60% 40% at center,#5a8fa8,transparent 70%);width:1500px;height:700px;bottom:-100px;left:-100px;animation-duration:20s;animation-delay:-8s}
+
+/* ============= E163 Drift Mesh Gradient ============= */
+.e163{position:absolute;inset:0;background:#1f2a3a;overflow:hidden}
+.e163__d{position:absolute;width:1100px;height:1100px;border-radius:50%;filter:blur(180px)}
+.e163__d1{background:radial-gradient(circle,#5a8fa8,transparent 60%);left:-20%;top:-20%;animation:drift1 22s ease-in-out infinite alternate}
+.e163__d2{background:radial-gradient(circle,#c97d5c,transparent 60%);right:-20%;bottom:-20%;animation:drift2 26s ease-in-out infinite alternate}
+.e163__d3{background:radial-gradient(circle,#4a8f70,transparent 60%);left:30%;top:30%;width:800px;height:800px;animation:drift1 30s ease-in-out infinite alternate-reverse}
+
+/* ============= E164 Falling Confetti Loop ============= */
+.e164{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.e164 i{position:absolute;width:24px;height:14px;animation:confettiFall linear infinite}
+
+/* ============= E165 Loop Rain ============= */
+.e165{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.e165 i{position:absolute;top:0;width:2px;height:80px;background:linear-gradient(180deg,transparent,rgba(220,235,255,.7));transform:rotate(15deg);animation:rainFall linear infinite}
+
+/* ============= E166 Snowfall ============= */
+.e166{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.e166 i{position:absolute;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 0 6px rgba(255,255,255,.5);animation:rainFall linear infinite}
+
+/* ============= E167 Scanline Sweep ============= */
+.e167{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.e167__line{position:absolute;left:0;right:0;height:80px;background:linear-gradient(180deg,transparent,rgba(120,255,180,.45),transparent);
+  filter:blur(2px);animation:scanY 3s linear infinite}
+.e167__grid{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.3) 0 2px,transparent 2px 5px);mix-blend-mode:multiply}
+
+/* ============= E168 Glitch Loop ============= */
+.e168{position:relative;font-family:var(--card-font-display);font-weight:800;font-size:240px;color:#fff;line-height:1}
+.e168 span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.e168 .r{color:#ff3a4a;mix-blend-mode:screen;animation:glitchA 4s steps(1,end) infinite}
+.e168 .c{color:#3affe6;mix-blend-mode:screen;animation:glitchB 4s steps(1,end) infinite}
+
+/* ============= E169 Neon Flicker ============= */
+.e169{font-family:var(--card-font-display);font-weight:600;font-size:240px;color:#fff;
+  text-shadow:0 0 8px #fff,0 0 24px #ff5cb1,0 0 60px #ff2a96,0 0 100px #ff2a96;
+  animation:neonFlick 5s steps(60,end) infinite}
+
+/* ============= E170 Typewriter Caret ============= */
+.e170{font-family:var(--card-font-mono);font-weight:600;font-size:120px;color:var(--card-paper);
+  white-space:nowrap;overflow:hidden;border-right:6px solid var(--card-accent);
+  width:0;animation:typewriter 4s steps(18,end) infinite,blink 1s step-end infinite}
+
+/* ============= E171 Letter Pop Cascade ============= */
+.e171{font-family:var(--card-font-display);font-weight:800;font-size:240px;color:var(--card-navy);display:flex;gap:8px}
+.e171 span{display:inline-block;animation:letterPop 2.4s ease-in-out infinite}
+.e171 span:nth-child(1){animation-delay:.0s}
+.e171 span:nth-child(2){animation-delay:.1s}
+.e171 span:nth-child(3){animation-delay:.2s}
+.e171 span:nth-child(4){animation-delay:.3s}
+.e171 span:nth-child(5){animation-delay:.4s}
+.e171 span:nth-child(6){animation-delay:.5s}
+
+/* ============= E172 Wave Type Loop ============= */
+.e172{font-family:var(--card-font-display);font-weight:800;font-size:200px;color:var(--card-accent);display:flex;gap:6px}
+.e172 span{display:inline-block;animation:wave 2.4s ease-in-out infinite}
+.e172 span:nth-child(2){animation-delay:.1s}.e172 span:nth-child(3){animation-delay:.2s}
+.e172 span:nth-child(4){animation-delay:.3s}.e172 span:nth-child(5){animation-delay:.4s}
+.e172 span:nth-child(6){animation-delay:.5s}.e172 span:nth-child(7){animation-delay:.6s}
+
+/* ============= E173 Wipe Reveal Loop ============= */
+.e173{position:absolute;inset:0;background:linear-gradient(135deg,#5a8fa8,#1f2a3a)}
+.e173__cover{position:absolute;inset:0;background:var(--card-paper);animation:wipe 3s ease-in-out infinite alternate}
+
+/* ============= E174 Pulse Beat ============= */
+.e174{width:480px;height:480px;border-radius:50%;background:var(--card-warn);
+  box-shadow:0 0 60px rgba(201,125,92,.6);animation:pulse 1.4s ease-in-out infinite}
+
+/* ============= E175 Pulse Ring Outward ============= */
+.e175{position:relative;width:480px;height:480px;display:flex;align-items:center;justify-content:center}
+.e175__c{width:140px;height:140px;border-radius:50%;background:var(--card-accent);box-shadow:0 0 60px rgba(90,143,168,.6)}
+.e175__r{position:absolute;width:140px;height:140px;border-radius:50%;border:4px solid var(--card-accent);
+  animation:ringPulse 2s ease-out infinite}
+.e175__r:nth-child(2){animation-delay:.6s}
+.e175__r:nth-child(3){animation-delay:1.2s}
+
+/* ============= E176 Shimmer Sweep (text) ============= */
+.e176{position:relative;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:var(--card-warn);overflow:hidden}
+.e176::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,236,200,.6),transparent);
+  mix-blend-mode:screen;animation:sweep 3s ease-in-out infinite}
+
+/* ============= E177 Light Sweep on Card ============= */
+.e177{position:relative;width:560px;height:760px;border-radius:30px;background:linear-gradient(135deg,#3a4858,#1f2a3a);overflow:hidden;
+  box-shadow:0 30px 60px rgba(0,0,0,.4)}
+.e177::before{content:"";position:absolute;top:-20%;bottom:-20%;width:240px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
+  transform:skewX(-15deg);animation:sweep 4s ease-in-out infinite}
+
+/* ============= E178 Audio Equalizer Bars ============= */
+.e178{display:flex;gap:24px;align-items:flex-end;height:560px}
+.e178 i{width:60px;background:var(--card-accent);transform-origin:bottom;animation:equalizer1 1.2s ease-in-out infinite}
+.e178 i:nth-child(2){animation-delay:.1s;background:var(--card-warn)}
+.e178 i:nth-child(3){animation-delay:.2s}
+.e178 i:nth-child(4){animation-delay:.3s;background:var(--card-warn)}
+.e178 i:nth-child(5){animation-delay:.4s}
+.e178 i:nth-child(6){animation-delay:.5s;background:var(--card-warn)}
+.e178 i:nth-child(7){animation-delay:.6s}
+
+/* ============= E179 Spectrum Sine (SVG path) ============= */
+.e179{width:100%;max-width:880px}
+
+/* ============= E180 Heart Beat / EKG ============= */
+.e180 path{stroke:var(--card-warn);stroke-width:6;fill:none;stroke-dasharray:1200;animation:ekg 2s linear infinite}
+
+/* ============= E181 Radar Sweep ============= */
+.e181{position:relative;width:760px;height:760px;border-radius:50%;border:2px solid rgba(120,255,180,.4);
+  background:radial-gradient(circle,rgba(0,30,20,.7),rgba(0,10,8,.95));overflow:hidden}
+.e181::before,.e181::after{content:"";position:absolute;inset:24%;border-radius:50%;border:1px solid rgba(120,255,180,.3)}
+.e181::after{inset:48%}
+.e181__sw{position:absolute;inset:0;background:conic-gradient(from 0deg,rgba(120,255,180,.5),transparent 25%);animation:radar 4s linear infinite;border-radius:50%}
+.e181__pt{position:absolute;width:24px;height:24px;border-radius:50%;background:#5cffaa;box-shadow:0 0 24px #5cffaa}
+.e181__pt--a{top:30%;left:60%}.e181__pt--b{top:60%;left:35%}
+
+/* ============= E182 Orbit System ============= */
+.e182{position:relative;width:760px;height:760px}
+.e182__sun{position:absolute;left:50%;top:50%;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffd14a,#c97d5c);
+  transform:translate(-50%,-50%);box-shadow:0 0 80px rgba(255,200,110,.6)}
+.e182__r{position:absolute;left:50%;top:50%;border:1px solid rgba(248,246,241,.25);border-radius:50%}
+.e182__r--1{width:560px;height:560px;transform:translate(-50%,-50%)}
+.e182__r--2{width:760px;height:760px;transform:translate(-50%,-50%)}
+.e182__p{position:absolute;left:50%;top:50%;width:48px;height:48px;border-radius:50%;background:var(--card-accent);
+  margin:-24px 0 0 -24px;animation:orbit 12s linear infinite}
+.e182__p--b{background:var(--card-warn);width:36px;height:36px;margin:-18px 0 0 -18px;animation-duration:18s;animation-name:orbit}
+.e182__p--b{--r:380px}
+
+/* ============= E183 Liquid Blob Loop ============= */
+.e183{width:740px;height:740px;background:linear-gradient(135deg,var(--card-warn),#e0a07a);
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,.3));animation:liquid 8s ease-in-out infinite}
+
+/* ============= E184 Floating Card Bob ============= */
+.e184{width:560px;height:760px;border-radius:30px;background:var(--card-paper);
+  box-shadow:0 60px 120px rgba(0,0,0,.4);animation:float 4s ease-in-out infinite}
+
+/* ============= E185 Camera Pan (Ken Burns) ============= */
+.e185{position:absolute;inset:0;overflow:hidden}
+.e185__img{position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.5)),
+  linear-gradient(135deg,#3a4858,#1f2a3a);background-size:cover;
+  animation:camPan 14s ease-in-out infinite alternate}
+
+/* ============= E186 Camera Zoom (slow push) ============= */
+.e186{position:absolute;inset:0;overflow:hidden}
+.e186__img{position:absolute;inset:0;background:linear-gradient(135deg,#c97d5c,#7a3f2a);animation:camZoom 10s ease-in-out infinite alternate}
+
+/* ============= E187 Lower Third (TV graphic) ============= */
+.e187{position:absolute;left:60px;right:60px;bottom:160px;height:300px;display:flex;align-items:flex-end;gap:40px}
+.e187__bar{flex:1;height:240px;background:linear-gradient(90deg,var(--card-navy) 0%,rgba(31,42,58,.8) 100%);
+  border-left:12px solid var(--card-warn);padding:30px 60px;display:flex;flex-direction:column;justify-content:center;gap:10px;
+  animation:wipe 1.6s ease-out 1 forwards;animation-iteration-count:infinite;animation-direction:alternate}
+.e187__name{font-family:var(--card-font-display);font-weight:700;font-size:84px;color:var(--card-paper);line-height:1}
+.e187__role{font-family:var(--card-font-mono);font-size:32px;color:var(--card-paper-soft);letter-spacing:.18em;text-transform:uppercase}
+
+/* ============= E188 Animated Underline ============= */
+.e188{font-family:var(--card-font-display);font-weight:700;font-size:200px;color:var(--card-navy);position:relative;display:inline-block}
+.e188::after{content:"";position:absolute;left:0;bottom:6px;height:14px;background:var(--card-accent);width:100%;
+  transform-origin:left;animation:wipe 2s ease-in-out infinite alternate}
+
+/* ============= E189 Counter Tick ============= */
+.e189{font-family:var(--card-font-display);font-weight:800;font-size:340px;color:var(--card-navy);line-height:1;letter-spacing:-.02em}
+.e189__lbl{font-family:var(--card-font-mono);font-size:42px;letter-spacing:.22em;text-transform:uppercase;color:var(--card-slate-ink);margin-top:30px;text-align:center}
+
+/* ============= E190 Progress Loop ============= */
+.e190{display:flex;flex-direction:column;gap:40px;width:760px}
+.e190__bar{height:24px;background:var(--card-paper-soft);border-radius:12px;overflow:hidden}
+.e190__fill{height:100%;background:linear-gradient(90deg,var(--card-accent),var(--card-ok));
+  transform-origin:left;animation:wipe 4s ease-in-out infinite}
+
+/* ============= E191 Spinner Loop ============= */
+.e191{width:340px;height:340px;border-radius:50%;border:18px solid var(--card-paper-soft);border-top-color:var(--card-accent);
+  animation:spin360 1.4s linear infinite}
+
+/* ============= E192 Dot Loader Bounce ============= */
+.e192{display:flex;gap:36px}
+.e192 i{width:80px;height:80px;border-radius:50%;background:var(--card-accent);animation:wave 1.2s ease-in-out infinite}
+.e192 i:nth-child(2){animation-delay:.15s}
+.e192 i:nth-child(3){animation-delay:.3s}
+
+/* ============= E193 Film Flicker ============= */
+.e193{position:absolute;inset:0;background:linear-gradient(180deg,#3a4858,#1f2a3a);animation:filmFlicker 1.6s steps(60,end) infinite}
+.e193__sc{position:absolute;inset:0}
+.e193__sc i{position:absolute;width:2px;background:rgba(248,246,241,.6);top:0;bottom:0}
+
+/* ============= E194 Earthquake Shake ============= */
+.e194{font-family:var(--card-font-display);font-weight:900;font-size:300px;color:var(--card-warn);animation:shake .14s linear infinite}
+
+/* ============= E195 Plane Fly-By ============= */
+.e195{position:absolute;left:0;right:0;top:30%;height:200px;display:flex;align-items:center}
+.e195 i{font-size:160px;animation:fly 8s linear infinite;display:inline-block;color:var(--card-navy)}
+
+/* ============= E196 Flag Wave ============= */
+.e196{width:680px;height:480px;background:repeating-linear-gradient(0deg,#c93f5c 0 80px,#fff 80px 160px,#1f2a3a 160px 240px);
+  animation:flag 3s ease-in-out infinite;transform-origin:left center;filter:drop-shadow(0 30px 40px rgba(0,0,0,.3))}
+
+/* ============= E197 Hue Cycle ============= */
+.e197{font-family:var(--card-font-display);font-weight:900;font-size:300px;color:var(--card-warn);animation:hueShift 6s linear infinite}
+
+/* ============= E198 Confetti Cannon (one-shot loop) ============= */
+.e198{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.e198 i{position:absolute;width:30px;height:18px;left:50%;bottom:200px;animation:cannon 3s ease-out infinite}
+@keyframes cannon{
+  0%{transform:translate(0,0) rotate(0);opacity:1}
+  60%{opacity:1}
+  100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}
+}
+
+/* ============= E199 Lightning Strike Loop ============= */
+.e199{position:absolute;inset:0}
+.e199__bg{position:absolute;inset:0;background:linear-gradient(180deg,#1a2030 0%,#080c14 100%)}
+.e199__flash{position:absolute;inset:0;background:rgba(220,235,255,.78);opacity:0;animation:strikeFlash 5s steps(40,end) infinite}
+@keyframes strikeFlash{0%,4%,7%,100%{opacity:0}5%{opacity:1}6%{opacity:.6}}
+.e199__bolt{position:absolute;top:8%;left:48%;width:120px;height:780px;
+  clip-path:polygon(60% 0%,18% 38%,52% 42%,12% 80%,52% 78%,30% 100%,76% 50%,40% 48%,80% 18%,52% 22%);
+  background:#fff;filter:drop-shadow(0 0 20px rgba(220,235,255,.9));opacity:0;animation:strikeFlash 5s steps(40,end) infinite}
+
+/* ============= E200 Vinyl Spin ============= */
+.e200{width:760px;height:760px;border-radius:50%;background:radial-gradient(circle,#1a1a1a 0%,#0a0a0a 60%,#1a1a1a 65%,#0a0a0a 100%);
+  position:relative;animation:spin360 6s linear infinite;
+  box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 0 40px rgba(255,255,255,.06)}
+.e200::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:repeating-radial-gradient(circle at center,transparent 0 14px,rgba(255,255,255,.04) 14px 16px)}
+.e200::after{content:"";position:absolute;inset:34%;border-radius:50%;background:radial-gradient(circle,#c97d5c,#7a3f2a)}
+</style>
+</head>
+<body>
+<h1>Effects Batch 05 — E161–E200 · video-priority</h1>
+<p class="sub">All looped, browser-only. <b style="color:#f5d35a">Yellow ★ flag</b> = especially well-suited to short video / motion-graphic use. Each tile actually animates in the preview — click into a tile if you want to inspect it fullscreen.</p>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E161 · Looping Marquee <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="placeholder-text" style="opacity:.3;font-size:120px">page</div></div>
+    <div class="e161"><div class="e161__t"><span>NEW DROP</span><span>NEW DROP</span><span>NEW DROP</span><span>NEW DROP</span><span>NEW DROP</span><span>NEW DROP</span></div></div>
+    <div class="frame__id">E161</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E162 · Animated Aurora <b>★</b></div><div class="cell__row">
+  <div class="frame"><div class="e162"><div class="e162__b e162__b1"></div><div class="e162__b e162__b2"></div><div class="e162__b e162__b3"></div></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff">aurora</div></div>
+    <div class="frame__id">E162</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E163 · Drift Mesh Gradient <b>★</b></div><div class="cell__row">
+  <div class="frame"><div class="e163"><div class="e163__d e163__d1"></div><div class="e163__d e163__d2"></div><div class="e163__d e163__d3"></div></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff">flow</div></div>
+    <div class="frame__id">E163</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E164 · Falling Confetti <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">yes!</div></div>
+    <div class="e164" id="confettiHost"></div>
+    <div class="frame__id">E164</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E165 · Looping Rain <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#1e2a3a,#0f1620)"></div>
+    <div class="frame__safe"><div class="placeholder-text">storm</div></div>
+    <div class="e165" id="rainHost"></div>
+    <div class="frame__id">E165</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E166 · Snowfall <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#26344a,#101822)"></div>
+    <div class="frame__safe"><div class="placeholder-text">winter</div></div>
+    <div class="e166" id="snowHost"></div>
+    <div class="frame__id">E166</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E167 · Scanline Sweep <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#1c4a3a,#080f0c)"></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#aaffcf;font-family:var(--card-font-mono)">SCAN</div></div>
+    <div class="e167"><div class="e167__grid"></div><div class="e167__line"></div></div>
+    <div class="frame__id">E167</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E168 · Glitch Loop <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e168"><span class="r">SIGNAL</span><span class="c">SIGNAL</span><span>SIGNAL</span></div></div>
+    <div class="frame__id">E168</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E169 · Neon Flicker <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e169">open</div></div><div class="frame__id">E169</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E170 · Typewriter <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e170">hello there.</div></div><div class="frame__id">E170</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E171 · Letter Pop <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e171"><span>b</span><span>o</span><span>u</span><span>n</span><span>c</span><span>e</span></div></div><div class="frame__id">E171</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E172 · Wave Type Loop <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e172"><span>R</span><span>I</span><span>P</span><span>P</span><span>L</span><span>E</span><span>S</span></div></div><div class="frame__id">E172</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E173 · Wipe Reveal Loop <b>★</b></div><div class="cell__row">
+  <div class="frame">
+    <div class="e173"></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff;text-shadow:0 4px 16px rgba(0,0,0,.4)">REVEAL</div></div>
+    <div class="e173__cover"></div>
+    <div class="frame__id">E173</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E174 · Pulse Beat <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e174"></div></div><div class="frame__id">E174</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E175 · Outward Pulse Rings <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e175"><div class="e175__r"></div><div class="e175__r"></div><div class="e175__r"></div><div class="e175__c"></div></div></div><div class="frame__id">E175</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E176 · Shimmer Sweep Type <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e176">GOLD</div></div><div class="frame__id">E176</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E177 · Light Sweep Card <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e177"></div></div><div class="frame__id">E177</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E178 · Equalizer Bars <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e178"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="frame__id">E178</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E179 · Sine Spectrum <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe">
+    <svg class="e179" viewBox="0 0 880 400">
+      <path d="M0 200 Q 110 80 220 200 T 440 200 T 660 200 T 880 200" stroke="#5A8FA8" stroke-width="6" fill="none">
+        <animate attributeName="d" dur="3s" repeatCount="indefinite"
+          values="M0 200 Q 110 80 220 200 T 440 200 T 660 200 T 880 200;
+                  M0 200 Q 110 320 220 200 T 440 200 T 660 200 T 880 200;
+                  M0 200 Q 110 80 220 200 T 440 200 T 660 200 T 880 200"/>
+      </path>
+      <path d="M0 200 Q 110 280 220 200 T 440 200 T 660 200 T 880 200" stroke="#C97D5C" stroke-width="4" fill="none" opacity=".7">
+        <animate attributeName="d" dur="2.4s" repeatCount="indefinite"
+          values="M0 200 Q 110 280 220 200 T 440 200 T 660 200 T 880 200;
+                  M0 200 Q 110 120 220 200 T 440 200 T 660 200 T 880 200;
+                  M0 200 Q 110 280 220 200 T 440 200 T 660 200 T 880 200"/>
+      </path>
+    </svg>
+  </div><div class="frame__id">E179</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E180 · EKG / Heartbeat <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe">
+    <svg class="e180" viewBox="0 0 1200 400" width="900">
+      <path d="M0 200 L 200 200 L 240 200 L 280 100 L 320 320 L 360 80 L 400 200 L 600 200 L 640 200 L 680 100 L 720 320 L 760 80 L 800 200 L 1200 200"/>
+    </svg>
+  </div><div class="frame__id">E180</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E181 · Radar Sweep <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e181"><div class="e181__sw"></div><div class="e181__pt e181__pt--a"></div><div class="e181__pt e181__pt--b"></div></div></div><div class="frame__id">E181</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E182 · Orbit System <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="e182">
+      <div class="e182__r e182__r--1"></div>
+      <div class="e182__r e182__r--2"></div>
+      <div class="e182__sun"></div>
+      <div class="e182__p" style="--r:280px"></div>
+      <div class="e182__p e182__p--b" style="--r:380px"></div>
+    </div></div>
+    <div class="frame__id">E182</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E183 · Liquid Blob Loop <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e183"></div></div><div class="frame__id">E183</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E184 · Floating Card Bob <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e184"></div></div><div class="frame__id">E184</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E185 · Camera Pan (Ken Burns) <b>★</b></div><div class="cell__row">
+  <div class="frame">
+    <div class="e185"><div class="e185__img"></div></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:160px"><div class="placeholder-text" style="color:#fff;font-size:140px">est. 2024</div></div>
+    <div class="frame__id">E185</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E186 · Camera Push <b>★</b></div><div class="cell__row">
+  <div class="frame"><div class="e186"><div class="e186__img"></div></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff">push in</div></div>
+    <div class="frame__id">E186</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E187 · Lower Third (TV) <b>★</b></div><div class="cell__row">
+  <div class="frame">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#3a4858,#1f2a3a)"></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff;opacity:.4;font-size:120px">talking head</div></div>
+    <div class="e187"><div class="e187__bar"><div class="e187__name">Mira Okafor</div><div class="e187__role">Founder · Drift Studio</div></div></div>
+    <div class="frame__id">E187</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E188 · Animated Underline <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e188">underline</div></div><div class="frame__id">E188</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E189 · Counter Tick</div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div style="display:flex;flex-direction:column;align-items:center">
+    <div class="e189" id="ctr">0%</div>
+    <div class="e189__lbl">DAILY UPTIME</div>
+  </div></div><div class="frame__id">E189</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E190 · Progress Loop <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e190">
+    <div class="e190__bar"><div class="e190__fill"></div></div>
+    <div class="e190__bar"><div class="e190__fill" style="animation-delay:.3s;animation-duration:5s"></div></div>
+    <div class="e190__bar"><div class="e190__fill" style="animation-delay:.6s;animation-duration:6s"></div></div>
+  </div></div><div class="frame__id">E190</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E191 · Spinner Loop <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e191"></div></div><div class="frame__id">E191</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E192 · Dot Loader Bounce <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e192"><i></i><i></i><i></i></div></div><div class="frame__id">E192</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E193 · Film Flicker <b>★</b></div><div class="cell__row">
+  <div class="frame">
+    <div class="e193"></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff">archive</div></div>
+    <div class="frame__id">E193</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E194 · Earthquake Shake <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e194">QUAKE</div></div><div class="frame__id">E194</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E195 · Plane Fly-By <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe"><div class="placeholder-text" style="opacity:.4">arrival</div></div>
+    <div class="e195"><i>✈</i></div>
+    <div class="frame__id">E195</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E196 · Flag Wave</div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e196"></div></div><div class="frame__id">E196</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E197 · Hue Cycle</div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e197">PRISM</div></div><div class="frame__id">E197</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E198 · Confetti Cannon <b>★</b></div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">launch</div></div>
+    <div class="e198" id="cannonHost"></div>
+    <div class="frame__id">E198</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E199 · Lightning Loop <b>★</b></div><div class="cell__row">
+  <div class="frame">
+    <div class="e199">
+      <div class="e199__bg"></div>
+      <div class="e199__flash"></div>
+      <div class="e199__bolt"></div>
+    </div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff">strike</div></div>
+    <div class="frame__id">E199</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E200 · Vinyl Spin <b>★</b></div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e200"></div></div><div class="frame__id">E200</div></div>
+</div></div>
+
+</div>
+
+<script>
+function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+function fill(host,n,fn){if(!host)return;for(let i=0;i<n;i++)host.appendChild(fn(i))}
+
+// E164 confetti — random delays, lateral offsets, colors
+(function(){const r=rng(13);const colors=['#5A8FA8','#C97D5C','#4A8F70','#F8F6F1','#f5d35a'];
+  fill(document.getElementById('confettiHost'),50,i=>{const e=document.createElement('i');
+    e.style.left=(r()*100)+'%';e.style.background=colors[Math.floor(r()*colors.length)];
+    e.style.animationDuration=(4+r()*4)+'s';e.style.animationDelay=(-r()*8)+'s';
+    e.style.transform='rotate('+(r()*360)+'deg)';
+    if(r()>.7){e.style.borderRadius='50%';e.style.width='18px';e.style.height='18px'}
+    return e})})();
+
+// E165 rain
+(function(){const r=rng(21);
+  fill(document.getElementById('rainHost'),60,i=>{const e=document.createElement('i');
+    e.style.left=(r()*100)+'%';e.style.height=(60+r()*80)+'px';e.style.opacity=(.4+r()*.5);
+    e.style.animationDuration=(.6+r()*.6)+'s';e.style.animationDelay=(-r()*1.2)+'s';return e})})();
+
+// E166 snow
+(function(){const r=rng(33);
+  fill(document.getElementById('snowHost'),50,i=>{const e=document.createElement('i');
+    const s=4+r()*12;e.style.width=s+'px';e.style.height=s+'px';e.style.left=(r()*100)+'%';
+    e.style.opacity=(.5+r()*.5);
+    e.style.animationDuration=(6+r()*6)+'s';e.style.animationDelay=(-r()*8)+'s';return e})})();
+
+// E198 confetti cannon — radial scatter
+(function(){const r=rng(44);const colors=['#5A8FA8','#C97D5C','#4A8F70','#F8F6F1','#f5d35a'];
+  fill(document.getElementById('cannonHost'),36,i=>{const e=document.createElement('i');
+    const a=(-Math.PI/2)+(r()-.5)*Math.PI*0.9;
+    const dist=400+r()*700;
+    e.style.setProperty('--dx',(Math.cos(a)*dist)+'px');
+    e.style.setProperty('--dy',(Math.sin(a)*dist)+'px');
+    e.style.background=colors[Math.floor(r()*colors.length)];
+    e.style.animationDuration=(2.4+r()*1.2)+'s';e.style.animationDelay=(-r()*3)+'s';
+    if(r()>.7){e.style.width='20px';e.style.height='20px';e.style.borderRadius='50%'}
+    return e})})();
+
+// E189 counter tick
+(function(){const el=document.getElementById('ctr');if(!el)return;
+  let v=0;setInterval(()=>{v=(v+1)%101;el.textContent=v+'%'},80)})();
+</script>
+</body>
+</html>

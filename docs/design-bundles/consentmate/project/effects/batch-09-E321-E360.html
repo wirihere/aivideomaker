@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 09 — E321–E360 · more explosions + MG staples</title>
+<style>
+:root{
+  --card-navy:#1F2A3A;--card-navy-deep:#131B27;--card-slate:#4A5568;--card-slate-ink:#6B7280;
+  --card-paper:#F8F6F1;--card-paper-soft:#EFEBE2;--card-accent:#5A8FA8;--card-warn:#C97D5C;--card-ok:#4A8F70;
+  --card-font-mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --card-font-display:Georgia,"Times New Roman",serif;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--card-font-mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:820px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__lbl b{color:#f5d35a;font-weight:600;letter-spacing:.18em}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);background:#1a2030}
+.frame--light{background:var(--card-paper)}
+.frame__safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 90px;box-sizing:border-box;z-index:5}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:20}
+.frame--light .frame__id{color:rgba(31,42,58,.45)}
+.ph{font-family:var(--card-font-display);font-weight:800;font-size:200px;line-height:1;color:#fff}
+
+@keyframes blastOut{0%{transform:translate(0,0) scale(.4) rotate(0);opacity:0}10%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1) rotate(var(--dr));opacity:0}}
+@keyframes flash{0%,100%{opacity:0}5%{opacity:1}30%{opacity:0}}
+@keyframes shockwave{0%{transform:scale(0);opacity:1;border-width:50px}100%{transform:scale(2.6);opacity:0;border-width:0}}
+@keyframes inkBloom{0%{transform:scale(.05);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+@keyframes rise{0%{transform:translateY(0);opacity:0}10%{opacity:1}100%{transform:translateY(-1100px);opacity:0}}
+@keyframes risefade{0%{transform:translateY(0);opacity:0}10%{opacity:1}100%{transform:translateY(-1300px);opacity:0}}
+@keyframes hueLoop{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+@keyframes wipeR{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes scrollX{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes scrollY{0%{transform:translateY(100%)}100%{transform:translateY(-100%)}}
+@keyframes neonExplode{0%{transform:scale(.4);opacity:0;filter:blur(40px)}30%{transform:scale(1);opacity:1;filter:blur(0)}80%{transform:scale(1);opacity:1}100%{transform:scale(1.4);opacity:0;filter:blur(20px)}}
+@keyframes pixelShatter{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--dr));opacity:0}}
+@keyframes inkDrop{0%{transform:scale(0);opacity:0}30%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes splashRise{0%{transform:translateY(0) scaleY(.3);opacity:1}50%{transform:translateY(-200px) scaleY(1);opacity:1}100%{transform:translateY(-600px) scaleY(0);opacity:0}}
+@keyframes barRise{0%{height:0}100%{height:var(--h)}}
+@keyframes typewrite{0%,90%{width:var(--w)}100%{width:var(--w)}}
+@keyframes drawLine{0%{stroke-dashoffset:1500}100%{stroke-dashoffset:0}}
+@keyframes scanline{0%{transform:translateY(0)}100%{transform:translateY(1920px)}}
+@keyframes glow{0%,100%{box-shadow:0 0 20px currentColor}50%{box-shadow:0 0 60px currentColor,0 0 100px currentColor}}
+@keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes shake{0%,100%{transform:translate(0)}25%{transform:translate(-8px,6px)}50%{transform:translate(6px,-8px)}75%{transform:translate(-4px,-6px)}}
+@keyframes barFill{0%{transform:scaleY(0)}100%{transform:scaleY(1)}}
+@keyframes wipeReveal{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0 0 0)}}
+
+/* ===== E321 Smoke Ring ===== */
+.e321{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,#1a3040,#000);overflow:hidden}
+.e321 i{position:absolute;left:50%;top:50%;border-radius:50%;border:80px solid;border-color:rgba(180,210,235,.6) rgba(160,190,220,.4) rgba(140,170,200,.3) rgba(170,200,230,.5);transform:translate(-50%,-50%);filter:blur(20px);animation:shockwave 4s ease-out infinite}
+.e321 i:nth-child(2){animation-delay:1s;border-color:rgba(255,180,140,.4)}
+.e321 i:nth-child(3){animation-delay:2s;border-color:rgba(140,210,255,.5)}
+
+/* ===== E322 Pixel Shatter ===== */
+.e322{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#0a141d);overflow:hidden}
+.e322__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#fff;animation:flash 4s ease-out infinite}
+.e322 i{position:absolute;left:50%;top:50%;width:24px;height:24px;background:#fff;animation:pixelShatter 3s ease-out infinite}
+
+/* ===== E323 Neon Explosion ===== */
+.e323{position:absolute;inset:0;background:#0a0014;overflow:hidden}
+.e323__core{position:absolute;left:50%;top:50%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#fff,#ff5cb1 40%,transparent 70%);transform:translate(-50%,-50%);filter:blur(20px);animation:flash 3s ease-out infinite}
+.e323 .ring{position:absolute;left:50%;top:50%;width:60px;height:60px;border-radius:50%;border:18px solid;transform:translate(-50%,-50%);filter:drop-shadow(0 0 30px currentColor);animation:shockwave 3s ease-out infinite}
+.e323 .ring:nth-child(2){border-color:#ff5cb1;color:#ff5cb1}
+.e323 .ring:nth-child(3){border-color:#3affe6;color:#3affe6;animation-delay:.4s}
+.e323 .ring:nth-child(4){border-color:#9b6bff;color:#9b6bff;animation-delay:.8s}
+.e323 i{position:absolute;left:50%;top:50%;width:6px;height:140px;background:linear-gradient(180deg,#fff,transparent);box-shadow:0 0 20px #ff5cb1;transform-origin:top center;animation:neonRay 3s ease-out infinite}
+@keyframes neonRay{0%{transform:rotate(var(--r)) translateY(0);opacity:0}10%{opacity:1}100%{transform:rotate(var(--r)) translateY(900px);opacity:0}}
+
+/* ===== E324 Ink Drop ===== */
+.e324{position:absolute;inset:0;background:#f4ede0}
+.e324 i{position:absolute;border-radius:50%;animation:inkBloom 3.6s ease-out infinite}
+
+/* ===== E325 Water Splash ===== */
+.e325{position:absolute;inset:0;background:linear-gradient(180deg,#1a3a6a,#0a1d3a);overflow:hidden}
+.e325__pool{position:absolute;left:0;right:0;bottom:0;height:340px;background:linear-gradient(180deg,rgba(80,170,230,.3),#0a3a6a)}
+.e325__pool::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:#7adfff;box-shadow:0 0 30px #7adfff}
+.e325 i{position:absolute;bottom:340px;width:30px;border-radius:30px 30px 0 0;background:linear-gradient(180deg,#a8e7ff,#3a8fc9);animation:splashRise 2.4s ease-out infinite;transform-origin:bottom center}
+.e325 .drop{position:absolute;width:18px;height:18px;border-radius:50%;background:#a8e7ff;box-shadow:0 0 10px #a8e7ff}
+.e325 .ring{position:absolute;left:50%;bottom:340px;width:60px;height:18px;border-radius:50%;border:4px solid #7adfff;transform:translate(-50%,-50%);animation:splashRing 2.4s ease-out infinite}
+@keyframes splashRing{0%{transform:translate(-50%,-50%) scale(.2);opacity:1}100%{transform:translate(-50%,-50%) scale(8);opacity:0}}
+
+/* ===== E326 Smoke Plume ===== */
+.e326{position:absolute;inset:0;background:linear-gradient(180deg,#2a3040,#0a141d);overflow:hidden}
+.e326 i{position:absolute;left:50%;bottom:0;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(220,220,220,.7),transparent 70%);filter:blur(30px);transform:translate(-50%,0);animation:smokePlume 5s ease-out infinite}
+@keyframes smokePlume{0%{transform:translate(-50%,200px) scale(.4);opacity:0}10%{opacity:1}100%{transform:translate(calc(-50% + var(--dx,0)),-1300px) scale(1.8);opacity:0}}
+
+/* ===== E327 Lightning Crack ===== */
+.e327{position:absolute;inset:0;background:linear-gradient(180deg,#0a0a1a,#000);overflow:hidden;animation:flash 2s steps(40,end) infinite}
+.e327 svg{position:absolute;inset:0;width:100%;height:100%}
+.e327 svg path{stroke:#fff;stroke-width:6;fill:none;filter:drop-shadow(0 0 24px #a8e7ff) drop-shadow(0 0 60px #7a99ff);stroke-dasharray:1500;animation:drawLine 2s ease-out infinite}
+
+/* ===== E328 Energy Ball Charge ===== */
+.e328{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#1a3a4a,#000)}
+.e328__core{position:absolute;left:50%;top:50%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#fff,#3affe6 40%,#1a4858 80%);transform:translate(-50%,-50%);box-shadow:0 0 100px #3affe6,0 0 200px #5cffaa;animation:pulseDot 1.4s ease-in-out infinite}
+.e328 i{position:absolute;left:50%;top:50%;width:6px;height:200px;background:linear-gradient(180deg,#3affe6,transparent);box-shadow:0 0 12px #3affe6;transform-origin:top center;animation:chargeIn 1.6s ease-in infinite}
+@keyframes chargeIn{0%{transform:rotate(var(--r)) translateY(800px);opacity:0}40%{opacity:1}100%{transform:rotate(var(--r)) translateY(150px);opacity:0}}
+
+/* ===== E329 Magic Sparks ===== */
+.e329{position:absolute;inset:0;background:radial-gradient(ellipse at center,#1a0a3a,#000);overflow:hidden}
+.e329__wand{position:absolute;left:50%;top:50%;width:8px;height:300px;background:linear-gradient(180deg,#f5d35a,#a3791e);transform:translate(-50%,-50%) rotate(-30deg);transform-origin:bottom center}
+.e329__tip{position:absolute;left:50%;top:30%;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,#fff,#f5d35a);box-shadow:0 0 60px #f5d35a;transform:translate(-50%,-50%);animation:pulseDot 1s ease-in-out infinite}
+.e329 i{position:absolute;left:50%;top:30%;width:14px;height:14px;background:radial-gradient(circle,#fff,#f5d35a);border-radius:50%;box-shadow:0 0 20px #f5d35a;animation:blastOut 3s ease-out infinite}
+
+/* ===== E330 Comet Tail ===== */
+.e330{position:absolute;inset:0;background:linear-gradient(135deg,#0a0e2a,#000);overflow:hidden}
+.e330__comet{position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#fff,#f5d35a 40%,transparent 70%);box-shadow:0 0 80px #f5d35a;animation:cometFly 4s ease-in infinite}
+@keyframes cometFly{0%{left:-200px;top:120%;transform:scale(.3)}100%{left:120%;top:-200px;transform:scale(1)}}
+.e330__comet::after{content:"";position:absolute;left:60px;top:50%;width:600px;height:30px;background:linear-gradient(90deg,transparent,#f5d35a,#fff);transform:translateY(-50%) rotate(45deg);transform-origin:left center;border-radius:30px;filter:blur(8px)}
+
+/* ===== E331 Lower-Third Wipe ===== */
+.e331{position:absolute;inset:0;background:linear-gradient(135deg,#0a141d,#1a3a4a)}
+.e331 .ph{position:absolute;left:0;right:0;top:30%;text-align:center;font-size:160px;opacity:.3}
+.e331__bar{position:absolute;left:60px;right:60px;bottom:280px;height:200px;display:flex;overflow:hidden}
+.e331__bar .accent{width:14px;background:var(--card-warn);animation:barFill 1s ease-out infinite alternate;transform-origin:bottom center}
+.e331__bar .body{flex:1;background:rgba(10,20,29,.92);backdrop-filter:blur(8px);padding:40px 60px;display:flex;flex-direction:column;justify-content:center;color:#fff;font-family:var(--card-font-display);overflow:hidden}
+.e331__bar .body::before{content:"";position:absolute;inset:0;background:rgba(10,20,29,.95);animation:wipeR 2s ease-out infinite alternate;transform-origin:left center}
+.e331__bar .body .h{position:relative;font-weight:700;font-size:80px;line-height:1.05;animation:wipeReveal 2s ease-out .3s infinite alternate}
+.e331__bar .body .s{position:relative;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.16em;color:rgba(255,255,255,.7);margin-top:16px;text-transform:uppercase;animation:wipeReveal 2s ease-out .5s infinite alternate}
+
+/* ===== E332 Callout Pointer ===== */
+.e332{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1f2a3a)}
+.e332 .ph{position:absolute;left:140px;top:34%;font-size:200px;opacity:.5}
+.e332__arrow{position:absolute;left:520px;top:42%;width:340px;height:6px;background:#f5d35a;animation:wipeR 2s ease-out infinite alternate;transform-origin:left center;box-shadow:0 0 20px rgba(245,211,90,.6)}
+.e332__arrow::after{content:"";position:absolute;right:-2px;top:50%;width:0;height:0;border-left:30px solid #f5d35a;border-top:18px solid transparent;border-bottom:18px solid transparent;transform:translateY(-50%)}
+.e332__label{position:absolute;left:880px;top:38%;background:#f5d35a;color:#1a1d22;padding:32px 50px;border-radius:14px;font-family:var(--card-font-display);font-weight:700;font-size:80px;animation:pop .5s ease-out infinite alternate;transform-origin:left center;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+
+/* ===== E333 Comparison Wipe ===== */
+.e333{position:absolute;inset:0;display:flex}
+.e333__l{flex:1;background:linear-gradient(135deg,#7a3a4a,#3a1a2a);display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:200px;color:#fff;clip-path:polygon(0 0,100% 0,calc(100% - 100px) 100%,0 100%)}
+.e333__r{flex:1;background:linear-gradient(135deg,#1a4a5a,#0a2a3a);display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:200px;color:#fff;clip-path:polygon(100px 0,100% 0,100% 100%,0 100%)}
+.e333__vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:200px;color:#f5d35a;text-shadow:0 0 60px rgba(245,211,90,.7);animation:pop .8s ease-out infinite alternate}
+
+/* ===== E334 Kinetic Type Block ===== */
+.e334{position:absolute;inset:0;background:#f4ede0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:0 80px;gap:30px}
+.e334 .row{font-family:var(--card-font-display);font-weight:900;font-size:200px;line-height:.95;color:#1a1d22;animation:wipeReveal 4s ease-out infinite}
+.e334 .row.accent{color:#c93f5c;font-style:italic}
+.e334 .row:nth-child(1){animation-delay:0s}
+.e334 .row:nth-child(2){animation-delay:.3s}
+.e334 .row:nth-child(3){animation-delay:.6s}
+.e334 .row:nth-child(4){animation-delay:.9s}
+
+/* ===== E335 Logo Reveal Sting ===== */
+.e335{position:absolute;inset:0;background:#000;overflow:hidden}
+.e335__bar{position:absolute;left:50%;top:50%;width:0;height:8px;background:var(--card-warn);transform:translate(-50%,-50%);animation:stingBar 3s ease-out infinite;box-shadow:0 0 30px var(--card-warn)}
+@keyframes stingBar{0%{width:0;opacity:1}30%{width:80%;opacity:1}80%{width:80%;opacity:1}100%{width:0;opacity:0}}
+.e335__logo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:240px;color:#fff;animation:stingLogo 3s ease-out infinite;letter-spacing:-.02em}
+@keyframes stingLogo{0%{opacity:0;transform:translate(-50%,-50%) scale(.8);filter:blur(20px)}30%{opacity:0;filter:blur(20px)}50%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0)}90%{opacity:1}100%{opacity:0}}
+
+/* ===== E336 Glitch Title (RGB split) ===== */
+.e336{position:absolute;inset:0;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.e336__t{position:relative;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#fff;letter-spacing:-.03em}
+.e336__t::before,.e336__t::after{content:"GLITCH";position:absolute;left:0;top:0}
+.e336__t::before{color:#ff3a4a;mix-blend-mode:screen;animation:rgbR .15s steps(2,end) infinite}
+.e336__t::after{color:#3affe6;mix-blend-mode:screen;animation:rgbB .12s steps(2,end) infinite}
+@keyframes rgbR{0%{transform:translate(-8px,2px)}50%{transform:translate(6px,-3px)}100%{transform:translate(-3px,4px)}}
+@keyframes rgbB{0%{transform:translate(8px,-2px)}50%{transform:translate(-6px,3px)}100%{transform:translate(3px,-4px)}}
+.e336__scan{position:absolute;left:0;right:0;top:0;height:8px;background:rgba(255,255,255,.15);animation:scanline 3s linear infinite}
+
+/* ===== E337 Bullet Point Reveal ===== */
+.e337{position:absolute;inset:0;background:#f4ede0;display:flex;flex-direction:column;justify-content:center;padding:120px}
+.e337 .row{display:flex;align-items:center;gap:40px;margin-bottom:40px;font-family:var(--card-font-display);color:#1a1d22;animation:bulletIn 4s ease-out infinite}
+.e337 .row .dot{width:50px;height:50px;border-radius:50%;background:#c93f5c;flex:0 0 auto;animation:pop .5s ease-out infinite alternate}
+.e337 .row .text{font-size:80px;font-weight:600}
+.e337 .row:nth-child(1){animation-delay:0s}
+.e337 .row:nth-child(2){animation-delay:.3s}
+.e337 .row:nth-child(3){animation-delay:.6s}
+.e337 .row:nth-child(4){animation-delay:.9s}
+.e337 .row:nth-child(5){animation-delay:1.2s}
+@keyframes bulletIn{0%{opacity:0;transform:translateX(-40px)}30%,90%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(40px)}}
+
+/* ===== E338 Bar Chart Race ===== */
+.e338{position:absolute;inset:0;background:linear-gradient(135deg,#0a141d,#1a3a4a);display:flex;align-items:flex-end;justify-content:center;gap:40px;padding:200px 100px}
+.e338 .bar{width:130px;background:linear-gradient(180deg,#5a8fa8,#2a4a5a);border-radius:14px 14px 0 0;animation:barFill 2.5s ease-out infinite alternate;transform-origin:bottom center;position:relative;color:#fff;font-family:var(--card-font-mono);font-size:36px;text-align:center;padding-top:14px;font-weight:700}
+.e338 .bar::before{content:attr(data-l);position:absolute;left:0;right:0;bottom:-60px;color:#fff;font-size:30px;letter-spacing:.16em;font-family:var(--card-font-mono)}
+.e338 .bar.win{background:linear-gradient(180deg,#f5d35a,#a3791e)}
+
+/* ===== E339 Counter Roll ===== */
+.e339{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#0a141d);display:flex;align-items:center;justify-content:center;gap:30px}
+.e339 .digit{width:140px;height:240px;background:#000;border-radius:14px;overflow:hidden;border:4px solid #5cffaa;box-shadow:0 0 40px rgba(120,255,180,.4);position:relative}
+.e339 .digit .strip{display:flex;flex-direction:column;font-family:var(--card-font-mono);font-weight:700;color:#5cffaa;font-size:200px;text-align:center;line-height:240px;animation:digitRoll 3s ease-out infinite}
+@keyframes digitRoll{0%{transform:translateY(0)}100%{transform:translateY(-2400px)}}
+.e339 .digit:nth-child(2) .strip{animation-duration:2.4s}
+.e339 .digit:nth-child(3) .strip{animation-duration:2s}
+
+/* ===== E340 Map Path Animation ===== */
+.e340{position:absolute;inset:0;background:linear-gradient(135deg,#0a1c2a,#1a3a4a);overflow:hidden}
+.e340__map{position:absolute;inset:0;background:
+  radial-gradient(circle 100px at 20% 30%,rgba(80,200,255,.2),transparent 70%),
+  radial-gradient(circle 80px at 75% 70%,rgba(80,200,255,.2),transparent 70%);}
+.e340 svg{position:absolute;inset:0;width:100%;height:100%}
+.e340 svg path{stroke:#f5d35a;stroke-width:8;fill:none;stroke-dasharray:1500;animation:drawLine 4s ease-out infinite;filter:drop-shadow(0 0 12px #f5d35a)}
+.e340 .pin{position:absolute;width:50px;height:50px;border-radius:50%;background:#f5d35a;box-shadow:0 0 30px #f5d35a;animation:pulseDot 1.5s ease-in-out infinite}
+
+/* ===== E341 Smoke Burst Color ===== */
+.e341{position:absolute;inset:0;background:#0a0a14;overflow:hidden}
+.e341 i{position:absolute;left:50%;top:50%;width:600px;height:600px;border-radius:50%;filter:blur(60px);transform:translate(-50%,-50%);mix-blend-mode:screen;animation:flash 4s ease-out infinite}
+.e341 i:nth-child(1){background:radial-gradient(circle,#ff5cb1,transparent 70%);animation-delay:0s}
+.e341 i:nth-child(2){background:radial-gradient(circle,#3affe6,transparent 70%);animation-delay:.3s}
+.e341 i:nth-child(3){background:radial-gradient(circle,#f5d35a,transparent 70%);animation-delay:.6s}
+.e341 i:nth-child(4){background:radial-gradient(circle,#9b6bff,transparent 70%);animation-delay:.9s}
+
+/* ===== E342 Fire Explosion ===== */
+.e342{position:absolute;inset:0;background:radial-gradient(circle at 50% 70%,#3a0a0a,#000);overflow:hidden}
+.e342 i{position:absolute;left:50%;bottom:0;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#ffd14a 0%,#ff8800 40%,#c93f5c 70%,transparent);filter:blur(20px);transform:translate(-50%,0);animation:fireRise 3s ease-out infinite}
+@keyframes fireRise{0%{transform:translate(-50%,300px) scale(.4);opacity:0}10%{opacity:1}100%{transform:translate(calc(-50% + var(--dx,0)),-1100px) scale(1.4);opacity:0}}
+.e342__core{position:absolute;left:50%;bottom:200px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,#fff,#ffd14a 30%,#ff3a4a 60%,transparent 80%);filter:blur(20px);transform:translate(-50%,0);animation:flash 3s ease-out infinite}
+
+/* ===== E343 Sticker Slap ===== */
+.e343{position:absolute;inset:0;background:#f4ede0;overflow:hidden}
+.e343 .ph{position:absolute;left:0;right:0;top:30%;text-align:center;font-size:200px;color:#1a1d22;opacity:.6}
+.e343 i{position:absolute;padding:30px 50px;border-radius:14px;font-family:var(--card-font-mono);font-weight:700;font-size:50px;text-transform:uppercase;letter-spacing:.16em;color:#fff;box-shadow:6px 6px 0 #1a1d22,0 20px 40px rgba(0,0,0,.2);animation:stickerSlap 4s ease-out infinite;transform-origin:center}
+@keyframes stickerSlap{0%{transform:scale(2) rotate(0);opacity:0;filter:blur(10px)}10%{transform:scale(1) rotate(var(--r));opacity:1;filter:blur(0)}90%{transform:scale(1) rotate(var(--r));opacity:1}100%{transform:scale(.6) rotate(var(--r));opacity:0}}
+
+/* ===== E344 Title Card Hard Cut ===== */
+.e344{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;animation:hardCut 4s steps(20,end) infinite}
+@keyframes hardCut{0%{background:#000}25%{background:#c93f5c}26%{background:#000}50%{background:#3affe6}51%{background:#000}}
+.e344__num{font-family:var(--card-font-mono);font-size:120px;color:rgba(255,255,255,.5);letter-spacing:.3em}
+.e344__t{font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:280px;color:#fff;line-height:1}
+.e344__sub{font-family:var(--card-font-mono);font-size:50px;letter-spacing:.4em;color:#f5d35a}
+
+/* ===== E345 Vertical Marquee ===== */
+.e345{position:absolute;inset:0;background:#0a141d;overflow:hidden;display:flex}
+.e345 .col{flex:1;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:rgba(255,255,255,.08);text-orientation:mixed;white-space:pre;line-height:.9;animation:scrollY 30s linear infinite}
+.e345 .col:nth-child(2){animation-direction:reverse;animation-duration:25s;color:rgba(255,255,255,.12)}
+.e345 .col:nth-child(3){animation-duration:35s;color:rgba(255,255,255,.06)}
+.e345__t{position:absolute;left:0;right:0;top:50%;text-align:center;transform:translateY(-50%);font-family:var(--card-font-display);font-weight:900;font-size:200px;color:#f5d35a;line-height:1;text-shadow:0 0 60px rgba(245,211,90,.5);z-index:5}
+
+/* ===== E346 Loading Bar Suspense ===== */
+.e346{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px}
+.e346__t{font-family:var(--card-font-mono);font-size:60px;letter-spacing:.32em;color:#5cffaa}
+.e346__t span{animation:blink 1s steps(2,end) infinite}
+.e346__bar{width:760px;height:60px;border:3px solid #5cffaa;padding:6px;border-radius:6px}
+.e346__bar .fill{height:100%;background:linear-gradient(90deg,#5cffaa,#3affe6);box-shadow:0 0 20px #5cffaa;animation:wipeR 4s ease-in-out infinite alternate;transform-origin:left center}
+.e346__pct{font-family:var(--card-font-mono);font-size:80px;color:#5cffaa;text-shadow:0 0 20px #5cffaa}
+
+/* ===== E347 Hex Honeycomb Reveal ===== */
+.e347{position:absolute;inset:0;background:#0a141d;overflow:hidden}
+.e347 i{position:absolute;width:100px;height:115px;background:linear-gradient(135deg,#5a8fa8,#1f2a3a);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);animation:hexFlash 3s ease-in-out infinite}
+@keyframes hexFlash{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:1;transform:scale(1.05);box-shadow:0 0 20px #5cffaa}}
+.e347 .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:200px;color:#5cffaa;text-shadow:0 0 40px #5cffaa;z-index:5}
+
+/* ===== E348 Speech Bubble Pop ===== */
+.e348{position:absolute;inset:0;background:#f5d35a;overflow:hidden}
+.e348 i{position:absolute;background:#fff;border-radius:30px;padding:30px 50px;font-family:var(--card-font-display);font-weight:700;font-size:72px;color:#1a1d22;box-shadow:8px 8px 0 #1a1d22;animation:pop .5s ease-out infinite alternate;transform-origin:bottom left}
+.e348 i::after{content:"";position:absolute;left:30px;bottom:-20px;width:40px;height:40px;background:#fff;clip-path:polygon(0 0,100% 0,0 100%);box-shadow:8px 8px 0 #1a1d22}
+
+/* ===== E349 Shutter Snap ===== */
+.e349{position:absolute;inset:0;background:#0a141d;overflow:hidden}
+.e349 .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:200px;color:#fff}
+.e349__t{position:absolute;left:0;right:0;top:0;height:50%;background:#0a141d;animation:shutterT 2.6s ease-in-out infinite}
+.e349__b{position:absolute;left:0;right:0;bottom:0;height:50%;background:#0a141d;animation:shutterB 2.6s ease-in-out infinite}
+@keyframes shutterT{0%,100%{transform:translateY(-100%)}10%,90%{transform:translateY(0)}50%{transform:translateY(0)}}
+@keyframes shutterB{0%,100%{transform:translateY(100%)}10%,90%{transform:translateY(0)}50%{transform:translateY(0)}}
+.e349__flash{position:absolute;inset:0;background:#fff;animation:flashShutter 2.6s ease-in-out infinite}
+@keyframes flashShutter{0%,8%,12%,100%{opacity:0}10%{opacity:1}}
+
+/* ===== E350 Highlight Marker Sweep ===== */
+.e350{position:absolute;inset:0;background:#f4ede0;display:flex;align-items:center;justify-content:center;padding:0 80px}
+.e350__t{position:relative;font-family:var(--card-font-display);font-weight:900;font-size:200px;color:#1a1d22;line-height:1.1;text-align:center}
+.e350__hl{position:relative;display:inline-block;background:linear-gradient(120deg,#f5d35a 50%,transparent 50%);background-size:200% 100%;background-position:100% 0;animation:hlSweep 3s ease-in-out infinite alternate;padding:0 8px}
+@keyframes hlSweep{from{background-position:100% 0}to{background-position:0 0}}
+
+/* ===== E351 Polaroid Slap Stack ===== */
+.e351{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1f2a3a);overflow:hidden}
+.e351 i{position:absolute;left:50%;top:50%;width:380px;height:460px;background:#fff;border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.5);transform-origin:center;animation:slapStack 4s ease-out infinite}
+.e351 i::after{content:attr(data-l);position:absolute;left:0;right:0;bottom:30px;text-align:center;font-family:var(--card-font-display);font-style:italic;font-size:36px;color:#1a1d22}
+.e351 i::before{content:"";position:absolute;left:30px;right:30px;top:30px;height:300px;background:linear-gradient(135deg,#5a8fa8,#1f2a3a)}
+@keyframes slapStack{0%{transform:translate(-50%,-50%) scale(2) rotate(0);opacity:0}10%{transform:translate(-50%,-50%) scale(1) rotate(var(--r));opacity:1}90%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(var(--r))}100%{opacity:0;transform:translate(-50%,-50%) scale(.8) rotate(var(--r))}}
+
+/* ===== E352 Logo Build (geometric) ===== */
+.e352{position:absolute;inset:0;background:#0a141d;display:flex;align-items:center;justify-content:center}
+.e352__svg{position:relative;width:600px;height:600px}
+.e352__svg .sq{position:absolute;background:var(--card-warn);animation:logoBuild 4s ease-out infinite}
+.e352__svg .sq.a{left:0;top:0;width:280px;height:280px;animation-delay:0s}
+.e352__svg .sq.b{right:0;top:0;width:280px;height:280px;background:#5cffaa;animation-delay:.2s}
+.e352__svg .sq.c{left:0;bottom:0;width:280px;height:280px;background:#f5d35a;animation-delay:.4s}
+.e352__svg .sq.d{right:0;bottom:0;width:280px;height:280px;background:#9b6bff;animation-delay:.6s}
+.e352__svg .core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:200px;height:200px;background:#fff;border-radius:50%;animation:logoBuild 4s ease-out 1s infinite}
+@keyframes logoBuild{0%{transform:scale(0) rotate(180deg);opacity:0}30%{transform:scale(1) rotate(0);opacity:1}90%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(.8) rotate(-90deg);opacity:0}}
+
+/* ===== E353 Vertical Reveal Bars ===== */
+.e353{position:absolute;inset:0;background:#000;overflow:hidden}
+.e353__bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#7a3a4a,#3a1a2a);font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#f5d35a}
+.e353 i{position:absolute;top:0;bottom:0;width:calc(100%/12);background:#000;animation:barReveal 4s ease-in-out infinite}
+@keyframes barReveal{0%{transform:translateY(0)}30%{transform:translateY(-100%)}70%{transform:translateY(-100%)}100%{transform:translateY(-200%)}}
+
+/* ===== E354 Fire Underline ===== */
+.e354{position:absolute;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:30px}
+.e354__t{font-family:var(--card-font-display);font-weight:900;font-size:240px;color:#fff;text-shadow:0 0 30px rgba(255,140,80,.4)}
+.e354__bar{width:0;height:14px;background:linear-gradient(90deg,#ff8800,#ffd14a,#fff);box-shadow:0 0 30px #ff8800,0 0 60px #ff3a4a;animation:wipeBar 3s ease-in-out infinite alternate;border-radius:8px}
+@keyframes wipeBar{from{width:0}to{width:60%}}
+
+/* ===== E355 Rip Reveal ===== */
+.e355{position:absolute;inset:0;background:#f4ede0;overflow:hidden}
+.e355__t{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:240px;color:#c93f5c}
+.e355__top{position:absolute;left:0;right:0;top:0;height:50%;background:#1a1d22;animation:ripT 4s ease-in-out infinite alternate;clip-path:polygon(0 0,100% 0,100% 100%,80% 95%,60% 100%,40% 92%,20% 100%,0 96%)}
+.e355__bot{position:absolute;left:0;right:0;bottom:0;height:50%;background:#1a1d22;animation:ripB 4s ease-in-out infinite alternate;clip-path:polygon(0 0,20% 6%,40% 0,60% 8%,80% 2%,100% 0,100% 100%,0 100%)}
+@keyframes ripT{from{transform:translateY(0)}to{transform:translateY(-100%)}}
+@keyframes ripB{from{transform:translateY(0)}to{transform:translateY(100%)}}
+
+/* ===== E356 Cinematic Intro Bars ===== */
+.e356{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#0a141d)}
+.e356__top{position:absolute;left:0;right:0;top:0;height:25%;background:#000;animation:cinTop 4s ease-in-out infinite alternate}
+.e356__bot{position:absolute;left:0;right:0;bottom:0;height:25%;background:#000;animation:cinBot 4s ease-in-out infinite alternate}
+@keyframes cinTop{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+@keyframes cinBot{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.e356__t{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:240px;color:#fff;line-height:1}
+.e356__sub{position:absolute;left:0;right:0;bottom:30%;text-align:center;font-family:var(--card-font-mono);font-size:42px;letter-spacing:.4em;color:#f5d35a;text-transform:uppercase}
+
+/* ===== E357 Confetti + Stars Burst ===== */
+.e357{position:absolute;inset:0;background:radial-gradient(ellipse at center,#3a1a2a,#0a0418);overflow:hidden}
+.e357 i{position:absolute;left:50%;top:50%}
+.e357 .conf{width:24px;height:14px;animation:blastOut 3s ease-out infinite}
+.e357 .star{width:32px;height:32px;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);animation:blastOut 3s ease-out infinite}
+.e357__core{position:absolute;left:50%;top:50%;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#fff,#f5d35a);box-shadow:0 0 80px #f5d35a;transform:translate(-50%,-50%);animation:flash 3s ease-out infinite}
+
+/* ===== E358 Knockout Title (alpha cut) ===== */
+.e358{position:absolute;inset:0;background:linear-gradient(135deg,#ff5cb1,#9b6bff,#3affe6);background-size:300% 300%;animation:gradientShift 6s ease-in-out infinite}
+@keyframes gradientShift{0%,100%{background-position:0 0}50%{background-position:100% 100%}}
+.e358__mask{position:absolute;inset:0;background:#0a0a14;-webkit-mask:linear-gradient(#fff,#fff);mask:linear-gradient(#fff,#fff);
+  -webkit-mask-composite:xor;mask-composite:exclude}
+.e358__t{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:380px;color:#0a0a14;mix-blend-mode:multiply;line-height:1;letter-spacing:-.04em}
+
+/* ===== E359 Boom! Chain Reaction ===== */
+.e359{position:absolute;inset:0;background:linear-gradient(135deg,#3a0a0a,#0a0a14);overflow:hidden}
+.e359 i{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#fff,#ff8800 30%,transparent 70%);filter:blur(8px);animation:flash 3s ease-out infinite;mix-blend-mode:screen}
+.e359 .lbl{position:absolute;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:120px;color:#fff;text-shadow:0 0 30px #ff3a4a;animation:pop .5s ease-out infinite alternate;text-transform:uppercase}
+
+/* ===== E360 End-Card Sign-off ===== */
+.e360{position:absolute;inset:0;background:#0a0a14;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px;padding:120px}
+.e360__logo{font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:240px;color:#fff;line-height:1;letter-spacing:-.02em;animation:wipeReveal 3s ease-out infinite}
+.e360__rule{width:60%;height:3px;background:var(--card-warn);transform-origin:center;animation:wipeR 3s ease-out .3s infinite}
+.e360__cta{font-family:var(--card-font-mono);font-size:50px;letter-spacing:.4em;color:var(--card-warn);text-transform:uppercase;animation:wipeReveal 3s ease-out .6s infinite}
+.e360__handles{display:flex;gap:60px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.7);animation:wipeReveal 3s ease-out .9s infinite}
+</style>
+</head>
+<body>
+<h1>Effects Batch 09 — E321–E360 · more explosions + motion graphics staples</h1>
+<p class="sub">Continued explosion variants (smoke ring, pixel shatter, neon, ink, water, fire, comet) plus broadcast / kinetic-type / title-card staples. <b style="color:#f5d35a">★</b> = especially video-ready.</p>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E321 · Smoke Ring <b>★</b></div>
+  <div class="frame"><div class="e321"><i></i><i></i><i></i></div><div class="frame__safe"><div class="ph">DRIFT</div></div><div class="frame__id">E321</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E322 · Pixel Shatter <b>★</b></div>
+  <div class="frame"><div class="e322" id="e322host"><div class="e322__t">SHATTER</div></div><div class="frame__id">E322</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E323 · Neon Explosion <b>★</b></div>
+  <div class="frame"><div class="e323" id="e323host"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="e323__core"></div></div>
+    <div class="frame__safe"><div class="ph" style="color:#ff5cb1;text-shadow:0 0 60px #ff5cb1">NEON</div></div>
+    <div class="frame__id">E323</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E324 · Ink Drop <b>★</b></div>
+  <div class="frame frame--light"><div class="e324" id="e324host"></div>
+    <div class="frame__safe"><div class="ph" style="color:#1a1d22">INK</div></div>
+    <div class="frame__id">E324</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E325 · Water Splash <b>★</b></div>
+  <div class="frame"><div class="e325" id="e325host"><div class="e325__pool"></div></div>
+    <div class="frame__safe" style="align-items:flex-start;padding-top:200px"><div class="ph" style="color:#a8e7ff">SPLASH</div></div>
+    <div class="frame__id">E325</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E326 · Smoke Plume <b>★</b></div>
+  <div class="frame"><div class="e326" id="e326host"></div>
+    <div class="frame__safe" style="align-items:flex-start;padding-top:200px"><div class="ph">RISE</div></div>
+    <div class="frame__id">E326</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E327 · Lightning Crack <b>★</b></div>
+  <div class="frame"><div class="e327">
+    <svg viewBox="0 0 1080 1920" preserveAspectRatio="none">
+      <path d="M540 0 L 480 380 L 600 600 L 460 940 L 620 1240 L 480 1560 L 600 1920"/>
+      <path d="M480 380 L 360 480 M460 940 L 320 1080 M620 1240 L 760 1380 M480 1560 L 360 1700"/>
+    </svg>
+  </div><div class="frame__id">E327</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E328 · Energy Charge <b>★</b></div>
+  <div class="frame"><div class="e328" id="e328host"><div class="e328__core"></div></div><div class="frame__id">E328</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E329 · Magic Sparks <b>★</b></div>
+  <div class="frame"><div class="e329" id="e329host"><div class="e329__wand"></div><div class="e329__tip"></div></div><div class="frame__id">E329</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E330 · Comet Tail <b>★</b></div>
+  <div class="frame"><div class="e330"><div class="e330__comet"></div></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:240px"><div class="ph" style="font-size:140px">A NEW ERA</div></div>
+    <div class="frame__id">E330</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E331 · Lower-Third Wipe <b>★</b></div>
+  <div class="frame"><div class="e331">
+    <div class="ph">studio</div>
+    <div class="e331__bar">
+      <div class="accent"></div>
+      <div class="body"><div class="h">Mira Okafor</div><div class="s">DIRECTOR · DRIFT &amp; CO.</div></div>
+    </div>
+  </div><div class="frame__id">E331</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E332 · Callout Pointer <b>★</b></div>
+  <div class="frame"><div class="e332"><div class="ph">item</div><div class="e332__arrow"></div><div class="e332__label">notice this</div></div><div class="frame__id">E332</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E333 · VS Comparison Wipe <b>★</b></div>
+  <div class="frame"><div class="e333"><div class="e333__l">A</div><div class="e333__r">B</div><div class="e333__vs">VS</div></div><div class="frame__id">E333</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E334 · Kinetic Type Block <b>★</b></div>
+  <div class="frame"><div class="e334">
+    <div class="row">A NEW</div>
+    <div class="row accent">CHAPTER</div>
+    <div class="row">BEGINS</div>
+    <div class="row accent">NOW.</div>
+  </div><div class="frame__id">E334</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E335 · Logo Reveal Sting <b>★</b></div>
+  <div class="frame"><div class="e335"><div class="e335__bar"></div><div class="e335__logo">drift</div></div><div class="frame__id">E335</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E336 · Glitch Title (RGB) <b>★</b></div>
+  <div class="frame"><div class="e336"><div class="e336__t">GLITCH</div><div class="e336__scan"></div></div><div class="frame__id">E336</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E337 · Bullet Reveal <b>★</b></div>
+  <div class="frame frame--light"><div class="e337">
+    <div class="row"><div class="dot"></div><div class="text">First, a clear thesis</div></div>
+    <div class="row"><div class="dot"></div><div class="text">Then, supporting data</div></div>
+    <div class="row"><div class="dot"></div><div class="text">Then, the counter-case</div></div>
+    <div class="row"><div class="dot"></div><div class="text">Finally, what we recommend</div></div>
+    <div class="row"><div class="dot"></div><div class="text">And the next 30 days</div></div>
+  </div><div class="frame__id">E337</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E338 · Bar Chart Race <b>★</b></div>
+  <div class="frame"><div class="e338">
+    <div class="bar" data-l="JAN" style="--h:300px;animation-delay:0s">12</div>
+    <div class="bar" data-l="FEB" style="--h:520px;animation-delay:.1s">28</div>
+    <div class="bar" data-l="MAR" style="--h:380px;animation-delay:.2s">19</div>
+    <div class="bar win" data-l="APR" style="--h:840px;animation-delay:.3s">61</div>
+    <div class="bar" data-l="MAY" style="--h:600px;animation-delay:.4s">34</div>
+    <div class="bar" data-l="JUN" style="--h:720px;animation-delay:.5s">47</div>
+  </div><div class="frame__id">E338</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E339 · Counter Roll <b>★</b></div>
+  <div class="frame"><div class="e339">
+    <div class="digit"><div class="strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+    <div class="digit"><div class="strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+    <div class="digit"><div class="strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+  </div><div class="frame__id">E339</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E340 · Map Path Animation <b>★</b></div>
+  <div class="frame"><div class="e340"><div class="e340__map"></div>
+    <svg viewBox="0 0 1080 1920" preserveAspectRatio="none">
+      <path d="M200 580 Q 400 300, 600 700 T 880 1340"/>
+    </svg>
+    <div class="pin" style="left:200px;top:580px;transform:translate(-50%,-50%)"></div>
+    <div class="pin" style="right:200px;top:1340px;transform:translate(50%,-50%);background:#ff3a4a;box-shadow:0 0 30px #ff3a4a"></div>
+  </div><div class="frame__id">E340</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E341 · Color Smoke Burst <b>★</b></div>
+  <div class="frame"><div class="e341"><i></i><i></i><i></i><i></i></div><div class="frame__safe"><div class="ph">COLOR</div></div><div class="frame__id">E341</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E342 · Fire Explosion <b>★</b></div>
+  <div class="frame"><div class="e342" id="e342host"><div class="e342__core"></div></div>
+    <div class="frame__safe" style="align-items:flex-start;padding-top:160px"><div class="ph" style="color:#ffd14a;text-shadow:0 0 40px #ff3a4a">IGNITE</div></div>
+    <div class="frame__id">E342</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E343 · Sticker Slap <b>★</b></div>
+  <div class="frame frame--light"><div class="e343">
+    <div class="ph">stickers</div>
+    <i style="background:#c93f5c;left:80px;top:200px;--r:-8deg">NEW</i>
+    <i style="background:#3a6fc9;right:120px;top:380px;--r:6deg">FRESH</i>
+    <i style="background:#4a8f70;left:200px;bottom:600px;--r:-12deg;animation-delay:.4s">DROP</i>
+    <i style="background:#f5d35a;color:#1a1d22;right:80px;bottom:380px;--r:10deg;animation-delay:.6s">2024</i>
+    <i style="background:#9b6bff;left:60px;bottom:240px;--r:-4deg;animation-delay:.8s">VOL.07</i>
+  </div><div class="frame__id">E343</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E344 · Title Card Hard Cut <b>★</b></div>
+  <div class="frame"><div class="e344">
+    <div class="e344__num">CHAPTER 03</div>
+    <div class="e344__t">Aftershock</div>
+    <div class="e344__sub">DIR. MIRA OKAFOR</div>
+  </div><div class="frame__id">E344</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E345 · Vertical Marquee BG</div>
+  <div class="frame"><div class="e345">
+    <div class="col">DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT</div>
+    <div class="col">DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT</div>
+    <div class="col">DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT</div>
+    <div class="e345__t">VOL.07</div>
+  </div><div class="frame__id">E345</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E346 · Loading Bar <b>★</b></div>
+  <div class="frame"><div class="e346">
+    <div class="e346__t">LOADING<span>_</span></div>
+    <div class="e346__bar"><div class="fill"></div></div>
+    <div class="e346__pct">68%</div>
+  </div><div class="frame__id">E346</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E347 · Hex Honeycomb</div>
+  <div class="frame"><div class="e347" id="e347host"><div class="ph">GRID</div></div><div class="frame__id">E347</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E348 · Speech Bubble Pop <b>★</b></div>
+  <div class="frame"><div class="e348">
+    <i style="left:80px;top:200px;animation-delay:0s">Hi!</i>
+    <i style="right:80px;top:480px;animation-delay:.3s">Hello.</i>
+    <i style="left:140px;top:800px;animation-delay:.6s">Real?</i>
+    <i style="right:120px;top:1120px;animation-delay:.9s">Yep.</i>
+    <i style="left:80px;top:1440px;background:#1a1d22;color:#fff;animation-delay:1.2s">!!!</i>
+  </div><div class="frame__id">E348</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E349 · Shutter Snap <b>★</b></div>
+  <div class="frame"><div class="e349">
+    <div class="ph">photo</div>
+    <div class="e349__t"></div>
+    <div class="e349__b"></div>
+    <div class="e349__flash"></div>
+  </div><div class="frame__id">E349</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E350 · Highlight Marker Sweep <b>★</b></div>
+  <div class="frame frame--light"><div class="e350">
+    <div class="e350__t">Designs people <span class="e350__hl">remember</span></div>
+  </div><div class="frame__id">E350</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E351 · Polaroid Slap Stack <b>★</b></div>
+  <div class="frame"><div class="e351">
+    <i data-l="ATELIER" style="--r:-10deg;animation-delay:0s"></i>
+    <i data-l="STUDIO 04" style="--r:7deg;animation-delay:.4s"></i>
+    <i data-l="MAY 2024" style="--r:-3deg;animation-delay:.8s"></i>
+    <i data-l="DRIFT &amp; CO." style="--r:12deg;animation-delay:1.2s"></i>
+  </div><div class="frame__id">E351</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E352 · Logo Build (4-square) <b>★</b></div>
+  <div class="frame"><div class="e352">
+    <div class="e352__svg">
+      <div class="sq a"></div><div class="sq b"></div><div class="sq c"></div><div class="sq d"></div>
+      <div class="core"></div>
+    </div>
+  </div><div class="frame__id">E352</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E353 · Vertical Bar Reveal <b>★</b></div>
+  <div class="frame"><div class="e353">
+    <div class="e353__bg">REVEAL</div>
+    <i style="left:0;animation-delay:0s"></i>
+    <i style="left:8.33%;animation-delay:.05s"></i>
+    <i style="left:16.66%;animation-delay:.1s"></i>
+    <i style="left:25%;animation-delay:.15s"></i>
+    <i style="left:33.33%;animation-delay:.2s"></i>
+    <i style="left:41.66%;animation-delay:.25s"></i>
+    <i style="left:50%;animation-delay:.3s"></i>
+    <i style="left:58.33%;animation-delay:.35s"></i>
+    <i style="left:66.66%;animation-delay:.4s"></i>
+    <i style="left:75%;animation-delay:.45s"></i>
+    <i style="left:83.33%;animation-delay:.5s"></i>
+    <i style="left:91.66%;animation-delay:.55s"></i>
+  </div><div class="frame__id">E353</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E354 · Fire Underline <b>★</b></div>
+  <div class="frame"><div class="e354">
+    <div class="e354__t">heat wave</div>
+    <div class="e354__bar"></div>
+  </div><div class="frame__id">E354</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E355 · Rip Reveal <b>★</b></div>
+  <div class="frame frame--light"><div class="e355">
+    <div class="e355__top"></div>
+    <div class="e355__bot"></div>
+    <div class="e355__t">REVEALED</div>
+  </div><div class="frame__id">E355</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E356 · Cinematic Bars <b>★</b></div>
+  <div class="frame"><div class="e356"><div class="e356__top"></div><div class="e356__bot"></div>
+    <div class="e356__t">The Long Drift</div>
+    <div class="e356__sub">A FILM BY MIRA OKAFOR</div>
+  </div><div class="frame__id">E356</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E357 · Confetti + Stars <b>★</b></div>
+  <div class="frame"><div class="e357" id="e357host"><div class="e357__core"></div></div><div class="frame__id">E357</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E358 · Knockout Title <b>★</b></div>
+  <div class="frame"><div class="e358"></div><div class="frame__safe"><div style="font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:380px;color:#0a0a14;background:#fff;padding:0 .1em;mix-blend-mode:lighten">DRIFT</div></div><div class="frame__id">E358</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E359 · Boom Chain Reaction <b>★</b></div>
+  <div class="frame"><div class="e359" id="e359host">
+    <i style="left:18%;top:30%;animation-delay:0s"></i>
+    <i style="right:22%;top:40%;animation-delay:.4s"></i>
+    <i style="left:28%;top:62%;animation-delay:.8s"></i>
+    <i style="right:14%;top:72%;animation-delay:1.2s"></i>
+    <div class="lbl" style="left:14%;top:30%;animation-delay:0s">BOOM!</div>
+    <div class="lbl" style="right:14%;top:42%;animation-delay:.4s">POW!</div>
+    <div class="lbl" style="left:24%;top:64%;animation-delay:.8s">BANG!</div>
+    <div class="lbl" style="right:8%;top:74%;animation-delay:1.2s">KAPOW!</div>
+  </div><div class="frame__id">E359</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E360 · End-Card Sign-off <b>★</b></div>
+  <div class="frame"><div class="e360">
+    <div class="e360__logo">drift &amp; co.</div>
+    <div class="e360__rule"></div>
+    <div class="e360__cta">subscribe — link below</div>
+    <div class="e360__handles"><span>@drift</span><span>·</span><span>drift.co</span></div>
+  </div><div class="frame__id">E360</div></div></div>
+
+</div>
+
+<script>
+function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+function radial(n,seed,minR,maxR){const r=rng(seed);const out=[];
+  for(let i=0;i<n;i++){const a=(i/n)*2*Math.PI+r()*0.4;const dist=minR+r()*(maxR-minR);
+    out.push({a,dist,dx:Math.cos(a)*dist,dy:Math.sin(a)*dist,r:r()*720,delay:r()*1.5})}return out}
+
+// E322 pixel shatter
+(function(){const host=document.getElementById('e322host');if(!host)return;
+  const r=rng(3);
+  for(let i=0;i<80;i++){const e=document.createElement('i');
+    const a=r()*Math.PI*2;const d=300+r()*900;
+    e.style.setProperty('--dx',(Math.cos(a)*d)+'px');
+    e.style.setProperty('--dy',(Math.sin(a)*d)+'px');
+    e.style.setProperty('--dr',(r()*720)+'deg');
+    e.style.animationDelay=(r()*1.5)+'s';
+    const sz=8+r()*30;e.style.width=sz+'px';e.style.height=sz+'px';
+    host.appendChild(e);}})();
+
+// E323 neon rays
+(function(){const host=document.getElementById('e323host');if(!host)return;
+  for(let i=0;i<12;i++){const e=document.createElement('i');
+    e.style.setProperty('--r',(i*30)+'deg');
+    e.style.animationDelay=(i*.05)+'s';
+    host.appendChild(e);}})();
+
+// E324 ink drops
+(function(){const host=document.getElementById('e324host');if(!host)return;
+  const r=rng(13);
+  const colors=['#1a1d22','#3a1a2a','#5a1a4a','#1a3a5a','#2a4a3a'];
+  for(let i=0;i<14;i++){const e=document.createElement('i');
+    const sz=200+r()*600;e.style.width=sz+'px';e.style.height=sz+'px';
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.transform='translate(-50%,-50%)';
+    e.style.background='radial-gradient(circle,'+colors[Math.floor(r()*colors.length)]+',transparent 70%)';
+    e.style.animationDelay=(r()*3)+'s';
+    e.style.animationDuration=(2.4+r()*2)+'s';
+    host.appendChild(e);}})();
+
+// E325 splash columns
+(function(){const host=document.getElementById('e325host');if(!host)return;
+  const r=rng(21);
+  for(let i=0;i<8;i++){const e=document.createElement('i');
+    e.style.left=(20+i*8)+'%';
+    const h=200+r()*200;e.style.height=h+'px';
+    e.style.animationDelay=(r()*2)+'s';
+    host.appendChild(e);}
+  for(let i=0;i<24;i++){const e=document.createElement('div');e.className='drop';
+    e.style.left=(r()*100)+'%';e.style.top=(40+r()*30)+'%';
+    e.style.animationDelay=(r()*2)+'s';
+    host.appendChild(e);}
+  const ring=document.createElement('div');ring.className='ring';host.appendChild(ring);})();
+
+// E326 smoke plumes
+(function(){const host=document.getElementById('e326host');if(!host)return;
+  const r=rng(31);
+  for(let i=0;i<10;i++){const e=document.createElement('i');
+    e.style.setProperty('--dx',((r()-.5)*200)+'px');
+    e.style.animationDelay=(-r()*5)+'s';
+    e.style.animationDuration=(4+r()*3)+'s';
+    host.appendChild(e);}})();
+
+// E328 charge rays
+(function(){const host=document.getElementById('e328host');if(!host)return;
+  for(let i=0;i<20;i++){const e=document.createElement('i');
+    e.style.setProperty('--r',(i*18)+'deg');
+    e.style.animationDelay=(i*.05)+'s';
+    host.appendChild(e);}})();
+
+// E329 magic sparks
+(function(){const host=document.getElementById('e329host');if(!host)return;
+  const r=rng(43);
+  radial(40,43,200,800).forEach(p=>{const e=document.createElement('i');
+    e.style.setProperty('--dx',p.dx+'px');
+    e.style.setProperty('--dy',p.dy+'px');
+    e.style.animationDelay=p.delay+'s';
+    e.style.top='30%';
+    host.appendChild(e);});})();
+
+// E342 fire embers
+(function(){const host=document.getElementById('e342host');if(!host)return;
+  const r=rng(53);
+  for(let i=0;i<14;i++){const e=document.createElement('i');
+    e.style.setProperty('--dx',((r()-.5)*400)+'px');
+    e.style.animationDelay=(-r()*3)+'s';
+    e.style.animationDuration=(2+r()*2)+'s';
+    e.style.left=(40+r()*20)+'%';
+    host.appendChild(e);}})();
+
+// E347 hexes
+(function(){const host=document.getElementById('e347host');if(!host)return;
+  const r=rng(63);
+  const w=110,h=100,off=55;
+  for(let row=0;row<22;row++){
+    for(let col=0;col<11;col++){
+      const e=document.createElement('i');
+      e.style.left=(col*w + (row%2?off:0))+'px';
+      e.style.top=(row*h*0.87)+'px';
+      e.style.animationDelay=(r()*3)+'s';
+      host.insertBefore(e,host.firstChild);}}})();
+
+// E357 confetti+stars
+(function(){const host=document.getElementById('e357host');if(!host)return;
+  const colors=['#ff5cb1','#3affe6','#f5d35a','#5cffaa','#9b6bff','#ff8800','#fff'];
+  const r=rng(73);
+  radial(40,73,400,1100).forEach(p=>{const e=document.createElement('i');e.className='conf';
+    e.style.background=colors[Math.floor(r()*colors.length)];
+    e.style.setProperty('--dx',p.dx+'px');e.style.setProperty('--dy',p.dy+'px');
+    e.style.setProperty('--dr',p.r+'deg');
+    e.style.animationDelay=p.delay+'s';
+    host.appendChild(e);});
+  radial(20,77,400,1100).forEach(p=>{const e=document.createElement('i');e.className='star';
+    const c=colors[Math.floor(r()*colors.length)];e.style.background=c;
+    e.style.boxShadow='0 0 20px '+c;
+    e.style.setProperty('--dx',p.dx+'px');e.style.setProperty('--dy',p.dy+'px');
+    e.style.setProperty('--dr',p.r+'deg');
+    e.style.animationDelay=p.delay+'s';
+    host.appendChild(e);});})();
+</script>
+</body>
+</html>

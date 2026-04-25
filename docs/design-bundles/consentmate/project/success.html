@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>Payment received — ConsentMate</title>
+<meta property="og:title" content="ConsentMate — Report delivered" />
+<meta property="og:description" content="Your NZ property compliance report is ready." />
+<meta property="og:image" content="assets/og-image.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --paper: #eef1f5; --paper-deep:#e2e7ed; --paper-line:#c8d0da;
+    --ink:#0d1826; --ink-2:#1a2a3d; --ink-3:#4b5a6d; --ink-mute:#7d8a9a;
+    --accent:#1f3a68; --accent-ink:#122649; --accent-wash:#d5deec;
+    --ok:#22543d; --ok-wash:#d9e4db;
+    --rule: rgba(13,24,38,.14); --rule-strong: rgba(13,24,38,.38);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--paper); color: var(--ink);
+    font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 48px 48px, 48px 48px;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+  }
+  body::before{ content:""; position:fixed; inset:0; background:var(--paper); opacity:.88; pointer-events:none; z-index:-1; }
+  a { color: inherit; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-feature-settings: "zero","ss01"; }
+  .serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 32px; }
+
+  /* tape */
+  .tape {
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.08em;
+    background: var(--ink); color: var(--paper);
+    padding: 10px 0; text-transform:uppercase;
+  }
+  .tape .wrap { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .tape b { color: var(--paper); font-weight:500; }
+  .tape .dot { opacity:.5; padding: 0 8px; }
+
+  /* header */
+  header.site { border-bottom: 1px solid var(--rule-strong); background: var(--paper); }
+  header.site .wrap { display:flex; justify-content:space-between; align-items:center; padding: 18px 32px; }
+  .logo { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink); }
+  .logo .word { font-family:"JetBrains Mono",monospace; font-weight:700; letter-spacing:-0.02em; font-size: 18px; }
+  .logo .word .slash { color: var(--accent); }
+  nav.main { display:flex; gap: 28px; font-family:"JetBrains Mono",monospace; font-size:13px; }
+  nav.main a { text-decoration:none; color:var(--ink-2); }
+  nav.main a:hover { color: var(--accent); }
+
+  /* hero */
+  .hero { padding: 56px 0 40px; }
+  .stamp {
+    display:inline-flex; align-items:center; gap:12px;
+    padding: 10px 16px;
+    background: var(--ok-wash);
+    border: 1px solid var(--ok);
+    border-radius: 2px;
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.14em; text-transform:uppercase; color: var(--ok);
+    font-weight:600;
+  }
+  .stamp svg { width:14px; height:14px; }
+  h1 {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(40px, 6vw, 64px);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 18px 0 10px;
+    text-wrap: pretty;
+  }
+  h1 em { font-family: "Instrument Serif", serif; font-style: italic; color: var(--accent); font-weight: 400; }
+  .lede {
+    color: var(--ink-3); font-size: 18px; max-width: 60ch; line-height: 1.55;
+    margin: 0 0 32px;
+  }
+
+  /* receipt card */
+  .receipt {
+    background: var(--paper-deep);
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    box-shadow: 4px 4px 0 var(--rule);
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .receipt .rh {
+    background: var(--ink); color: var(--paper);
+    padding: 12px 20px;
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.14em; text-transform:uppercase;
+    display:flex; justify-content:space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .receipt .rb { padding: 24px 20px; }
+  .receipt dl { margin: 0; display:grid; grid-template-columns: 1fr 1fr; gap: 18px 32px; }
+  .receipt dt { font-family:"JetBrains Mono",monospace; font-size: 10px; letter-spacing:.14em; text-transform:uppercase; color: var(--ink-3); margin-bottom: 4px; }
+  .receipt dd { margin: 0; font-family:"JetBrains Mono",monospace; font-size: 15px; color: var(--ink); font-weight: 500; word-break: break-word; }
+  .receipt dd.big { font-family:"Inter",sans-serif; font-size: 22px; font-weight: 600; letter-spacing:-.01em; }
+  .receipt .ticks {
+    position:absolute; top: -1px; left:0; right:0;
+    display:flex; justify-content:space-between;
+    padding: 0 8px;
+  }
+  .receipt .rf {
+    padding: 14px 20px;
+    border-top: 1px dashed var(--rule-strong);
+    display:flex; gap: 12px; flex-wrap: wrap; align-items:center; justify-content:space-between;
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.08em; color: var(--ink-3);
+  }
+
+  /* action grid */
+  .grid {
+    display:grid; grid-template-columns: 1.6fr 1fr; gap: 24px;
+    margin-bottom: 48px;
+  }
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    padding: 24px 22px;
+    position: relative;
+    display:flex; flex-direction:column; gap: 12px;
+  }
+  .card.accent { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .card.accent .eyebrow, .card.accent p, .card.accent h3 { color: var(--paper); }
+  .card.accent .btn { background: var(--paper); color: var(--accent); border-color: var(--paper); }
+  .card.accent .btn:hover { background: var(--accent-wash); color: var(--accent-ink); }
+  .card.dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .card.dark h3, .card.dark p, .card.dark .eyebrow { color: var(--paper); }
+  .eyebrow {
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.14em; text-transform:uppercase;
+    color: var(--ink-3);
+  }
+  .card h3 {
+    font-family: "Inter", sans-serif;
+    font-size: 22px; font-weight: 600; letter-spacing: -.015em;
+    margin: 0; line-height: 1.2;
+  }
+  .card p { margin: 0; color: var(--ink-3); font-size: 14px; line-height: 1.55; }
+  .card ul { margin: 4px 0 0; padding: 0; list-style: none; display:flex; flex-direction:column; gap: 6px; font-family:"JetBrains Mono",monospace; font-size: 12px; }
+  .card ul li { padding-left: 16px; position:relative; color: var(--ink-2); }
+  .card ul li::before { content:"+"; position:absolute; left: 0; color: var(--accent); font-weight: 600; }
+  .card.accent ul li { color: var(--paper); }
+  .card.accent ul li::before { color: var(--paper); }
+
+  .btn {
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:"JetBrains Mono",monospace;
+    font-size: 13px; font-weight: 500;
+    padding: 10px 16px;
+    border: 1px solid var(--ink);
+    background: var(--ink); color: var(--paper);
+    text-decoration:none;
+    letter-spacing:.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .12s;
+    border-radius: 2px;
+    align-self: flex-start;
+  }
+  .btn:hover { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--ink); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); }
+  .btn .arrow { font-family:"Inter",sans-serif; letter-spacing: normal; }
+
+  /* next steps */
+  .steps {
+    border-top: 1px solid var(--rule-strong);
+    padding: 48px 0 32px;
+  }
+  .section-head { display:flex; align-items:baseline; gap: 28px; margin-bottom: 32px; }
+  .section-head .n { font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.14em; color:var(--ink-3); text-transform: uppercase; }
+  .section-head h2 {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 600; letter-spacing: -.02em;
+    margin: 0; line-height: 1.15;
+  }
+  .section-head h2 em { font-family:"Instrument Serif",serif; font-style: italic; color: var(--accent); font-weight: 400; }
+
+  .timeline { display:grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule-strong); border-bottom: 1px solid var(--rule-strong); }
+  .step {
+    padding: 24px;
+    border-right: 1px solid var(--rule);
+    display:flex; flex-direction:column; gap: 12px;
+  }
+  .step:last-child { border-right: 0; }
+  .step .num { font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.14em; color: var(--accent); }
+  .step h3 { font-family:"Inter",sans-serif; font-size: 18px; font-weight: 600; margin: 0; letter-spacing:-.01em; }
+  .step p { color: var(--ink-3); font-size: 14px; margin: 0; line-height: 1.5; }
+  .step .tag { align-self: flex-start; font-family:"JetBrains Mono",monospace; font-size: 10px; padding: 3px 8px; background: var(--ink); color: var(--paper); border-radius: 2px; letter-spacing:.08em; text-transform: uppercase; }
+
+  /* refer */
+  .refer {
+    margin: 48px 0;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-deep);
+    padding: 28px 24px;
+    display:grid; grid-template-columns: 1fr 1.2fr; gap: 24px; align-items:center;
+    border-radius: 2px;
+  }
+  .refer h3 { font-family:"Inter",sans-serif; font-size: 22px; font-weight:600; margin: 0 0 6px; letter-spacing:-.015em; }
+  .refer p { margin: 0; color: var(--ink-3); font-size: 14px; line-height: 1.55; }
+  .refer .copybox {
+    display:flex; gap: 8px; background: var(--paper); border: 1px solid var(--ink); border-radius: 2px; padding: 4px;
+    font-family:"JetBrains Mono",monospace; font-size: 12px; color: var(--ink);
+  }
+  .refer input {
+    flex: 1; border: 0; background: transparent; padding: 8px 10px; font: inherit; color: var(--ink); min-width: 0;
+  }
+  .refer input:focus { outline: none; }
+  .refer button { border: 0; background: var(--ink); color: var(--paper); padding: 8px 14px; font: inherit; text-transform:uppercase; letter-spacing:.08em; cursor:pointer; border-radius: 2px; }
+  .refer button:hover { background: var(--accent); }
+  .refer .chans { display:flex; gap: 10px; margin-top: 10px; flex-wrap:wrap; }
+  .refer .chans a { font-family:"JetBrains Mono",monospace; font-size: 12px; text-decoration:none; color: var(--ink-2); border-bottom: 1px solid var(--rule-strong); padding-bottom: 2px; }
+  .refer .chans a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* footer */
+  footer.site { background: var(--ink); color: color-mix(in oklab, var(--paper) 60%, transparent); font-family:"JetBrains Mono",monospace; font-size: 12px; padding: 36px 0; margin-top: 60px; }
+  footer.site .wrap { display:flex; justify-content:space-between; gap: 20px; flex-wrap: wrap; }
+  footer.site a { color: inherit; text-decoration: none; }
+  footer.site a:hover { color: var(--paper); }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .timeline { grid-template-columns: 1fr; }
+    .step { border-right: 0; border-bottom: 1px solid var(--rule); }
+    .step:last-child { border-bottom: 0; }
+    .refer { grid-template-columns: 1fr; }
+    .receipt dl { grid-template-columns: 1fr; }
+    nav.main { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tape">
+  <div class="wrap">
+    <span><b>◆ TRANSACTION CLEARED</b> · RECEIPT ISSUED</span>
+    <span><span id="nowDate">—</span><span class="dot">·</span>AOTEAROA NZ<span class="dot">·</span>REF <span id="refId">—</span></span>
+  </div>
+</div>
+
+<header class="site">
+  <div class="wrap">
+    <a href="Landing Page.html" class="logo">
+      <svg class="mark" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="26" height="26" stroke="currentColor" stroke-width="1.6" fill="none"/>
+        <path d="M3 6 L6 6 L6 3 M26 3 L26 6 L29 6 M3 26 L6 26 L6 29 M26 29 L26 26 L29 26" stroke="currentColor" stroke-width="1.8" fill="none"/>
+        <line x1="16" y1="6" x2="16" y2="26" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 2" opacity="0.5"/>
+        <path d="M10 17 L14 21 L23 11" stroke="#1f3a68" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="word">consent<span class="slash">/</span>mate</span>
+    </a>
+    <nav class="main">
+      <a href="map.html">Map</a>
+      <a href="Landing Page.html#pricing">Pricing</a>
+      <a href="Landing Page.html#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ── hero ── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="stamp">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5 L6.5 12 L13 4" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Payment received · <span id="receivedAt">Today</span>
+    </div>
+    <h1>Your report is <em>on its way</em>.</h1>
+    <p class="lede">We've filed your receipt, stamped the reference, and begun the council check. You'll find everything below — the PDF is usually ready in under a minute.</p>
+  </div>
+</section>
+
+<!-- ── receipt ── -->
+<section>
+  <div class="wrap">
+    <div class="receipt">
+      <div class="rh">
+        <span>◆ Receipt</span>
+        <span id="receiptSerial">REF —</span>
+      </div>
+      <div class="rb">
+        <dl>
+          <div><dt>Property</dt><dd class="big" id="rcAddr">—</dd></div>
+          <div><dt>Report reference</dt><dd id="rcRef">—</dd></div>
+          <div><dt>Issued to</dt><dd id="rcEmail">—</dd></div>
+          <div><dt>Status</dt><dd id="rcStatus">Delivered</dd></div>
+          <div><dt>Amount</dt><dd>NZD $29.00</dd></div>
+          <div><dt>Payment method</dt><dd>Card · Stripe</dd></div>
+        </dl>
+      </div>
+      <div class="rf">
+        <span>Receipt emailed to you · keep this tab open to download the PDF</span>
+        <span id="receiptTxn">TXN —</span>
+      </div>
+    </div>
+
+    <!-- actions -->
+    <div class="grid">
+      <div class="card">
+        <div class="eyebrow">◆ 01 · Download</div>
+        <h3>Your compliance report (PDF)</h3>
+        <p>Site plan, zone rules, setback math, verdict, council contact and required-documents checklist. A4. Print-ready.</p>
+        <div style="display:flex; gap: 10px; flex-wrap:wrap;">
+          <button class="btn" onclick="downloadReportPDF()">↓ Download PDF</button>
+          <a href="map.html" class="btn ghost">Back to map →</a>
+        </div>
+        <p class="mono" style="font-size: 11px; color: var(--ink-mute); margin-top: 6px;">If download doesn't start, check the map tab is still open — the report cache lives there.</p>
+      </div>
+
+      <div class="card accent">
+        <div class="eyebrow">◆ 02 · Optional</div>
+        <h3>Full consent draft · $1,500</h3>
+        <p>We draft the complete resource consent — AEE, site plan, supporting documents. You review, you lodge.</p>
+        <ul>
+          <li>Assessment of Environmental Effects</li>
+          <li>Site plan + elevations drafted</li>
+          <li>Cover letter + supporting docs</li>
+          <li>2–3 business day turnaround</li>
+          <li>$29 report credited to this purchase</li>
+        </ul>
+        <a class="btn" href="mailto:hello@consentmate.co.nz?subject=Full%20consent%20draft%20(%241%2C500)&body=I%27d%20like%20a%20full%20draft%20for%3A%20%0A%0AReport%20ref%3A%20%0AProperty%3A%20">Request full draft →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── what happens next ── -->
+<section class="steps">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">03 — What happens next</div>
+      <h2>Three quick things, in order <em>of time.</em></h2>
+    </div>
+    <div class="timeline">
+      <div class="step">
+        <span class="tag">Now</span>
+        <div class="num">01 / NOW</div>
+        <h3>Download the PDF</h3>
+        <p>Everything you need to determine if your project is permitted — or what to tell your planner if it's not.</p>
+      </div>
+      <div class="step">
+        <span class="tag">~5 min</span>
+        <div class="num">02 / SOON</div>
+        <h3>Check your inbox</h3>
+        <p>A receipt from Stripe and a copy of the report arrive at the email you entered. Check spam if it's quiet.</p>
+      </div>
+      <div class="step">
+        <span class="tag">If needed</span>
+        <div class="num">03 / LATER</div>
+        <h3>Draft your consent</h3>
+        <p>If your project needs consent, come back and we'll draft the application for $1,500 — credit applied.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── refer ── -->
+<section>
+  <div class="wrap">
+    <div class="refer">
+      <div>
+        <div class="eyebrow">◆ 04 · Help a mate</div>
+        <h3>Know another homeowner or builder?</h3>
+        <p>If you got value from this, send the link on. More users means more councils added, more planning rules understood, and better reports for everyone.</p>
+      </div>
+      <div>
+        <div class="copybox">
+          <input id="referLink" value="https://consentmate.co.nz" readonly>
+          <button onclick="copyRefer()" id="referBtn">Copy</button>
+        </div>
+        <div class="chans">
+          <a id="referEmail" href="mailto:?subject=ConsentMate%20%E2%80%94%20resource%20consent%20check%20for%20NZ%20homes&body=Thought%20you%27d%20find%20this%20useful%3A%20https%3A%2F%2Fconsentmate.co.nz">✉ Email</a>
+          <a id="referSms" href="sms:?body=Thought%20you%27d%20find%20this%20useful%3A%20https%3A%2F%2Fconsentmate.co.nz">✉ SMS</a>
+          <a id="referWa" href="https://wa.me/?text=Thought%20you%27d%20find%20this%20useful%3A%20https%3A%2F%2Fconsentmate.co.nz" target="_blank" rel="noopener">✉ WhatsApp</a>
+          <a id="referLi" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fconsentmate.co.nz" target="_blank" rel="noopener">✉ LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── footer ── -->
+<footer class="site">
+  <div class="wrap">
+    <span>© 2026 ConsentMate · Aotearoa NZ · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span>
+    <span>Need help? <a href="mailto:hello@consentmate.co.nz">hello@consentmate.co.nz</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ── Pull context: address + ref + email from localStorage (set by map flow) ──
+  let report = {};
+  try { report = JSON.parse(localStorage.getItem('consentmate_report_cache') || '{}'); } catch(e){}
+  const email = (new URL(location.href)).searchParams.get('email')
+             || localStorage.getItem('consentmate_buyer_email') || '';
+  const addr  = report.address || '—';
+  // Deterministic ref from address so refunds/support can look it up
+  const refBase = (addr || 'property').split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const refId = 'CM-R/' + String(Math.abs(refBase) % 999 + 1).padStart(3,'0');
+  const txnId = 'TXN/' + String(Math.abs(refBase * 31) % 9999).padStart(4,'0') + '-' + (new Date()).getFullYear();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-NZ', {year:'numeric',month:'2-digit',day:'2-digit'});
+  const timeStr = now.toLocaleTimeString('en-NZ', {hour:'2-digit',minute:'2-digit'});
+
+  // mark paid + stash buyer email
+  if (email) localStorage.setItem('consentmate_buyer_email', email);
+  if (report.address) localStorage.setItem('consentmate_report_paid', 'true');
+
+  // fill DOM
+  const $ = (id) => document.getElementById(id);
+  $('nowDate').textContent     = dateStr;
+  $('refId').textContent       = refId;
+  $('receivedAt').textContent  = dateStr + ' · ' + timeStr;
+  $('receiptSerial').textContent = 'REF ' + refId;
+  $('rcAddr').textContent      = addr;
+  $('rcRef').textContent       = refId;
+  $('rcEmail').textContent     = email || 'Check your inbox';
+  $('receiptTxn').textContent  = txnId;
+
+  // ── Refer link with ?ref=… so if we ever add tracking we can ──
+  const referTag = 'ref_' + Math.abs(refBase).toString(36).slice(0,6);
+  const link = 'https://consentmate.co.nz/?r=' + referTag;
+  $('referLink').value = link;
+  const enc = encodeURIComponent;
+  const msg = 'Thought you\'d find this useful — a quick NZ resource-consent checker: ' + link;
+  $('referEmail').href = 'mailto:?subject=' + enc('ConsentMate — resource consent check for NZ homes') + '&body=' + enc(msg);
+  $('referSms').href   = 'sms:?body=' + enc(msg);
+  $('referWa').href    = 'https://wa.me/?text=' + enc(msg);
+  $('referLi').href    = 'https://www.linkedin.com/sharing/share-offsite/?url=' + enc(link);
+
+  window.copyRefer = async function(){
+    try {
+      await navigator.clipboard.writeText(link);
+      const btn = document.getElementById('referBtn');
+      btn.textContent = 'Copied';
+      setTimeout(()=> btn.textContent = 'Copy', 1500);
+    } catch(e) {
+      const i = document.getElementById('referLink'); i.select(); document.execCommand('copy');
+    }
+  };
+
+  // ── PDF: try to reuse the same generator the map uses ──
+  // We do it the reliable way: if the map tab set a cache, redirect users there
+  // with a flag that auto-fires downloadReportPDF. If cache is local (same-origin),
+  // we can also build a minimal one right here.
+  window.downloadReportPDF = function(){
+    const raw = localStorage.getItem('consentmate_report_cache');
+    if (!raw) {
+      alert('Report data not found. Opening the map so you can restore it.');
+      location.href = 'map.html';
+      return;
+    }
+    // Simplest, most reliable route: bounce to map.html with an auto-download flag.
+    // map.html already has the full cadastral PDF generator + map image in cache.
+    location.href = 'map.html?auto=download';
+  };
+})();
+</script>
+</body>
+</html>

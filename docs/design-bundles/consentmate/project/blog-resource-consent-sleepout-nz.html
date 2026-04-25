@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:title" content="Do I need resource consent for a sleepout in NZ? — ConsentMate" />
+<meta property="og:description" content="Everything you need to know about sleepout consent in New Zealand — rules, costs, timelines." />
+<meta property="og:image" content="assets/og-image.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ConsentMate" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="description" content="Everything you need to know about sleepout consent in New Zealand — rules, costs, timelines." />
+
+<title>Do I Need a Resource Consent for a Sleepout in NZ? (2026 Guide) — ConsentMate</title>
+<meta name="description" content="The 2026 homeowner's guide to resource consent for a sleepout, garage, or accessory building in New Zealand. Decision tree, costs, and 22-council rule check.">
+<meta name="keywords" content="resource consent NZ, sleepout consent, do I need a resource consent, building consent sleepout, NZ council rules, accessory building consent">
+<link rel="canonical" href="https://consentmate.co.nz/blog-resource-consent-sleepout-nz">
+
+<meta property="og:title" content="Do I Need a Resource Consent for a Sleepout in NZ?">
+<meta property="og:description" content="The 2026 homeowner's guide — decision tree, costs, and 22-council rule check. Free first-cut answer.">
+<meta property="og:url" content="https://consentmate.co.nz/blog-resource-consent-sleepout-nz">
+<meta property="og:type" content="article">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Do I Need a Resource Consent for a Sleepout in NZ? (2026 Guide)",
+  "description": "The 2026 homeowner's guide to resource consent for sleepouts and accessory buildings in New Zealand.",
+  "author": { "@type": "Organization", "name": "ConsentMate" },
+  "publisher": { "@type": "Organization", "name": "ConsentMate" },
+  "datePublished": "2026-04-17",
+  "dateModified": "2026-04-17",
+  "mainEntityOfPage": "https://consentmate.co.nz/blog-resource-consent-sleepout-nz"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="assets/cadastral.css">
+<style>
+  /* Blog-specific — breadcrumb + compact FAQ */
+  .cm-breadcrumb {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+  }
+  .cm-breadcrumb a { color: var(--ink-mute); text-decoration: none; }
+  .cm-breadcrumb a:hover { color: var(--ink); }
+  .cm-breadcrumb .sep { margin: 0 8px; color: var(--rule-strong); }
+
+  .cm-tldr {
+    margin: 36px 0;
+    padding: 0;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .cm-tldr-hd {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-deep);
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cm-tldr-hd b { font-weight: 600; }
+  .cm-tldr-hd .cm-dot { width: 7px; height: 7px; background: var(--accent); display: inline-block; margin-right: 8px; }
+  .cm-tldr-body {
+    padding: 22px 24px;
+    font-size: 1rem;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+  .cm-tldr-body strong { color: var(--ink); }
+
+  /* Decision-tree cards */
+  .cm-qrow {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    padding: 26px 0 8px;
+    margin-top: 0;
+  }
+  .cm-qrow-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding-top: 4px;
+  }
+  .cm-qrow h3 {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1.25;
+    color: var(--ink);
+    margin: 0 0 10px;
+  }
+  @media (max-width: 700px) {
+    .cm-qrow { grid-template-columns: 1fr; }
+    .cm-qrow-label { margin-bottom: 6px; }
+  }
+
+  /* Cost/option table cards */
+  .cm-option-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+    margin: 16px 0;
+    background: var(--paper);
+  }
+  .cm-option-row > div { padding: 14px 18px; }
+  .cm-option-row > div + div { border-top: 1px solid var(--rule); }
+  .cm-option-hd {
+    background: var(--paper-deep);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .cm-option-hd b { font-weight: 600; color: var(--ink); }
+  .cm-option-hd .cm-price {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .cm-option-row.cm-featured { border-color: var(--ink); }
+  .cm-option-row.cm-featured .cm-option-hd { background: var(--ink); color: var(--paper); }
+  .cm-option-row.cm-featured .cm-option-hd b { color: var(--paper); }
+  .cm-option-row.cm-featured .cm-option-hd .cm-price { color: var(--paper); }
+
+  /* FAQ */
+  .cm-faq dt {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-top: 18px;
+    padding-bottom: 6px;
+    border-top: 1px solid var(--rule);
+    margin-top: 6px;
+  }
+  .cm-faq dd {
+    font-size: 0.97rem;
+    color: var(--ink-2);
+    margin: 0 0 16px;
+    line-height: 1.65;
+  }
+</style>
+</head>
+<body data-palette="ordnance">
+
+<div class="cm-tape">
+  <span><span class="cm-pulse"></span>LIVE · CADASTRAL SHELL v0.4</span>
+  <span>FIELD GUIDE</span>
+  <span>22 NZ COUNCILS</span>
+  <span>REV · 2026-04-17</span>
+</div>
+
+<header class="cm-header">
+  <a href="index.html" class="cm-logo">
+    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="2" y="5" width="18" height="22" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M2 10 L20 10 M2 15 L20 15 M2 20 L20 20" stroke="currentColor" stroke-width="0.5" opacity="0.5"/>
+      <path d="M7 5 L7 27 M13 5 L13 27" stroke="currentColor" stroke-width="0.5" opacity="0.5"/>
+      <circle cx="24" cy="22" r="7" fill="var(--accent)" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M21 22 L23.5 24.5 L27.5 19.5" stroke="var(--paper)" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" fill="none"/>
+    </svg>
+    <span class="cm-word">consent<span class="cm-slash">/</span>mate</span>
+  </a>
+  <nav class="cm-nav">
+    <a href="index.html">Home</a>
+    <a href="map.html">Property check</a>
+    <a href="blog-resource-consent-sleepout-nz.html">Guide</a>
+  </nav>
+  <a href="map.html" class="cm-cta">Check property</a>
+</header>
+
+<div class="cm-coord-strip">
+  <span>FIELD GUIDE <b>FG-SLEEPOUT-01</b></span>
+  <span>READ <b>8 MIN</b></span>
+  <span>REV <b>2026-04-17</b></span>
+  <span>TOPIC <b>ACCESSORY BUILDING</b></span>
+  <span>JURIS <b>NZ</b></span>
+</div>
+
+<main class="cm-content">
+  <div class="cm-breadcrumb">
+    <a href="index.html">Home</a><span class="sep">›</span>Field guide<span class="sep">›</span>Sleepout
+  </div>
+  <span class="cm-eyebrow">Field guide · 001</span>
+  <h1 class="cm-h1">Do I need a resource consent for a <em>sleepout</em> in NZ?</h1>
+  <div class="cm-meta">
+    <span>UPDATED <b>17 APR 2026</b></span>
+    <span>READ <b>8 MIN</b></span>
+    <span>COVERAGE <b>22 COUNCILS</b></span>
+  </div>
+
+  <div class="cm-tldr">
+    <div class="cm-tldr-hd"><span><span class="cm-dot"></span>TL;DR · Short answer</span><b>001 / 009</b></div>
+    <div class="cm-tldr-body">
+      Most small sleepouts (≤30 m², single-storey, not used as a separate dwelling) don't need a resource consent <strong>or</strong> a building consent if they meet the Building Act's "exempt building work" rules. But the exact answer depends on your council's district plan, your section's zone, your boundary setbacks, and how you'll use the sleepout. This guide walks you through the decision tree used by the 22 biggest NZ councils so you can get a first-cut answer before paying a planner $3,500+ for the same thing.
+    </div>
+  </div>
+
+  <h2 data-n="01">The two different consents <span style="color:var(--ink-mute);font-weight:400;text-transform:none;letter-spacing:0;font-family:inherit;font-size:11px;margin-left:auto;">don't confuse them</span></h2>
+  <table>
+    <thead>
+      <tr><th></th><th>Building consent</th><th>Resource consent</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>What it checks</strong></td><td>Is the building structurally safe and code-compliant?</td><td>Is the building allowed on this site under the district plan?</td></tr>
+      <tr><td><strong>Who issues it</strong></td><td>Your territorial council's Building Control team</td><td>Your council's Planning / RMA team</td></tr>
+      <tr><td><strong>When you need it</strong></td><td>Most construction not exempt under Schedule 1 of the Building Act 2004</td><td>When your project breaches a district plan rule (zoning, setbacks, height, coverage, etc.)</td></tr>
+      <tr><td><strong>Typical cost</strong></td><td>$800–$3,000+ council fees + $2,000–$6,000 designer/drafter</td><td>$1,500–$8,000 consultant + $1,000–$3,500 council fees</td></tr>
+      <tr><td><strong>Timeline</strong></td><td>20 working days statutory</td><td>20 working days (non-notified), months (notified)</td></tr>
+    </tbody>
+  </table>
+  <p>Important: you can need one, both, or neither. This guide is about <strong>resource consent</strong> — the planning-rules one.</p>
+
+  <h2 data-n="02">The 5-question decision tree</h2>
+  <p style="color:var(--ink-mute);font-size:0.9rem;margin-top:-8px;">Run these before you spend a dollar.</p>
+
+  <div class="cm-qrow">
+    <div class="cm-qrow-label">Q1</div>
+    <div>
+      <h3>Is your sleepout ≤30 m² in floor area and single-storey?</h3>
+      <p>If yes, and it's not used for sleeping by anyone other than household members, AND it's more than 1 m from any boundary, AND it's not over a drainage easement — you might fall under Schedule 1 of the Building Act 2004 (no building consent needed). That <strong>doesn't</strong> automatically mean no resource consent, though — the district plan still applies.</p>
+    </div>
+  </div>
+
+  <div class="cm-qrow">
+    <div class="cm-qrow-label">Q2</div>
+    <div>
+      <h3>Is your section zoned Residential, or Rural / Rural-Residential?</h3>
+      <ul>
+        <li><strong>Residential zones</strong> usually allow an accessory building like a sleepout as a "permitted activity" IF it stays inside permitted limits (setbacks, height, coverage, impermeable surfaces).</li>
+        <li><strong>Rural zones</strong> often treat sleepouts as "minor residential units" and have stricter rules around water supply, wastewater, and minimum lot sizes.</li>
+        <li><strong>Business / Industrial / Open Space</strong> zones usually need consent by default.</li>
+      </ul>
+      <p>Check your council's GIS viewer (e.g. Auckland Council GeoMaps, New Plymouth District Council's MapOnline) for your section's zone.</p>
+    </div>
+  </div>
+
+  <div class="cm-qrow">
+    <div class="cm-qrow-label">Q3</div>
+    <div>
+      <h3>Will the sleepout breach any of these common district-plan rules?</h3>
+      <ul>
+        <li><strong>Boundary setback:</strong> typically 1.0–1.5 m from side and rear boundaries, 3.0–4.5 m from the front (road). Closer than this and you'll likely need consent.</li>
+        <li><strong>Height to boundary (recession plane):</strong> imagine a 45° line rising from 2.5 m above each side boundary — your sleepout can't poke above it.</li>
+        <li><strong>Building coverage:</strong> total footprint of all buildings can't exceed a percentage of the site (usually 35–50% in residential zones).</li>
+        <li><strong>Impermeable surfaces:</strong> concrete/asphalt/roofs combined often can't exceed 60%.</li>
+        <li><strong>Height limit:</strong> usually 8 m in residential zones. A single-storey sleepout is well under.</li>
+      </ul>
+      <p>If any ONE of these is breached, you likely need resource consent. If all pass, you likely don't.</p>
+    </div>
+  </div>
+
+  <div class="cm-qrow">
+    <div class="cm-qrow-label">Q4</div>
+    <div>
+      <h3>Will it be used as a separate dwelling (granny flat, rental, Airbnb)?</h3>
+      <p>If yes, you're now applying for a <strong>minor residential unit</strong>, not a sleepout. Most councils need resource consent for this regardless of size, plus wastewater / three-waters assessment. Budget: $3,000–$8,000+ in fees and consultants.</p>
+    </div>
+  </div>
+
+  <div class="cm-qrow">
+    <div class="cm-qrow-label">Q5</div>
+    <div>
+      <h3>Any of these special overlays on your section?</h3>
+      <ul>
+        <li>Coastal environment / coastal hazard area</li>
+        <li>Flood / overland flow path / ponding area</li>
+        <li>Significant natural area (SNA) / ecological overlay</li>
+        <li>Heritage / character / archaeological overlay</li>
+        <li>Wāhi tapu / sites of significance to mana whenua</li>
+        <li>Outstanding natural landscape or feature</li>
+        <li>Designated land (e.g. road widening, Transpower lines)</li>
+      </ul>
+      <p>If your section has any of these (shown on council GIS maps), consent requirements tighten fast. Expect a "restricted discretionary" or "discretionary" consent status minimum.</p>
+    </div>
+  </div>
+
+  <h2 data-n="03">How to get the actual answer in 10 minutes (free)</h2>
+  <ol>
+    <li><strong>Find your property's zone.</strong> Go to your council's GIS map. Type in your address. Click your property. Note the zone (e.g. "Residential – Single House Zone").</li>
+    <li><strong>Find your council's district plan.</strong> Search "[Council name] district plan" → find the chapter for your zone.</li>
+    <li><strong>Check the "permitted activity" rules</strong> in that chapter for accessory buildings. Setbacks, height to boundary, coverage, etc.</li>
+    <li><strong>Measure your proposed sleepout's distance to boundary</strong> and check against the permitted setback.</li>
+    <li><strong>Check for overlays</strong> on the GIS map — toggle on coastal, flood, and heritage layers.</li>
+  </ol>
+  <p>Pass all permitted rules → no resource consent needed. Break one → consent needed.</p>
+
+  <div class="cm-cta-box">
+    <h3>Rather let a tool do it for you?</h3>
+    <p>ConsentMate runs steps 1–5 automatically. Drag your planned sleepout onto a map of your section — we check it against your council's live district-plan rules and tell you in 60 seconds whether you need consent, with the specific rules flagged. Covers 22 NZ councils. Free for the first-cut answer.</p>
+    <a href="map.html" class="cm-btn">Check my property →</a>
+  </div>
+
+  <h2 data-n="04">If it turns out you DO need consent</h2>
+
+  <div class="cm-option-row">
+    <div class="cm-option-hd"><span><b>Option 01</b> · Hire a planner <span style="color:var(--ink-mute);">(traditional)</span></span><span class="cm-price">$3,500–$8,000</span></div>
+    <div>
+      <ul>
+        <li>Timeline: 6–8 weeks prep + 20 working days council review</li>
+        <li>Best for: complex sites, multiple rules breached</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cm-option-row">
+    <div class="cm-option-hd"><span><b>Option 02</b> · DIY the application</span><span class="cm-price">~$1,000–$3,500</span></div>
+    <div>
+      <ul>
+        <li>Cost: council fees only</li>
+        <li>Timeline: your evenings for a few weeks</li>
+        <li>Best for: simple breaches, you're comfortable reading legal documents</li>
+        <li>Risk: if you miss something, council requests an RFI and adds weeks</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cm-option-row cm-featured">
+    <div class="cm-option-hd"><span><b>Option 03</b> · ConsentMate for the paperwork</span><span class="cm-price">$1,500 + council fees</span></div>
+    <div>
+      <ul>
+        <li>Timeline: 48 hours for the drafted application + 20 working days council review</li>
+        <li>What you get: a council-ready Assessment of Environmental Effects (AEE), map annotations, application form, cover letter — all reviewed by a human. You review and lodge.</li>
+        <li><strong>First-customer offer:</strong> FREE for the first 3 with code <strong>PILOT3</strong></li>
+        <li>Not suitable for: notified consents, Environment Court cases, subdivisions.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 data-n="05">Common mistakes that cost homeowners thousands</h2>
+  <ol>
+    <li><strong>Starting construction without checking</strong> — council can issue a stop-work and require retrospective consent (more expensive than doing it properly).</li>
+    <li><strong>Confusing building consent with resource consent</strong> — doing the building one but missing the resource one leaves you legally exposed.</li>
+    <li><strong>Assuming "it's only small" means exempt</strong> — Building Act exemptions are specific and unforgiving. 30 m² is the ceiling, not a soft limit.</li>
+    <li><strong>Not checking overlays</strong> — a 2 m coastal setback breach can turn a permitted activity into a notified resource consent (hearings, six-figure cost).</li>
+    <li><strong>Ringing three planners for three quotes</strong> — get a free first-cut first, ring a planner only if genuinely complex.</li>
+  </ol>
+
+  <h2 data-n="06">FAQs</h2>
+  <dl class="cm-faq">
+    <dt>How long does a resource consent take?</dt>
+    <dd>20 working days for non-notified residential consents (statutory timeframe). If council requests more info, the clock pauses. Add 2–6 weeks prep before submission. Total: ~2–3 months start to finish is common.</dd>
+
+    <dt>Can I appeal a declined consent?</dt>
+    <dd>Yes, to the Environment Court. Expensive (lawyer + planner + $5K+ filing fees). About 95% of homeowner-grade resource consent applications are approved — most declines happen at the pre-application stage.</dd>
+
+    <dt>What if my neighbour objects?</dt>
+    <dd>For non-notified consents, neighbour objections don't automatically block approval. Getting written approvals from affected neighbours before lodging drops the risk to near-zero.</dd>
+
+    <dt>Is ConsentMate a licensed planner?</dt>
+    <dd>No. We're a paperwork preparation service. You (the homeowner) remain the applicant and sign the forms. A human reviews every drafted application before it's sent to you. For legally binding planning advice, talk to a licensed planner.</dd>
+  </dl>
+
+  <div class="cm-cta-box">
+    <h3>Ready to check your property?</h3>
+    <p>Free 60-second first-cut answer. 22 NZ councils. No login needed.</p>
+    <a href="map.html" class="cm-btn">Check my property →</a>
+  </div>
+</main>
+
+<div class="cm-disclaimer">
+  <div class="cm-disclaimer-inner">
+    ConsentMate provides a clerical drafting service. We prepare resource consent application documents from information you supply. We are not lawyers, licensed planners, licensed building practitioners, or engineers, and we do not provide legal, planning, design, or engineering advice. You are the applicant and are responsible for the accuracy of all information. Council fees are not included in our service fee. Our liability is limited to the fee paid.
+  </div>
+</div>
+
+<footer class="cm-footer">
+  <div class="cm-footer-inner">
+    <div>
+      <span class="cm-footer-brand">consent/mate</span>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="map.html">Property check</a>
+        <a href="blog-resource-consent-sleepout-nz.html">Sleepout guide</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </div>
+    <div class="cm-footer-lines">
+      AUCKLAND · NEW ZEALAND<br>
+      © 2026 CONSENTMATE<br>
+      HELLO@CONSENTMATE.CO.NZ
+    </div>
+  </div>
+</footer>
+
+<div class="cm-palette" role="group" aria-label="Preview palette">
+  <span class="cm-pal-label">Preview</span>
+  <button data-pal="ordnance">Ordnance</button>
+  <button data-pal="paper">Paper</button>
+  <button data-pal="clay">Clay</button>
+  <button data-pal="mono">Mono</button>
+</div>
+<script src="assets/palette-switch.js"></script>
+
+</body>
+</html>

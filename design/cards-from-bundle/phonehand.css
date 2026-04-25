@@ -1,0 +1,144 @@
+.phonehand {
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+  color: var(--card-navy);
+}
+.phonehand[data-mode="dark"] { color: var(--card-paper); }
+
+.phonehand__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+.phonehand__kicker {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--card-accent);
+}
+.phonehand[data-mode="dark"] .phonehand__kicker { color: var(--card-paper-soft); }
+.phonehand__title {
+  font-family: var(--card-font-display);
+  font-weight: 600;
+  font-size: 92px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 820px;
+  color: inherit;
+  text-wrap: balance;
+}
+
+/* Stage holds phone + hand + shadow at fixed positions. */
+.phonehand__stage {
+  position: relative;
+  width: 760px;
+  height: 1180px;
+  perspective: 1800px;
+}
+
+/* Phone — 9:19.5 rounded rect, tilted on Y. */
+.phonehand__phone {
+  position: absolute;
+  top: 60px;
+  left: 90px;
+  width: 580px;
+  height: 1080px;
+  border-radius: 78px;
+  background: var(--card-navy-deep);
+  border: 14px solid var(--card-navy);
+  box-sizing: border-box;
+  box-shadow:
+    0 60px 110px rgba(0,0,0,0.40),
+    0 14px 28px rgba(0,0,0,0.28),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+  transform: rotateY(-13deg) rotateZ(-3deg);
+  transform-origin: 50% 70%;
+}
+.phonehand[data-mode="light"] .phonehand__phone { border-color: var(--card-slate); background: var(--card-navy); }
+.phonehand[data-mode="dark"]  .phonehand__phone { border-color: var(--card-navy-deep); background: var(--card-navy-deep); }
+
+.phonehand__phone-island {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 36px;
+  border-radius: 22px;
+  background: var(--card-navy-deep);
+  z-index: 2;
+}
+
+.phonehand__phone-screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 64px;
+  background: var(--card-paper-soft);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.phonehand__slot {
+  font-family: var(--card-font-mono);
+  font-size: 28px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--card-slate-ink);
+  padding: 14px 22px;
+  border: 2px dashed var(--card-slate-ink);
+  border-radius: var(--card-r-sm);
+  opacity: 0.65;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0 12px,
+    rgba(0,0,0,0.04) 12px 24px
+  );
+}
+
+/* Hand — silhouette only. Positioned bottom-left, "holding" the phone. */
+.phonehand__hand {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 520px;
+  height: 520px;
+  background: var(--card-slate);
+  /* organic blob using radial mask via clip-path */
+  clip-path: polygon(
+     0% 100%, 0% 38%,
+    10% 22%, 26% 12%,
+    44%  6%, 60% 10%,
+    78% 22%, 92% 40%,
+   100% 60%, 96% 78%,
+    82% 92%, 60% 100%
+  );
+  opacity: 0.92;
+  filter: blur(0.4px);
+}
+.phonehand[data-mode="light"] .phonehand__hand { background: var(--card-slate); opacity: 0.85; }
+.phonehand[data-mode="dark"]  .phonehand__hand { background: var(--card-paper-soft); opacity: 0.18; }
+
+/* Soft ground shadow under the phone */
+.phonehand__shadow {
+  position: absolute;
+  left: 130px;
+  bottom: 30px;
+  width: 540px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    rgba(0,0,0,0.42) 0%,
+    rgba(0,0,0,0.22) 40%,
+    rgba(0,0,0,0.0)  72%);
+  filter: blur(8px);
+  z-index: 0;
+}

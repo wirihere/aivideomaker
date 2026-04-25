@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 12 — E441–E480 · image / video container cards</title>
+<style>
+:root{
+  --paper:#F8F6F1;--mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --serif:Georgia,"Times New Roman",serif;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:880px;line-height:1.55}
+.legend{font-size:12px;color:#7a818d;margin:0 0 32px;display:flex;gap:18px;flex-wrap:wrap}
+.legend i{display:inline-flex;align-items:center;gap:6px}
+.legend .dot{width:10px;height:10px;border-radius:50%;background:#5cffaa}
+.legend .dot.v{background:#f5d35a}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__lbl b{color:#f5d35a;font-weight:600;letter-spacing:.18em}
+.cell__lbl em{color:#5cffaa;font-style:normal;font-weight:600}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);background:#1a2030}
+.frame--light{background:var(--paper)}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:30}
+.frame--light .frame__id{color:rgba(31,42,58,.45)}
+
+/* Image / video slot — production drops asset here */
+.slot{position:absolute;background:repeating-linear-gradient(45deg,rgba(245,211,90,.08) 0 22px,rgba(245,211,90,.16) 22px 44px);border:3px dashed rgba(245,211,90,.55);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:36px;letter-spacing:.22em;color:rgba(245,211,90,.85);text-transform:uppercase;text-align:center;line-height:1.3;padding:20px}
+.slot--v{background:repeating-linear-gradient(45deg,rgba(92,255,170,.08) 0 22px,rgba(92,255,170,.16) 22px 44px);border-color:rgba(92,255,170,.6);color:rgba(92,255,170,.95)}
+.slot small{display:block;font-size:24px;letter-spacing:.32em;opacity:.7;margin-top:8px}
+.slot--proxy{ /* visual proxy gradient when slot is filled in mock */ background:linear-gradient(135deg,#7a3a4a,#1a1d22);border:none;color:rgba(255,255,255,.35)}
+
+/* Common motion */
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+@keyframes float2{0%,100%{transform:translateY(0) rotate(var(--r,0))}50%{transform:translateY(-26px) rotate(var(--r,0))}}
+@keyframes wipeR{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes wipeReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes parallaxX{0%,100%{transform:translateX(0) scale(1.1)}50%{transform:translateX(-60px) scale(1.1)}}
+@keyframes kenBurns{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.25) translate(-3%,-2%)}}
+@keyframes scrollX{to{transform:translateX(-50%)}}
+@keyframes scrollY{to{transform:translateY(-50%)}}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes drawL{from{stroke-dashoffset:1500}to{stroke-dashoffset:0}}
+
+/* E441 magazine cover */
+.e441{position:absolute;inset:0;background:#0e1117}
+.e441__img{position:absolute;inset:0;animation:kenBurns 12s ease-in-out infinite alternate}
+.e441__img.proxy{background:linear-gradient(135deg,#3a1a2a 0%,#7a3a4a 50%,#c93f5c 100%)}
+.e441__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 35%,transparent 55%,rgba(0,0,0,.85) 100%)}
+.e441__mast{position:absolute;left:60px;right:60px;top:80px;display:flex;justify-content:space-between;align-items:flex-start;color:#fff;font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;line-height:.85;letter-spacing:-.03em;animation:wipeReveal 4s ease-out infinite}
+.e441__mast small{font-family:var(--mono);font-style:normal;font-size:36px;letter-spacing:.3em;font-weight:400;writing-mode:vertical-rl;transform:rotate(180deg)}
+.e441__btm{position:absolute;left:60px;right:60px;bottom:120px;color:#fff;font-family:var(--serif)}
+.e441__btm .iss{font-family:var(--mono);font-size:32px;letter-spacing:.4em;color:#f5d35a;margin-bottom:30px;text-transform:uppercase}
+.e441__btm .h{font-weight:600;font-size:90px;line-height:1.05;text-wrap:balance;margin-bottom:36px;animation:wipeReveal 4s ease-out .3s infinite}
+.e441__btm .lines{display:flex;flex-direction:column;gap:14px;font-family:var(--mono);font-size:34px;letter-spacing:.05em;color:rgba(255,255,255,.85)}
+.e441__btm .lines i{padding-left:50px;position:relative}
+.e441__btm .lines i::before{content:"";position:absolute;left:0;top:50%;width:36px;height:2px;background:#f5d35a}
+
+/* E442 polaroid w/ caption */
+.e442{position:absolute;inset:0;background:#1a3a4a;display:flex;align-items:center;justify-content:center;padding:80px}
+.e442__p{position:relative;width:780px;background:#fff;border-radius:6px;padding:60px 60px 140px;box-shadow:0 30px 80px rgba(0,0,0,.45);transform:rotate(-3deg);animation:float1 5s ease-in-out infinite}
+.e442__p .slot{position:relative;width:100%;height:780px}
+.e442__p .cap{position:absolute;left:60px;right:60px;bottom:60px;text-align:center;font-family:var(--serif);font-style:italic;font-weight:600;font-size:54px;color:#1a1d22}
+.e442__p .date{position:absolute;right:80px;bottom:30px;font-family:var(--mono);font-size:28px;color:#7a7a7a;letter-spacing:.16em}
+
+/* E443 split image+text */
+.e443{position:absolute;inset:0;background:var(--paper);display:flex}
+.e443__l{flex:1.3;position:relative;overflow:hidden}
+.e443__l .slot{position:absolute;inset:0;animation:kenBurns 10s ease-in-out infinite alternate}
+.e443__r{flex:1;padding:120px 60px;display:flex;flex-direction:column;justify-content:center;gap:40px;background:var(--paper)}
+.e443__r .num{font-family:var(--mono);font-size:36px;letter-spacing:.3em;color:#c93f5c;text-transform:uppercase}
+.e443__r .h{font-family:var(--serif);font-weight:900;font-style:italic;font-size:140px;color:#1a1d22;line-height:.95;letter-spacing:-.02em;animation:wipeReveal 4s ease-out infinite}
+.e443__r .b{font-family:var(--serif);font-size:42px;line-height:1.45;color:rgba(26,29,34,.78);text-wrap:pretty}
+.e443__r .btn{align-self:flex-start;font-family:var(--mono);font-weight:600;font-size:32px;letter-spacing:.18em;text-transform:uppercase;padding:24px 50px;background:#1a1d22;color:#fff;border-radius:6px}
+
+/* E444 video reel mockup w/ play */
+.e444{position:absolute;inset:0;background:#000;display:flex;align-items:center;justify-content:center}
+.e444__v{position:relative;width:780px;height:1400px;border-radius:46px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 12px #1a1d22}
+.e444__v .slot{position:absolute;inset:0}
+.e444__shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.85) 100%)}
+.e444__play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;animation:pop 1.5s ease-out infinite alternate;backdrop-filter:blur(8px)}
+.e444__play::after{content:"";width:0;height:0;border-left:60px solid #1a1d22;border-top:40px solid transparent;border-bottom:40px solid transparent;margin-left:14px}
+.e444__bar{position:absolute;left:30px;right:30px;bottom:80px;height:6px;background:rgba(255,255,255,.25);border-radius:3px;overflow:hidden}
+.e444__bar i{position:absolute;left:0;top:0;bottom:0;width:32%;background:#c93f5c;animation:wipeR 5s linear infinite;transform-origin:left}
+.e444__h{position:absolute;left:60px;right:60px;bottom:140px;color:#fff;font-family:var(--serif);font-weight:600;font-size:54px;line-height:1.15}
+.e444__t{position:absolute;left:60px;top:60px;font-family:var(--mono);font-size:30px;letter-spacing:.3em;color:#fff;background:rgba(0,0,0,.4);padding:14px 24px;border-radius:6px;text-transform:uppercase;display:flex;gap:18px;align-items:center}
+.e444__t::before{content:"";width:14px;height:14px;border-radius:50%;background:#ff3a3a;animation:blink 1s steps(1) infinite}
+
+/* E445 stacked image grid */
+.e445{position:absolute;inset:0;background:#0a141d;padding:80px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr 1fr;gap:14px}
+.e445 .slot{position:relative}
+.e445 .slot.span2{grid-row:span 2}
+.e445 .a{animation:wipeReveal 5s ease-out infinite}
+.e445 .b{animation:wipeReveal 5s ease-out .15s infinite}
+.e445 .c{animation:wipeReveal 5s ease-out .3s infinite}
+.e445 .d{animation:wipeReveal 5s ease-out .45s infinite}
+.e445__t{position:absolute;left:80px;right:80px;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;color:#fff;line-height:.95;letter-spacing:-.02em;mix-blend-mode:difference;pointer-events:none;z-index:10}
+
+/* E446 portrait card with floating UI */
+.e446{position:absolute;inset:0;background:linear-gradient(135deg,#3a1a2a,#0a141d)}
+.e446__img{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:760px;height:1100px;border-radius:30px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.5);animation:kenBurns 10s ease-in-out infinite alternate}
+.e446 .badge{position:absolute;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);padding:24px 36px;border-radius:18px;box-shadow:0 20px 40px rgba(0,0,0,.4);font-family:var(--mono);color:#1a1d22;animation:float2 4s ease-in-out infinite}
+.e446 .badge .lbl{font-size:24px;letter-spacing:.24em;color:#7a7a7a;margin-bottom:6px;text-transform:uppercase}
+.e446 .badge .v{font-family:var(--serif);font-weight:700;font-size:54px;line-height:1}
+.e446 .b1{left:60px;top:340px;--r:-4deg;animation-delay:0s}
+.e446 .b2{right:60px;top:480px;--r:6deg;animation-delay:.7s}
+.e446 .b3{left:120px;bottom:380px;--r:-2deg;animation-delay:1.2s}
+.e446 .heart{position:absolute;right:200px;top:240px;width:120px;height:120px;border-radius:50%;background:#c93f5c;display:flex;align-items:center;justify-content:center;color:#fff;font-size:80px;animation:pop 1.5s ease-out infinite alternate;box-shadow:0 12px 24px rgba(201,63,92,.6)}
+
+/* E447 image carousel */
+.e447{position:absolute;inset:0;background:#0a0a14;overflow:hidden}
+.e447__rail{display:flex;height:100%;width:300%;animation:carouselX 12s ease-in-out infinite}
+@keyframes carouselX{0%,28%{transform:translateX(0)}33%,61%{transform:translateX(-33.33%)}66%,94%{transform:translateX(-66.66%)}100%{transform:translateX(0)}}
+.e447__rail .slide{flex:0 0 33.33%;height:100%;position:relative;display:flex;align-items:flex-end;padding:80px}
+.e447__rail .slide .slot{position:absolute;inset:0}
+.e447__rail .slide .cap{position:relative;font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;color:#fff;line-height:.9;text-shadow:0 2px 30px rgba(0,0,0,.5);z-index:5}
+.e447__dots{position:absolute;left:50%;bottom:60px;transform:translateX(-50%);display:flex;gap:18px;z-index:10}
+.e447__dots i{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.35)}
+.e447__dots i.on{background:#fff;width:48px;border-radius:9px}
+
+/* E448 spotlight reveal */
+.e448{position:absolute;inset:0;background:#000;overflow:hidden}
+.e448__img{position:absolute;inset:0;animation:kenBurns 12s ease-in-out infinite alternate}
+.e448__mask{position:absolute;inset:0;background:radial-gradient(circle 600px at 50% 50%,transparent 0%,rgba(0,0,0,.95) 70%);animation:spotMove 8s ease-in-out infinite alternate}
+@keyframes spotMove{0%{background-position:30% 30%}100%{background-position:70% 70%}}
+.e448__t{position:absolute;left:60px;right:60px;bottom:120px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:160px;color:#fff;line-height:.95;letter-spacing:-.02em;z-index:10;text-wrap:balance}
+.e448__lbl{position:absolute;left:60px;top:80px;font-family:var(--mono);font-size:36px;letter-spacing:.3em;color:#f5d35a;text-transform:uppercase;z-index:10}
+
+/* E449 reel strip */
+.e449{position:absolute;inset:0;background:#0a0a14;display:flex;flex-direction:column;gap:30px;justify-content:center;padding:80px 0}
+.e449 .strip{display:flex;gap:30px;height:380px;flex-shrink:0;animation:scrollX 30s linear infinite}
+.e449 .strip:nth-child(2){animation:scrollX 30s linear -10s infinite reverse}
+.e449 .strip:nth-child(3){animation:scrollX 30s linear -20s infinite}
+.e449 .strip .slot{flex:0 0 480px;height:100%;border-radius:18px}
+.e449__t{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:240px;color:#fff;line-height:.9;mix-blend-mode:difference;pointer-events:none;z-index:10}
+
+/* E450 testimonial w/ avatar video circle */
+.e450{position:absolute;inset:0;background:var(--paper);padding:80px 60px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:60px}
+.e450__av{position:relative;width:480px;height:480px;border-radius:50%;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.2)}
+.e450__av .slot{position:absolute;inset:0;border:none;border-radius:50%}
+.e450__av::after{content:"";position:absolute;inset:-12px;border-radius:50%;border:6px solid #c93f5c;animation:spinSlow 8s linear infinite;border-top-color:transparent}
+.e450__q{font-family:var(--serif);font-weight:600;font-style:italic;font-size:80px;line-height:1.15;color:#1a1d22;text-align:center;text-wrap:balance;animation:wipeReveal 4s ease-out infinite}
+.e450__a{display:flex;flex-direction:column;align-items:center;gap:14px;font-family:var(--mono);text-align:center}
+.e450__a .n{font-family:var(--serif);font-weight:700;font-size:54px}
+.e450__a .r{font-size:34px;letter-spacing:.24em;color:rgba(26,29,34,.65);text-transform:uppercase}
+.e450__stars{display:flex;gap:12px;font-size:60px;color:#f5d35a}
+
+/* E451 product hero */
+.e451{position:absolute;inset:0;background:linear-gradient(135deg,#f5e6c8,#e6d4a8);padding:80px;display:flex;flex-direction:column;justify-content:space-between}
+.e451__top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:32px;letter-spacing:.24em;color:#1a1d22;text-transform:uppercase}
+.e451__top b{font-weight:700;color:#c93f5c}
+.e451__c{display:flex;flex-direction:column;align-items:center;gap:60px}
+.e451__img{width:780px;height:780px;animation:float1 4s ease-in-out infinite}
+.e451__img .slot{position:relative;width:100%;height:100%;border-radius:30px}
+.e451__name{font-family:var(--serif);font-weight:900;font-size:140px;color:#1a1d22;line-height:.95;text-align:center;letter-spacing:-.03em;animation:wipeReveal 3.5s ease-out infinite}
+.e451__btm{display:flex;justify-content:space-between;align-items:flex-end;color:#1a1d22;font-family:var(--serif)}
+.e451__btm .price{font-weight:900;font-size:120px;line-height:1}
+.e451__btm .price small{font-family:var(--mono);font-size:36px;font-weight:400;letter-spacing:.18em;display:block;color:rgba(26,29,34,.6);margin-bottom:12px;text-transform:uppercase}
+.e451__btm .btn{font-family:var(--mono);font-weight:700;font-size:42px;letter-spacing:.16em;text-transform:uppercase;background:#1a1d22;color:#fff;padding:36px 60px;border-radius:99px;animation:float1 4s ease-in-out infinite}
+
+/* E452 IG-style story */
+.e452{position:absolute;inset:0;background:#000;overflow:hidden}
+.e452__img{position:absolute;inset:0;animation:kenBurns 8s ease-in-out infinite alternate}
+.e452__bars{position:absolute;left:30px;right:30px;top:30px;display:flex;gap:8px;height:8px;z-index:10}
+.e452__bars i{flex:1;background:rgba(255,255,255,.35);border-radius:4px;overflow:hidden;position:relative}
+.e452__bars i.done{background:rgba(255,255,255,.95)}
+.e452__bars i.cur::after{content:"";position:absolute;left:0;top:0;bottom:0;width:0;background:#fff;animation:wipeR 4s linear infinite;transform-origin:left;transform:scaleX(.3)}
+.e452__head{position:absolute;left:30px;top:80px;display:flex;align-items:center;gap:24px;z-index:10}
+.e452__head .av{width:80px;height:80px;border-radius:50%;border:4px solid #fff;background:linear-gradient(135deg,#ff5cb1,#9b6bff);box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.e452__head .nm{font-family:var(--mono);color:#fff;font-weight:600;font-size:36px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.e452__head .nm small{display:block;font-weight:400;font-size:26px;color:rgba(255,255,255,.8);letter-spacing:.1em}
+.e452__cap{position:absolute;left:60px;right:60px;bottom:240px;font-family:var(--serif);font-weight:600;font-size:80px;color:#fff;line-height:1.1;text-shadow:0 4px 30px rgba(0,0,0,.5);animation:wipeReveal 4s ease-out infinite}
+.e452__sticker{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) rotate(-8deg);background:#fff;color:#c93f5c;font-family:var(--serif);font-weight:900;font-style:italic;font-size:120px;padding:16px 40px;border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.4);animation:float2 4s ease-in-out infinite}
+
+/* E453 BeReal grid */
+.e453{position:absolute;inset:0;background:#0e1117;padding:80px 60px;display:flex;flex-direction:column;gap:40px}
+.e453__head{font-family:var(--serif);color:#fff}
+.e453__head .h{font-weight:900;font-size:120px;font-style:italic;line-height:1}
+.e453__head .s{font-family:var(--mono);font-size:34px;letter-spacing:.18em;color:#9aa1ad;margin-top:16px;text-transform:uppercase}
+.e453__grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.e453__grid .pair{position:relative}
+.e453__grid .main{position:absolute;inset:0;border-radius:30px;overflow:hidden}
+.e453__grid .main .slot{position:absolute;inset:0;border-radius:30px}
+.e453__grid .pip{position:absolute;left:24px;top:24px;width:140px;height:200px;border-radius:14px;overflow:hidden;border:4px solid rgba(255,255,255,.95);box-shadow:0 8px 16px rgba(0,0,0,.4);animation:float1 3s ease-in-out infinite}
+.e453__grid .pip .slot{position:absolute;inset:0;border-radius:10px}
+.e453__grid .lbl{position:absolute;right:24px;bottom:24px;font-family:var(--mono);font-size:24px;letter-spacing:.18em;color:#fff;background:rgba(0,0,0,.55);padding:10px 18px;border-radius:6px;text-transform:uppercase}
+
+/* E454 fullbleed parallax */
+.e454{position:absolute;inset:0;background:#000;overflow:hidden}
+.e454__img{position:absolute;inset:-30px;animation:parallaxX 14s ease-in-out infinite alternate}
+.e454__img .slot{position:absolute;inset:0;border:none;background:linear-gradient(135deg,#1a3a4a 0%,#0a1d2a 100%);color:rgba(255,255,255,.25)}
+.e454__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,transparent 30%,transparent 60%,rgba(0,0,0,.9) 100%)}
+.e454__t{position:absolute;left:60px;right:60px;bottom:300px;color:#fff;font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;line-height:.95;letter-spacing:-.03em;text-wrap:balance;z-index:5;animation:wipeReveal 4s ease-out infinite}
+.e454__b{position:absolute;left:60px;right:60px;bottom:120px;display:flex;justify-content:space-between;align-items:flex-end;font-family:var(--mono);color:#fff;z-index:5}
+.e454__b .meta{font-size:34px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.85)}
+.e454__b .arrow{width:120px;height:120px;border-radius:50%;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:60px;animation:pop 1.5s ease-out infinite alternate}
+
+/* E455 photo collage drop */
+.e455{position:absolute;inset:0;background:#1a1f3a;overflow:hidden}
+.e455 .p{position:absolute;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:float2 5s ease-in-out infinite}
+.e455 .p .slot{position:absolute;inset:0;border:none;border-radius:18px}
+.e455__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;color:#f5d35a;line-height:1;letter-spacing:-.04em;z-index:20;text-shadow:0 0 40px rgba(0,0,0,.5);pointer-events:none}
+
+/* E456 magazine spread */
+.e456{position:absolute;inset:0;background:#f4ede0;display:flex;flex-direction:column}
+.e456__top{height:50%;position:relative}
+.e456__top .slot{position:absolute;inset:0;animation:kenBurns 12s ease-in-out infinite alternate}
+.e456__top .slot{border:none}
+.e456__top .lbl{position:absolute;left:50px;top:50px;font-family:var(--mono);color:#fff;background:rgba(0,0,0,.55);padding:18px 30px;font-size:34px;letter-spacing:.3em;text-transform:uppercase;z-index:5}
+.e456__bot{flex:1;padding:60px;display:grid;grid-template-columns:1fr 1.5fr;gap:60px;background:#f4ede0;color:#1a1d22}
+.e456__bot .lead{font-family:var(--serif);font-weight:900;font-style:italic;font-size:100px;line-height:.95;letter-spacing:-.02em;animation:wipeReveal 4s ease-out infinite}
+.e456__bot .body{font-family:var(--serif);font-size:36px;line-height:1.5;column-count:2;column-gap:30px;text-wrap:pretty}
+.e456__bot .body p{margin:0 0 20px}
+
+/* E457 story tiles auto-advance */
+.e457{position:absolute;inset:0;background:#000;overflow:hidden}
+.e457__rail{position:absolute;inset:0;display:flex;width:400%;animation:storyX 16s steps(4) infinite}
+@keyframes storyX{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+.e457__rail .s{flex:0 0 25%;height:100%;position:relative}
+.e457__rail .s .slot{position:absolute;inset:0;border:none;border-radius:0}
+.e457__rail .s .t{position:absolute;left:60px;right:60px;bottom:140px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:160px;color:#fff;line-height:.95;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.e457__chip{position:absolute;left:60px;top:60px;font-family:var(--mono);font-size:28px;letter-spacing:.3em;color:#fff;background:rgba(0,0,0,.55);padding:14px 24px;border-radius:8px;text-transform:uppercase;z-index:10}
+
+/* E458 highlight ring stories */
+.e458{position:absolute;inset:0;background:#0a0a14;padding:80px 60px;display:flex;flex-direction:column;gap:60px}
+.e458__h{font-family:var(--serif);font-weight:900;font-style:italic;font-size:140px;color:#fff;line-height:.95}
+.e458__row{display:grid;grid-template-columns:repeat(3,1fr);gap:50px}
+.e458__row .ring{display:flex;flex-direction:column;align-items:center;gap:24px}
+.e458__row .ring .o{position:relative;width:280px;height:280px;border-radius:50%;padding:8px;background:conic-gradient(from 0deg,#c93f5c,#f5d35a,#3affe6,#9b6bff,#c93f5c);animation:spinSlow 6s linear infinite}
+.e458__row .ring .o .i{width:100%;height:100%;border-radius:50%;background:#0a0a14;padding:8px}
+.e458__row .ring .o .i .slot{position:relative;width:100%;height:100%;border-radius:50%;border:none}
+.e458__row .ring .nm{font-family:var(--mono);font-size:34px;letter-spacing:.2em;color:#fff;text-transform:uppercase;text-align:center}
+.e458__sub{font-family:var(--serif);font-size:46px;line-height:1.45;color:rgba(255,255,255,.7);text-wrap:pretty;margin-top:30px}
+
+/* E459 card stack peek */
+.e459{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#0a141d);display:flex;align-items:center;justify-content:center}
+.e459__deck{position:relative;width:680px;height:1100px}
+.e459__deck .c{position:absolute;inset:0;border-radius:30px;box-shadow:0 30px 60px rgba(0,0,0,.5);overflow:hidden;animation:cardSwap 8s ease-in-out infinite}
+@keyframes cardSwap{0%,100%{transform:translateY(0) rotate(0);z-index:3}33%{transform:translateY(-30px) rotate(-3deg);z-index:3}66%{transform:translateY(40px) rotate(4deg);z-index:1}}
+.e459__deck .c:nth-child(1){animation-delay:0s}
+.e459__deck .c:nth-child(2){animation-delay:-2.6s;transform:translateY(20px) rotate(-3deg)}
+.e459__deck .c:nth-child(3){animation-delay:-5.2s;transform:translateY(40px) rotate(4deg)}
+.e459__deck .c .slot{position:absolute;inset:0;border:none;border-radius:30px}
+.e459__deck .c .lbl{position:absolute;left:30px;bottom:40px;color:#fff;font-family:var(--serif);font-weight:600;font-size:60px;line-height:1;text-shadow:0 2px 20px rgba(0,0,0,.6);z-index:5}
+
+/* E460 newsletter card */
+.e460{position:absolute;inset:0;background:#0e1117;padding:60px;display:flex;align-items:center;justify-content:center}
+.e460__c{width:100%;background:#fff;border-radius:36px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.e460__c .img{height:780px;position:relative}
+.e460__c .img .slot{position:absolute;inset:0;border:none;border-radius:0;animation:kenBurns 10s ease-in-out infinite alternate}
+.e460__c .body{padding:60px}
+.e460__c .body .iss{font-family:var(--mono);font-size:32px;letter-spacing:.3em;color:#c93f5c;text-transform:uppercase}
+.e460__c .body .h{font-family:var(--serif);font-weight:900;font-style:italic;font-size:120px;color:#1a1d22;line-height:.95;letter-spacing:-.02em;margin:30px 0;animation:wipeReveal 4s ease-out infinite}
+.e460__c .body .b{font-family:var(--serif);font-size:42px;color:rgba(26,29,34,.75);line-height:1.4;margin-bottom:50px;text-wrap:pretty}
+.e460__c .body .row{display:flex;gap:14px;align-items:center}
+.e460__c .body input{flex:1;border:3px solid #1a1d22;border-radius:14px;padding:30px;font-family:var(--mono);font-size:36px;background:transparent}
+.e460__c .body .btn{background:#1a1d22;color:#fff;font-family:var(--mono);font-weight:700;font-size:36px;letter-spacing:.16em;padding:30px 50px;border-radius:14px;text-transform:uppercase}
+
+/* E461 image+stat overlay */
+.e461{position:absolute;inset:0;background:#000;overflow:hidden}
+.e461__img{position:absolute;inset:0}
+.e461__img .slot{position:absolute;inset:0;border:none;animation:kenBurns 12s ease-in-out infinite alternate}
+.e461__shade{position:absolute;inset:0;background:linear-gradient(45deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.3) 60%,transparent 100%)}
+.e461__num{position:absolute;left:60px;top:60px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:520px;color:#f5d35a;line-height:.85;letter-spacing:-.05em;animation:wipeReveal 4s ease-out infinite;z-index:5}
+.e461__num small{font-family:var(--mono);font-style:normal;font-weight:400;font-size:60px;letter-spacing:.4em;display:block;color:#fff;margin-top:30px;text-transform:uppercase}
+.e461__cap{position:absolute;left:60px;right:60px;bottom:120px;font-family:var(--serif);font-size:60px;color:#fff;line-height:1.2;text-wrap:pretty;z-index:5}
+
+/* E462 tilt photo card */
+.e462{position:absolute;inset:0;background:linear-gradient(135deg,#5a3a78,#1a1a3a);display:flex;align-items:center;justify-content:center;perspective:1500px}
+.e462__c{width:780px;height:1280px;border-radius:36px;overflow:hidden;box-shadow:0 50px 100px rgba(0,0,0,.6);animation:tilt3d 8s ease-in-out infinite}
+@keyframes tilt3d{0%,100%{transform:rotateY(-15deg) rotateX(5deg)}50%{transform:rotateY(15deg) rotateX(-5deg)}}
+.e462__c .slot{position:absolute;inset:0;border:none;border-radius:36px}
+.e462__c .ring{position:absolute;inset:30px;border:6px solid rgba(255,255,255,.6);border-radius:24px;pointer-events:none}
+.e462__c .lbl{position:absolute;left:60px;bottom:60px;color:#fff;font-family:var(--serif);font-weight:900;font-style:italic;font-size:120px;line-height:.95;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.e462__c .lbl small{font-family:var(--mono);font-style:normal;font-weight:400;font-size:32px;letter-spacing:.3em;color:#f5d35a;display:block;margin-bottom:20px;text-transform:uppercase}
+
+/* E463 review card with photo */
+.e463{position:absolute;inset:0;background:var(--paper);padding:60px;display:flex;align-items:center;justify-content:center}
+.e463__c{width:100%;display:grid;grid-template-columns:1.2fr 1fr;gap:50px;align-items:center}
+.e463__img{aspect-ratio:3/4;border-radius:24px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.25)}
+.e463__img .slot{position:relative;width:100%;height:100%;border:none;border-radius:24px;animation:kenBurns 10s ease-in-out infinite alternate}
+.e463__txt{display:flex;flex-direction:column;gap:30px;color:#1a1d22}
+.e463__txt .stars{font-size:60px;color:#f5d35a;letter-spacing:6px}
+.e463__txt .q{font-family:var(--serif);font-weight:600;font-style:italic;font-size:64px;line-height:1.15;text-wrap:balance;animation:wipeReveal 4s ease-out infinite}
+.e463__txt hr{border:0;border-top:2px solid #1a1d22;margin:0;width:80px}
+.e463__txt .a{font-family:var(--mono);font-size:30px;letter-spacing:.24em;text-transform:uppercase;color:rgba(26,29,34,.65)}
+.e463__txt .a b{font-family:var(--serif);font-weight:700;font-size:50px;color:#1a1d22;display:block;letter-spacing:0;margin-bottom:6px;text-transform:none}
+
+/* E464 lookbook grid */
+.e464{position:absolute;inset:0;background:#f5d35a;padding:60px;display:flex;flex-direction:column;gap:30px}
+.e464__h{display:flex;justify-content:space-between;align-items:flex-end;color:#1a1d22;font-family:var(--serif)}
+.e464__h .t{font-weight:900;font-style:italic;font-size:180px;line-height:.85;letter-spacing:-.03em}
+.e464__h .s{font-family:var(--mono);font-size:36px;letter-spacing:.3em;text-transform:uppercase;text-align:right}
+.e464__g{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:20px}
+.e464__g .slot{position:relative;border-radius:18px;border:none}
+.e464__g .slot.span2{grid-row:span 2}
+.e464__g .slot:nth-child(1){animation:wipeReveal 4s ease-out infinite}
+.e464__g .slot:nth-child(2){animation:wipeReveal 4s ease-out .12s infinite}
+.e464__g .slot:nth-child(3){animation:wipeReveal 4s ease-out .24s infinite}
+.e464__g .slot:nth-child(4){animation:wipeReveal 4s ease-out .36s infinite}
+.e464__g .slot:nth-child(5){animation:wipeReveal 4s ease-out .48s infinite}
+
+/* E465 quote ribbon over image */
+.e465{position:absolute;inset:0;background:#000;overflow:hidden}
+.e465__img{position:absolute;inset:0}
+.e465__img .slot{position:absolute;inset:0;border:none;animation:kenBurns 12s ease-in-out infinite alternate}
+.e465__shade{position:absolute;inset:0;background:rgba(0,0,0,.4)}
+.e465__rib{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%) skewY(-3deg);background:#c93f5c;padding:60px 100px;color:#fff;animation:wipeReveal 4s ease-out infinite}
+.e465__rib .q{font-family:var(--serif);font-weight:900;font-style:italic;font-size:160px;line-height:.95;letter-spacing:-.02em;text-wrap:balance}
+.e465__rib .a{font-family:var(--mono);font-size:32px;letter-spacing:.3em;margin-top:30px;text-transform:uppercase;color:#f5d35a}
+
+/* E466 cinemagraph */
+.e466{position:absolute;inset:0;background:#000;overflow:hidden}
+.e466__img{position:absolute;inset:0}
+.e466__img .slot{position:absolute;inset:0;border:none}
+.e466__loop{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);width:480px;height:480px;border-radius:50%;overflow:hidden;border:6px solid rgba(255,255,255,.6);animation:loopRot 8s linear infinite;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+@keyframes loopRot{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.e466__loop .slot{position:absolute;inset:0;border:none;border-radius:50%}
+.e466__chip{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--mono);font-size:32px;letter-spacing:.3em;color:#fff;background:rgba(0,0,0,.6);padding:12px 24px;border-radius:6px;text-transform:uppercase;z-index:5}
+.e466__t{position:absolute;left:60px;right:60px;bottom:140px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;color:#fff;line-height:.95;text-shadow:0 4px 30px rgba(0,0,0,.6);text-wrap:balance}
+
+/* E467 phone carousel mockup */
+.e467{position:absolute;inset:0;background:linear-gradient(135deg,#0a141d,#1a3a4a);overflow:hidden;display:flex;align-items:center;justify-content:center;gap:30px;padding:0 30px}
+.e467 .ph{flex:0 0 auto;width:480px;height:980px;border-radius:60px;background:#1a1d22;padding:18px;box-shadow:0 30px 60px rgba(0,0,0,.5);position:relative;animation:float2 5s ease-in-out infinite}
+.e467 .ph::before{content:"";position:absolute;left:50%;top:30px;transform:translateX(-50%);width:140px;height:36px;border-radius:99px;background:#000;z-index:5}
+.e467 .ph .scr{position:absolute;inset:18px;border-radius:46px;overflow:hidden}
+.e467 .ph .scr .slot{position:absolute;inset:0;border:none;border-radius:46px}
+.e467 .ph:nth-child(1){--r:-6deg;animation-delay:0s;transform:rotate(-6deg) translateY(20px)}
+.e467 .ph:nth-child(2){--r:0deg;animation-delay:.5s;transform:scale(1.08)}
+.e467 .ph:nth-child(3){--r:6deg;animation-delay:1s;transform:rotate(6deg) translateY(20px)}
+.e467__t{position:absolute;left:60px;bottom:80px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:120px;color:#fff;line-height:.95;letter-spacing:-.02em;z-index:10}
+.e467__t small{font-family:var(--mono);font-size:30px;font-style:normal;font-weight:400;letter-spacing:.3em;color:#5cffaa;display:block;margin-bottom:20px;text-transform:uppercase}
+
+/* E468 GIF/sticker on photo */
+.e468{position:absolute;inset:0;background:#000}
+.e468__img{position:absolute;inset:0}
+.e468__img .slot{position:absolute;inset:0;border:none}
+.e468 .sticker{position:absolute;font-family:var(--serif);font-weight:900;font-style:italic;background:#fff;color:#c93f5c;padding:14px 36px;border-radius:18px;box-shadow:0 14px 30px rgba(0,0,0,.4);animation:float2 3.5s ease-in-out infinite;font-size:80px;line-height:1}
+.e468 .sticker.b{background:#1a1d22;color:#f5d35a}
+.e468 .sticker.r{background:#c93f5c;color:#fff}
+.e468 .heart{position:absolute;font-size:140px;color:#c93f5c;animation:pop 2s ease-out infinite alternate;text-shadow:0 8px 20px rgba(0,0,0,.4)}
+
+/* E469 zoom-in image scrubber */
+.e469{position:absolute;inset:0;background:#0a0a14;overflow:hidden}
+.e469__img{position:absolute;inset:0}
+.e469__img .slot{position:absolute;inset:0;border:none;animation:zoomScrub 10s ease-in-out infinite alternate}
+@keyframes zoomScrub{from{transform:scale(1) translate(0,0)}to{transform:scale(2.5) translate(-15%,10%)}}
+.e469__scrubber{position:absolute;left:60px;right:60px;bottom:200px;height:8px;background:rgba(255,255,255,.2);border-radius:4px;z-index:10}
+.e469__scrubber i{position:absolute;left:0;top:0;bottom:0;width:55%;background:#5cffaa;border-radius:4px;animation:scrubW 10s ease-in-out infinite alternate;transform-origin:left}
+@keyframes scrubW{from{transform:scaleX(.05)}to{transform:scaleX(1)}}
+.e469__lbl{position:absolute;left:60px;top:60px;font-family:var(--mono);font-size:36px;letter-spacing:.3em;color:#5cffaa;background:rgba(0,0,0,.55);padding:14px 24px;border-radius:6px;text-transform:uppercase;z-index:10}
+.e469__t{position:absolute;left:60px;right:60px;bottom:280px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:140px;color:#fff;line-height:.95;text-shadow:0 4px 30px rgba(0,0,0,.6);z-index:10}
+
+/* E470 split-screen video compare */
+.e470{position:absolute;inset:0;background:#000;display:flex}
+.e470__a,.e470__b{flex:1;position:relative;overflow:hidden}
+.e470__a .slot,.e470__b .slot{position:absolute;inset:0;border:none}
+.e470__a .slot{animation:kenBurns 10s ease-in-out infinite alternate}
+.e470__b .slot{animation:kenBurns 10s ease-in-out infinite alternate-reverse}
+.e470__lbl{position:absolute;bottom:140px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:160px;color:#fff;line-height:.9;text-shadow:0 4px 30px rgba(0,0,0,.6);z-index:5}
+.e470__a .e470__lbl{left:50px}
+.e470__b .e470__lbl{right:50px;text-align:right}
+.e470__lbl small{display:block;font-family:var(--mono);font-style:normal;font-weight:400;font-size:32px;letter-spacing:.3em;color:#f5d35a;margin-bottom:20px;text-transform:uppercase}
+.e470__div{position:absolute;left:50%;top:0;bottom:0;width:6px;background:#fff;transform:translateX(-50%);box-shadow:0 0 30px rgba(255,255,255,.6);animation:dvW 4s ease-in-out infinite alternate}
+@keyframes dvW{from{left:46%}to{left:54%}}
+.e470__div::before{content:"⇆";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:100px;height:100px;background:#fff;border-radius:50%;color:#000;font-size:50px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+
+/* E471 product card grid */
+.e471{position:absolute;inset:0;background:var(--paper);padding:60px;display:flex;flex-direction:column;gap:50px}
+.e471__h{display:flex;justify-content:space-between;align-items:flex-end;color:#1a1d22;font-family:var(--serif)}
+.e471__h .t{font-weight:900;font-style:italic;font-size:120px;line-height:.85;letter-spacing:-.02em}
+.e471__h .s{font-family:var(--mono);font-size:30px;letter-spacing:.3em;text-transform:uppercase;color:rgba(26,29,34,.6)}
+.e471__g{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.e471__g .card{background:#fff;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 14px 30px rgba(0,0,0,.08);animation:wipeReveal 4s ease-out infinite}
+.e471__g .card:nth-child(2){animation-delay:.15s}
+.e471__g .card:nth-child(3){animation-delay:.3s}
+.e471__g .card:nth-child(4){animation-delay:.45s}
+.e471__g .card .img{flex:1;position:relative}
+.e471__g .card .img .slot{position:absolute;inset:0;border:none;border-radius:0}
+.e471__g .card .meta{padding:30px 36px;display:flex;justify-content:space-between;align-items:center;color:#1a1d22}
+.e471__g .card .meta .nm{font-family:var(--serif);font-weight:600;font-size:46px;line-height:1}
+.e471__g .card .meta .nm small{display:block;font-family:var(--mono);font-weight:400;font-size:24px;letter-spacing:.16em;color:rgba(26,29,34,.55);margin-top:8px;text-transform:uppercase}
+.e471__g .card .meta .pr{font-family:var(--mono);font-weight:700;font-size:36px;background:#1a1d22;color:#fff;padding:14px 24px;border-radius:14px}
+
+/* E472 split image+chart */
+.e472{position:absolute;inset:0;background:#0a141d;display:flex;flex-direction:column}
+.e472__top{flex:1.1;position:relative;overflow:hidden}
+.e472__top .slot{position:absolute;inset:0;border:none;animation:kenBurns 12s ease-in-out infinite alternate}
+.e472__top .lbl{position:absolute;left:60px;bottom:60px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:140px;color:#fff;line-height:.95;text-shadow:0 4px 30px rgba(0,0,0,.6);text-wrap:balance}
+.e472__bot{flex:1;background:#0a141d;padding:60px;display:flex;flex-direction:column;gap:40px;color:#fff}
+.e472__bot .row{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono)}
+.e472__bot .row .l{font-size:34px;letter-spacing:.18em;color:rgba(255,255,255,.7);text-transform:uppercase}
+.e472__bot .row .v{font-family:var(--serif);font-weight:700;font-size:80px;color:#5cffaa}
+.e472__bot .bar{position:relative;height:18px;background:rgba(255,255,255,.1);border-radius:9px;overflow:hidden}
+.e472__bot .bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#5cffaa,#3affe6);border-radius:9px;animation:wipeR 3s ease-out infinite alternate;transform-origin:left}
+
+/* E473 magazine portrait spread */
+.e473{position:absolute;inset:0;background:#0a141d;display:flex}
+.e473__l{width:62%;position:relative;overflow:hidden}
+.e473__l .slot{position:absolute;inset:0;border:none;animation:kenBurns 14s ease-in-out infinite alternate}
+.e473__r{flex:1;background:#f4ede0;color:#1a1d22;padding:60px 50px;display:flex;flex-direction:column;justify-content:space-between}
+.e473__r .top .lbl{font-family:var(--mono);font-size:30px;letter-spacing:.4em;color:#c93f5c;text-transform:uppercase;margin-bottom:50px}
+.e473__r .top .nm{font-family:var(--serif);font-weight:900;font-style:italic;font-size:160px;line-height:.85;letter-spacing:-.04em;animation:wipeReveal 4s ease-out infinite}
+.e473__r .top .role{font-family:var(--serif);font-size:46px;line-height:1.3;color:rgba(26,29,34,.7);margin-top:30px}
+.e473__r .body{font-family:var(--serif);font-size:34px;line-height:1.45;color:rgba(26,29,34,.8);text-wrap:pretty;column-count:1}
+.e473__r .body p{margin:0 0 20px}
+.e473__r .body p::first-letter{font-weight:900;font-style:italic;font-size:84px;float:left;line-height:.9;margin-right:14px;margin-top:6px;color:#c93f5c}
+.e473__r .nums{display:flex;gap:50px;border-top:2px solid #1a1d22;padding-top:30px}
+.e473__r .nums i{display:flex;flex-direction:column;font-family:var(--serif)}
+.e473__r .nums i b{font-weight:900;font-size:80px;line-height:1}
+.e473__r .nums i small{font-family:var(--mono);font-size:22px;letter-spacing:.18em;color:rgba(26,29,34,.6);text-transform:uppercase;margin-top:6px}
+
+/* E474 newsletter swipe */
+.e474{position:absolute;inset:0;background:#0a0a14;overflow:hidden}
+.e474__rail{position:absolute;inset:0;display:flex;width:300%;animation:swiperX 15s ease-in-out infinite}
+@keyframes swiperX{0%,30%{transform:translateX(0)}33%,63%{transform:translateX(-33.33%)}66%,96%{transform:translateX(-66.66%)}100%{transform:translateX(0)}}
+.e474__rail .s{flex:0 0 33.33%;height:100%;display:flex;flex-direction:column}
+.e474__rail .s .img{height:65%;position:relative}
+.e474__rail .s .img .slot{position:absolute;inset:0;border:none;border-radius:0}
+.e474__rail .s .body{flex:1;background:#fff;color:#1a1d22;padding:60px;display:flex;flex-direction:column;justify-content:space-between}
+.e474__rail .s .body .iss{font-family:var(--mono);font-size:30px;letter-spacing:.3em;color:#c93f5c;text-transform:uppercase}
+.e474__rail .s .body .h{font-family:var(--serif);font-weight:900;font-style:italic;font-size:100px;line-height:.95;letter-spacing:-.02em;margin-top:20px;text-wrap:balance}
+.e474__rail .s .body .meta{font-family:var(--mono);font-size:30px;letter-spacing:.18em;color:rgba(26,29,34,.6);text-transform:uppercase;display:flex;justify-content:space-between;border-top:2px solid #1a1d22;padding-top:30px}
+
+/* E475 photo strobe (3 shots) */
+.e475{position:absolute;inset:0;background:#fff;overflow:hidden;display:flex}
+.e475 .pane{flex:1;position:relative;overflow:hidden}
+.e475 .pane .slot{position:absolute;inset:0;border:none;border-radius:0}
+.e475 .pane .lbl{position:absolute;left:30px;bottom:30px;font-family:var(--mono);font-size:30px;letter-spacing:.24em;color:#fff;background:rgba(0,0,0,.6);padding:14px 22px;border-radius:6px;z-index:5}
+.e475 .pane:nth-child(1) .slot{animation:kenBurns 10s ease-in-out infinite alternate}
+.e475 .pane:nth-child(2) .slot{animation:kenBurns 10s ease-in-out -3s infinite alternate}
+.e475 .pane:nth-child(3) .slot{animation:kenBurns 10s ease-in-out -6s infinite alternate}
+.e475__t{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;color:#fff;mix-blend-mode:difference;z-index:10;line-height:.85;letter-spacing:-.04em}
+
+/* E476 portrait + name plate */
+.e476{position:absolute;inset:0;background:#0a141d;overflow:hidden}
+.e476__img{position:absolute;inset:0}
+.e476__img .slot{position:absolute;inset:0;border:none;animation:kenBurns 12s ease-in-out infinite alternate}
+.e476__shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.85) 100%)}
+.e476__plate{position:absolute;left:60px;right:60px;bottom:120px;color:#fff;font-family:var(--serif);animation:wipeReveal 4s ease-out infinite}
+.e476__plate .nm{font-weight:900;font-style:italic;font-size:200px;line-height:.85;letter-spacing:-.03em}
+.e476__plate .ttl{display:flex;align-items:center;gap:24px;margin-top:30px}
+.e476__plate .ttl::before{content:"";width:80px;height:6px;background:#f5d35a}
+.e476__plate .ttl span{font-family:var(--mono);font-size:36px;letter-spacing:.24em;color:#f5d35a;text-transform:uppercase}
+.e476__plate .b{font-family:var(--serif);font-size:42px;line-height:1.4;color:rgba(255,255,255,.85);margin-top:30px;max-width:840px;text-wrap:pretty}
+
+/* E477 text-mask image */
+.e477{position:absolute;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center}
+.e477__t{font-family:var(--serif);font-weight:900;font-style:italic;font-size:560px;line-height:.85;letter-spacing:-.04em;background-image:linear-gradient(135deg,#c93f5c,#f5d35a 40%,#3affe6 70%,#9b6bff);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 200%;animation:gradMove 8s ease-in-out infinite alternate;text-align:center;text-wrap:balance;padding:0 40px}
+@keyframes gradMove{from{background-position:0% 0%}to{background-position:100% 100%}}
+.e477__sub{position:absolute;left:0;right:0;bottom:160px;text-align:center;font-family:var(--mono);font-size:42px;letter-spacing:.4em;color:#fff;text-transform:uppercase}
+.e477__sub::before,.e477__sub::after{content:"";display:inline-block;width:100px;height:2px;background:#fff;vertical-align:middle;margin:0 30px}
+
+/* E478 pinterest masonry */
+.e478{position:absolute;inset:0;background:#f4ede0;padding:50px;display:grid;grid-template-columns:1fr 1fr 1fr;grid-auto-rows:280px;gap:18px;grid-auto-flow:dense}
+.e478 .slot{border:none;border-radius:18px;overflow:hidden;animation:wipeReveal 5s ease-out infinite}
+.e478 .slot.tall{grid-row:span 2}
+.e478 .slot.wide{grid-column:span 2}
+.e478 .slot.big{grid-row:span 2;grid-column:span 2}
+.e478 .slot:nth-child(1){animation-delay:0s}
+.e478 .slot:nth-child(2){animation-delay:.1s}
+.e478 .slot:nth-child(3){animation-delay:.2s}
+.e478 .slot:nth-child(4){animation-delay:.3s}
+.e478 .slot:nth-child(5){animation-delay:.4s}
+.e478 .slot:nth-child(6){animation-delay:.5s}
+.e478 .slot:nth-child(7){animation-delay:.6s}
+.e478 .slot:nth-child(8){animation-delay:.7s}
+.e478 .slot:nth-child(9){animation-delay:.8s}
+.e478 .slot:nth-child(10){animation-delay:.9s}
+.e478__t{position:absolute;left:60px;top:60px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:130px;color:#1a1d22;line-height:.85;z-index:10;letter-spacing:-.02em;background:#f5d35a;padding:14px 30px;border-radius:14px;animation:float1 4s ease-in-out infinite}
+
+/* E479 tear/rip transition */
+.e479{position:absolute;inset:0;background:#000;overflow:hidden;display:flex;flex-direction:column}
+.e479__top{flex:1;position:relative;overflow:hidden;animation:tearTop 6s ease-in-out infinite}
+.e479__top .slot{position:absolute;inset:0;border:none}
+@keyframes tearTop{0%,40%,100%{transform:translateY(0) rotate(0)}50%,90%{transform:translateY(-8%) rotate(-1deg)}}
+.e479__bot{flex:1;position:relative;overflow:hidden;animation:tearBot 6s ease-in-out infinite}
+.e479__bot .slot{position:absolute;inset:0;border:none}
+@keyframes tearBot{0%,40%,100%{transform:translateY(0) rotate(0)}50%,90%{transform:translateY(8%) rotate(1deg)}}
+.e479__rip{position:absolute;left:0;right:0;top:50%;height:30px;background:#fff;transform:translateY(-50%);clip-path:polygon(0 50%,2% 30%,5% 70%,8% 25%,12% 65%,16% 35%,20% 70%,24% 25%,28% 60%,33% 35%,37% 70%,42% 25%,46% 65%,50% 35%,54% 70%,58% 25%,63% 60%,67% 35%,71% 70%,75% 25%,79% 65%,83% 35%,87% 70%,92% 25%,95% 60%,98% 30%,100% 50%,98% 70%,95% 40%,92% 75%,87% 30%,83% 65%,79% 35%,75% 75%,71% 30%,67% 65%,63% 40%,58% 75%,54% 30%,50% 65%,46% 35%,42% 75%,37% 30%,33% 65%,28% 40%,24% 75%,20% 30%,16% 65%,12% 35%,8% 75%,5% 30%,2% 70%,0 50%);z-index:5}
+.e479__t{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;color:#000;background:#fff;padding:14px 50px;line-height:1;letter-spacing:-.04em;z-index:10;animation:float1 4s ease-in-out infinite}
+
+/* E480 cinematic title card with footer */
+.e480{position:absolute;inset:0;background:#000;overflow:hidden}
+.e480__img{position:absolute;inset:0}
+.e480__img .slot{position:absolute;inset:0;border:none;animation:kenBurns 14s ease-in-out infinite alternate}
+.e480__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 30%,transparent 60%,rgba(0,0,0,.95) 100%)}
+.e480__bars{position:absolute;left:0;right:0;height:120px;background:#000;z-index:5}
+.e480__bars.t{top:0}
+.e480__bars.b{bottom:0}
+.e480__t{position:absolute;left:60px;right:60px;top:50%;transform:translateY(-50%);text-align:center;color:#fff;font-family:var(--serif);font-weight:900;font-style:italic;font-size:240px;line-height:.85;letter-spacing:-.04em;z-index:10;text-shadow:0 4px 40px rgba(0,0,0,.5);animation:wipeReveal 4s ease-out infinite}
+.e480__t small{display:block;font-family:var(--mono);font-style:normal;font-weight:400;font-size:36px;letter-spacing:.6em;color:#f5d35a;margin-top:50px;text-transform:uppercase}
+.e480__credit{position:absolute;left:60px;bottom:160px;font-family:var(--mono);font-size:28px;letter-spacing:.3em;color:rgba(255,255,255,.6);text-transform:uppercase;z-index:10}
+.e480__credit b{display:block;color:#fff;font-weight:600;margin-top:6px}
+.e480__credit b+span{display:block;font-size:22px;letter-spacing:.18em;margin-top:6px;color:rgba(255,255,255,.5)}
+</style>
+</head>
+<body>
+<h1>Effects Batch 12 — E441–E480 · image / video container cards</h1>
+<p class="sub">Cards built around <b style="color:#f5d35a">[IMG_SLOT]</b> and <b style="color:#5cffaa">[VIDEO_SLOT]</b> placeholders so you can drop real assets in. Motion runs on the <em>frame</em> (Ken Burns, parallax, swipes, tilts) so even a still photo feels alive. Some cards include proxy gradients to preview the composition.</p>
+<div class="legend"><i><span class="dot"></span> image slot</i><i><span class="dot v"></span> video slot</i><i>★ = especially video-ready</i></div>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E441 · Magazine Cover <b>★</b> · <em>image</em></div><div class="frame"><div class="e441">
+<div class="e441__img proxy"></div>
+<div class="e441__shade"></div>
+<div class="e441__mast">DRIFT<small>VOL.07 — APR 24</small></div>
+<div class="e441__btm">
+<div class="iss">FEATURED · STUDIO 04</div>
+<div class="h">how mira okafor is rewriting the rules of brand at scale</div>
+<div class="lines"><i>Inside the new studio model</i><i>The post-platform era</i><i>Five rituals that stuck</i></div>
+</div>
+</div><div class="frame__id">E441</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E442 · Polaroid Card <b>★</b> · <em>image</em></div><div class="frame"><div class="e442"><div class="e442__p">
+<div class="slot">[IMG_SLOT_01]<small>4 : 4 RATIO</small></div>
+<div class="cap">Studio 04 · midweek</div>
+<div class="date">04·24</div>
+</div></div><div class="frame__id">E442</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E443 · Editorial Split <b>★</b> · <em>image</em></div><div class="frame"><div class="e443">
+<div class="e443__l"><div class="slot slot--proxy">[IMG_SLOT_02]<small>FILL FRAME</small></div></div>
+<div class="e443__r">
+<div class="num">CHAPTER 04</div>
+<div class="h">a quieter way to ship.</div>
+<div class="b">For a decade we mistook noise for signal. The studios that lasted figured out how to ship without yelling. Here's how they did it.</div>
+<div class="btn">read on</div>
+</div>
+</div><div class="frame__id">E443</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E444 · Reel / Video Mock <b>★</b> · <em>video</em></div><div class="frame"><div class="e444"><div class="e444__v">
+<div class="slot slot--v">[VIDEO_SLOT_01]<small>9 : 16 LOOP</small></div>
+<div class="e444__shade"></div>
+<div class="e444__t">LIVE</div>
+<div class="e444__play"></div>
+<div class="e444__h">behind the scenes — drift studio, april</div>
+<div class="e444__bar"><i></i></div>
+</div></div><div class="frame__id">E444</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E445 · Image Grid + Title <b>★</b> · <em>4 images</em></div><div class="frame"><div class="e445">
+<div class="slot a">[IMG_01]</div>
+<div class="slot b span2">[IMG_02]<small>TALL</small></div>
+<div class="slot c">[IMG_03]</div>
+<div class="slot d">[IMG_04]</div>
+<div class="e445__t">drift atlas vol.07</div>
+</div><div class="frame__id">E445</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E446 · Portrait + Floating UI <b>★</b> · <em>image</em></div><div class="frame"><div class="e446">
+<div class="e446__img"><div class="slot slot--proxy">[IMG_SLOT_03]<small>3 : 4 PORTRAIT</small></div></div>
+<div class="badge b1"><div class="lbl">FOLLOWERS</div><div class="v">+12.4K</div></div>
+<div class="badge b2"><div class="lbl">REACH · WEEK</div><div class="v">2.1M</div></div>
+<div class="badge b3"><div class="lbl">SAVED</div><div class="v">847</div></div>
+<div class="heart">♥</div>
+</div><div class="frame__id">E446</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E447 · Image Carousel <b>★</b> · <em>3 images</em></div><div class="frame"><div class="e447"><div class="e447__rail">
+<div class="slide"><div class="slot">[IMG_01]</div><div class="cap">studio<br>floor.</div></div>
+<div class="slide"><div class="slot">[IMG_02]</div><div class="cap">close<br>up.</div></div>
+<div class="slide"><div class="slot">[IMG_03]</div><div class="cap">team<br>04.</div></div>
+</div><div class="e447__dots"><i class="on"></i><i></i><i></i></div></div><div class="frame__id">E447</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E448 · Spotlight Reveal <b>★</b> · <em>image</em></div><div class="frame"><div class="e448">
+<div class="e448__img"><div class="slot slot--proxy">[IMG_SLOT_04]</div></div>
+<div class="e448__mask"></div>
+<div class="e448__lbl">CHAPTER 04</div>
+<div class="e448__t">a story half hidden, half lit.</div>
+</div><div class="frame__id">E448</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E449 · Reel Strip Marquee <b>★</b> · <em>many images</em></div><div class="frame"><div class="e449">
+<div class="strip"><div class="slot">[IMG_01]</div><div class="slot">[IMG_02]</div><div class="slot">[IMG_03]</div><div class="slot">[IMG_04]</div><div class="slot">[IMG_05]</div></div>
+<div class="strip"><div class="slot">[IMG_06]</div><div class="slot">[IMG_07]</div><div class="slot">[IMG_08]</div><div class="slot">[IMG_09]</div><div class="slot">[IMG_10]</div></div>
+<div class="strip"><div class="slot">[IMG_11]</div><div class="slot">[IMG_12]</div><div class="slot">[IMG_13]</div><div class="slot">[IMG_14]</div><div class="slot">[IMG_15]</div></div>
+<div class="e449__t">archive</div>
+</div><div class="frame__id">E449</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E450 · Testimonial + Avatar Video <b>★</b> · <em>video</em></div><div class="frame frame--light"><div class="e450">
+<div class="e450__av"><div class="slot slot--v">[VIDEO_SLOT_02]<small>AVATAR LOOP</small></div></div>
+<div class="e450__q">"They moved fast without losing the soul of the thing — that's rare."</div>
+<div class="e450__a"><div class="n">Jordan Yamasaki</div><div class="r">FOUNDER · LATTICE</div></div>
+<div class="e450__stars">★★★★★</div>
+</div><div class="frame__id">E450</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E451 · Product Hero <b>★</b> · <em>image</em></div><div class="frame"><div class="e451">
+<div class="e451__top"><span>NEW · APRIL</span><span>VOL.07</span><span><b>IN STOCK</b></span></div>
+<div class="e451__c">
+<div class="e451__img"><div class="slot slot--proxy">[IMG_SLOT_PRODUCT]</div></div>
+<div class="e451__name">drift 07 chair</div>
+</div>
+<div class="e451__btm">
+<div class="price"><small>STARTING AT</small>$1,240</div>
+<div class="btn">shop now</div>
+</div>
+</div><div class="frame__id">E451</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E452 · IG Story <b>★</b> · <em>image</em></div><div class="frame"><div class="e452">
+<div class="e452__img"><div class="slot slot--proxy">[IMG_SLOT_05]<small>9 : 16</small></div></div>
+<div class="e452__bars"><i class="done"></i><i class="cur"></i><i></i><i></i><i></i></div>
+<div class="e452__head"><div class="av"></div><div class="nm">drift.studio<small>2h · Atelier 04</small></div></div>
+<div class="e452__sticker">MOOD</div>
+<div class="e452__cap">making things slowly, on purpose.</div>
+</div><div class="frame__id">E452</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E453 · BeReal Dual <b>★</b> · <em>4 images</em></div><div class="frame"><div class="e453">
+<div class="e453__head"><div class="h">today.</div><div class="s">04·24 — STUDIO POV</div></div>
+<div class="e453__grid">
+<div class="pair"><div class="main"><div class="slot">[IMG_MAIN_01]</div></div><div class="pip"><div class="slot">[PIP_01]</div></div><div class="lbl">10:42</div></div>
+<div class="pair"><div class="main"><div class="slot">[IMG_MAIN_02]</div></div><div class="pip"><div class="slot">[PIP_02]</div></div><div class="lbl">14:08</div></div>
+</div>
+</div><div class="frame__id">E453</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E454 · Fullbleed Parallax <b>★</b> · <em>image</em></div><div class="frame"><div class="e454">
+<div class="e454__img"><div class="slot slot--proxy">[IMG_SLOT_06]<small>OVERSCAN 30PX</small></div></div>
+<div class="e454__shade"></div>
+<div class="e454__t">into the drift, again.</div>
+<div class="e454__b"><div class="meta">CHAPTER 07 · 2024</div><div class="arrow">→</div></div>
+</div><div class="frame__id">E454</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E455 · Photo Collage <b>★</b> · <em>5 images</em></div><div class="frame"><div class="e455">
+<div class="p" style="left:60px;top:120px;width:380px;height:480px;--r:-8deg;animation-delay:0s"><div class="slot">[IMG_01]</div></div>
+<div class="p" style="right:80px;top:240px;width:340px;height:420px;--r:6deg;animation-delay:.4s"><div class="slot">[IMG_02]</div></div>
+<div class="p" style="left:80px;bottom:340px;width:360px;height:440px;--r:4deg;animation-delay:.8s"><div class="slot">[IMG_03]</div></div>
+<div class="p" style="right:60px;bottom:160px;width:320px;height:400px;--r:-6deg;animation-delay:1.2s"><div class="slot">[IMG_04]</div></div>
+<div class="p" style="left:50%;top:50%;transform:translate(-50%,-50%) rotate(-2deg);width:380px;height:520px;--r:-2deg;animation-delay:1.6s"><div class="slot">[IMG_05]</div></div>
+<div class="e455__t">crew.</div>
+</div><div class="frame__id">E455</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E456 · Magazine Spread <b>★</b> · <em>image</em></div><div class="frame"><div class="e456">
+<div class="e456__top"><div class="slot slot--proxy">[IMG_SPREAD]</div><div class="lbl">FEATURE · 04</div></div>
+<div class="e456__bot">
+<div class="lead">slow brands, fast rooms.</div>
+<div class="body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.</p></div>
+</div>
+</div><div class="frame__id">E456</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E457 · Story Tile Auto-Advance <b>★</b> · <em>4 images</em></div><div class="frame"><div class="e457"><div class="e457__rail">
+<div class="s"><div class="slot">[IMG_01]</div><div class="t">monday: blank page.</div></div>
+<div class="s"><div class="slot">[IMG_02]</div><div class="t">tuesday: first cut.</div></div>
+<div class="s"><div class="slot">[IMG_03]</div><div class="t">wednesday: pinning.</div></div>
+<div class="s"><div class="slot">[IMG_04]</div><div class="t">friday: shipped.</div></div>
+</div><div class="e457__chip">DAY 4 / 4</div></div><div class="frame__id">E457</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E458 · Highlight Rings <b>★</b> · <em>3 images</em></div><div class="frame"><div class="e458">
+<div class="e458__h">crew highlights</div>
+<div class="e458__row">
+<div class="ring"><div class="o"><div class="i"><div class="slot">[IMG_01]</div></div></div><div class="nm">MIRA</div></div>
+<div class="ring"><div class="o"><div class="i"><div class="slot">[IMG_02]</div></div></div><div class="nm">JORDAN</div></div>
+<div class="ring"><div class="o"><div class="i"><div class="slot">[IMG_03]</div></div></div><div class="nm">SOLEN</div></div>
+</div>
+<div class="e458__sub">tap to scroll the studio's april journal — three people, one room, fifteen frames.</div>
+</div><div class="frame__id">E458</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E459 · Card Stack Swap <b>★</b> · <em>3 images</em></div><div class="frame"><div class="e459"><div class="e459__deck">
+<div class="c"><div class="slot">[IMG_03]</div><div class="lbl">jordan, atelier 04</div></div>
+<div class="c"><div class="slot">[IMG_02]</div><div class="lbl">solen, late dusk</div></div>
+<div class="c"><div class="slot">[IMG_01]</div><div class="lbl">mira, midweek</div></div>
+</div></div><div class="frame__id">E459</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E460 · Newsletter Card <b>★</b> · <em>image</em></div><div class="frame"><div class="e460"><div class="e460__c">
+<div class="img"><div class="slot slot--proxy">[IMG_HEADER]</div></div>
+<div class="body">
+<div class="iss">ISSUE 04 · APR 24</div>
+<div class="h">a slower way to ship</div>
+<div class="b">A weekly note from our atelier — three things we made, three things we threw out, one thing we're still chewing on.</div>
+<div class="row"><input value="you@studio.co" disabled /><div class="btn">join</div></div>
+</div>
+</div></div><div class="frame__id">E460</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E461 · Big Stat Over Photo <b>★</b> · <em>image</em></div><div class="frame"><div class="e461">
+<div class="e461__img"><div class="slot slot--proxy">[IMG_BG]</div></div>
+<div class="e461__shade"></div>
+<div class="e461__num">94<small>% RECOMMEND</small></div>
+<div class="e461__cap">based on 1,240 verified studios in the 2024 cohort.</div>
+</div><div class="frame__id">E461</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E462 · 3D Tilt Card <b>★</b> · <em>image</em></div><div class="frame"><div class="e462"><div class="e462__c">
+<div class="slot slot--proxy">[IMG_PORTRAIT]</div>
+<div class="ring"></div>
+<div class="lbl"><small>FEATURE 07</small>solen<br>park</div>
+</div></div><div class="frame__id">E462</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E463 · Review Card <b>★</b> · <em>image</em></div><div class="frame frame--light"><div class="e463"><div class="e463__c">
+<div class="e463__img"><div class="slot slot--proxy">[IMG_REVIEWER]</div></div>
+<div class="e463__txt">
+<div class="stars">★★★★★</div>
+<div class="q">"Honestly the most thoughtful studio I've worked with. They made my brand feel like itself."</div>
+<hr>
+<div class="a"><b>Sasha Lin</b>FOUNDER · LATTICE STUDIOS</div>
+</div>
+</div></div><div class="frame__id">E463</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E464 · Lookbook Grid <b>★</b> · <em>5 images</em></div><div class="frame"><div class="e464">
+<div class="e464__h"><div class="t">lookbook<br>vol.07</div><div class="s">SS24<br>EDITION</div></div>
+<div class="e464__g">
+<div class="slot span2">[IMG_01]<small>HERO</small></div>
+<div class="slot">[IMG_02]</div>
+<div class="slot">[IMG_03]</div>
+<div class="slot">[IMG_04]</div>
+<div class="slot">[IMG_05]</div>
+</div>
+</div><div class="frame__id">E464</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E465 · Quote Ribbon <b>★</b> · <em>image</em></div><div class="frame"><div class="e465">
+<div class="e465__img"><div class="slot slot--proxy">[IMG_BG]</div></div>
+<div class="e465__shade"></div>
+<div class="e465__rib">
+<div class="q">"design it like you'll have to live in it."</div>
+<div class="a">— DRIFT FIELD NOTES, 04</div>
+</div>
+</div><div class="frame__id">E465</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E466 · Cinemagraph Loop <b>★</b> · <em>image + video</em></div><div class="frame"><div class="e466">
+<div class="e466__img"><div class="slot slot--proxy">[IMG_STILL]</div></div>
+<div class="e466__loop"><div class="slot slot--v">[VIDEO_LOOP]</div></div>
+<div class="e466__chip">CINEMAGRAPH</div>
+<div class="e466__t">part frozen, part forever.</div>
+</div><div class="frame__id">E466</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E467 · Phone Triptych <b>★</b> · <em>3 video</em></div><div class="frame"><div class="e467">
+<div class="ph"><div class="scr"><div class="slot slot--v">[V_01]</div></div></div>
+<div class="ph"><div class="scr"><div class="slot slot--v">[V_02]</div></div></div>
+<div class="ph"><div class="scr"><div class="slot slot--v">[V_03]</div></div></div>
+<div class="e467__t"><small>NEW APP · APR 24</small>three taps,<br>then quiet.</div>
+</div><div class="frame__id">E467</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E468 · Stickers on Photo <b>★</b> · <em>image</em></div><div class="frame"><div class="e468">
+<div class="e468__img"><div class="slot slot--proxy">[IMG_BG]</div></div>
+<div class="sticker" style="left:60px;top:200px;transform:rotate(-8deg);animation-delay:0s">vibes</div>
+<div class="sticker b" style="right:80px;top:380px;transform:rotate(6deg);animation-delay:.4s">2024</div>
+<div class="sticker r" style="left:120px;bottom:480px;transform:rotate(-4deg);animation-delay:.8s">DRIFT</div>
+<div class="sticker" style="right:140px;bottom:280px;transform:rotate(4deg);animation-delay:1.2s">★ ★ ★</div>
+<div class="heart" style="left:220px;top:680px">♥</div>
+<div class="heart" style="right:300px;bottom:680px;animation-delay:.5s">✿</div>
+</div><div class="frame__id">E468</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E469 · Zoom Scrubber <b>★</b> · <em>image</em></div><div class="frame"><div class="e469">
+<div class="e469__img"><div class="slot slot--proxy">[IMG_DETAIL]</div></div>
+<div class="e469__lbl">DETAIL · 250%</div>
+<div class="e469__t">closer than you'd ever notice.</div>
+<div class="e469__scrubber"><i></i></div>
+</div><div class="frame__id">E469</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E470 · Split Compare <b>★</b> · <em>2 images</em></div><div class="frame"><div class="e470">
+<div class="e470__a"><div class="slot slot--proxy">[IMG_BEFORE]</div><div class="e470__lbl"><small>BEFORE</small>v.06</div></div>
+<div class="e470__b"><div class="slot slot--proxy">[IMG_AFTER]</div><div class="e470__lbl"><small>AFTER</small>v.07</div></div>
+<div class="e470__div"></div>
+</div><div class="frame__id">E470</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E471 · Product Card Grid <b>★</b> · <em>4 images</em></div><div class="frame"><div class="e471">
+<div class="e471__h"><div class="t">spring drop.</div><div class="s">04 / 12 PIECES</div></div>
+<div class="e471__g">
+<div class="card"><div class="img"><div class="slot">[IMG_P01]</div></div><div class="meta"><div class="nm">Atlas Vase<small>STONEWARE</small></div><div class="pr">$140</div></div></div>
+<div class="card"><div class="img"><div class="slot">[IMG_P02]</div></div><div class="meta"><div class="nm">Drift Lamp<small>BRASS</small></div><div class="pr">$320</div></div></div>
+<div class="card"><div class="img"><div class="slot">[IMG_P03]</div></div><div class="meta"><div class="nm">Studio Mug<small>EARTHENWARE</small></div><div class="pr">$48</div></div></div>
+<div class="card"><div class="img"><div class="slot">[IMG_P04]</div></div><div class="meta"><div class="nm">Field Notes<small>HARDCOVER</small></div><div class="pr">$28</div></div></div>
+</div>
+</div><div class="frame__id">E471</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E472 · Image + Stat Bars <b>★</b> · <em>image</em></div><div class="frame"><div class="e472">
+<div class="e472__top"><div class="slot slot--proxy">[IMG_TOP]</div><div class="lbl">how the work landed.</div></div>
+<div class="e472__bot">
+<div class="row"><div class="l">REACH · 30 DAYS</div><div class="v">2.4M</div></div>
+<div class="bar"><i style="width:84%"></i></div>
+<div class="row"><div class="l">ENGAGEMENT</div><div class="v">11.7%</div></div>
+<div class="bar"><i style="width:62%"></i></div>
+<div class="row"><div class="l">CONVERSION</div><div class="v">3.4%</div></div>
+<div class="bar"><i style="width:34%"></i></div>
+</div>
+</div><div class="frame__id">E472</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E473 · Magazine Portrait Spread <b>★</b> · <em>image</em></div><div class="frame"><div class="e473">
+<div class="e473__l"><div class="slot slot--proxy">[IMG_PORTRAIT]</div></div>
+<div class="e473__r">
+<div class="top">
+<div class="lbl">FEATURE · CHAPTER 07</div>
+<div class="nm">solen<br>park</div>
+<div class="role">director of programs · drift atelier</div>
+</div>
+<div class="body"><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+<div class="nums"><i><b>14</b><small>YEARS</small></i><i><b>04</b><small>STUDIOS</small></i><i><b>240</b><small>PROJECTS</small></i></div>
+</div>
+</div><div class="frame__id">E473</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E474 · Newsletter Swipe Carousel <b>★</b> · <em>3 images</em></div><div class="frame"><div class="e474"><div class="e474__rail">
+<div class="s"><div class="img"><div class="slot">[IMG_01]</div></div><div class="body"><div class="iss">ISSUE 04</div><div class="h">a slower way to ship.</div><div class="meta"><span>04 · 24</span><span>5 MIN READ</span></div></div></div>
+<div class="s"><div class="img"><div class="slot">[IMG_02]</div></div><div class="body"><div class="iss">ISSUE 05</div><div class="h">tools that disappear.</div><div class="meta"><span>04 · 24</span><span>7 MIN READ</span></div></div></div>
+<div class="s"><div class="img"><div class="slot">[IMG_03]</div></div><div class="body"><div class="iss">ISSUE 06</div><div class="h">studios as systems.</div><div class="meta"><span>05 · 24</span><span>4 MIN READ</span></div></div></div>
+</div></div><div class="frame__id">E474</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E475 · Triptych Strobe <b>★</b> · <em>3 images</em></div><div class="frame"><div class="e475">
+<div class="pane"><div class="slot">[IMG_01]</div><div class="lbl">10:42</div></div>
+<div class="pane"><div class="slot">[IMG_02]</div><div class="lbl">14:08</div></div>
+<div class="pane"><div class="slot">[IMG_03]</div><div class="lbl">19:55</div></div>
+<div class="e475__t">a day in three.</div>
+</div><div class="frame__id">E475</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E476 · Portrait + Name Plate <b>★</b> · <em>image</em></div><div class="frame"><div class="e476">
+<div class="e476__img"><div class="slot slot--proxy">[IMG_PORTRAIT]</div></div>
+<div class="e476__shade"></div>
+<div class="e476__plate">
+<div class="nm">jordan<br>yamasaki</div>
+<div class="ttl"><span>FOUNDER · LATTICE STUDIOS</span></div>
+<div class="b">"i'm interested in studios that move slowly enough to remember why they started."</div>
+</div>
+</div><div class="frame__id">E476</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E477 · Text-Mask Image (gradient stand-in)</div><div class="frame"><div class="e477__t" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">drift</div><div class="e477"><div class="e477__t">drift</div><div class="e477__sub">VOL.07</div></div><div class="frame__id">E477</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E478 · Pinterest Masonry <b>★</b> · <em>10 images</em></div><div class="frame frame--light"><div class="e478">
+<div class="slot tall">[IMG_01]</div>
+<div class="slot">[IMG_02]</div>
+<div class="slot">[IMG_03]</div>
+<div class="slot wide">[IMG_04]</div>
+<div class="slot tall">[IMG_05]</div>
+<div class="slot">[IMG_06]</div>
+<div class="slot">[IMG_07]</div>
+<div class="slot big">[IMG_08]</div>
+<div class="slot">[IMG_09]</div>
+<div class="slot">[IMG_10]</div>
+<div class="e478__t">moodboard.</div>
+</div><div class="frame__id">E478</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E479 · Tear/Rip Reveal <b>★</b> · <em>2 images</em></div><div class="frame"><div class="e479">
+<div class="e479__top"><div class="slot slot--proxy">[IMG_TOP]</div></div>
+<div class="e479__bot"><div class="slot slot--proxy" style="background:linear-gradient(135deg,#0a141d,#1a3a4a)">[IMG_BOT]</div></div>
+<div class="e479__rip"></div>
+<div class="e479__t">CUT</div>
+</div><div class="frame__id">E479</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E480 · Cinematic Title Card <b>★</b> · <em>image</em></div><div class="frame"><div class="e480">
+<div class="e480__img"><div class="slot slot--proxy">[IMG_BG]</div></div>
+<div class="e480__shade"></div>
+<div class="e480__bars t"></div>
+<div class="e480__bars b"></div>
+<div class="e480__t">into the drift<small>A FILM IN FOUR PARTS</small></div>
+<div class="e480__credit">DIRECTED BY<b>MIRA OKAFOR</b><span>DRIFT &amp; CO. · 2024</span></div>
+</div><div class="frame__id">E480</div></div></div>
+
+</div>
+</body>
+</html>

@@ -46,3 +46,7 @@ desktop.ini
 # Claude Code per-user / runtime state — not portable across machines
 .claude/scheduled_tasks.lock
 .claude/settings.local.json
+
+# Derived Claude-Design upload artifacts — regenerable from source playbooks
+claude-design-upload/
+claude-design-context.md

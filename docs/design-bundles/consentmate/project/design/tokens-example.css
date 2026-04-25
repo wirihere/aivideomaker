@@ -1,0 +1,82 @@
+/* =========================================================================
+   TOKENS — EXAMPLE OVERLAY (placeholder neutrals)
+   =========================================================================
+   This file shows the SHAPE of a brand-tokens overlay. Values are placeholder
+   neutrals — NOT any specific brand. A real project would replace these with
+   the brand's extracted palette / fonts.
+
+   Structure (do not change):
+     1. :root token overrides for palette + type vocabulary
+     2. Surface re-skins for cards.css surface variants
+     3. Optional: type-scale tweaks for the brand's display weight character
+
+   The token NAMES (--card-navy, --card-paper, etc.) are the contract. Any
+   pattern designed against these names works for ANY brand by swapping
+   this file.
+   ========================================================================= */
+
+:root {
+  /* Palette — placeholder neutrals. Brand-specific values plug in here. */
+  --card-navy:        #1F2A3A;   /* primary dark text on light bg */
+  --card-navy-deep:   #131B27;   /* deeper variant */
+  --card-slate:       #4A5568;   /* secondary dark / accent-deep */
+  --card-slate-ink:   #6B7280;   /* tertiary muted text */
+  --card-paper:       #F8F6F1;   /* primary light canvas */
+  --card-paper-soft:  #EFEBE2;   /* slightly warmer light surface */
+  --card-accent:      #5A8FA8;   /* brand accent — pleasant neutral */
+  --card-warn:        #C97D5C;   /* warning / coral */
+  --card-ok:          #4A8F70;   /* success / green */
+
+  /* Type — fonts in production are imported globally; placeholder system fonts here */
+  --card-font-ui:       system-ui, -apple-system, "Segoe UI", sans-serif;
+  --card-font-mono:     ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+  --card-font-display:  Georgia, "Times New Roman", serif;
+
+  /* Type scale — restrained defaults; brands tweak for their display character */
+  --card-title-size:   54px;
+  --card-kicker-size:  26px;
+  --card-kicker-track: 0.20em;
+  --card-body-size:    32px;
+  --card-body-line:    1.45;
+  --card-label-size:   30px;
+  --card-label-track:  0.18em;
+}
+
+/* Surface re-skins — these override the cards.css surface variants for the
+   current brand. The placeholder values here keep things neutral; a real brand
+   overlay would tint these with brand colours. */
+
+.card--dark-glass {
+  background: rgba(31, 42, 58, 0.94);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  color: var(--card-paper);
+}
+.card--dark-glass .card__kicker { color: var(--card-paper-soft); }
+.card--dark-glass .card__label  { color: rgba(248, 246, 241, 0.78); }
+
+.card--light-paper {
+  background: var(--card-paper-soft);
+  border: 1px solid rgba(31, 42, 58, 0.08);
+  box-shadow: 0 6px 24px rgba(31, 42, 58, 0.06), 0 1px 0 rgba(31, 42, 58, 0.04);
+  color: var(--card-navy);
+}
+.card--light-paper .card__kicker      { color: var(--card-accent); }
+.card--light-paper .card__label       { color: var(--card-slate-ink); }
+.card--light-paper .card__figure-unit { color: var(--card-accent); }
+
+.card--brand-navy {
+  background: var(--card-accent);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 24px 60px rgba(31, 42, 58, 0.28);
+  color: var(--card-paper);
+}
+
+.card--ghost {
+  background: rgba(248, 246, 241, 0.65);
+  backdrop-filter: blur(6px);
+  border: 1.5px solid rgba(90, 143, 168, 0.20);
+  color: var(--card-navy);
+}
+
+.card--ghost .card__kicker { color: var(--card-accent); }

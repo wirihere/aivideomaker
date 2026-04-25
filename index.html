@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="design/cards.css">
   <link rel="stylesheet" href="design/tokens-kindred.css">
+  <link rel="stylesheet" href="design/effects-batch-07.css">
+  <link rel="stylesheet" href="design/cards-from-bundle/phonehand.css">
   <style>
     /* ---------- Page reset + composition canvas ---------- */
     html, body { margin: 0; padding: 0; background: #FBF9F6; overflow: hidden; }
@@ -83,6 +85,7 @@
     .s1-title .em {
       font-style: italic;
       color: var(--card-slate);
+      will-change: text-shadow;
     }
 
     /* ---------- Scene 2 — Brand introduce ---------- */
@@ -534,7 +537,13 @@
       <div class="s2-glow"></div>
       <div class="particles" data-particles="14"></div>
       <div class="vignette"></div>
-      <div class="scene-content">
+      <!-- Concentric pulse rings centred on wordmark; sits behind content via z-index -->
+      <div id="s2-pulse" class="fx-concentric-pulse" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;">
+        <div id="s2-pulse-r1" class="fx-concentric-pulse__ring"></div>
+        <div id="s2-pulse-r2" class="fx-concentric-pulse__ring fx-concentric-pulse__ring--warn"></div>
+        <div id="s2-pulse-r3" class="fx-concentric-pulse__ring"></div>
+      </div>
+      <div class="scene-content" style="position:relative;z-index:2;">
         <div id="s2-wordmark" class="s2-wordmark" data-text="Kindred">Kindred</div>
         <div id="s2-tagline" class="s2-tagline">
           the community app<br />powered by kindness
@@ -571,9 +580,20 @@
           <span class="s4-h-line" id="s4-l3">No algorithm.<span class="strike-line" id="s4-strike-3"></span></span>
           <span class="s4-h-line s4-h-line--em" id="s4-l4">Just local.</span>
         </div>
-        <div id="s4-phone" class="s4-phone-wrap">
-          <img class="s4-phone-screen" src="assets/photos/kindred-app.png" alt="" />
-          <div id="s4-ping" class="s4-ping">+1</div>
+        <!-- Phone-In-Hand mockup (BRIEF 21 from Claude Design) — tilted phone + hand silhouette -->
+        <div id="s4-phone" class="phonehand" data-mode="light" style="width:auto;gap:0;">
+          <div class="phonehand__stage" style="width:760px;height:1080px;margin:0 auto;">
+            <div class="phonehand__hand" aria-hidden="true"></div>
+            <div class="phonehand__phone">
+              <div class="phonehand__phone-island" aria-hidden="true"></div>
+              <div class="phonehand__phone-screen">
+                <img class="s4-phone-screen" src="assets/photos/kindred-app.png" alt=""
+                     style="width:100%;height:100%;object-fit:cover;display:block;border-radius:64px;" />
+              </div>
+            </div>
+            <div class="phonehand__shadow" aria-hidden="true"></div>
+            <div id="s4-ping" class="s4-ping" style="top:140px;right:-40px;">+1</div>
+          </div>
         </div>
       </div>
     </div>
@@ -731,6 +751,11 @@
       tl.from("#s1-title", { y: 60, opacity: 0, duration: 0.9, ease: "expo.out" }, 0.35);
       // gentle drift on the title for warmth (starts after entrance lands)
       tl.to("#s1-title", { y: -6, duration: 2.0, ease: "sine.inOut" }, 1.35);
+      // Soft glow pulse on "useful things" — accent-coloured halo breathes once
+      // (text-shadow doesn't affect layout, so wrapping stays intact)
+      tl.to("#s1-title .em",
+        { textShadow: "0 0 28px rgba(20, 128, 111, 0.35)", duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 1 },
+        0.9);
 
       // ---------------- Transition: sc1→sc2 — ZOOM IN (deeper into the brand) ----------------
       // Outgoing scene 1: scales up + fades. Incoming scene 2: starts small + grows + fades.
@@ -752,6 +777,21 @@
       tl.from("#s2-tagline", { y: 30, opacity: 0, duration: 0.6 }, 4.5);
       // Soft breathing on the glow — adds ambient life
       tl.to(".s2-glow", { opacity: 0.55, scale: 1.06, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 4.7);
+
+      // Concentric pulse rings (Claude Design E265) — emanate from wordmark centre
+      // after letters land. Three staggered rings amplify the brand-arrival moment.
+      tl.fromTo("#s2-pulse-r1",
+        { width: 0, height: 0, opacity: 1 },
+        { width: 900, height: 900, opacity: 0, duration: 2.4, ease: "power2.out" },
+        3.85);
+      tl.fromTo("#s2-pulse-r2",
+        { width: 0, height: 0, opacity: 1 },
+        { width: 900, height: 900, opacity: 0, duration: 2.4, ease: "power2.out" },
+        4.25);
+      tl.fromTo("#s2-pulse-r3",
+        { width: 0, height: 0, opacity: 1 },
+        { width: 900, height: 900, opacity: 0, duration: 2.4, ease: "power2.out" },
+        4.65);
 
       // ---------------- Transition: sc2→sc3 — ZOOM OUT (broader view of what brand offers) ----------------
       tl.to("#scene-2",
@@ -787,6 +827,11 @@
         { scale: 0.82, opacity: 0, duration: 0.6, ease: "power2.out", transformOrigin: "50% 50%" }, 16.0);
       // Phone enters first — anchors the visual centre
       tl.from("#s4-phone", { y: 80, scale: 0.92, opacity: 0, duration: 0.85, ease: "back.out(1.3)" }, 16.4);
+      // Hand silhouette + shadow fade in once the phone lands (Phone-In-Hand pattern from Claude Design)
+      tl.from("#s4-phone .phonehand__hand",
+        { opacity: 0, x: -40, duration: 0.55, ease: "power2.out" }, 16.85);
+      tl.from("#s4-phone .phonehand__shadow",
+        { opacity: 0, scaleX: 0.7, duration: 0.5, ease: "power2.out" }, 16.85);
       // Kinetic headline — each line cued to its own narration sentence in the VTT
       tl.from("#s4-l1", { y: 36, opacity: 0, duration: 0.55, ease: "expo.out" }, 16.25);
       // Strike-through line 1 — draws across "No money" right after it lands

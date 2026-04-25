@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 08 — E281–E320 · explosions + bonus</title>
+<style>
+:root{
+  --card-navy:#1F2A3A;--card-navy-deep:#131B27;--card-slate:#4A5568;--card-slate-ink:#6B7280;
+  --card-paper:#F8F6F1;--card-paper-soft:#EFEBE2;--card-accent:#5A8FA8;--card-warn:#C97D5C;--card-ok:#4A8F70;
+  --card-font-mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --card-font-display:Georgia,"Times New Roman",serif;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--card-font-mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:820px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__lbl b{color:#f5d35a;font-weight:600;letter-spacing:.18em}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);background:#1a2030}
+.frame--light{background:var(--card-paper)}
+.frame__safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 90px;box-sizing:border-box;z-index:5}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:20}
+.frame--light .frame__id{color:rgba(31,42,58,.45)}
+.ph{font-family:var(--card-font-display);font-weight:800;font-size:200px;line-height:1;color:#fff}
+.ph--d{color:var(--card-navy)}
+
+@keyframes blastOut{
+  0%{transform:translate(0,0) scale(.4) rotate(0);opacity:0}
+  10%{opacity:1}
+  100%{transform:translate(var(--dx),var(--dy)) scale(1) rotate(var(--dr));opacity:0}
+}
+@keyframes shockwave{0%{transform:scale(0);opacity:1;border-width:60px}100%{transform:scale(2.4);opacity:0;border-width:0}}
+@keyframes flash{0%,100%{opacity:0}5%{opacity:1}25%{opacity:0}}
+@keyframes shake{0%,100%{transform:translate(0)}25%{transform:translate(-10px,8px)}50%{transform:translate(8px,-12px)}75%{transform:translate(-6px,-8px)}}
+@keyframes glitterTwinkle{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1) rotate(45deg);opacity:1}}
+@keyframes paintSplat{0%{transform:scale(.1);opacity:0}30%{transform:scale(1.3);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes dustExpand{0%{transform:scale(.2);opacity:0}30%{opacity:.8}100%{transform:scale(2.6);opacity:0}}
+@keyframes shardSpin{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--dr));opacity:0}}
+@keyframes balloonFall{0%{transform:translateY(-110%) rotate(var(--rs));opacity:0}10%{opacity:1}100%{transform:translateY(120vh) rotate(var(--re));opacity:1}}
+@keyframes coinPop{0%{transform:translate(0,0) scale(0);opacity:0}30%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotateY(720deg);opacity:0}}
+@keyframes ringExplode{0%{transform:scale(.05);opacity:1;border-width:30px}100%{transform:scale(2.4);opacity:0;border-width:0}}
+@keyframes textZoomBlast{0%{transform:scale(0);opacity:0;filter:blur(40px)}30%{transform:scale(1.1);opacity:1;filter:blur(0)}80%{transform:scale(1);opacity:1}100%{transform:scale(1.3);opacity:0;filter:blur(20px)}}
+@keyframes hueLoop{0%{filter:hue-rotate(0)}100%{filter:hue-rotate(360deg)}}
+@keyframes risefade{0%{transform:translateY(0);opacity:0}10%{opacity:1}100%{transform:translateY(-1200px);opacity:0}}
+@keyframes scoreFlip{0%,100%{transform:rotateX(0)}50%{transform:rotateX(180deg)}}
+@keyframes pixelDissolve{0%{opacity:0}20%,80%{opacity:1}100%{opacity:0}}
+@keyframes drop{0%{transform:translateY(-120%)}60%{transform:translateY(0)}70%{transform:translateY(-30px)}80%{transform:translateY(0)}90%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+@keyframes scrollX{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes brokenGlassPan{0%{transform:translate(0,0)}50%{transform:translate(-30px,-20px)}100%{transform:translate(0,0)}}
+@keyframes bracket{0%,100%{background:rgba(255,255,255,.1)}50%{background:var(--card-warn);color:#fff}}
+@keyframes blackHole{0%{transform:scale(1) rotate(0)}100%{transform:scale(.95) rotate(360deg)}}
+@keyframes screenZoom{0%{transform:scale(.6);opacity:0}50%{transform:scale(1.05);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes mapZoom{0%{transform:scale(1)}50%{transform:scale(2.6) translate(-10%,8%)}100%{transform:scale(1)}}
+@keyframes tickDrop{0%{transform:translateY(-40px);opacity:0}40%{transform:translateY(0);opacity:1}80%{transform:translateY(0);opacity:1}100%{transform:translateY(40px);opacity:0}}
+@keyframes nameRise{0%{opacity:0;transform:translateY(40px)}30%,80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-40px)}}
+@keyframes weatherSweep{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
+
+/* ============ E281 Confetti Explosion (radial) ============ */
+.e281{position:absolute;inset:0;background:radial-gradient(ellipse at center,#3a4858,#0a141d);overflow:hidden}
+.e281__core{position:absolute;left:50%;top:50%;width:120px;height:120px;border-radius:50%;background:#fff;box-shadow:0 0 80px #fff;transform:translate(-50%,-50%);animation:flash 3s ease-out infinite}
+.e281__sw{position:absolute;left:50%;top:50%;width:60px;height:60px;border-radius:50%;border:30px solid #fff;transform:translate(-50%,-50%);animation:shockwave 3s ease-out infinite}
+.e281__p{position:absolute;left:50%;top:50%;width:30px;height:18px;animation:blastOut 3s ease-out infinite}
+
+/* ============ E282 Glitter Explosion ============ */
+.e282{position:absolute;inset:0;background:radial-gradient(ellipse at center,#3a1a2a 0%,#0a0418 100%);overflow:hidden}
+.e282__core{position:absolute;left:50%;top:50%;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,#fff,#f5d35a);box-shadow:0 0 100px #f5d35a;transform:translate(-50%,-50%);animation:flash 3s ease-out infinite}
+.e282 i{position:absolute;left:50%;top:50%;width:14px;height:14px;
+  background:radial-gradient(circle,#fff 30%,transparent 70%);
+  filter:drop-shadow(0 0 6px currentColor);
+  animation:glitterTwinkle 2.4s ease-in-out infinite}
+.e282 i.s{clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);width:32px;height:32px;background:#f5d35a;color:#f5d35a;animation:blastOut 3s ease-out infinite}
+
+/* ============ E283 Firework Multi-Burst ============ */
+.e283{position:absolute;inset:0;background:linear-gradient(180deg,#0a0e1c 0%,#000 100%);overflow:hidden}
+.e283__b{position:absolute;width:0;height:0}
+.e283__b i{position:absolute;left:0;top:0;width:8px;height:60px;border-radius:4px;background:linear-gradient(180deg,#fff,transparent);transform-origin:top center;animation:fireworkBurst 2.4s ease-out infinite}
+@keyframes fireworkBurst{0%{transform:rotate(var(--r)) translateY(0);opacity:1}100%{transform:rotate(var(--r)) translateY(420px);opacity:0}}
+
+/* ============ E284 Paint Splatter ============ */
+.e284{position:absolute;inset:0;background:#f4ede0;overflow:hidden}
+.e284 .blob{position:absolute;border-radius:50%;animation:paintSplat 3s ease-out infinite;transform-origin:center}
+.e284 .drop{position:absolute;border-radius:50%}
+
+/* ============ E285 Dust Cloud Explosion ============ */
+.e285{position:absolute;inset:0;background:linear-gradient(180deg,#3a3a3a,#0a0a0a);overflow:hidden;animation:shake .15s steps(8,end) infinite}
+.e285 i{position:absolute;left:50%;top:50%;border-radius:50%;background:radial-gradient(circle,rgba(220,200,170,.85),transparent 70%);filter:blur(20px);transform:translate(-50%,-50%) scale(.2);animation:dustExpand 3.6s ease-out infinite}
+.e285 i:nth-child(1){width:600px;height:600px;animation-delay:0s}
+.e285 i:nth-child(2){width:500px;height:500px;animation-delay:.4s}
+.e285 i:nth-child(3){width:700px;height:700px;animation-delay:.8s}
+.e285 i:nth-child(4){width:400px;height:400px;animation-delay:1.2s}
+.e285__flash{position:absolute;left:50%;top:50%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#fff8e0,transparent 70%);transform:translate(-50%,-50%);animation:flash 3.6s ease-out infinite}
+
+/* ============ E286 Shard Explosion ============ */
+.e286{position:absolute;inset:0;background:radial-gradient(circle,#1a3a4a,#000);overflow:hidden}
+.e286 i{position:absolute;left:50%;top:50%;width:80px;height:120px;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(180,210,235,.6));border:1px solid rgba(255,255,255,.6);box-shadow:0 0 20px rgba(180,210,235,.5);animation:shardSpin 2.6s ease-out infinite}
+
+/* ============ E287 Balloon Drop ============ */
+.e287{position:absolute;inset:0;background:linear-gradient(180deg,#5a3a78,#1a1a3a);overflow:hidden}
+.e287 i{position:absolute;top:0;width:80px;height:100px;border-radius:50%/60% 60% 40% 40%;animation:balloonFall linear infinite}
+.e287 i::after{content:"";position:absolute;left:50%;bottom:-3px;width:3px;height:6px;background:rgba(255,255,255,.5);transform:translateX(-50%)}
+
+/* ============ E288 Coin Burst ============ */
+.e288{position:absolute;inset:0;background:radial-gradient(ellipse at center,#3a2a0a,#000);overflow:hidden}
+.e288__core{position:absolute;left:50%;top:50%;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffd14a,#a3791e);box-shadow:0 0 60px #f5d35a;transform:translate(-50%,-50%);animation:flash 3s ease-out infinite}
+.e288 i{position:absolute;left:50%;top:50%;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffd14a,#a3791e);box-shadow:0 6px 12px rgba(0,0,0,.4),inset 0 0 6px rgba(0,0,0,.3);transform:translate(-50%,-50%);animation:coinPop 2.6s ease-out infinite}
+
+/* ============ E289 Ring Shockwave Stack ============ */
+.e289{position:absolute;inset:0;background:radial-gradient(ellipse at center,#1a1d3a,#000);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.e289 i{position:absolute;width:60px;height:60px;border-radius:50%;border:30px solid;animation:ringExplode 2.4s ease-out infinite}
+.e289 i:nth-child(1){border-color:#ff5cb1;animation-delay:0s}
+.e289 i:nth-child(2){border-color:#3affe6;animation-delay:.4s}
+.e289 i:nth-child(3){border-color:#f5d35a;animation-delay:.8s}
+.e289 i:nth-child(4){border-color:#5cffaa;animation-delay:1.2s}
+.e289 i:nth-child(5){border-color:#9b6bff;animation-delay:1.6s}
+.e289 i:nth-child(6){border-color:#ff8800;animation-delay:2s}
+
+/* ============ E290 Title Zoom Blast ============ */
+.e290{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#0a141d)}
+.e290__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#fff;text-shadow:0 0 60px rgba(255,80,80,.5),0 0 120px rgba(255,80,80,.3);animation:textZoomBlast 3s ease-out infinite;line-height:1}
+.e290__bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 4px,transparent 4px 8px);mix-blend-mode:overlay}
+
+/* ============ E291 Pop! Comic Burst ============ */
+.e291{position:absolute;inset:0;background:#f5d35a}
+.e291__star{position:absolute;left:50%;top:50%;width:880px;height:880px;background:#ff3a4a;clip-path:polygon(50% 0,55% 35%,98% 35%,62% 55%,80% 92%,50% 70%,20% 92%,38% 55%,2% 35%,45% 35%);transform:translate(-50%,-50%) rotate(-12deg);box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.e291__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:280px;color:#fff;text-shadow:8px 8px 0 #1a1a1a;animation:textZoomBlast 2s ease-out infinite}
+.e291__dots{position:absolute;inset:0;background:radial-gradient(circle at 4px 4px,rgba(0,0,0,.15) 1px,transparent 1.6px) 0 0/24px 24px;mix-blend-mode:multiply}
+
+/* ============ E292 Pixel Dissolve ============ */
+.e292{position:absolute;inset:0;background:linear-gradient(135deg,#5a8fa8,#1f2a3a);overflow:hidden;display:grid;grid-template-columns:repeat(20,1fr);grid-template-rows:repeat(36,1fr)}
+.e292 i{background:#1a1d22;animation:pixelDissolve 3.6s ease-in-out infinite}
+
+/* ============ E293 Drop In Headline ============ */
+.e293{position:absolute;inset:0;background:linear-gradient(180deg,#3a4858,#0a141d)}
+.e293__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:240px;color:var(--card-warn);animation:drop 3s ease-out infinite;text-shadow:0 30px 40px rgba(0,0,0,.5)}
+
+/* ============ E294 News Ticker ============ */
+.e294{position:absolute;left:0;right:0;bottom:120px;display:flex;flex-direction:column;background:#000}
+.e294__top{height:120px;background:#c93f5c;display:flex;align-items:center;padding:0 50px;font-family:var(--card-font-mono);color:#fff;font-size:48px;letter-spacing:.2em;font-weight:700}
+.e294__top::before{content:"●";color:#fff;font-size:60px;margin-right:30px;animation:pulseDot 1s ease-in-out infinite}
+.e294__strip{height:120px;overflow:hidden;display:flex;align-items:center}
+.e294__strip__inner{display:flex;white-space:nowrap;font-family:var(--card-font-mono);font-size:54px;color:#fff;animation:scrollX 30s linear infinite;gap:80px}
+
+/* ============ E295 Election Bar ============ */
+.e295{position:absolute;inset:120px;display:flex;flex-direction:column;gap:40px;justify-content:center}
+.e295__row{display:flex;align-items:center;gap:30px;color:#fff;font-family:var(--card-font-display);font-size:64px}
+.e295__row .name{width:280px;font-weight:700}
+.e295__row .bar{flex:1;height:80px;border-radius:14px;overflow:hidden;background:rgba(255,255,255,.1);position:relative}
+.e295__row .fill{height:100%;animation:wipeR 4s ease-out infinite alternate;transform-origin:left}
+@keyframes wipeR{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+.e295__row .pct{width:200px;text-align:right;font-family:var(--card-font-mono);font-size:60px}
+
+/* ============ E296 Scoreboard Flip ============ */
+.e296{position:absolute;inset:0;background:linear-gradient(180deg,#0a141d,#000)}
+.e296__panel{position:absolute;inset:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px;background:#0a1c2a;border-radius:30px;border:4px solid #5cffaa;padding:80px;box-shadow:0 0 60px rgba(120,255,180,.3)}
+.e296__title{font-family:var(--card-font-mono);font-size:48px;letter-spacing:.3em;color:#5cffaa}
+.e296__row{display:flex;gap:60px;align-items:center;font-family:var(--card-font-mono);font-weight:600;color:#fff}
+.e296__row .team{width:280px;font-size:80px;text-align:center}
+.e296__row .score{width:200px;height:240px;background:#000;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:200px;color:#5cffaa;text-shadow:0 0 20px #5cffaa;animation:scoreFlip 4s ease-in-out infinite;transform-style:preserve-3d}
+.e296__row .score:nth-child(3){animation-delay:.2s}
+
+/* ============ E297 Tournament Bracket ============ */
+.e297{position:absolute;inset:120px;display:grid;grid-template-columns:repeat(4,1fr);align-items:center;color:#fff;font-family:var(--card-font-display);gap:30px}
+.e297 .col{display:flex;flex-direction:column;gap:30px;justify-content:center}
+.e297 .m{padding:30px 36px;background:rgba(255,255,255,.1);border-radius:14px;font-size:48px;font-weight:600}
+.e297 .m.win{background:var(--card-warn);animation:bracket 4s ease-in-out infinite}
+.e297 .col:nth-child(2) .m{height:160px;display:flex;align-items:center}
+.e297 .col:nth-child(3) .m{height:300px;display:flex;align-items:center}
+.e297 .col:nth-child(4) .m{height:600px;display:flex;align-items:center;justify-content:center;font-size:120px}
+
+/* ============ E298 Black Hole ============ */
+.e298{position:absolute;inset:0;background:#000;overflow:hidden}
+.e298__d{position:absolute;left:50%;top:50%;width:1400px;height:1400px;margin:-700px 0 0 -700px;border-radius:50%;
+  background:conic-gradient(from 0deg,#ff5cb1,#9b6bff,#3affe6,#5cffaa,#f5d35a,#ff8800,#ff5cb1);
+  filter:blur(40px);animation:hueLoop 8s linear infinite,blackHole 14s linear infinite;mix-blend-mode:screen;clip-path:circle(50% at 50% 50%);mask:radial-gradient(circle,transparent 14%,#000 17%,#000 100%);-webkit-mask:radial-gradient(circle,transparent 14%,#000 17%,#000 100%)}
+.e298__core{position:absolute;left:50%;top:50%;width:380px;height:380px;margin:-190px 0 0 -190px;border-radius:50%;background:#000;box-shadow:0 0 80px rgba(0,0,0,.9),inset 0 0 60px rgba(0,0,0,.9)}
+
+/* ============ E299 Screen Zoom Reveal ============ */
+.e299{position:absolute;inset:0;background:#1a1d22;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.e299__phone{width:520px;height:1080px;border-radius:60px;background:#000;border:14px solid #1a1d22;box-shadow:0 60px 120px rgba(0,0,0,.6);overflow:hidden;position:relative;animation:screenZoom 4s ease-out infinite}
+.e299__phone .scr{position:absolute;inset:6px;background:linear-gradient(180deg,#5a8fa8,#1f2a3a);border-radius:48px;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:800;font-size:120px;color:#fff}
+
+/* ============ E300 Map Zoom ============ */
+.e300{position:absolute;inset:0;background:#0a1c2a;overflow:hidden}
+.e300__inner{position:absolute;inset:0;background:
+  radial-gradient(circle 60px at 30% 40%,#c97d5c,transparent 70%),
+  radial-gradient(circle 80px at 60% 35%,#c97d5c,transparent 70%),
+  radial-gradient(circle 50px at 50% 60%,#c97d5c,transparent 70%),
+  linear-gradient(135deg,#1a3a4a,#0a141d);
+  background-size:auto;animation:mapZoom 6s ease-in-out infinite;transform-origin:center}
+.e300 .pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:80px;background:#ff3a4a;clip-path:polygon(50% 100%,15% 50%,15% 0,85% 0,85% 50%);filter:drop-shadow(0 6px 8px rgba(0,0,0,.4));animation:tickDrop 4s ease-in-out infinite}
+.e300 .ping{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;border:4px solid #ff3a4a;animation:ringExplode 2s ease-out infinite}
+
+/* ============ E301 Name Reel (credits) ============ */
+.e301{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--card-font-display);color:#fff}
+.e301__lbl{font-family:var(--card-font-mono);font-size:42px;letter-spacing:.3em;color:rgba(255,255,255,.5);text-transform:uppercase;margin-bottom:30px}
+.e301__name{font-weight:700;font-size:240px;line-height:1;animation:nameRise 4s ease-in-out infinite}
+
+/* ============ E302 Weather Sweep (radar) ============ */
+.e302{position:absolute;inset:0;background:linear-gradient(135deg,#0a1c2a,#1a3a4a)}
+.e302__map{position:absolute;inset:80px;background:linear-gradient(135deg,#1a4a3a,#0a2a1a);border-radius:30px;overflow:hidden}
+.e302__map::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(ellipse 200px 120px at 30% 40%,rgba(120,200,255,.4),transparent 70%),
+  radial-gradient(ellipse 240px 140px at 60% 60%,rgba(120,200,255,.5),transparent 70%);}
+.e302__sweep{position:absolute;inset:0;background:linear-gradient(90deg,transparent 30%,rgba(120,255,180,.4) 50%,transparent 70%);animation:weatherSweep 3s ease-in-out infinite}
+
+/* ============ E303 Champion Crown ============ */
+.e303{position:absolute;inset:0;background:radial-gradient(ellipse at center,#3a2a0a,#000)}
+.e303__rays{position:absolute;left:50%;top:50%;width:1600px;height:1600px;margin:-800px 0 0 -800px;background:repeating-conic-gradient(from 0deg,rgba(255,236,180,.3) 0 4deg,transparent 4deg 12deg);animation:hueLoop 12s linear infinite;border-radius:50%}
+.e303__c{position:absolute;left:50%;top:46%;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffd14a,#a3791e);box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 0 40px rgba(0,0,0,.3);transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;color:#5e3f1a;font-size:240px}
+
+/* ============ E304 Cassette Insert ============ */
+.e304{position:absolute;inset:0;background:linear-gradient(180deg,#3a3a3a,#0a0a0a);overflow:hidden}
+.e304__c{position:absolute;left:50%;top:50%;width:760px;height:480px;background:linear-gradient(180deg,#7a3a4a,#3a1a2a);border-radius:18px;transform:translate(-50%,-50%);box-shadow:0 30px 60px rgba(0,0,0,.5);padding:24px;animation:drop 4s ease-out infinite}
+.e304__c::before{content:"";position:absolute;inset:24px;background:linear-gradient(180deg,#f5d35a,#a3791e);border-radius:8px}
+.e304__c::after{content:"DRIFT MIX 1992";position:absolute;left:0;right:0;top:60px;text-align:center;font-family:var(--card-font-mono);font-size:32px;letter-spacing:.3em;color:#1a1d22;font-weight:700;z-index:2}
+.e304 .h{position:absolute;top:140px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#1a1a1a 30%,#3a3a3a 100%);border:4px solid #ddd;animation:tapeSpool2 1.4s linear infinite}
+@keyframes tapeSpool2{to{transform:rotate(360deg)}}
+.e304 .h--l{left:120px}
+.e304 .h--r{right:120px}
+
+/* ============ E305 News Studio Lower-Third + Ticker ============ */
+.e305{position:absolute;inset:0;background:linear-gradient(180deg,#3a4858,#1f2a3a)}
+.e305 .ph{position:absolute;left:0;right:0;top:25%;text-align:center;font-size:160px;opacity:.3}
+.e305__lt{position:absolute;left:60px;right:60px;bottom:300px;height:240px;display:flex}
+.e305__lt .red{background:#c93f5c;width:240px;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-mono);font-size:48px;color:#fff;letter-spacing:.2em;font-weight:700;animation:flash 1.4s steps(20,end) infinite}
+.e305__lt .blue{flex:1;background:#0a1c4a;display:flex;flex-direction:column;justify-content:center;padding:20px 60px;color:#fff;font-family:var(--card-font-display);gap:10px}
+.e305__lt .blue .h{font-weight:700;font-size:80px;line-height:1}
+.e305__lt .blue .s{font-family:var(--card-font-mono);font-size:36px;letter-spacing:.16em;opacity:.85}
+.e305__tk{position:absolute;left:0;right:0;bottom:120px;height:120px;background:#0a141d;display:flex;align-items:center;overflow:hidden}
+.e305__tk .strip{display:flex;white-space:nowrap;font-family:var(--card-font-mono);font-size:48px;color:#fff;animation:scrollX 30s linear infinite;gap:80px}
+
+/* ============ E306 Glass Crack ============ */
+.e306{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#3a4858,#0a141d)}
+.e306__cr{position:absolute;inset:0;background:
+  radial-gradient(circle 200px at 50% 40%,#000 0%,transparent 70%);
+  mix-blend-mode:multiply}
+.e306 svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.e306 svg path{stroke:#fff;stroke-width:3;fill:none;filter:drop-shadow(0 0 6px rgba(255,255,255,.4));stroke-dasharray:1500;animation:loadingLine 3.6s ease-out infinite}
+@keyframes loadingLine{0%{stroke-dashoffset:1500}60%,100%{stroke-dashoffset:0}}
+.e306 .ph{font-size:240px;text-shadow:0 0 30px rgba(0,0,0,.6)}
+
+/* ============ E307 Curtain Open (3D) ============ */
+.e307{position:absolute;inset:0;background:#0a0e16;perspective:1800px;overflow:hidden}
+.e307__l,.e307__r{position:absolute;top:0;bottom:0;width:50%;background:repeating-linear-gradient(90deg,#7a1a2a 0 30px,#5a0a1a 30px 60px);box-shadow:inset 0 0 80px rgba(0,0,0,.6)}
+.e307__l{left:0;transform-origin:left center;animation:curtainL 5s ease-in-out infinite alternate}
+.e307__r{right:0;transform-origin:right center;animation:curtainR 5s ease-in-out infinite alternate}
+@keyframes curtainL{0%{transform:rotateY(0)}100%{transform:rotateY(-80deg)}}
+@keyframes curtainR{0%{transform:rotateY(0)}100%{transform:rotateY(80deg)}}
+.e307__t{position:absolute;left:0;right:0;top:46%;transform:translateY(-50%);text-align:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:240px;color:#f5d35a;text-shadow:0 0 40px rgba(255,200,100,.5)}
+
+/* ============ E308 Rocket Launch ============ */
+.e308{position:absolute;inset:0;background:linear-gradient(180deg,#0a0e1c 0%,#3a0a2a 80%,#7a3a4a 100%);overflow:hidden}
+.e308__r{position:absolute;left:50%;bottom:200px;width:140px;height:380px;transform:translateX(-50%);animation:rocketUp 4s ease-in infinite}
+@keyframes rocketUp{0%{bottom:200px;opacity:1}80%,100%{bottom:140%;opacity:0}}
+.e308__r::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#fff 0%,#cdd5dd 100%);border-radius:50% 50% 20% 20% / 30% 30% 6% 6%}
+.e308__r::after{content:"";position:absolute;left:50%;bottom:-180px;width:80px;height:200px;background:linear-gradient(180deg,#ff3a4a,#ffd14a 80%,transparent);transform:translateX(-50%);border-radius:50% 50% 50% 50% / 30% 30% 80% 80%;filter:blur(8px);animation:flameWick2 .15s ease-in-out infinite}
+@keyframes flameWick2{0%,100%{transform:translateX(-50%) scaleY(1)}50%{transform:translateX(-50%) scaleY(1.15)}}
+.e308__star{position:absolute;width:6px;height:6px;background:#fff;border-radius:50%;animation:risefade 4s linear infinite}
+
+/* ============ E309 Coin Counter Pop ============ */
+.e309{position:absolute;inset:0;background:radial-gradient(ellipse at center,#3a2a0a,#0a0a0a)}
+.e309__t{position:absolute;left:0;right:0;top:32%;text-align:center;font-family:var(--card-font-display);font-weight:900;font-size:380px;color:#f5d35a;text-shadow:0 0 60px rgba(245,211,90,.7)}
+.e309__sub{position:absolute;left:0;right:0;top:62%;text-align:center;font-family:var(--card-font-mono);font-size:48px;color:#f5d35a;letter-spacing:.32em}
+.e309 i{position:absolute;left:50%;top:54%;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffd14a,#a3791e);box-shadow:0 4px 8px rgba(0,0,0,.5);transform:translate(-50%,-50%);animation:coinPop 2.4s ease-out infinite}
+
+/* ============ E310 Rainbow Splash ============ */
+.e310{position:absolute;inset:0;background:#1a0a3a}
+.e310 .arc{position:absolute;left:50%;top:50%;width:1400px;height:1400px;margin:-700px 0 0 -700px;border-radius:50%;border:60px solid;clip-path:polygon(0 50%,100% 50%,100% 100%,0 100%)}
+.e310 .arc:nth-child(1){border-color:#ff3a4a;width:1400px;height:1400px;margin:-700px 0 0 -700px}
+.e310 .arc:nth-child(2){border-color:#ff8800;width:1280px;height:1280px;margin:-640px 0 0 -640px}
+.e310 .arc:nth-child(3){border-color:#f5d35a;width:1160px;height:1160px;margin:-580px 0 0 -580px}
+.e310 .arc:nth-child(4){border-color:#5cffaa;width:1040px;height:1040px;margin:-520px 0 0 -520px}
+.e310 .arc:nth-child(5){border-color:#3affe6;width:920px;height:920px;margin:-460px 0 0 -460px}
+.e310 .arc:nth-child(6){border-color:#9b6bff;width:800px;height:800px;margin:-400px 0 0 -400px}
+.e310__t{position:absolute;left:0;right:0;top:30%;text-align:center;font-family:var(--card-font-display);font-weight:900;font-size:240px;color:#fff}
+
+/* ============ E311 Bouncing Logo (DVD) ============ */
+.e311{position:absolute;inset:0;background:#000;overflow:hidden}
+.e311__l{position:absolute;width:300px;height:200px;background:linear-gradient(135deg,var(--card-warn),#7a3f2a);border-radius:24px;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:120px;color:#fff;box-shadow:0 0 40px rgba(255,200,100,.4);
+  animation:dvdX 7s linear infinite alternate, dvdY 5s linear infinite alternate}
+@keyframes dvdX{from{left:0}to{left:calc(100% - 300px)}}
+@keyframes dvdY{from{top:0}to{top:calc(100% - 200px)}}
+
+/* ============ E312 Holiday Sparkle Trail ============ */
+.e312{position:absolute;inset:0;background:linear-gradient(180deg,#0a0a3a,#0a0a0a)}
+.e312 i{position:absolute;width:14px;height:14px;background:radial-gradient(circle,#fff 30%,transparent 70%);filter:drop-shadow(0 0 8px #f5d35a);animation:glitterTwinkle 2s ease-in-out infinite}
+.e312__t{position:absolute;left:0;right:0;top:42%;text-align:center;font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:200px;color:#f5d35a;text-shadow:0 0 40px rgba(255,210,100,.7)}
+
+/* ============ E313 Election Map (US-style) ============ */
+.e313{position:absolute;inset:0;background:#0a141d;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(8,1fr);gap:6px;padding:60px}
+.e313 i{background:#3a4858;border-radius:6px;animation:electionFlip 6s steps(60,end) infinite}
+@keyframes electionFlip{0%,40%{background:#3a4858}50%,100%{background:var(--c)}}
+
+/* ============ E314 Confetti Cannon Side ============ */
+.e314{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1a1d22);overflow:hidden}
+.e314 i{position:absolute;left:0;bottom:30%;width:30px;height:18px;animation:cannonSide 3s ease-out infinite}
+@keyframes cannonSide{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(720deg);opacity:0}}
+.e314 i.r{left:auto;right:0}
+
+/* ============ E315 Fireworks Sky ============ */
+.e315{position:absolute;inset:0;background:linear-gradient(180deg,#0a0a3a 0%,#0a0a0a 100%);overflow:hidden}
+.e315__b{position:absolute;width:0;height:0}
+.e315__b i{position:absolute;left:0;top:0;width:6px;height:80px;background:linear-gradient(180deg,var(--c),transparent);transform-origin:top center;animation:fireworkBurst 2.4s ease-out infinite}
+
+/* ============ E316 Loading Galaxy ============ */
+.e316{position:absolute;inset:0;background:radial-gradient(ellipse at center,#1a0a3a,#000);overflow:hidden}
+.e316__d{position:absolute;left:50%;top:50%;width:1400px;height:1400px;margin:-700px 0 0 -700px;
+  background:conic-gradient(from 0deg,transparent 0deg,#ff5cb1 30deg,transparent 80deg,#9b6bff 130deg,transparent 180deg,#3affe6 230deg,transparent 280deg,#5cffaa 330deg,transparent 360deg);
+  border-radius:50%;filter:blur(40px);animation:cosmosRotate 14s linear infinite;mix-blend-mode:screen;opacity:.8}
+@keyframes cosmosRotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.e316__core{position:absolute;left:50%;top:50%;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,#fff,#9b6bff);box-shadow:0 0 80px #fff;transform:translate(-50%,-50%)}
+
+/* ============ E317 Chyron Lower ============ */
+.e317{position:absolute;inset:0;background:linear-gradient(135deg,#0a141d,#1a3a4a)}
+.e317__chy{position:absolute;left:60px;right:60px;bottom:200px;background:rgba(10,20,29,.85);backdrop-filter:blur(8px);padding:60px 80px;border-radius:18px;border-left:14px solid var(--card-warn);color:#fff;font-family:var(--card-font-display)}
+.e317__h{font-weight:700;font-size:90px;line-height:1.05}
+.e317__s{font-family:var(--card-font-mono);font-size:42px;letter-spacing:.18em;color:rgba(255,255,255,.7);margin-top:18px;text-transform:uppercase}
+
+/* ============ E318 Reaction Emoji Float ============ */
+.e318{position:absolute;inset:0;background:linear-gradient(180deg,#5a3a78,#1a1a3a);overflow:hidden}
+.e318 i{position:absolute;bottom:0;font-size:140px;animation:risefade 5s ease-out infinite;text-shadow:0 0 30px rgba(255,255,255,.3)}
+
+/* ============ E319 Stamp / Approved ============ */
+.e319{position:absolute;inset:0;background:#f4ede0}
+.e319__stamp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-12deg);padding:80px 120px;border:18px solid #c93f5c;color:#c93f5c;font-family:var(--card-font-display);font-weight:900;font-size:200px;letter-spacing:.05em;text-transform:uppercase;animation:stampHit .6s ease-out infinite alternate}
+@keyframes stampHit{0%{transform:translate(-50%,-50%) rotate(-12deg) scale(2);opacity:0;filter:blur(8px)}40%{transform:translate(-50%,-50%) rotate(-12deg) scale(1);opacity:1;filter:blur(0)}100%{transform:translate(-50%,-50%) rotate(-12deg) scale(1);opacity:1}}
+
+/* ============ E320 End Stinger ============ */
+.e320{position:absolute;inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px}
+.e320__line{height:6px;background:var(--card-warn);width:0;animation:wipe320 2s ease-out infinite alternate}
+@keyframes wipe320{0%{width:0}100%{width:60%}}
+.e320__t{font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:280px;color:#fff;line-height:1}
+.e320__sub{font-family:var(--card-font-mono);font-size:48px;letter-spacing:.4em;color:var(--card-warn);text-transform:uppercase}
+</style>
+</head>
+<body>
+<h1>Effects Batch 08 — E281–E320 · explosions + bonus</h1>
+<p class="sub">All loops auto-play. <b style="color:#f5d35a">★</b> = especially video-ready. Heavy emphasis on explosion / celebration this batch (E281–E289 + 291, 309, 314, 315, 318), then more broadcast / cinematic bonus.</p>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E281 · Confetti Explosion <b>★</b></div>
+  <div class="frame"><div class="e281"><div class="e281__sw"></div><div class="e281__core"></div><div id="e281p"></div></div><div class="frame__id">E281</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E282 · Glitter Explosion <b>★</b></div>
+  <div class="frame"><div class="e282" id="e282host"><div class="e282__core"></div></div><div class="frame__id">E282</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E283 · Multi-Burst Firework <b>★</b></div>
+  <div class="frame"><div class="e283">
+    <div class="e283__b" style="left:30%;top:30%" id="fb1"></div>
+    <div class="e283__b" style="left:70%;top:25%" id="fb2"></div>
+    <div class="e283__b" style="left:50%;top:60%" id="fb3"></div>
+  </div><div class="frame__id">E283</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E284 · Paint Splatter <b>★</b></div>
+  <div class="frame frame--light"><div class="e284" id="e284host"></div><div class="frame__id">E284</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E285 · Dust Cloud Boom <b>★</b></div>
+  <div class="frame"><div class="e285"><i></i><i></i><i></i><i></i><div class="e285__flash"></div></div>
+    <div class="frame__safe"><div class="ph" style="text-shadow:0 0 60px #fff">BOOM</div></div>
+    <div class="frame__id">E285</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E286 · Ice Shard Burst <b>★</b></div>
+  <div class="frame"><div class="e286" id="e286host"></div><div class="frame__id">E286</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E287 · Balloon Drop <b>★</b></div>
+  <div class="frame"><div class="e287" id="e287host"></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:240px"><div class="ph" style="font-size:160px">CELEBRATE</div></div>
+    <div class="frame__id">E287</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E288 · Coin Burst <b>★</b></div>
+  <div class="frame"><div class="e288" id="e288host"><div class="e288__core"></div></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:280px"><div class="ph" style="color:#f5d35a;font-size:160px;text-shadow:0 0 40px rgba(245,211,90,.6)">JACKPOT</div></div>
+    <div class="frame__id">E288</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E289 · Ring Shockwaves <b>★</b></div>
+  <div class="frame"><div class="e289"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="frame__id">E289</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E290 · Title Zoom Blast <b>★</b></div>
+  <div class="frame"><div class="e290"><div class="e290__bg"></div><div class="e290__t">IMPACT</div></div><div class="frame__id">E290</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E291 · Comic POP! <b>★</b></div>
+  <div class="frame"><div class="e291"><div class="e291__dots"></div><div class="e291__star"></div><div class="e291__t">POP!</div></div><div class="frame__id">E291</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E292 · Pixel Dissolve <b>★</b></div>
+  <div class="frame"><div class="e292" id="e292host"></div><div class="frame__safe"><div class="ph">DISSOLVE</div></div><div class="frame__id">E292</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E293 · Drop-In Headline <b>★</b></div>
+  <div class="frame"><div class="e293"><div class="e293__t">DROP</div></div><div class="frame__id">E293</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E294 · News Ticker <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1f2a3a)"></div>
+    <div class="frame__safe"><div class="ph" style="opacity:.4">BREAKING</div></div>
+    <div class="e294">
+      <div class="e294__top">LIVE · BREAKING NEWS</div>
+      <div class="e294__strip"><div class="e294__strip__inner">
+        <span>MARKETS RALLY ON TECH GAINS</span><span>STORM WARNING ISSUED</span><span>RECORD HEAT IN COASTAL REGIONS</span><span>TRADE TALKS RESUME</span>
+        <span>MARKETS RALLY ON TECH GAINS</span><span>STORM WARNING ISSUED</span><span>RECORD HEAT IN COASTAL REGIONS</span><span>TRADE TALKS RESUME</span>
+      </div></div>
+    </div>
+    <div class="frame__id">E294</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E295 · Election Bar <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#0a141d,#1a3a4a)"></div>
+    <div class="e295">
+      <div class="e295__row"><div class="name">RED</div><div class="bar"><div class="fill" style="background:#c93f5c;width:42%"></div></div><div class="pct">42%</div></div>
+      <div class="e295__row"><div class="name">BLUE</div><div class="bar"><div class="fill" style="background:#3a6fc9;width:38%;animation-delay:.2s"></div></div><div class="pct">38%</div></div>
+      <div class="e295__row"><div class="name">GREEN</div><div class="bar"><div class="fill" style="background:#4a8f70;width:14%;animation-delay:.4s"></div></div><div class="pct">14%</div></div>
+      <div class="e295__row"><div class="name">YELLOW</div><div class="bar"><div class="fill" style="background:#f5d35a;width:6%;animation-delay:.6s"></div></div><div class="pct">6%</div></div>
+    </div>
+    <div class="frame__id">E295</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E296 · Scoreboard Flip <b>★</b></div>
+  <div class="frame"><div class="e296"><div class="e296__panel">
+    <div class="e296__title">FINAL · Q4 · 2:14</div>
+    <div class="e296__row"><div class="team">DRIFT</div><div class="score">42</div><div style="font-size:80px;color:#5cffaa">:</div><div class="score">38</div><div class="team">WAVE</div></div>
+  </div></div><div class="frame__id">E296</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E297 · Tournament Bracket</div>
+  <div class="frame"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#0a141d,#1a3a4a)"></div>
+  <div class="e297">
+    <div class="col"><div class="m">DRIFT</div><div class="m">WAVE</div><div class="m">PEAK</div><div class="m">FLUX</div><div class="m">ECHO</div><div class="m">RIFT</div><div class="m">VOID</div><div class="m">NOVA</div></div>
+    <div class="col"><div class="m">DRIFT</div><div class="m">PEAK</div><div class="m">ECHO</div><div class="m">NOVA</div></div>
+    <div class="col"><div class="m">DRIFT</div><div class="m">NOVA</div></div>
+    <div class="col"><div class="m win">DRIFT</div></div>
+  </div>
+  <div class="frame__id">E297</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E298 · Black Hole Disc <b>★</b></div>
+  <div class="frame"><div class="e298"><div class="e298__d"></div><div class="e298__core"></div></div><div class="frame__id">E298</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E299 · Phone Zoom Reveal <b>★</b></div>
+  <div class="frame"><div class="e299"><div class="e299__phone"><div class="scr">app</div></div></div><div class="frame__id">E299</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E300 · Map Zoom <b>★</b></div>
+  <div class="frame"><div class="e300"><div class="e300__inner"></div><div class="ping"></div><div class="pin"></div></div><div class="frame__id">E300</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E301 · Name Reel (credits) <b>★</b></div>
+  <div class="frame"><div class="e301"><div class="e301__lbl">DIRECTED BY</div><div class="e301__name">MIRA OKAFOR</div></div><div class="frame__id">E301</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E302 · Weather Radar Sweep</div>
+  <div class="frame"><div class="e302"><div class="e302__map"></div><div class="e302__sweep"></div></div>
+    <div class="frame__safe" style="align-items:flex-start;padding-top:140px"><div class="ph" style="font-size:120px">DOPPLER</div></div>
+    <div class="frame__id">E302</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E303 · Champion Crown <b>★</b></div>
+  <div class="frame"><div class="e303"><div class="e303__rays"></div><div class="e303__c">★</div></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:240px"><div class="ph" style="color:#f5d35a;font-size:160px">CHAMPION</div></div>
+    <div class="frame__id">E303</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E304 · Cassette Insert <b>★</b></div>
+  <div class="frame"><div class="e304"><div class="e304__c"><div class="h h--l"></div><div class="h h--r"></div></div></div><div class="frame__id">E304</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E305 · News Studio Lower-Third <b>★</b></div>
+  <div class="frame"><div class="e305">
+    <div class="ph">studio</div>
+    <div class="e305__lt"><div class="red">LIVE</div><div class="blue"><div class="h">Storm hits north coast</div><div class="s">REPORTER · MIRA OKAFOR</div></div></div>
+    <div class="e305__tk"><div class="strip"><span>WIND GUSTS UP TO 110 KMH</span><span>FLIGHTS DELAYED AT MAIN HUB</span><span>EVACUATIONS UNDER WAY</span><span>WIND GUSTS UP TO 110 KMH</span><span>FLIGHTS DELAYED AT MAIN HUB</span><span>EVACUATIONS UNDER WAY</span></div></div>
+  </div><div class="frame__id">E305</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E306 · Glass Crack <b>★</b></div>
+  <div class="frame"><div class="e306">
+    <svg viewBox="0 0 1080 1920">
+      <path d="M540 760 L 280 380 M540 760 L 760 360 M540 760 L 920 540 M540 760 L 920 880 M540 760 L 760 1100 M540 760 L 540 1300 M540 760 L 320 1100 M540 760 L 160 880 M540 760 L 180 540"/>
+      <path d="M280 380 L 220 200 M280 380 L 360 240 M760 360 L 840 220 M760 360 L 660 200 M920 540 L 1040 460 M920 540 L 990 700"/>
+    </svg>
+    <div class="e306__cr"></div>
+    <div class="frame__safe"><div class="ph">CRACK</div></div>
+  </div>
+  <div class="frame__id">E306</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E307 · Curtain Open (3D) <b>★</b></div>
+  <div class="frame"><div class="e307"><div class="e307__l"></div><div class="e307__r"></div><div class="e307__t">SHOWTIME</div></div><div class="frame__id">E307</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E308 · Rocket Launch <b>★</b></div>
+  <div class="frame"><div class="e308" id="e308host"><div class="e308__r"></div></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:200px"><div class="ph" style="font-size:160px">LAUNCH</div></div>
+    <div class="frame__id">E308</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E309 · Coin Counter Pop <b>★</b></div>
+  <div class="frame"><div class="e309"><div class="e309__t">$1,000</div><div class="e309__sub">YOU WIN</div>
+    <div id="e309host"></div>
+  </div><div class="frame__id">E309</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E310 · Rainbow Splash <b>★</b></div>
+  <div class="frame"><div class="e310"><div class="arc"></div><div class="arc"></div><div class="arc"></div><div class="arc"></div><div class="arc"></div><div class="arc"></div><div class="e310__t">PRIDE</div></div><div class="frame__id">E310</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E311 · Bouncing Logo (DVD) <b>★</b></div>
+  <div class="frame"><div class="e311"><div class="e311__l">drift</div></div><div class="frame__id">E311</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E312 · Sparkle Trail <b>★</b></div>
+  <div class="frame"><div class="e312" id="e312host"><div class="e312__t">enchanted</div></div><div class="frame__id">E312</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E313 · Election Map Flip</div>
+  <div class="frame"><div class="e313" id="e313host"></div><div class="frame__safe"><div class="ph" style="font-size:120px">2024</div></div><div class="frame__id">E313</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E314 · Side Cannons <b>★</b></div>
+  <div class="frame"><div class="e314" id="e314host"></div>
+    <div class="frame__safe"><div class="ph">YES!</div></div>
+    <div class="frame__id">E314</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E315 · Sky Fireworks <b>★</b></div>
+  <div class="frame"><div class="e315">
+    <div class="e315__b" style="left:25%;top:30%" id="sf1"></div>
+    <div class="e315__b" style="left:70%;top:22%" id="sf2"></div>
+    <div class="e315__b" style="left:50%;top:50%" id="sf3"></div>
+    <div class="e315__b" style="left:30%;top:60%" id="sf4"></div>
+  </div><div class="frame__id">E315</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E316 · Loading Galaxy <b>★</b></div>
+  <div class="frame"><div class="e316"><div class="e316__d"></div><div class="e316__core"></div></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:200px"><div class="ph" style="font-size:120px">LOADING UNIVERSE</div></div>
+    <div class="frame__id">E316</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E317 · Chyron Lower <b>★</b></div>
+  <div class="frame"><div class="e317">
+    <div class="frame__safe"><div class="ph" style="opacity:.4">studio</div></div>
+    <div class="e317__chy"><div class="e317__h">Markets close at record high</div><div class="e317__s">FINANCE · 4:00 PM ET</div></div>
+  </div><div class="frame__id">E317</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E318 · Reaction Floats <b>★</b></div>
+  <div class="frame"><div class="e318" id="e318host"></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:240px"><div class="ph" style="font-size:140px">live chat</div></div>
+    <div class="frame__id">E318</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E319 · APPROVED Stamp <b>★</b></div>
+  <div class="frame frame--light"><div class="e319"><div class="e319__stamp">APPROVED</div></div><div class="frame__id">E319</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E320 · End Stinger <b>★</b></div>
+  <div class="frame"><div class="e320">
+    <div class="e320__line"></div>
+    <div class="e320__t">drift &amp; co.</div>
+    <div class="e320__sub">END · 2024</div>
+    <div class="e320__line"></div>
+  </div><div class="frame__id">E320</div></div></div>
+
+</div>
+
+<script>
+function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+function fill(host,n,fn){if(!host)return;for(let i=0;i<n;i++)host.appendChild(fn(i))}
+function radial(n,seed,minR,maxR){const r=rng(seed);const out=[];
+  for(let i=0;i<n;i++){const a=(i/n)*2*Math.PI+r()*0.4;const dist=minR+r()*(maxR-minR);
+    out.push({a,dist,dx:Math.cos(a)*dist,dy:Math.sin(a)*dist,r:r()*720,delay:r()*1.5})}return out}
+
+// E281 confetti explosion
+(function(){const host=document.getElementById('e281p');if(!host)return;
+  const colors=['#ff5cb1','#3affe6','#f5d35a','#5cffaa','#9b6bff','#ff8800','#fff'];
+  const r=rng(2);
+  radial(60,7,500,1200).forEach(p=>{const e=document.createElement('i');
+    e.style.position='absolute';e.style.left='50%';e.style.top='50%';
+    e.style.width='30px';e.style.height='18px';
+    e.style.background=colors[Math.floor(r()*colors.length)];
+    e.style.setProperty('--dx',p.dx+'px');e.style.setProperty('--dy',p.dy+'px');
+    e.style.setProperty('--dr',p.r+'deg');
+    e.style.animation='blastOut 3s ease-out '+p.delay+'s infinite';
+    if(r()>.7){e.style.borderRadius='50%';e.style.width='22px';e.style.height='22px'}
+    host.appendChild(e);})})();
+
+// E282 glitter explosion - mix of stars + sparkles
+(function(){const host=document.getElementById('e282host');if(!host)return;
+  const colors=['#fff','#f5d35a','#ffd14a','#ff8800','#ffe680'];
+  const r=rng(11);
+  radial(50,11,400,1100).forEach(p=>{const e=document.createElement('i');
+    e.classList.add('s');
+    const sz=18+r()*30;e.style.width=sz+'px';e.style.height=sz+'px';
+    const c=colors[Math.floor(r()*colors.length)];
+    e.style.background=c;e.style.color=c;
+    e.style.setProperty('--dx',p.dx+'px');e.style.setProperty('--dy',p.dy+'px');
+    e.style.setProperty('--dr',p.r+'deg');
+    e.style.animation='blastOut 3s ease-out '+p.delay+'s infinite';
+    host.appendChild(e);});
+  // sparkle twinkles
+  for(let i=0;i<40;i++){const e=document.createElement('i');
+    const a=r()*Math.PI*2;const d=200+r()*900;
+    e.style.left='calc(50% + '+(Math.cos(a)*d)+'px)';
+    e.style.top='calc(50% + '+(Math.sin(a)*d)+'px)';
+    const sz=10+r()*20;e.style.width=sz+'px';e.style.height=sz+'px';
+    const c=colors[Math.floor(r()*colors.length)];e.style.background=c;e.style.color=c;
+    e.style.animationDelay=(r()*2.4)+'s';
+    host.appendChild(e);}
+})();
+
+// E283 firework triple bursts
+(function(){const colors=['#ff5cb1','#3affe6','#f5d35a','#5cffaa','#9b6bff'];
+  ['fb1','fb2','fb3'].forEach((id,idx)=>{const host=document.getElementById(id);if(!host)return;
+    const c=colors[idx%colors.length];
+    for(let i=0;i<24;i++){const e=document.createElement('i');
+      e.style.setProperty('--r',(i*15)+'deg');
+      e.style.background='linear-gradient(180deg,'+c+',transparent)';
+      e.style.animationDelay=(idx*0.4)+'s';
+      host.appendChild(e);}});})();
+
+// E284 paint splatter
+(function(){const host=document.getElementById('e284host');if(!host)return;
+  const r=rng(31);
+  const colors=['#c93f5c','#3a6fc9','#4a8f70','#f5d35a','#9b6bff','#ff8800'];
+  // 8 main splats
+  for(let i=0;i<8;i++){const e=document.createElement('div');e.className='blob';
+    const sz=200+r()*420;e.style.width=sz+'px';e.style.height=sz+'px';
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.transform='translate(-50%,-50%)';
+    e.style.background=colors[i%colors.length];
+    e.style.animationDelay=(r()*2.4)+'s';
+    e.style.borderRadius=(50+r()*30)+'% '+(50+r()*30)+'% '+(50+r()*30)+'% '+(50+r()*30)+'%';
+    host.appendChild(e);}
+  // small drips around
+  for(let i=0;i<60;i++){const e=document.createElement('div');e.className='blob';
+    const sz=30+r()*80;e.style.width=sz+'px';e.style.height=sz+'px';
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.transform='translate(-50%,-50%)';
+    e.style.background=colors[Math.floor(r()*colors.length)];
+    e.style.animationDelay=(r()*2.4)+'s';
+    host.appendChild(e);}
+})();
+
+// E286 ice shard
+(function(){const host=document.getElementById('e286host');if(!host)return;
+  const r=rng(41);
+  radial(28,41,400,1200).forEach((p,i)=>{const e=document.createElement('i');
+    e.style.setProperty('--dx',p.dx+'px');
+    e.style.setProperty('--dy',p.dy+'px');
+    e.style.setProperty('--dr',p.r+'deg');
+    e.style.animationDelay=(p.delay)+'s';
+    const w=40+r()*100;const h=80+r()*180;
+    e.style.width=w+'px';e.style.height=h+'px';
+    const points=[
+      `polygon(50% 0,100% 30%,80% 100%,20% 100%,0 30%)`,
+      `polygon(40% 0,100% 50%,70% 100%,0 80%,10% 30%)`,
+      `polygon(50% 0,90% 20%,100% 80%,40% 100%,10% 50%)`
+    ];
+    e.style.clipPath=points[Math.floor(r()*points.length)];
+    host.appendChild(e);});})();
+
+// E287 balloons
+(function(){const host=document.getElementById('e287host');if(!host)return;
+  const r=rng(51);
+  const colors=['#ff5cb1','#3affe6','#f5d35a','#5cffaa','#9b6bff','#ff8800','#fff'];
+  for(let i=0;i<28;i++){const e=document.createElement('i');
+    e.style.left=(r()*100)+'%';
+    const c=colors[Math.floor(r()*colors.length)];e.style.background='radial-gradient(circle at 30% 30%,'+c+',rgba(0,0,0,.2))';
+    const sz=60+r()*60;e.style.width=sz+'px';e.style.height=(sz*1.2)+'px';
+    e.style.setProperty('--rs',(r()*30-15)+'deg');
+    e.style.setProperty('--re',(r()*60-30)+'deg');
+    e.style.animationDuration=(6+r()*5)+'s';
+    e.style.animationDelay=(-r()*10)+'s';
+    host.appendChild(e);}})();
+
+// E288 coin burst
+(function(){const host=document.getElementById('e288host');if(!host)return;
+  radial(28,61,400,1100).forEach(p=>{const e=document.createElement('i');
+    e.style.setProperty('--dx',p.dx+'px');
+    e.style.setProperty('--dy',p.dy+'px');
+    e.style.animationDelay=p.delay+'s';
+    host.appendChild(e);});})();
+
+// E292 pixel dissolve
+(function(){const host=document.getElementById('e292host');if(!host)return;
+  const r=rng(71);
+  for(let i=0;i<720;i++){const e=document.createElement('i');
+    e.style.animationDelay=(r()*3)+'s';host.appendChild(e);}})();
+
+// E308 rocket stars
+(function(){const host=document.getElementById('e308host');if(!host)return;
+  const r=rng(83);
+  for(let i=0;i<60;i++){const e=document.createElement('div');e.className='e308__star';
+    e.style.left=(r()*100)+'%';
+    e.style.bottom='0';
+    e.style.opacity=(.5+r()*.5);
+    e.style.animationDelay=(-r()*5)+'s';
+    e.style.animationDuration=(3+r()*4)+'s';
+    host.appendChild(e);}})();
+
+// E309 small coin pops
+(function(){const host=document.getElementById('e309host');if(!host)return;
+  radial(36,93,300,900).forEach(p=>{const e=document.createElement('i');
+    e.style.position='absolute';e.style.left='50%';e.style.top='54%';
+    e.style.width='40px';e.style.height='40px';e.style.borderRadius='50%';
+    e.style.background='radial-gradient(circle at 30% 30%,#ffd14a,#a3791e)';
+    e.style.boxShadow='0 4px 8px rgba(0,0,0,.5)';
+    e.style.transform='translate(-50%,-50%)';
+    e.style.setProperty('--dx',p.dx+'px');
+    e.style.setProperty('--dy',p.dy+'px');
+    e.style.animation='coinPop 2.4s ease-out '+p.delay+'s infinite';
+    host.appendChild(e);});})();
+
+// E312 sparkle trail
+(function(){const host=document.getElementById('e312host');if(!host)return;
+  const r=rng(101);
+  const colors=['#fff','#f5d35a','#ffd14a','#ffe680','#ff8800'];
+  for(let i=0;i<60;i++){const e=document.createElement('i');
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    const sz=10+r()*22;e.style.width=sz+'px';e.style.height=sz+'px';
+    const c=colors[Math.floor(r()*colors.length)];
+    e.style.background='radial-gradient(circle,'+c+' 30%,transparent 70%)';
+    e.style.filter='drop-shadow(0 0 8px '+c+')';
+    e.style.animationDelay=(r()*2)+'s';
+    host.appendChild(e);}})();
+
+// E313 election map
+(function(){const host=document.getElementById('e313host');if(!host)return;
+  const r=rng(111);
+  const c=['#c93f5c','#3a6fc9','#4a8f70','#f5d35a'];
+  for(let i=0;i<96;i++){const e=document.createElement('i');
+    const v=r();
+    e.style.setProperty('--c',c[v<.45?0:v<.85?1:Math.floor(2+r()*2)]);
+    e.style.animationDelay=(r()*4)+'s';
+    host.appendChild(e);}})();
+
+// E314 side cannons
+(function(){const host=document.getElementById('e314host');if(!host)return;
+  const r=rng(121);
+  const colors=['#ff5cb1','#3affe6','#f5d35a','#5cffaa','#9b6bff','#fff'];
+  for(let i=0;i<30;i++){const e=document.createElement('i');
+    const a=(r()-.3)*Math.PI*0.5;
+    const dist=600+r()*600;
+    e.style.setProperty('--dx',(Math.cos(a)*dist)+'px');
+    e.style.setProperty('--dy',(-Math.sin(a)*dist-200)+'px');
+    e.style.background=colors[Math.floor(r()*colors.length)];
+    e.style.animationDuration=(2.4+r()*1.5)+'s';
+    e.style.animationDelay=(-r()*3)+'s';
+    host.appendChild(e);}
+  for(let i=0;i<30;i++){const e=document.createElement('i');e.classList.add('r');
+    const a=(r()-.3)*Math.PI*0.5;
+    const dist=600+r()*600;
+    e.style.setProperty('--dx',(-Math.cos(a)*dist)+'px');
+    e.style.setProperty('--dy',(-Math.sin(a)*dist-200)+'px');
+    e.style.background=colors[Math.floor(r()*colors.length)];
+    e.style.animationDuration=(2.4+r()*1.5)+'s';
+    e.style.animationDelay=(-r()*3)+'s';
+    host.appendChild(e);}})();
+
+// E315 sky fireworks
+(function(){const colors=['#ff5cb1','#3affe6','#f5d35a','#5cffaa','#9b6bff','#ff8800'];
+  ['sf1','sf2','sf3','sf4'].forEach((id,idx)=>{const host=document.getElementById(id);if(!host)return;
+    const c=colors[idx%colors.length];
+    for(let i=0;i<20;i++){const e=document.createElement('i');
+      e.style.setProperty('--r',(i*18)+'deg');
+      e.style.setProperty('--c',c);
+      e.style.animationDelay=(idx*0.6)+'s';
+      host.appendChild(e);}});})();
+
+// E318 reaction emojis
+(function(){const host=document.getElementById('e318host');if(!host)return;
+  const r=rng(141);
+  const emojis=['❤','★','✿','♥','✦','✺','✧','♡'];
+  for(let i=0;i<24;i++){const e=document.createElement('i');
+    e.textContent=emojis[Math.floor(r()*emojis.length)];
+    e.style.left=(r()*100)+'%';
+    const colors=['#ff5cb1','#f5d35a','#5cffaa','#fff','#ff8800'];
+    e.style.color=colors[Math.floor(r()*colors.length)];
+    e.style.animationDuration=(4+r()*3)+'s';
+    e.style.animationDelay=(-r()*7)+'s';
+    host.appendChild(e);}})();
+</script>
+</body>
+</html>

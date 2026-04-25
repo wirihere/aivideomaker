@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 01 — E01–E40</title>
+<style>
+:root {
+  --card-navy:#1F2A3A;--card-navy-deep:#131B27;--card-slate:#4A5568;--card-slate-ink:#6B7280;
+  --card-paper:#F8F6F1;--card-paper-soft:#EFEBE2;--card-accent:#5A8FA8;--card-warn:#C97D5C;--card-ok:#4A8F70;
+  --card-font-ui:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --card-font-mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --card-font-display:Georgia,"Times New Roman",serif;
+  --card-r-sm:14px;--card-r-md:22px;--card-r-lg:28px;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--card-font-mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:780px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__row{display:flex;gap:12px}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06)}
+.frame--light{background:var(--card-paper)}
+.frame--dark{background:var(--card-navy)}
+.frame__bg-photo{position:absolute;inset:0;background:
+  linear-gradient(135deg,#3a4858 0%,#1f2a3a 100%);
+  background-size:cover;z-index:0}
+.frame__safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 90px;box-sizing:border-box;z-index:5}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:20}
+.frame--light .frame__id{color:rgba(31,42,58,.4)}
+.placeholder-text{font-family:var(--card-font-display);font-weight:600;font-size:160px;line-height:1;letter-spacing:-.02em;color:var(--card-paper);text-align:center}
+.frame--light .placeholder-text{color:var(--card-navy)}
+.placeholder-sub{font-family:var(--card-font-mono);font-size:32px;letter-spacing:.22em;text-transform:uppercase;color:var(--card-paper);opacity:.7;margin-top:24px}
+.frame--light .placeholder-sub{color:var(--card-slate-ink)}
+.center-stack{display:flex;flex-direction:column;align-items:center;gap:20px;position:relative;z-index:6}
+
+/* ================ E01 — Brand Glow on Text ============== */
+.e01__word{font-family:var(--card-font-display);font-weight:700;font-size:240px;line-height:1;color:var(--card-paper);
+  text-shadow:
+    0 0 8px rgba(90,143,168,.65),
+    0 0 32px rgba(90,143,168,.55),
+    0 0 80px rgba(90,143,168,.35);
+  position:relative;z-index:6}
+.e01--light .e01__word{color:var(--card-navy);
+  text-shadow:0 0 8px rgba(90,143,168,.5),0 0 24px rgba(90,143,168,.35),0 0 60px rgba(90,143,168,.18)}
+
+/* ================ E02 — Sparkle Overlay ============== */
+.e02{position:absolute;inset:0;z-index:4;pointer-events:none}
+.e02__star{position:absolute;width:18px;height:18px;
+  background:
+    linear-gradient(currentColor,currentColor) center/100% 2px no-repeat,
+    linear-gradient(currentColor,currentColor) center/2px 100% no-repeat;
+  color:var(--card-accent);
+  filter:drop-shadow(0 0 8px var(--card-accent))}
+.e02__star::before,.e02__star::after{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(currentColor,currentColor) center/100% 1px no-repeat,
+    linear-gradient(currentColor,currentColor) center/1px 100% no-repeat;
+  transform:rotate(45deg);opacity:.7}
+
+/* ================ E03 — Confetti Burst ============== */
+.e03{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e03__p{position:absolute;width:24px;height:14px}
+.e03__p--c1{background:var(--card-accent)}
+.e03__p--c2{background:var(--card-warn)}
+.e03__p--c3{background:var(--card-ok)}
+.e03__p--c4{background:var(--card-paper)}
+.e03__p--tri{width:0;height:0;background:transparent;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:24px solid var(--card-warn)}
+.e03__p--circ{border-radius:50%;width:20px;height:20px;background:var(--card-ok)}
+
+/* ================ E04 — Smoke / Mist ============== */
+.e04{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e04__b{position:absolute;border-radius:50%;background:rgba(248,246,241,.35);filter:blur(80px)}
+
+/* ================ E05 — Lens Flare ============== */
+.e05{position:absolute;inset:0;z-index:4;pointer-events:none}
+.e05__core{position:absolute;top:14%;left:74%;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,238,200,.95) 0%,rgba(255,210,140,.5) 30%,transparent 70%);
+  filter:blur(2px)}
+.e05__halo{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,220,160,.3),transparent 70%)}
+.e05__h1{top:32%;left:60%;width:80px;height:80px}
+.e05__h2{top:46%;left:50%;width:50px;height:50px;background:radial-gradient(circle,rgba(180,210,255,.35),transparent 70%)}
+.e05__h3{top:62%;left:38%;width:120px;height:120px}
+.e05__h4{top:78%;left:22%;width:60px;height:60px;background:radial-gradient(circle,rgba(200,180,255,.25),transparent 70%)}
+.e05__ray{position:absolute;top:14%;left:74%;width:1200px;height:6px;
+  background:linear-gradient(90deg,rgba(255,238,200,.7),transparent);
+  transform-origin:left center;transform:translate(140px,140px) rotate(155deg);
+  filter:blur(3px)}
+
+/* ================ E06 — Bokeh ============== */
+.e06{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e06__c{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(90,143,168,.7),rgba(90,143,168,.1) 60%,transparent 80%);filter:blur(40px)}
+
+/* ================ E07 — Film Scratches ============== */
+.e07{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.e07__sc{position:absolute;width:2px;background:rgba(248,246,241,.6);top:0;bottom:0}
+.e07__d{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(248,246,241,.55)}
+.e07__d--dark{background:rgba(0,0,0,.5)}
+
+/* ================ E08 — God Rays ============== */
+.e08{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e08__ray{position:absolute;top:-200px;left:0;width:80px;height:2400px;
+  background:linear-gradient(180deg,rgba(255,236,200,.6),transparent 60%);
+  filter:blur(30px);transform-origin:top left}
+
+/* ================ E09 — Rain ============== */
+.e09{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.e09__d{position:absolute;width:2px;height:80px;background:linear-gradient(180deg,transparent,rgba(220,235,255,.7));transform:rotate(15deg);filter:blur(.5px)}
+
+/* ================ E10 — Snow ============== */
+.e10{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.e10__f{position:absolute;border-radius:50%;background:rgba(255,255,255,.9);filter:blur(.5px);box-shadow:0 0 6px rgba(255,255,255,.6)}
+
+/* ================ E11 — Falling Leaves ============== */
+.e11{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.e11__l{position:absolute;width:60px;height:60px;
+  clip-path:path("M30 4 C46 12 56 28 56 44 C56 52 50 56 42 56 C28 56 12 46 4 30 C12 14 22 6 30 4Z");
+  background:var(--card-warn)}
+
+/* ================ E12 — Cherry Petals ============== */
+.e12{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.e12__p{position:absolute;width:36px;height:50px;
+  clip-path:ellipse(50% 50% at 50% 50%);
+  background:#f5c8d6;filter:drop-shadow(0 0 4px rgba(245,200,214,.5))}
+
+/* ================ E13 — Stars ============== */
+.e13{position:absolute;inset:0;z-index:4;pointer-events:none}
+.e13__s{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.9);box-shadow:0 0 6px rgba(255,255,255,.7)}
+.e13__s--big{width:14px;height:14px;box-shadow:0 0 16px rgba(255,255,255,.9)}
+
+/* ================ E14 — Fog Roll ============== */
+.e14{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e14__b{position:absolute;border-radius:50%;background:rgba(248,246,241,.18);filter:blur(120px)}
+
+/* ================ E15 — Cloud Drift ============== */
+.e15{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e15__c{position:absolute;border-radius:50%;background:radial-gradient(ellipse 70% 50% at center,rgba(248,246,241,.55),transparent 80%);filter:blur(20px)}
+
+/* ================ E16 — Heat Shimmer ============== */
+.e16{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e16__layer{position:absolute;left:0;right:0;bottom:0;height:600px;opacity:.4;
+  background:repeating-linear-gradient(0deg,
+    rgba(201,125,92,.18) 0 6px,
+    transparent 6px 18px,
+    rgba(201,125,92,.12) 18px 22px,
+    transparent 22px 36px);
+  mask-image:linear-gradient(0deg,#000 30%,transparent);
+  -webkit-mask-image:linear-gradient(0deg,#000 30%,transparent)}
+
+/* ================ E17 — Lightning ============== */
+.e17{position:absolute;inset:0;z-index:6;pointer-events:none}
+.e17__flash{position:absolute;inset:0;background:rgba(220,235,255,.78)}
+.e17__bolt{position:absolute;top:8%;left:48%;width:120px;height:780px;
+  clip-path:polygon(60% 0%,18% 38%,52% 42%,12% 80%,52% 78%,30% 100%,76% 50%,40% 48%,80% 18%,52% 22%);
+  background:#fff;filter:drop-shadow(0 0 20px rgba(220,235,255,.9))}
+
+/* ================ E18 — Sun Rays Through Clouds ============== */
+.e18{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e18__cl{position:absolute;border-radius:50%;background:radial-gradient(ellipse 70% 50% at center,rgba(248,246,241,.6),transparent 80%);filter:blur(24px)}
+.e18__r{position:absolute;top:0;left:30%;width:80px;height:1500px;
+  background:linear-gradient(180deg,rgba(255,236,200,.55),transparent 70%);filter:blur(20px);transform-origin:top center;transform:rotate(8deg)}
+
+/* ================ E19 — Halftone ============== */
+.e19{position:absolute;inset:0;z-index:4;pointer-events:none;
+  background-image:radial-gradient(circle,rgba(31,42,58,.45) 2px,transparent 3px);
+  background-size:18px 18px;opacity:.45}
+.frame--dark .e19{background-image:radial-gradient(circle,rgba(248,246,241,.45) 2px,transparent 3px)}
+
+/* ================ E20 — Crosshatch ============== */
+.e20{position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:
+    repeating-linear-gradient(45deg,rgba(31,42,58,.10) 0 2px,transparent 2px 12px),
+    repeating-linear-gradient(-45deg,rgba(31,42,58,.10) 0 2px,transparent 2px 12px);
+  opacity:.6}
+.frame--dark .e20{background:
+    repeating-linear-gradient(45deg,rgba(248,246,241,.10) 0 2px,transparent 2px 12px),
+    repeating-linear-gradient(-45deg,rgba(248,246,241,.10) 0 2px,transparent 2px 12px)}
+
+/* ================ E21 — Topographic ============== */
+.e21{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.5}
+
+/* ================ E22 — Dot Grid ============== */
+.e22{position:absolute;inset:0;z-index:4;pointer-events:none;
+  background-image:radial-gradient(circle,rgba(31,42,58,.35) 1.5px,transparent 2px);
+  background-size:28px 28px;opacity:.55}
+.frame--dark .e22{background-image:radial-gradient(circle,rgba(248,246,241,.4) 1.5px,transparent 2px)}
+
+/* ================ E23 — Diagonal Stripes ============== */
+.e23{position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:repeating-linear-gradient(45deg,
+    var(--card-accent) 0 60px,
+    var(--card-paper-soft) 60px 120px)}
+
+/* ================ E24 — Watercolor Wash ============== */
+.e24{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.e24__b{position:absolute;border-radius:50%;filter:blur(100px);opacity:.45}
+.e24__b1{top:10%;left:-10%;width:900px;height:900px;background:var(--card-warn)}
+.e24__b2{top:50%;right:-15%;width:1100px;height:1100px;background:var(--card-accent)}
+.e24__b3{bottom:-10%;left:30%;width:700px;height:700px;background:var(--card-ok);opacity:.3}
+
+/* ================ E25 — Grunge ============== */
+.e25{position:absolute;inset:0;z-index:6;pointer-events:none;mix-blend-mode:multiply;opacity:.4}
+
+/* ================ E26 — Wood Grain ============== */
+.e26{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.18;
+  background:
+    repeating-linear-gradient(95deg,
+      rgba(120,80,40,.5) 0 2px,
+      transparent 2px 18px,
+      rgba(120,80,40,.25) 18px 22px,
+      transparent 22px 38px),
+    radial-gradient(ellipse 200% 30% at 30% 50%,rgba(120,80,40,.4),transparent 70%)}
+
+/* ================ E27 — Marble ============== */
+.e27{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.5}
+
+/* ================ E28 — Mandala ============== */
+.e28{position:absolute;inset:0;z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:.18}
+.e28 svg{width:1400px;height:1400px}
+
+/* ================ E29 — Sine Waves ============== */
+.e29{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.3}
+
+/* ================ E30 — Concentric Ripple ============== */
+.e30{position:absolute;inset:0;z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.e30__r{position:absolute;border-radius:50%;border:2px solid var(--card-accent);opacity:.4}
+
+/* ================ E31 — Hex Grid ============== */
+.e31{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.35}
+
+/* ================ E32 — Golden Spiral ============== */
+.e32{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.4;display:flex;align-items:center;justify-content:center}
+
+/* ================ E33 — Glitch Text ============== */
+.e33{position:relative;z-index:6;font-family:var(--card-font-display);font-weight:700;font-size:240px;line-height:1;color:var(--card-paper)}
+.e33__l{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.e33__l--r{color:#ff3a4a;transform:translate(8px,-2px);mix-blend-mode:screen}
+.e33__l--c{color:#3affe6;transform:translate(-8px,2px);mix-blend-mode:screen}
+
+/* ================ E34 — Static Noise Text ============== */
+.e34__w{font-family:var(--card-font-display);font-weight:700;font-size:240px;line-height:1;
+  background:repeating-linear-gradient(0deg,
+    rgba(255,255,255,.7) 0 1px,
+    rgba(255,255,255,.2) 1px 2px,
+    rgba(0,0,0,.6) 2px 3px,
+    rgba(255,255,255,.5) 3px 5px);
+  background-clip:text;-webkit-background-clip:text;color:transparent;
+  text-shadow:0 0 30px rgba(90,143,168,.4)}
+
+/* ================ E35 — Wobble Text ============== */
+.e35__w{font-family:var(--card-font-display);font-weight:700;font-size:200px;line-height:1;color:var(--card-navy);display:flex;gap:8px}
+.frame--dark .e35__w{color:var(--card-paper)}
+.e35__w span{display:inline-block}
+
+/* ================ E36 — Wave Text ============== */
+.e36__w{font-family:var(--card-font-display);font-weight:700;font-size:200px;line-height:1;color:var(--card-accent);display:flex;gap:6px}
+.e36__w span{display:inline-block}
+
+/* ================ E37 — Typewriter Cursor ============== */
+.e37__w{font-family:var(--card-font-mono);font-weight:600;font-size:140px;line-height:1;color:var(--card-paper);display:flex;align-items:center;gap:8px}
+.frame--light .e37__w{color:var(--card-navy)}
+.e37__cur{display:inline-block;width:6px;height:120px;background:var(--card-accent)}
+
+/* ================ E38 — Letterpress ============== */
+.e38__w{font-family:var(--card-font-display);font-weight:700;font-size:240px;line-height:1;color:var(--card-paper-soft);
+  text-shadow:
+    -2px -2px 0 rgba(255,255,255,.65),
+    3px 3px 0 rgba(0,0,0,.35),
+    6px 6px 8px rgba(0,0,0,.25)}
+.frame--dark .e38__w{color:var(--card-navy);
+  text-shadow:
+    -2px -2px 0 rgba(255,255,255,.12),
+    3px 3px 0 rgba(0,0,0,.55),
+    6px 6px 14px rgba(0,0,0,.6)}
+
+/* ================ E39 — Bubble Drift ============== */
+.e39{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.e39__b{position:absolute;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.85),rgba(255,255,255,.15) 30%,rgba(90,143,168,.18) 70%,transparent 100%);
+  border:1.5px solid rgba(255,255,255,.4)}
+
+/* ================ E40 — Money Rain ============== */
+.e40{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.e40__n{position:absolute;width:60px;height:32px;background:#7fb892;border:1.5px solid #4f8866;border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-mono);font-weight:700;font-size:18px;color:#1f3a2a}
+</style>
+</head>
+<body>
+<h1>Effects Batch 01 — E01–E40</h1>
+<p class="sub">Token-only ambient layers. Frames at 1080×1920, scaled to 16.5%. Each shows the static visual state; motion intent is in the spec block below the preview. Light + dark variants where the effect's appearance changes; otherwise single tile.</p>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E01 · Brand Glow on Text</div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e01__word">aurora</div></div><div class="frame__id">E01</div></div>
+  <div class="frame frame--light e01--light"><div class="frame__safe"><div class="e01__word">aurora</div></div><div class="frame__id">E01·L</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E02 · Sparkle Overlay</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">moment</div></div>
+    <div class="e02">
+      <div class="e02__star" style="top:10%;left:18%;transform:scale(1.3)"></div>
+      <div class="e02__star" style="top:22%;left:78%;transform:scale(.9)"></div>
+      <div class="e02__star" style="top:38%;left:8%"></div>
+      <div class="e02__star" style="top:52%;left:88%;transform:scale(1.6)"></div>
+      <div class="e02__star" style="top:66%;left:28%"></div>
+      <div class="e02__star" style="top:74%;left:62%;transform:scale(.7)"></div>
+      <div class="e02__star" style="top:84%;left:14%;transform:scale(1.1)"></div>
+      <div class="e02__star" style="top:30%;left:48%;transform:scale(.8)"></div>
+      <div class="e02__star" style="top:88%;left:82%;transform:scale(1.4)"></div>
+    </div>
+    <div class="frame__id">E02</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E03 · Confetti Burst</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">yes!</div></div>
+    <div class="e03">
+      <div class="e03__p e03__p--c1" style="top:20%;left:48%;transform:rotate(20deg)"></div>
+      <div class="e03__p e03__p--c2" style="top:8%;left:30%;transform:rotate(-30deg)"></div>
+      <div class="e03__p e03__p--tri" style="top:14%;left:62%"></div>
+      <div class="e03__p e03__p--circ" style="top:26%;left:18%"></div>
+      <div class="e03__p e03__p--c4" style="top:34%;left:70%;transform:rotate(45deg)"></div>
+      <div class="e03__p e03__p--c1" style="top:42%;left:12%;transform:rotate(15deg)"></div>
+      <div class="e03__p e03__p--c2" style="top:48%;left:82%;transform:rotate(-50deg)"></div>
+      <div class="e03__p e03__p--circ" style="top:56%;left:38%"></div>
+      <div class="e03__p e03__p--tri" style="top:62%;left:74%;transform:rotate(180deg)"></div>
+      <div class="e03__p e03__p--c4" style="top:70%;left:22%;transform:rotate(60deg)"></div>
+      <div class="e03__p e03__p--c1" style="top:78%;left:58%;transform:rotate(-20deg)"></div>
+      <div class="e03__p e03__p--c2" style="top:84%;left:80%"></div>
+      <div class="e03__p e03__p--circ" style="top:90%;left:14%"></div>
+      <div class="e03__p e03__p--c4" style="top:32%;left:42%;transform:rotate(75deg)"></div>
+    </div>
+    <div class="frame__id">E03</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E04 · Smoke / Mist</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo"></div>
+    <div class="frame__safe"><div class="placeholder-text">drift</div></div>
+    <div class="e04">
+      <div class="e04__b" style="bottom:10%;left:-10%;width:700px;height:280px"></div>
+      <div class="e04__b" style="bottom:28%;left:30%;width:900px;height:240px;opacity:.25"></div>
+      <div class="e04__b" style="bottom:6%;right:-10%;width:700px;height:300px;opacity:.2"></div>
+    </div>
+    <div class="frame__id">E04</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E05 · Lens Flare</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo" style="background:linear-gradient(135deg,#5a4a3a 0%,#1f1810 100%)"></div>
+    <div class="frame__safe"><div class="placeholder-text">golden</div></div>
+    <div class="e05">
+      <div class="e05__core"></div><div class="e05__halo e05__h1"></div><div class="e05__halo e05__h2"></div>
+      <div class="e05__halo e05__h3"></div><div class="e05__halo e05__h4"></div><div class="e05__ray"></div>
+    </div>
+    <div class="frame__id">E05</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E06 · Bokeh</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo"></div>
+    <div class="frame__safe"><div class="placeholder-text" style="font-size:140px">soft focus</div></div>
+    <div class="e06">
+      <div class="e06__c" style="top:8%;left:12%;width:120px;height:120px"></div>
+      <div class="e06__c" style="top:18%;right:18%;width:80px;height:80px;opacity:.5"></div>
+      <div class="e06__c" style="top:42%;left:6%;width:60px;height:60px"></div>
+      <div class="e06__c" style="top:58%;right:8%;width:140px;height:140px;opacity:.4"></div>
+      <div class="e06__c" style="bottom:18%;left:28%;width:90px;height:90px"></div>
+      <div class="e06__c" style="bottom:8%;right:32%;width:70px;height:70px;opacity:.6"></div>
+      <div class="e06__c" style="top:30%;left:42%;width:50px;height:50px;opacity:.4"></div>
+      <div class="e06__c" style="bottom:38%;left:62%;width:100px;height:100px"></div>
+    </div>
+    <div class="frame__id">E06</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E07 · Film Scratches & Dust</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe"><div class="placeholder-text">heritage</div></div>
+    <div class="e07">
+      <div class="e07__sc" style="left:14%;transform:rotate(.4deg)"></div>
+      <div class="e07__sc" style="left:42%;height:70%;top:10%;background:rgba(31,42,58,.55)"></div>
+      <div class="e07__sc" style="left:78%;transform:rotate(-.6deg)"></div>
+      <div class="e07__sc" style="left:62%;height:40%;top:30%"></div>
+      <div class="e07__d" style="top:12%;left:24%"></div><div class="e07__d e07__d--dark" style="top:28%;left:68%"></div>
+      <div class="e07__d" style="top:44%;left:38%;width:4px;height:4px"></div>
+      <div class="e07__d e07__d--dark" style="top:56%;left:18%"></div>
+      <div class="e07__d" style="top:72%;left:82%"></div>
+      <div class="e07__d e07__d--dark" style="top:84%;left:46%;width:8px;height:8px"></div>
+    </div>
+    <div class="frame__id">E07</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E08 · God Rays</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo" style="background:linear-gradient(180deg,#3a4858 0%,#1a1f28 100%)"></div>
+    <div class="frame__safe"><div class="placeholder-text">awakening</div></div>
+    <div class="e08">
+      <div class="e08__ray" style="left:0;transform:rotate(20deg)"></div>
+      <div class="e08__ray" style="left:8%;transform:rotate(22deg);width:50px;opacity:.7"></div>
+      <div class="e08__ray" style="left:18%;transform:rotate(24deg);width:120px;opacity:.4"></div>
+      <div class="e08__ray" style="left:30%;transform:rotate(26deg);width:60px"></div>
+      <div class="e08__ray" style="left:44%;transform:rotate(28deg);width:90px;opacity:.5"></div>
+      <div class="e08__ray" style="left:60%;transform:rotate(30deg);width:50px;opacity:.7"></div>
+    </div>
+    <div class="frame__id">E08</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E09 · Rain</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo" style="background:linear-gradient(180deg,#1e2a3a 0%,#0f1620 100%)"></div>
+    <div class="frame__safe"><div class="placeholder-text">storm</div></div>
+    <div class="e09" id="rainHost"></div>
+    <div class="frame__id">E09</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E10 · Snow</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo" style="background:linear-gradient(180deg,#26344a 0%,#101822 100%)"></div>
+    <div class="frame__safe"><div class="placeholder-text">winter</div></div>
+    <div class="e10" id="snowHost"></div>
+    <div class="frame__id">E10</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E11 · Falling Leaves</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe"><div class="placeholder-text">autumn</div></div>
+    <div class="e11" id="leafHost"></div>
+    <div class="frame__id">E11</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E12 · Cherry Petals</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe"><div class="placeholder-text">spring</div></div>
+    <div class="e12" id="petalHost"></div>
+    <div class="frame__id">E12</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E13 · Star Field</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo" style="background:linear-gradient(180deg,#0a0f1c 0%,#1f1830 100%)"></div>
+    <div class="frame__safe"><div class="placeholder-text">night</div></div>
+    <div class="e13" id="starHost"></div>
+    <div class="frame__id">E13</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E14 · Fog Roll</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo"></div>
+    <div class="frame__safe"><div class="placeholder-text">veiled</div></div>
+    <div class="e14">
+      <div class="e14__b" style="top:30%;left:-15%;width:1100px;height:600px"></div>
+      <div class="e14__b" style="top:55%;right:-20%;width:1300px;height:700px;opacity:.22"></div>
+      <div class="e14__b" style="bottom:8%;left:20%;width:900px;height:500px;opacity:.18"></div>
+    </div>
+    <div class="frame__id">E14</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E15 · Cloud Drift</div><div class="cell__row">
+  <div class="frame frame--light" style="background:linear-gradient(180deg,#bcd0e0 0%,#e8efef 100%)">
+    <div class="frame__safe"><div class="placeholder-text">sky</div></div>
+    <div class="e15">
+      <div class="e15__c" style="top:8%;left:5%;width:480px;height:240px"></div>
+      <div class="e15__c" style="top:14%;right:0%;width:600px;height:280px;opacity:.7"></div>
+      <div class="e15__c" style="top:30%;left:30%;width:380px;height:200px;opacity:.5"></div>
+    </div>
+    <div class="frame__id">E15</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E16 · Heat Shimmer</div><div class="cell__row">
+  <div class="frame frame--light" style="background:linear-gradient(180deg,#f5e8c8 0%,#e8c89a 100%)">
+    <div class="frame__safe"><div class="placeholder-text">desert</div></div>
+    <div class="e16"><div class="e16__layer"></div></div>
+    <div class="frame__id">E16</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E17 · Lightning</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo" style="background:linear-gradient(180deg,#1a2030 0%,#080c14 100%)"></div>
+    <div class="frame__safe"><div class="placeholder-text" style="opacity:.85">strike</div></div>
+    <div class="e17" style="opacity:.55">
+      <div class="e17__flash"></div>
+      <div class="e17__bolt"></div>
+    </div>
+    <div class="frame__id">E17</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E18 · Sun Through Clouds</div><div class="cell__row">
+  <div class="frame frame--light" style="background:linear-gradient(180deg,#a8c0d0 0%,#f0e0c0 100%)">
+    <div class="frame__safe"><div class="placeholder-text">hope</div></div>
+    <div class="e18">
+      <div class="e18__cl" style="top:8%;left:0;width:600px;height:280px"></div>
+      <div class="e18__cl" style="top:18%;right:5%;width:500px;height:240px;opacity:.7"></div>
+      <div class="e18__r" style="left:20%;transform:rotate(8deg)"></div>
+      <div class="e18__r" style="left:36%;transform:rotate(10deg);opacity:.6"></div>
+      <div class="e18__r" style="left:52%;transform:rotate(12deg);opacity:.7"></div>
+      <div class="e18__r" style="left:70%;transform:rotate(14deg);opacity:.5"></div>
+    </div>
+    <div class="frame__id">E18</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E19 · Halftone Dots</div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="placeholder-text">print</div></div><div class="e19"></div><div class="frame__id">E19</div></div>
+  <div class="frame frame--dark"><div class="frame__safe"><div class="placeholder-text">print</div></div><div class="e19"></div><div class="frame__id">E19·D</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E20 · Crosshatch</div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="placeholder-text">etched</div></div><div class="e20"></div><div class="frame__id">E20</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E21 · Topographic Lines</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe"><div class="placeholder-text">contour</div></div>
+    <svg class="e21" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+      <g fill="none" stroke="#5A8FA8" stroke-width="2">
+        <path d="M-50 200 Q 200 140 540 220 T 1130 200"/>
+        <path d="M-50 320 Q 250 250 540 340 T 1130 320"/>
+        <path d="M-50 460 Q 220 380 540 480 T 1130 460"/>
+        <path d="M-50 620 Q 260 520 540 640 T 1130 620"/>
+        <path d="M-50 800 Q 240 700 540 820 T 1130 800"/>
+        <path d="M-50 1000 Q 260 880 540 1020 T 1130 1000"/>
+        <path d="M-50 1220 Q 240 1100 540 1240 T 1130 1220"/>
+        <path d="M-50 1440 Q 260 1320 540 1460 T 1130 1440"/>
+        <path d="M-50 1660 Q 240 1540 540 1680 T 1130 1660"/>
+        <path d="M-50 1860 Q 260 1740 540 1880 T 1130 1860"/>
+      </g>
+    </svg>
+    <div class="frame__id">E21</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E22 · Dot Grid</div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="placeholder-text">notebook</div></div><div class="e22"></div><div class="frame__id">E22</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E23 · Diagonal Stripes</div><div class="cell__row">
+  <div class="frame"><div class="e23"></div>
+    <div class="frame__safe"><div class="placeholder-text" style="color:#fff;text-shadow:0 4px 20px rgba(0,0,0,.4)">pop</div></div>
+    <div class="frame__id">E23</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E24 · Watercolor Wash</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="e24"><div class="e24__b e24__b1"></div><div class="e24__b e24__b2"></div><div class="e24__b e24__b3"></div></div>
+    <div class="frame__safe"><div class="placeholder-text">wash</div></div>
+    <div class="frame__id">E24</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E25 · Grunge / Distress</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe"><div class="placeholder-text">worn</div></div>
+    <svg class="e25" viewBox="0 0 600 1067" preserveAspectRatio="xMidYMid slice">
+      <filter id="grunge"><feTurbulence type="fractalNoise" baseFrequency=".82" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 6 -3.2"/></filter>
+      <rect width="600" height="1067" filter="url(#grunge)" fill="#1F2A3A"/>
+    </svg>
+    <div class="frame__id">E25</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E26 · Wood Grain</div><div class="cell__row">
+  <div class="frame frame--light" style="background:#e8d8b8"><div class="frame__safe"><div class="placeholder-text" style="color:#3a2818">craft</div></div><div class="e26"></div><div class="frame__id">E26</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E27 · Marble</div><div class="cell__row">
+  <div class="frame" style="background:#f4f0ea">
+    <div class="frame__safe"><div class="placeholder-text" style="color:#1f2a3a">premium</div></div>
+    <svg class="e27" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+      <g fill="none" stroke="#9aa1ad" stroke-width="1.5">
+        <path d="M-20 280 C 200 240 320 380 540 320 S 880 240 1100 320"/>
+        <path d="M-20 540 C 240 480 360 660 540 580 S 920 460 1100 560" stroke-width="2"/>
+        <path d="M-20 880 C 200 800 380 980 540 900 S 880 760 1100 860"/>
+        <path d="M-20 1240 C 240 1160 360 1340 540 1260 S 920 1120 1100 1240" stroke-width=".8"/>
+        <path d="M-20 1580 C 200 1500 380 1680 540 1600 S 880 1460 1100 1560"/>
+      </g>
+    </svg>
+    <div class="frame__id">E27</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E28 · Mandala / Sacred Geometry</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">center</div></div>
+    <div class="e28">
+      <svg viewBox="0 0 1400 1400">
+        <g fill="none" stroke="#5A8FA8" stroke-width="1.5" transform="translate(700 700)">
+          <circle r="160"/><circle r="240"/><circle r="320"/><circle r="440"/><circle r="560"/><circle r="660"/>
+          <g>
+            <line x1="0" y1="-700" x2="0" y2="700"/>
+            <line x1="-700" y1="0" x2="700" y2="0"/>
+            <line x1="-495" y1="-495" x2="495" y2="495"/>
+            <line x1="-495" y1="495" x2="495" y2="-495"/>
+          </g>
+          <g>
+            <ellipse cx="0" cy="-280" rx="80" ry="160"/>
+            <ellipse cx="280" cy="0" rx="160" ry="80"/>
+            <ellipse cx="0" cy="280" rx="80" ry="160"/>
+            <ellipse cx="-280" cy="0" rx="160" ry="80"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="frame__id">E28</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E29 · Sine Waves</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">flow</div></div>
+    <svg class="e29" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+      <g fill="none" stroke="#5A8FA8" stroke-width="2">
+        <path d="M0 400 Q 135 320 270 400 T 540 400 T 810 400 T 1080 400"/>
+        <path d="M0 700 Q 90 600 180 700 T 360 700 T 540 700 T 720 700 T 900 700 T 1080 700"/>
+        <path d="M0 1000 Q 180 880 360 1000 T 720 1000 T 1080 1000" stroke-width="3"/>
+        <path d="M0 1300 Q 135 1380 270 1300 T 540 1300 T 810 1300 T 1080 1300"/>
+        <path d="M0 1600 Q 90 1700 180 1600 T 360 1600 T 540 1600 T 720 1600 T 900 1600 T 1080 1600"/>
+      </g>
+    </svg>
+    <div class="frame__id">E29</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E30 · Concentric Ripple</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">echo</div></div>
+    <div class="e30">
+      <div class="e30__r" style="width:300px;height:300px;opacity:.9"></div>
+      <div class="e30__r" style="width:520px;height:520px;opacity:.65"></div>
+      <div class="e30__r" style="width:760px;height:760px;opacity:.45"></div>
+      <div class="e30__r" style="width:1020px;height:1020px;opacity:.3"></div>
+      <div class="e30__r" style="width:1300px;height:1300px;opacity:.18"></div>
+      <div class="e30__r" style="width:1600px;height:1600px;opacity:.1"></div>
+    </div>
+    <div class="frame__id">E30</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E31 · Hex Grid</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">mesh</div></div>
+    <svg class="e31" viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="hex" width="120" height="138" patternUnits="userSpaceOnUse">
+          <polygon points="60,4 116,36 116,102 60,134 4,102 4,36" fill="none" stroke="#5A8FA8" stroke-width="1.5"/>
+        </pattern>
+      </defs>
+      <rect width="1080" height="1920" fill="url(#hex)"/>
+    </svg>
+    <div class="frame__id">E31</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E32 · Golden Spiral</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe"><div class="placeholder-text">phi</div></div>
+    <svg class="e32" viewBox="-100 -100 1280 2120">
+      <path d="M540 960 m -8 0 a 8 8 0 1 1 16 0 a 13 13 0 1 1 -26 0 a 21 21 0 1 1 42 0 a 34 34 0 1 1 -68 0 a 55 55 0 1 1 110 0 a 89 89 0 1 1 -178 0 a 144 144 0 1 1 288 0 a 233 233 0 1 1 -466 0 a 377 377 0 1 1 754 0 a 610 610 0 1 1 -1220 0"
+        fill="none" stroke="#1F2A3A" stroke-width="3"/>
+    </svg>
+    <div class="frame__id">E32</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E33 · Glitch Text</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe">
+      <div class="e33">
+        <div class="e33__l e33__l--r">SIGNAL</div>
+        <div class="e33__l e33__l--c">SIGNAL</div>
+        <div class="e33__l">SIGNAL</div>
+      </div>
+    </div>
+    <div class="frame__id">E33</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E34 · Static Noise Text</div><div class="cell__row">
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e34__w">STATIC</div></div><div class="frame__id">E34</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E35 · Wobble Text</div><div class="cell__row">
+  <div class="frame frame--light">
+    <div class="frame__safe">
+      <div class="e35__w">
+        <span style="transform:rotate(-3deg) translateY(-4px)">w</span>
+        <span style="transform:rotate(2deg) translateY(2px)">o</span>
+        <span style="transform:rotate(-1deg) translateY(-2px)">n</span>
+        <span style="transform:rotate(3deg) translateY(3px)">k</span>
+        <span style="transform:rotate(-2deg) translateY(-3px)">y</span>
+      </div>
+    </div>
+    <div class="frame__id">E35</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E36 · Wave Text</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe">
+      <div class="e36__w">
+        <span style="transform:translateY(-30px)">R</span>
+        <span style="transform:translateY(-10px)">I</span>
+        <span style="transform:translateY(20px)">P</span>
+        <span style="transform:translateY(40px)">P</span>
+        <span style="transform:translateY(20px)">L</span>
+        <span style="transform:translateY(-10px)">E</span>
+      </div>
+    </div>
+    <div class="frame__id">E36</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E37 · Typewriter Cursor</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="e37__w">typing<span class="e37__cur"></span></div></div>
+    <div class="frame__id">E37</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E38 · Letterpress</div><div class="cell__row">
+  <div class="frame frame--light"><div class="frame__safe"><div class="e38__w">PRESSED</div></div><div class="frame__id">E38</div></div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E39 · Bubble Drift</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__bg-photo" style="background:linear-gradient(180deg,#2a4a6a 0%,#0e1a2a 100%)"></div>
+    <div class="frame__safe"><div class="placeholder-text">surface</div></div>
+    <div class="e39" id="bubbleHost"></div>
+    <div class="frame__id">E39</div>
+  </div>
+</div></div>
+
+<div class="cell"><div class="cell__lbl">E40 · Money Rain</div><div class="cell__row">
+  <div class="frame frame--dark">
+    <div class="frame__safe"><div class="placeholder-text">payday</div></div>
+    <div class="e40" id="moneyHost"></div>
+    <div class="frame__id">E40</div>
+  </div>
+</div></div>
+
+</div>
+
+<script>
+// Seeded PRNG-ish positioning so review tile is deterministic.
+function rng(seed){let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280}}
+function fill(host,count,fn){if(!host)return;for(let i=0;i<count;i++)host.appendChild(fn(i))}
+
+// Rain
+(function(){const r=rng(11);fill(document.getElementById('rainHost'),50,i=>{const e=document.createElement('div');e.className='e09__d';
+  e.style.left=(r()*100)+'%';e.style.top=(r()*120-20)+'%';e.style.height=(60+r()*80)+'px';e.style.opacity=(.4+r()*.5);return e})})();
+// Snow
+(function(){const r=rng(22);fill(document.getElementById('snowHost'),40,i=>{const e=document.createElement('div');e.className='e10__f';
+  const s=4+r()*10;e.style.width=s+'px';e.style.height=s+'px';e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';e.style.opacity=(.5+r()*.5);return e})})();
+// Leaves
+(function(){const r=rng(33);const colors=['#C97D5C','#B8632F','#8B4A1F','#D49855'];
+  fill(document.getElementById('leafHost'),16,i=>{const e=document.createElement('div');e.className='e11__l';
+    const s=40+r()*60;e.style.width=s+'px';e.style.height=s+'px';
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.background=colors[Math.floor(r()*4)];
+    e.style.transform='rotate('+(r()*360)+'deg)';return e})})();
+// Petals
+(function(){const r=rng(44);
+  fill(document.getElementById('petalHost'),22,i=>{const e=document.createElement('div');e.className='e12__p';
+    const s=20+r()*30;e.style.width=s+'px';e.style.height=(s*1.4)+'px';
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.transform='rotate('+(r()*360)+'deg)';
+    if(r()>.5)e.style.background='#fce4ec';return e})})();
+// Stars
+(function(){const r=rng(55);
+  fill(document.getElementById('starHost'),50,i=>{const e=document.createElement('div');e.className='e13__s';
+    if(r()>.92)e.classList.add('e13__s--big');
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.opacity=(.4+r()*.6);return e})})();
+// Bubbles
+(function(){const r=rng(66);
+  fill(document.getElementById('bubbleHost'),22,i=>{const e=document.createElement('div');e.className='e39__b';
+    const s=14+r()*60;e.style.width=s+'px';e.style.height=s+'px';
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';return e})})();
+// Money
+(function(){const r=rng(77);
+  fill(document.getElementById('moneyHost'),26,i=>{const e=document.createElement('div');e.className='e40__n';
+    e.textContent='$';e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.transform='rotate('+(r()*360-180)+'deg)';return e})})();
+</script>
+</body>
+</html>

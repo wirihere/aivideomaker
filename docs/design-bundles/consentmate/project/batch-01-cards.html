@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Batch 01 — Cards (BRIEF 01, 17, 21, 28)</title>
+<style>
+/* Inlined: design/tokens-example.css (placeholder neutrals) */
+:root {
+  --card-navy:        #1F2A3A;
+  --card-navy-deep:   #131B27;
+  --card-slate:       #4A5568;
+  --card-slate-ink:   #6B7280;
+  --card-paper:       #F8F6F1;
+  --card-paper-soft:  #EFEBE2;
+  --card-accent:      #5A8FA8;
+  --card-warn:        #C97D5C;
+  --card-ok:          #4A8F70;
+  --card-font-ui:       system-ui, -apple-system, "Segoe UI", sans-serif;
+  --card-font-mono:     ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+  --card-font-display:  Georgia, "Times New Roman", serif;
+  --card-r-sm: 14px;
+  --card-r-md: 22px;
+  --card-r-lg: 28px;
+}
+</style>
+<style>
+  :root { color-scheme: light; }
+  html, body { margin: 0; padding: 0; background: #1a1d22; color: #e7e9ec; font-family: ui-monospace, "SF Mono", "JetBrains Mono", monospace; }
+  body { padding: 48px 32px 96px; }
+  .page-h { font-family: ui-sans-serif, system-ui, sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.01em; margin: 0 0 6px; color: #fff; }
+  .page-sub { font-size: 13px; color: #9aa1ad; max-width: 780px; line-height: 1.55; margin: 0 0 40px; }
+  .row { display: flex; flex-wrap: wrap; gap: 56px; align-items: flex-start; justify-content: center; }
+  .frame-pair { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+  .frame-pair__label { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #9aa1ad; }
+  .frame-pair__row { display: flex; gap: 24px; }
+  /* The fixed 1080×1920 design surface, scaled down for review only. */
+  .frame {
+    width: 1080px; height: 1920px;
+    transform-origin: top left;
+    transform: scale(0.32);
+    margin-right: -734px;   /* compensate scaled width */
+    margin-bottom: -1306px; /* compensate scaled height */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .frame--light { background: var(--card-paper); }
+  .frame--dark  { background: var(--card-navy); }
+  .frame__safe {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 120px 110px;
+    box-sizing: border-box;
+  }
+  .frame__caption {
+    position: absolute;
+    left: 32px; bottom: 32px;
+    font-family: var(--card-font-mono);
+    font-size: 28px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink);
+    opacity: 0.55;
+  }
+  .frame--dark .frame__caption { color: var(--card-paper); opacity: 0.45; }
+</style>
+</head>
+<body>
+
+<h1 class="page-h">Batch 01 — Cards</h1>
+<p class="page-sub">
+  Four token-only patterns, each at fixed 1080×1920, shown in light + dark variants.
+  The frames here are scaled to 32% for side-by-side review; nothing in the markup uses
+  responsive logic. Specs (HTML / CSS / motion intent / tokens) are in the bundle below
+  the previews.
+</p>
+
+<!-- =====================================================================
+     BRIEF 01 — Magazine Pull-Quote
+     ===================================================================== -->
+<div class="row">
+  <div class="frame-pair">
+    <div class="frame-pair__label">BRIEF 01 — Pull-Quote</div>
+    <div class="frame-pair__row">
+
+      <div class="frame frame--light">
+        <div class="frame__safe">
+          <article class="pullquote" data-mode="light">
+            <span class="pullquote__glyph" aria-hidden="true">&ldquo;</span>
+            <p class="pullquote__body">
+              The street is the smallest unit of trust we have left.
+            </p>
+            <div class="pullquote__rule" aria-hidden="true"></div>
+            <div class="pullquote__attr">
+              <span class="pullquote__attr-name">Brand X</span>
+              <span class="pullquote__attr-sep">·</span>
+              <span class="pullquote__attr-role">Community Noticeboard</span>
+            </div>
+          </article>
+        </div>
+        <div class="frame__caption">01 · light</div>
+      </div>
+
+      <div class="frame frame--dark">
+        <div class="frame__safe">
+          <article class="pullquote" data-mode="dark">
+            <span class="pullquote__glyph" aria-hidden="true">&ldquo;</span>
+            <p class="pullquote__body">
+              The street is the smallest unit of trust we have left.
+            </p>
+            <div class="pullquote__rule" aria-hidden="true"></div>
+            <div class="pullquote__attr">
+              <span class="pullquote__attr-name">Brand X</span>
+              <span class="pullquote__attr-sep">·</span>
+              <span class="pullquote__attr-role">Community Noticeboard</span>
+            </div>
+          </article>
+        </div>
+        <div class="frame__caption">01 · dark</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     BRIEF 17 — Stat Hero
+     ===================================================================== -->
+<div class="row" style="margin-top: 56px;">
+  <div class="frame-pair">
+    <div class="frame-pair__label">BRIEF 17 — Stat Hero</div>
+    <div class="frame-pair__row">
+
+      <div class="frame frame--light">
+        <div class="frame__safe">
+          <article class="stathero" data-mode="light">
+            <div class="stathero__kicker">{{ kicker }}</div>
+            <div class="stathero__number">
+              <span class="stathero__num-value">100</span><span class="stathero__num-unit">%</span>
+            </div>
+            <div class="stathero__arc" aria-hidden="true">
+              <svg viewBox="0 0 600 80" preserveAspectRatio="none">
+                <path class="stathero__arc-track" d="M 20 60 Q 300 -10 580 60" />
+                <path class="stathero__arc-fill"  d="M 20 60 Q 300 -10 580 60" />
+              </svg>
+            </div>
+            <div class="stathero__label">FREE · FOREVER</div>
+            <p class="stathero__support">
+              No subscription, no upsell, no premium tier.
+              Built for the street, paid for once.
+            </p>
+          </article>
+        </div>
+        <div class="frame__caption">17 · light</div>
+      </div>
+
+      <div class="frame frame--dark">
+        <div class="frame__safe">
+          <article class="stathero" data-mode="dark">
+            <div class="stathero__kicker">{{ kicker }}</div>
+            <div class="stathero__number">
+              <span class="stathero__num-value">100</span><span class="stathero__num-unit">%</span>
+            </div>
+            <div class="stathero__arc" aria-hidden="true">
+              <svg viewBox="0 0 600 80" preserveAspectRatio="none">
+                <path class="stathero__arc-track" d="M 20 60 Q 300 -10 580 60" />
+                <path class="stathero__arc-fill"  d="M 20 60 Q 300 -10 580 60" />
+              </svg>
+            </div>
+            <div class="stathero__label">FREE · FOREVER</div>
+            <p class="stathero__support">
+              No subscription, no upsell, no premium tier.
+              Built for the street, paid for once.
+            </p>
+          </article>
+        </div>
+        <div class="frame__caption">17 · dark</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     BRIEF 21 — Phone-In-Hand Mockup
+     ===================================================================== -->
+<div class="row" style="margin-top: 56px;">
+  <div class="frame-pair">
+    <div class="frame-pair__label">BRIEF 21 — Phone-In-Hand</div>
+    <div class="frame-pair__row">
+
+      <div class="frame frame--light">
+        <div class="frame__safe" style="align-items: flex-start; padding-top: 220px;">
+          <article class="phonehand" data-mode="light">
+            <div class="phonehand__head">
+              <div class="phonehand__kicker">IN YOUR HAND</div>
+              <h2 class="phonehand__title">{{ headline copy }}</h2>
+            </div>
+
+            <div class="phonehand__stage">
+              <!-- Hand silhouette (stylised — no skin texture) -->
+              <div class="phonehand__hand" aria-hidden="true"></div>
+              <!-- Tilted phone -->
+              <div class="phonehand__phone">
+                <div class="phonehand__phone-island" aria-hidden="true"></div>
+                <div class="phonehand__phone-screen">
+                  <div class="phonehand__slot">[SCREENSHOT_SLOT]</div>
+                </div>
+              </div>
+              <div class="phonehand__shadow" aria-hidden="true"></div>
+            </div>
+          </article>
+        </div>
+        <div class="frame__caption">21 · light</div>
+      </div>
+
+      <div class="frame frame--dark">
+        <div class="frame__safe" style="align-items: flex-start; padding-top: 220px;">
+          <article class="phonehand" data-mode="dark">
+            <div class="phonehand__head">
+              <div class="phonehand__kicker">IN YOUR HAND</div>
+              <h2 class="phonehand__title">{{ headline copy }}</h2>
+            </div>
+            <div class="phonehand__stage">
+              <div class="phonehand__hand" aria-hidden="true"></div>
+              <div class="phonehand__phone">
+                <div class="phonehand__phone-island" aria-hidden="true"></div>
+                <div class="phonehand__phone-screen">
+                  <div class="phonehand__slot">[SCREENSHOT_SLOT]</div>
+                </div>
+              </div>
+              <div class="phonehand__shadow" aria-hidden="true"></div>
+            </div>
+          </article>
+        </div>
+        <div class="frame__caption">21 · dark</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     BRIEF 28 — Logo Grid ("Trusted by")
+     ===================================================================== -->
+<div class="row" style="margin-top: 56px;">
+  <div class="frame-pair">
+    <div class="frame-pair__label">BRIEF 28 — Logo Grid</div>
+    <div class="frame-pair__row">
+
+      <div class="frame frame--light">
+        <div class="frame__safe">
+          <article class="logogrid" data-mode="light">
+            <div class="logogrid__head">
+              <div class="logogrid__rule" aria-hidden="true"></div>
+              <div class="logogrid__kicker">SUPPORTING</div>
+              <div class="logogrid__rule" aria-hidden="true"></div>
+            </div>
+            <h2 class="logogrid__title">{{ section title }}</h2>
+            <div class="logogrid__grid">
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_01]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_02]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_03]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_04]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_05]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_06]</span></div>
+            </div>
+            <div class="logogrid__foot">PARTNERS · 2026</div>
+          </article>
+        </div>
+        <div class="frame__caption">28 · light</div>
+      </div>
+
+      <div class="frame frame--dark">
+        <div class="frame__safe">
+          <article class="logogrid" data-mode="dark">
+            <div class="logogrid__head">
+              <div class="logogrid__rule" aria-hidden="true"></div>
+              <div class="logogrid__kicker">SUPPORTING</div>
+              <div class="logogrid__rule" aria-hidden="true"></div>
+            </div>
+            <h2 class="logogrid__title">{{ section title }}</h2>
+            <div class="logogrid__grid">
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_01]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_02]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_03]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_04]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_05]</span></div>
+              <div class="logogrid__cell"><span class="logogrid__slot">[LOGO_06]</span></div>
+            </div>
+            <div class="logogrid__foot">PARTNERS · 2026</div>
+          </article>
+        </div>
+        <div class="frame__caption">28 · dark</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- =====================================================================
+     PATTERN STYLES (token-only)
+     ===================================================================== -->
+<style>
+
+/* ----------- BRIEF 01 — Magazine Pull-Quote ------------------------- */
+
+.pullquote {
+  position: relative;
+  width: 860px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding-top: 40px;
+  color: var(--card-navy);
+}
+.pullquote[data-mode="dark"] { color: var(--card-paper); }
+
+.pullquote__glyph {
+  font-family: var(--card-font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 360px;
+  line-height: 0.7;
+  color: var(--card-accent);
+  position: absolute;
+  top: -40px;
+  left: -28px;
+  transform: rotate(-6deg);
+  opacity: 0.78;
+  pointer-events: none;
+  user-select: none;
+}
+.pullquote[data-mode="dark"] .pullquote__glyph {
+  color: var(--card-paper-soft);
+  opacity: 0.42;
+}
+
+.pullquote__body {
+  position: relative;
+  font-family: var(--card-font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 108px;
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  margin: 200px 0 56px;
+  color: inherit;
+  text-wrap: pretty;
+}
+/* drop-cap on first character */
+.pullquote__body::first-letter {
+  font-size: 1.18em;
+  color: var(--card-accent);
+}
+.pullquote[data-mode="dark"] .pullquote__body::first-letter {
+  color: var(--card-paper-soft);
+}
+
+.pullquote__rule {
+  width: 220px;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.35;
+  margin-bottom: 30px;
+}
+
+.pullquote__attr {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.78;
+  display: inline-flex;
+  gap: 16px;
+  align-items: center;
+}
+.pullquote__attr-sep { opacity: 0.6; }
+.pullquote[data-mode="light"] .pullquote__attr-name { color: var(--card-accent); }
+.pullquote[data-mode="dark"]  .pullquote__attr-name { color: var(--card-paper); opacity: 1; }
+
+
+/* ----------- BRIEF 17 — Stat Hero ----------------------------------- */
+
+.stathero {
+  width: 860px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  color: var(--card-navy);
+}
+.stathero[data-mode="dark"] { color: var(--card-paper); }
+
+.stathero__kicker {
+  font-family: var(--card-font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--card-slate-ink);
+  margin-bottom: 20px;
+}
+.stathero[data-mode="dark"] .stathero__kicker {
+  color: var(--card-paper-soft);
+  opacity: 0.7;
+}
+
+.stathero__number {
+  display: inline-flex;
+  align-items: flex-start;
+  font-family: var(--card-font-display);
+  font-weight: 600;
+  font-size: 360px;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: inherit;
+}
+.stathero__num-unit {
+  font-size: 200px;
+  line-height: 1;
+  padding-top: 36px;
+  margin-left: 6px;
+  color: var(--card-accent);
+  font-weight: 500;
+}
+.stathero[data-mode="dark"] .stathero__num-unit {
+  color: var(--card-paper-soft);
+}
+
+.stathero__arc {
+  width: 600px;
+  height: 80px;
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+.stathero__arc svg { width: 100%; height: 100%; overflow: visible; }
+.stathero__arc-track {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.18;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+.stathero__arc-fill {
+  fill: none;
+  stroke: var(--card-accent);
+  stroke-width: 8;
+  stroke-linecap: round;
+  /* Default 'is-filled' state — full arc drawn. Wire dashoffset for count-up. */
+  stroke-dasharray: 1 0;
+}
+.stathero[data-mode="dark"] .stathero__arc-fill { stroke: var(--card-paper); }
+
+.stathero__label {
+  font-family: var(--card-font-mono);
+  font-weight: 600;
+  font-size: 40px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.stathero__support {
+  font-family: var(--card-font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 1.4;
+  max-width: 720px;
+  margin: 16px 0 0;
+  color: inherit;
+  opacity: 0.82;
+  text-wrap: balance;
+}
+
+/* States for the count-up:
+   .stathero.is-counting → arc-fill animates via stroke-dasharray;
+   .stathero.is-final    → resting state shown above (default). */
+.stathero.is-counting .stathero__arc-fill {
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
+}
+.stathero.is-final .stathero__arc-fill {
+  stroke-dasharray: 700;
+  stroke-dashoffset: 0;
+}
+
+
+/* ----------- BRIEF 21 — Phone-In-Hand ------------------------------- */
+
+.phonehand {
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+  color: var(--card-navy);
+}
+.phonehand[data-mode="dark"] { color: var(--card-paper); }
+
+.phonehand__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  text-align: center;
+}
+.phonehand__kicker {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--card-accent);
+}
+.phonehand[data-mode="dark"] .phonehand__kicker { color: var(--card-paper-soft); }
+.phonehand__title {
+  font-family: var(--card-font-display);
+  font-weight: 600;
+  font-size: 92px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 820px;
+  color: inherit;
+  text-wrap: balance;
+}
+
+/* Stage holds phone + hand + shadow at fixed positions. */
+.phonehand__stage {
+  position: relative;
+  width: 760px;
+  height: 1180px;
+  perspective: 1800px;
+}
+
+/* Phone — 9:19.5 rounded rect, tilted on Y. */
+.phonehand__phone {
+  position: absolute;
+  top: 60px;
+  left: 90px;
+  width: 580px;
+  height: 1080px;
+  border-radius: 78px;
+  background: var(--card-navy-deep);
+  border: 14px solid var(--card-navy);
+  box-sizing: border-box;
+  box-shadow:
+    0 60px 110px rgba(0,0,0,0.40),
+    0 14px 28px rgba(0,0,0,0.28),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+  transform: rotateY(-13deg) rotateZ(-3deg);
+  transform-origin: 50% 70%;
+}
+.phonehand[data-mode="light"] .phonehand__phone { border-color: var(--card-slate); background: var(--card-navy); }
+.phonehand[data-mode="dark"]  .phonehand__phone { border-color: var(--card-navy-deep); background: var(--card-navy-deep); }
+
+.phonehand__phone-island {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 180px;
+  height: 36px;
+  border-radius: 22px;
+  background: var(--card-navy-deep);
+  z-index: 2;
+}
+
+.phonehand__phone-screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 64px;
+  background: var(--card-paper-soft);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.phonehand__slot {
+  font-family: var(--card-font-mono);
+  font-size: 28px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--card-slate-ink);
+  padding: 14px 22px;
+  border: 2px dashed var(--card-slate-ink);
+  border-radius: var(--card-r-sm);
+  opacity: 0.65;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0 12px,
+    rgba(0,0,0,0.04) 12px 24px
+  );
+}
+
+/* Hand — silhouette only. Positioned bottom-left, "holding" the phone. */
+.phonehand__hand {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 520px;
+  height: 520px;
+  background: var(--card-slate);
+  /* organic blob using radial mask via clip-path */
+  clip-path: polygon(
+     0% 100%, 0% 38%,
+    10% 22%, 26% 12%,
+    44%  6%, 60% 10%,
+    78% 22%, 92% 40%,
+   100% 60%, 96% 78%,
+    82% 92%, 60% 100%
+  );
+  opacity: 0.92;
+  filter: blur(0.4px);
+}
+.phonehand[data-mode="light"] .phonehand__hand { background: var(--card-slate); opacity: 0.85; }
+.phonehand[data-mode="dark"]  .phonehand__hand { background: var(--card-paper-soft); opacity: 0.18; }
+
+/* Soft ground shadow under the phone */
+.phonehand__shadow {
+  position: absolute;
+  left: 130px;
+  bottom: 30px;
+  width: 540px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center,
+    rgba(0,0,0,0.42) 0%,
+    rgba(0,0,0,0.22) 40%,
+    rgba(0,0,0,0.0)  72%);
+  filter: blur(8px);
+  z-index: 0;
+}
+.phonehand[data-mode="dark"] .phonehand__shadow {
+  background: radial-gradient(ellipse at center,
+    rgba(0,0,0,0.55) 0%,
+    rgba(0,0,0,0.30) 40%,
+    rgba(0,0,0,0.0)  72%);
+}
+
+/* States — design two postures so motion can interpolate.
+   .phonehand.is-entering — phone parked off-bottom, no tilt;
+   .phonehand.is-rest     — final tilted position (default). */
+.phonehand.is-entering .phonehand__phone {
+  transform: translateY(280px) rotateY(0deg) rotateZ(0deg);
+}
+.phonehand.is-entering .phonehand__hand   { opacity: 0; }
+.phonehand.is-entering .phonehand__shadow { opacity: 0; }
+
+
+/* ----------- BRIEF 28 — Logo Grid ----------------------------------- */
+
+.logogrid {
+  width: 920px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  color: var(--card-navy);
+}
+.logogrid[data-mode="dark"] { color: var(--card-paper); }
+
+.logogrid__head {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  width: 100%;
+  justify-content: center;
+}
+.logogrid__rule {
+  flex: 1;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.22;
+  max-width: 280px;
+}
+.logogrid__kicker {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--card-accent);
+  white-space: nowrap;
+}
+.logogrid[data-mode="dark"] .logogrid__kicker { color: var(--card-paper); opacity: 0.92; }
+
+.logogrid__title {
+  font-family: var(--card-font-display);
+  font-weight: 600;
+  font-size: 84px;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  margin: 4px 0 12px;
+  text-align: center;
+  max-width: 820px;
+  color: inherit;
+  text-wrap: balance;
+}
+
+.logogrid__grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  padding: 28px;
+  border: 1.5px solid currentColor;
+  border-color: color-mix(in oklch, currentColor 25%, transparent);
+  border-radius: var(--card-r-md);
+  background: color-mix(in oklch, var(--card-paper-soft) 50%, transparent);
+}
+.logogrid[data-mode="dark"] .logogrid__grid {
+  background: color-mix(in oklch, var(--card-navy-deep) 60%, transparent);
+}
+
+.logogrid__cell {
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--card-r-sm);
+  background: var(--card-paper);
+  border: 1px solid color-mix(in oklch, var(--card-slate-ink) 18%, transparent);
+}
+.logogrid[data-mode="dark"] .logogrid__cell {
+  background: color-mix(in oklch, var(--card-paper) 6%, transparent);
+  border-color: color-mix(in oklch, var(--card-paper) 14%, transparent);
+}
+
+.logogrid__slot {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--card-slate-ink);
+  opacity: 0.7;
+}
+.logogrid[data-mode="dark"] .logogrid__slot { color: var(--card-paper); opacity: 0.65; }
+
+.logogrid__foot {
+  font-family: var(--card-font-mono);
+  font-size: 24px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--card-slate-ink);
+  opacity: 0.55;
+}
+.logogrid[data-mode="dark"] .logogrid__foot { color: var(--card-paper); opacity: 0.5; }
+
+/* States for the cascade reveal:
+   .logogrid.is-entering .logogrid__cell — cell pre-state (used for staggered fade-up);
+   .logogrid.is-rest                     — default visible state. */
+.logogrid.is-entering .logogrid__cell { opacity: 0; transform: translateY(28px); }
+.logogrid.is-entering .logogrid__title,
+.logogrid.is-entering .logogrid__kicker { opacity: 0; transform: translateY(18px); }
+
+</style>
+
+</body>
+</html>

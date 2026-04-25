@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 06 — E201–E240 · cinematic + UI motion</title>
+<style>
+:root{
+  --card-navy:#1F2A3A;--card-navy-deep:#131B27;--card-slate:#4A5568;--card-slate-ink:#6B7280;
+  --card-paper:#F8F6F1;--card-paper-soft:#EFEBE2;--card-accent:#5A8FA8;--card-warn:#C97D5C;--card-ok:#4A8F70;
+  --card-font-mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --card-font-display:Georgia,"Times New Roman",serif;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--card-font-mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:820px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__lbl b{color:#f5d35a;font-weight:600;letter-spacing:.18em}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);background:var(--card-paper)}
+.frame--dark{background:var(--card-navy)}
+.frame__safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 90px;box-sizing:border-box;z-index:5}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:20}
+.frame--light .frame__id,.frame:not(.frame--dark) .frame__id{color:rgba(31,42,58,.4)}
+.ph{font-family:var(--card-font-display);font-weight:700;font-size:140px;line-height:1;color:var(--card-navy);text-align:center}
+.ph--inv{color:var(--card-paper)}
+
+/* ===== Animations ===== */
+@keyframes pageCurl{0%,100%{transform:perspective(1600px) rotateY(0)}50%{transform:perspective(1600px) rotateY(-160deg)}}
+@keyframes splitL{0%,100%{transform:translateX(-50%)}50%{transform:translateX(0)}}
+@keyframes splitR{0%,100%{transform:translateX(50%)}50%{transform:translateX(0)}}
+@keyframes shutterIn{0%{transform:scaleX(0)}50%,100%{transform:scaleX(1)}}
+@keyframes maskGrow{0%{clip-path:circle(0% at 50% 50%)}100%{clip-path:circle(75% at 50% 50%)}}
+@keyframes diamondMask{0%{clip-path:polygon(50% 50%,50% 50%,50% 50%,50% 50%)}100%{clip-path:polygon(50% -10%,110% 50%,50% 110%,-10% 50%)}}
+@keyframes barReveal{0%{transform:scaleY(0)}100%{transform:scaleY(1)}}
+@keyframes blindSweep{0%{transform:translateX(-100%)}100%{transform:translateX(0)}}
+@keyframes letterboxOpen{0%{transform:scaleY(1)}100%{transform:scaleY(.2)}}
+@keyframes flipBoard{0%{transform:rotateY(0)}50%{transform:rotateY(180deg)}100%{transform:rotateY(360deg)}}
+@keyframes spinY{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+@keyframes explode{0%,100%{transform:translate(0)}50%{transform:translate(var(--dx),var(--dy))}}
+@keyframes barRise{0%{transform:scaleY(.05);opacity:.7}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:1}}
+@keyframes drawLine{0%{stroke-dashoffset:1500}100%{stroke-dashoffset:0}}
+@keyframes mapTrace{0%{stroke-dashoffset:1200}100%{stroke-dashoffset:0}}
+@keyframes mapPing{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+@keyframes toastIn{0%{transform:translateY(-180%);opacity:0}10%,90%{transform:translateY(0);opacity:1}100%{transform:translateY(-180%);opacity:0}}
+@keyframes tabSwipe{0%,100%{transform:translateX(0)}50%{transform:translateX(-33.333%)}}
+@keyframes modalUp{0%{transform:translateY(120%);opacity:0}30%,90%{transform:translateY(0);opacity:1}100%{transform:translateY(120%);opacity:0}}
+@keyframes drawerSlide{0%,100%{transform:translateX(100%)}25%,75%{transform:translateX(0)}}
+@keyframes fabPulse{0%,100%{transform:scale(1);box-shadow:0 12px 40px rgba(201,125,92,.5),0 0 0 0 rgba(201,125,92,.5)}50%{transform:scale(1.06);box-shadow:0 12px 40px rgba(201,125,92,.5),0 0 0 60px rgba(201,125,92,0)}}
+@keyframes sliderThumb{0%,100%{left:8%}50%{left:82%}}
+@keyframes checkbox{0%,40%{stroke-dashoffset:80}60%,100%{stroke-dashoffset:0}}
+@keyframes ringFill{0%{stroke-dashoffset:880}100%{stroke-dashoffset:264}}
+@keyframes counterUp{0%{transform:translateY(0)}100%{transform:translateY(-90%)}}
+@keyframes accordion{0%,40%{max-height:60px}60%,100%{max-height:340px}}
+@keyframes toggleSlide{0%,100%{left:8px;background:#cfd6df}50%{left:78px;background:var(--card-ok)}}
+@keyframes ratingFill{0%{width:0}100%{width:80%}}
+@keyframes parallaxBack{0%,100%{transform:translateY(0) scale(1.05)}50%{transform:translateY(-30px) scale(1.05)}}
+@keyframes parallaxFront{0%,100%{transform:translateY(0)}50%{transform:translateY(-80px)}}
+@keyframes globeSpin{0%{background-position:0 0}100%{background-position:1000px 0}}
+@keyframes scrubber{0%{width:0}100%{width:62%}}
+@keyframes barChartCycle{0%,100%{height:30%}25%{height:80%}50%{height:60%}75%{height:95%}}
+@keyframes badgeBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+@keyframes textCycle{0%,30%{transform:translateY(0)}33%,63%{transform:translateY(-100%)}66%,96%{transform:translateY(-200%)}100%{transform:translateY(0)}}
+@keyframes paperFold{0%,100%{transform:perspective(1200px) rotateX(0)}50%{transform:perspective(1200px) rotateX(60deg)}}
+@keyframes elevatorOpen{0%,100%{transform:scaleX(1)}50%{transform:scaleX(0)}}
+@keyframes pendulum{0%,100%{transform:rotate(-22deg)}50%{transform:rotate(22deg)}}
+@keyframes coinFlip{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes burst{0%{transform:scale(0);opacity:1}100%{transform:scale(1);opacity:0}}
+
+/* ============ E201 Page Curl Transition ============ */
+.e201{position:absolute;inset:0;perspective:1800px}
+.e201__a,.e201__b{position:absolute;inset:0;backface-visibility:hidden}
+.e201__a{background:linear-gradient(135deg,#3a4858,#1f2a3a);transform-origin:left center;animation:pageCurl 6s ease-in-out infinite}
+.e201__b{background:linear-gradient(135deg,#c97d5c,#7a3f2a)}
+.e201__caption{position:absolute;left:0;right:0;bottom:140px;text-align:center;color:#fff;font-family:var(--card-font-display);font-size:120px;font-weight:700;z-index:3}
+
+/* ============ E202 Split Screen ============ */
+.e202{position:absolute;inset:0;display:flex}
+.e202__l,.e202__r{flex:1;display:flex;align-items:center;justify-content:center}
+.e202__l{background:var(--card-navy);animation:splitL 5s ease-in-out infinite}
+.e202__r{background:var(--card-warn);animation:splitR 5s ease-in-out infinite}
+.e202 .ph{color:#fff}
+
+/* ============ E203 Shutter Reveal ============ */
+.e203{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1f2a3a)}
+.e203__bars{position:absolute;inset:0;display:flex;flex-direction:column}
+.e203__bars i{flex:1;background:var(--card-paper);transform-origin:left center;animation:shutterIn 4s ease-in-out infinite alternate}
+.e203__bars i:nth-child(2){animation-delay:.08s}.e203__bars i:nth-child(3){animation-delay:.16s}
+.e203__bars i:nth-child(4){animation-delay:.24s}.e203__bars i:nth-child(5){animation-delay:.32s}
+.e203__bars i:nth-child(6){animation-delay:.4s}.e203__bars i:nth-child(7){animation-delay:.48s}
+.e203__bars i:nth-child(8){animation-delay:.56s}
+
+/* ============ E204 Circular Mask Reveal ============ */
+.e204{position:absolute;inset:0;background:linear-gradient(135deg,var(--card-warn),#7a3f2a)}
+.e204__top{position:absolute;inset:0;background:var(--card-navy);animation:maskGrow 4s ease-in-out infinite alternate}
+
+/* ============ E205 Diamond Mask ============ */
+.e205{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#5a8fa8,#1f2a3a)}
+.e205__top{position:absolute;inset:0;background:var(--card-paper);animation:diamondMask 4s ease-in-out infinite alternate}
+
+/* ============ E206 Vertical Bars Reveal ============ */
+.e206{position:absolute;inset:0;display:flex}
+.e206 i{flex:1;background:linear-gradient(180deg,var(--card-navy),var(--card-navy-deep));transform-origin:bottom center;animation:barReveal 3s ease-in-out infinite alternate}
+.e206 i:nth-child(2){animation-delay:.05s}.e206 i:nth-child(3){animation-delay:.1s}
+.e206 i:nth-child(4){animation-delay:.15s}.e206 i:nth-child(5){animation-delay:.2s}
+.e206 i:nth-child(6){animation-delay:.25s}.e206 i:nth-child(7){animation-delay:.3s}
+.e206 i:nth-child(8){animation-delay:.35s}.e206 i:nth-child(9){animation-delay:.4s}
+
+/* ============ E207 Letterbox Open ============ */
+.e207{position:absolute;inset:0;background:linear-gradient(180deg,#3a4858,#1f2a3a)}
+.e207__top,.e207__btm{position:absolute;left:0;right:0;background:#000;height:50%;transform-origin:center;animation:letterboxOpen 4s ease-in-out infinite alternate}
+.e207__top{top:0;transform-origin:top}
+.e207__btm{bottom:0;transform-origin:bottom}
+
+/* ============ E208 Card Flip Board ============ */
+.e208{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:20px;width:780px;height:780px;perspective:1400px}
+.e208 i{background:var(--card-warn);animation:flipBoard 3s ease-in-out infinite}
+.e208 i:nth-child(2){background:var(--card-accent);animation-delay:.15s}
+.e208 i:nth-child(3){background:var(--card-navy);animation-delay:.3s}
+.e208 i:nth-child(4){background:var(--card-ok);animation-delay:.45s}
+.e208 i:nth-child(5){background:var(--card-paper-soft);animation-delay:.6s}
+.e208 i:nth-child(6){background:var(--card-warn);animation-delay:.75s}
+.e208 i:nth-child(7){background:var(--card-accent);animation-delay:.9s}
+.e208 i:nth-child(8){background:var(--card-navy);animation-delay:1.05s}
+.e208 i:nth-child(9){background:var(--card-ok);animation-delay:1.2s}
+
+/* ============ E209 3D Cube Spin ============ */
+.e209{width:600px;height:600px;perspective:1800px;transform-style:preserve-3d}
+.e209__c{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:spinY 8s linear infinite}
+.e209__c i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:800;font-size:140px;color:#fff;border:2px solid rgba(255,255,255,.18)}
+.e209__c i:nth-child(1){background:var(--card-warn);transform:translateZ(300px)}
+.e209__c i:nth-child(2){background:var(--card-accent);transform:rotateY(90deg) translateZ(300px)}
+.e209__c i:nth-child(3){background:var(--card-ok);transform:rotateY(180deg) translateZ(300px)}
+.e209__c i:nth-child(4){background:var(--card-navy-deep);transform:rotateY(-90deg) translateZ(300px)}
+
+/* ============ E210 Exploded View ============ */
+.e210{position:relative;width:780px;height:780px}
+.e210 i{position:absolute;left:50%;top:50%;width:160px;height:160px;margin:-80px 0 0 -80px;border-radius:14px;background:var(--card-paper);
+  box-shadow:0 20px 40px rgba(0,0,0,.3);animation:explode 3.6s ease-in-out infinite}
+.e210 i:nth-child(1){--dx:-220px;--dy:-220px;background:var(--card-warn)}
+.e210 i:nth-child(2){--dx:220px;--dy:-220px;background:var(--card-accent)}
+.e210 i:nth-child(3){--dx:-220px;--dy:220px;background:var(--card-ok)}
+.e210 i:nth-child(4){--dx:220px;--dy:220px;background:var(--card-navy-deep)}
+.e210 i:nth-child(5){--dx:0;--dy:-310px;background:#fff}
+.e210 i:nth-child(6){--dx:0;--dy:310px;background:#fff}
+
+/* ============ E211 Bar Chart Animated ============ */
+.e211{display:flex;align-items:flex-end;gap:42px;height:840px;padding:0 60px}
+.e211 i{flex:1;background:linear-gradient(180deg,var(--card-accent),#3a6b80);border-radius:14px 14px 0 0;transform-origin:bottom;animation:barChartCycle 4s ease-in-out infinite}
+.e211 i:nth-child(1){animation-delay:0s}.e211 i:nth-child(2){animation-delay:.2s;background:linear-gradient(180deg,var(--card-warn),#7a3f2a)}
+.e211 i:nth-child(3){animation-delay:.4s}.e211 i:nth-child(4){animation-delay:.6s;background:linear-gradient(180deg,var(--card-ok),#2a5a48)}
+.e211 i:nth-child(5){animation-delay:.8s}.e211 i:nth-child(6){animation-delay:1s;background:linear-gradient(180deg,var(--card-warn),#7a3f2a)}
+
+/* ============ E212 Line Chart Draw ============ */
+.e212{width:90%;max-width:880px}
+.e212 path{fill:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1500}
+.e212 .a{stroke:var(--card-accent);animation:drawLine 4s ease-in-out infinite alternate}
+.e212 .b{stroke:var(--card-warn);animation:drawLine 4s ease-in-out .4s infinite alternate}
+
+/* ============ E213 Donut Fill ============ */
+.e213{width:580px;height:580px;position:relative}
+.e213 svg{transform:rotate(-90deg)}
+.e213 circle{fill:none;stroke-width:60;cx:200;cy:200;r:140}
+.e213 .track{stroke:var(--card-paper-soft)}
+.e213 .fill{stroke:var(--card-accent);stroke-dasharray:880;animation:ringFill 3s ease-in-out infinite alternate;stroke-linecap:round}
+.e213__num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:800;font-size:180px;color:var(--card-navy)}
+
+/* ============ E214 Map Pin Trace ============ */
+.e214{width:90%;max-width:880px}
+.e214 .country{fill:var(--card-paper-soft);stroke:var(--card-slate-ink);stroke-width:1}
+.e214 .route{fill:none;stroke:var(--card-warn);stroke-width:6;stroke-dasharray:1200;animation:mapTrace 4s ease-in-out infinite}
+.e214 .pin{fill:var(--card-warn)}
+.e214 .ping{fill:none;stroke:var(--card-warn);stroke-width:4;transform-origin:center;animation:mapPing 2s ease-out infinite}
+
+/* ============ E215 Globe Spin ============ */
+.e215{width:760px;height:760px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#6da3bd,#1f4252 70%),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 2px,transparent 2px 60px);
+  box-shadow:inset -60px -40px 100px rgba(0,0,0,.5),0 30px 60px rgba(0,0,0,.4);
+  position:relative;overflow:hidden}
+.e215::before{content:"";position:absolute;inset:0;background:
+    radial-gradient(60px 60px at 30% 35%,#3a6b50,transparent 70%),
+    radial-gradient(80px 50px at 55% 45%,#3a6b50,transparent 70%),
+    radial-gradient(90px 60px at 35% 65%,#3a6b50,transparent 70%),
+    radial-gradient(70px 40px at 70% 70%,#3a6b50,transparent 70%);
+  animation:globeSpin 14s linear infinite;background-size:1000px 1000px}
+
+/* ============ E216 Toast Slide-In ============ */
+.e216{position:absolute;inset:0;background:#dde2ea}
+.e216__t{position:absolute;left:60px;right:60px;top:120px;padding:48px 60px;border-radius:24px;background:var(--card-navy);
+  color:var(--card-paper);box-shadow:0 30px 60px rgba(0,0,0,.3);display:flex;align-items:center;gap:36px;
+  animation:toastIn 4s ease-in-out infinite}
+.e216__icon{width:96px;height:96px;border-radius:50%;background:var(--card-ok);display:flex;align-items:center;justify-content:center;color:#fff;font-size:60px;font-weight:700;flex-shrink:0}
+.e216__msg{font-family:var(--card-font-display);font-size:64px;font-weight:600;line-height:1.1}
+.e216__bg-ph{position:absolute;left:60px;right:60px;top:340px;bottom:60px;border-radius:24px;background:#eef1f6;display:flex;align-items:center;justify-content:center}
+.e216__bg-ph .ph{font-size:120px;opacity:.4}
+
+/* ============ E217 Tab Swipe ============ */
+.e217{position:absolute;inset:0;background:#eef1f6;display:flex;flex-direction:column}
+.e217__tabs{display:flex;height:160px;background:#fff;border-bottom:2px solid #e2e7ee}
+.e217__tab{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-mono);font-size:42px;letter-spacing:.18em;color:var(--card-slate-ink);text-transform:uppercase;position:relative}
+.e217__tab.active{color:var(--card-navy)}
+.e217__indicator{position:absolute;bottom:-2px;height:8px;background:var(--card-warn);width:33.333%;animation:tabSwipe 4s ease-in-out infinite}
+.e217__panes{flex:1;overflow:hidden;position:relative}
+.e217__strip{position:absolute;inset:0;display:flex;width:300%;animation:tabSwipe 4s ease-in-out infinite}
+.e217__pane{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-size:200px;font-weight:700;color:var(--card-navy)}
+.e217__pane:nth-child(2){background:#fff}
+
+/* ============ E218 Modal Lift ============ */
+.e218{position:absolute;inset:0;background:#dde2ea}
+.e218__shim{position:absolute;inset:0;background:rgba(31,42,58,.55);animation:toastIn 6s ease-in-out infinite}
+.e218__m{position:absolute;left:90px;right:90px;top:280px;bottom:280px;background:var(--card-paper);border-radius:30px;padding:80px;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 40px 80px rgba(0,0,0,.4);animation:modalUp 6s ease-in-out infinite}
+.e218__title{font-family:var(--card-font-display);font-weight:700;font-size:120px;color:var(--card-navy);line-height:1}
+.e218__btns{display:flex;gap:24px}
+.e218__btn{padding:36px 60px;border-radius:18px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;text-transform:uppercase}
+.e218__btn--p{background:var(--card-warn);color:#fff}
+.e218__btn--s{background:transparent;border:3px solid var(--card-navy);color:var(--card-navy)}
+
+/* ============ E219 Drawer Slide ============ */
+.e219{position:absolute;inset:0;background:#eef1f6;overflow:hidden}
+.e219__menu{position:absolute;right:0;top:0;bottom:0;width:60%;background:var(--card-navy);
+  padding:120px 80px;display:flex;flex-direction:column;gap:36px;animation:drawerSlide 5s ease-in-out infinite;
+  box-shadow:-30px 0 60px rgba(0,0,0,.3)}
+.e219__menu i{height:96px;background:rgba(248,246,241,.08);border-radius:14px}
+.e219__menu i:nth-child(odd){background:rgba(248,246,241,.16)}
+
+/* ============ E220 FAB Pulse ============ */
+.e220{position:absolute;right:120px;bottom:240px;width:200px;height:200px;border-radius:50%;background:var(--card-warn);display:flex;align-items:center;justify-content:center;font-size:140px;color:#fff;animation:fabPulse 2.4s ease-out infinite}
+
+/* ============ E221 Slider Thumb ============ */
+.e221{position:relative;width:760px;height:140px;display:flex;align-items:center}
+.e221__track{width:100%;height:14px;border-radius:7px;background:var(--card-paper-soft);position:relative}
+.e221__fill{position:absolute;left:0;top:0;bottom:0;background:var(--card-accent);border-radius:7px;width:0;animation:scrubber 4s ease-in-out infinite alternate}
+.e221__thumb{position:absolute;top:50%;width:80px;height:80px;border-radius:50%;background:#fff;border:6px solid var(--card-accent);transform:translate(-50%,-50%);
+  box-shadow:0 14px 24px rgba(0,0,0,.2);animation:sliderThumb 4s ease-in-out infinite alternate}
+
+/* ============ E222 Checkbox Tick ============ */
+.e222{display:flex;gap:60px;align-items:center}
+.e222__box{width:200px;height:200px;border-radius:30px;background:var(--card-ok);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 20px 40px rgba(74,143,112,.4)}
+.e222 path{fill:none;stroke:#fff;stroke-width:14;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;animation:checkbox 2.4s ease-in-out infinite}
+.e222__lbl{font-family:var(--card-font-display);font-size:140px;font-weight:700;color:var(--card-navy)}
+
+/* ============ E223 Toggle Switch ============ */
+.e223{position:relative;width:200px;height:108px;border-radius:54px;background:#cfd6df;transition:background .4s}
+.e223__knob{position:absolute;top:8px;width:92px;height:92px;border-radius:50%;background:#fff;
+  box-shadow:0 6px 14px rgba(0,0,0,.2);animation:toggleSlide 3s ease-in-out infinite}
+
+/* ============ E224 Star Rating Fill ============ */
+.e224{display:flex;flex-direction:column;align-items:center;gap:30px}
+.e224__row{position:relative;font-family:var(--card-font-display);font-size:200px;line-height:1;letter-spacing:0}
+.e224__bg{color:#e2e7ee}
+.e224__fg{position:absolute;inset:0;color:#f5b531;overflow:hidden;width:0;animation:ratingFill 3s ease-out infinite alternate}
+.e224__num{font-family:var(--card-font-mono);font-size:48px;letter-spacing:.18em;color:var(--card-slate-ink)}
+
+/* ============ E225 Parallax (3-layer) ============ */
+.e225{position:absolute;inset:0;background:linear-gradient(180deg,#3a5a78 0%,#1f2a3a 100%);overflow:hidden}
+.e225__back{position:absolute;left:-5%;right:-5%;bottom:30%;height:600px;
+  background:radial-gradient(ellipse 60% 100% at 30% 80%,#5a7898 0,transparent 70%),
+             radial-gradient(ellipse 60% 100% at 70% 80%,#3a5878 0,transparent 70%);animation:parallaxBack 8s ease-in-out infinite}
+.e225__mid{position:absolute;left:-5%;right:-5%;bottom:18%;height:400px;background:linear-gradient(180deg,#1f3a52,#0f1c2a)}
+.e225__front{position:absolute;left:0;right:0;bottom:0;height:380px;background:#0a141d;animation:parallaxFront 6s ease-in-out infinite}
+.e225__moon{position:absolute;left:50%;top:18%;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#cdd5dd);transform:translateX(-50%);box-shadow:0 0 60px rgba(255,255,255,.4)}
+
+/* ============ E226 Counter Slot Roll ============ */
+.e226{display:flex;gap:24px;font-family:var(--card-font-display);font-weight:800;font-size:340px;color:var(--card-navy);line-height:1}
+.e226 .col{width:240px;height:340px;overflow:hidden;background:var(--card-paper-soft);border-radius:24px;display:flex;justify-content:center;align-items:flex-start}
+.e226 .col i{display:flex;flex-direction:column;line-height:1;animation:counterUp 6s linear infinite}
+.e226 .col i b{font-weight:800;height:340px;display:flex;align-items:center}
+.e226 .col:nth-child(2) i{animation-duration:5s}
+.e226 .col:nth-child(3) i{animation-duration:4s}
+
+/* ============ E227 Accordion ============ */
+.e227{display:flex;flex-direction:column;gap:24px;width:840px}
+.e227 .row{background:var(--card-paper-soft);border-radius:18px;padding:36px 48px;font-family:var(--card-font-display);font-weight:600;font-size:64px;color:var(--card-navy);overflow:hidden}
+.e227 .row.open{background:#fff;border:2px solid var(--card-accent);max-height:60px;animation:accordion 5s ease-in-out infinite}
+.e227 .row.open .body{margin-top:24px;font-family:var(--card-font-mono);font-size:32px;color:var(--card-slate-ink);line-height:1.5}
+
+/* ============ E228 Search Suggest ============ */
+.e228{width:840px}
+.e228__bar{height:140px;border-radius:30px;background:#fff;border:3px solid var(--card-paper-soft);display:flex;align-items:center;padding:0 48px;gap:30px;box-shadow:0 20px 40px rgba(0,0,0,.08)}
+.e228__bar i{width:60px;height:60px;border-radius:50%;border:6px solid var(--card-slate-ink);position:relative}
+.e228__bar i::after{content:"";position:absolute;right:-22px;bottom:-12px;width:24px;height:6px;background:var(--card-slate-ink);transform:rotate(45deg)}
+.e228__q{font-family:var(--card-font-display);font-size:60px;color:var(--card-navy);overflow:hidden;border-right:5px solid var(--card-accent);white-space:nowrap;width:0;animation:typewriter 4s steps(15,end) infinite}
+@keyframes typewriter{0%{width:0}60%,100%{width:100%}}
+.e228__list{margin-top:24px;background:#fff;border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:18px;box-shadow:0 30px 60px rgba(0,0,0,.1)}
+.e228__row{padding:30px 36px;border-radius:14px;font-family:var(--card-font-display);font-size:48px;color:var(--card-navy);background:#f6f7fa}
+.e228__row:nth-child(2){background:#eef3f8;color:var(--card-accent);font-weight:600}
+
+/* ============ E229 Chip Selector ============ */
+.e229{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;max-width:860px}
+.e229 i{padding:30px 60px;border-radius:60px;background:var(--card-paper-soft);font-family:var(--card-font-mono);font-size:42px;letter-spacing:.16em;text-transform:uppercase;color:var(--card-slate-ink);border:3px solid transparent;transition:all .4s}
+.e229 i.active{background:var(--card-warn);color:#fff;border-color:#fff;box-shadow:0 14px 30px rgba(201,125,92,.4);animation:badgeBounce 2s ease-in-out infinite}
+
+/* ============ E230 Notification Badge ============ */
+.e230{position:relative;width:280px;height:280px;border-radius:24px;background:var(--card-navy);display:flex;align-items:center;justify-content:center;color:#fff;font-size:140px}
+.e230__b{position:absolute;top:-30px;right:-30px;min-width:120px;height:120px;border-radius:60px;background:var(--card-warn);display:flex;align-items:center;justify-content:center;font-family:var(--card-font-mono);font-size:60px;color:#fff;font-weight:700;animation:badgeBounce 1.4s ease-in-out infinite;border:6px solid var(--card-paper)}
+
+/* ============ E231 Word Cycle ============ */
+.e231{font-family:var(--card-font-display);font-weight:800;font-size:200px;color:var(--card-navy);line-height:1.1;display:flex;align-items:baseline;gap:30px}
+.e231__static{}
+.e231__cycle{position:relative;height:1.1em;overflow:hidden;width:auto;display:inline-block;color:var(--card-warn)}
+.e231__cycle ul{margin:0;padding:0;list-style:none;animation:textCycle 6s ease-in-out infinite}
+.e231__cycle li{height:1.1em;display:flex;align-items:center;padding-right:20px}
+
+/* ============ E232 Paper Fold ============ */
+.e232{width:760px;height:1000px;background:var(--card-paper);
+  background-image:repeating-linear-gradient(0deg,#dadfe6 0 1px,transparent 1px 80px);
+  border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,.3);position:relative;
+  transform-origin:top center;animation:paperFold 5s ease-in-out infinite}
+
+/* ============ E233 Elevator Doors ============ */
+.e233{position:absolute;inset:0;background:linear-gradient(180deg,#0a0e16,#1f2a3a);overflow:hidden;display:flex}
+.e233__d{flex:1;background:linear-gradient(135deg,#7a8290,#3a4858);transform-origin:left center;animation:elevatorOpen 5s ease-in-out infinite alternate}
+.e233__d:last-child{transform-origin:right center}
+.e233__inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--card-font-display);font-size:200px;font-weight:700;z-index:0}
+
+/* ============ E234 Pendulum ============ */
+.e234{position:absolute;left:50%;top:0;transform-origin:top center;width:14px;height:1100px;background:var(--card-slate);transform:translateX(-50%);animation:pendulum 3s ease-in-out infinite}
+.e234::after{content:"";position:absolute;bottom:-180px;left:-83px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#c8a872,#7a5e2a);box-shadow:0 30px 40px rgba(0,0,0,.3)}
+
+/* ============ E235 Coin Flip ============ */
+.e235{width:520px;height:520px;perspective:1600px}
+.e235__c{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:coinFlip 2.5s linear infinite}
+.e235__f{position:absolute;inset:0;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#5e3f1a;
+  background:radial-gradient(circle at 30% 30%,#f0c14a,#a3791e);box-shadow:inset 0 0 30px rgba(0,0,0,.3),0 30px 60px rgba(0,0,0,.4);backface-visibility:hidden}
+.e235__f--b{transform:rotateY(180deg)}
+
+/* ============ E236 Stock Ticker ============ */
+.e236{position:absolute;left:0;right:0;top:46%;height:160px;background:var(--card-navy);overflow:hidden;display:flex;align-items:center}
+.e236__strip{display:flex;font-family:var(--card-font-mono);font-size:80px;color:var(--card-paper);white-space:nowrap;animation:tickerScroll 25s linear infinite;gap:60px;padding-right:60px}
+.e236__strip span{display:inline-flex;align-items:center;gap:24px}
+.e236__strip span b{color:var(--card-ok);font-weight:600}
+.e236__strip span.dn b{color:var(--card-warn)}
+
+/* ============ E237 Burst (firework) ============ */
+.e237{position:relative;width:760px;height:760px}
+.e237 i{position:absolute;left:50%;top:50%;width:14px;height:80px;background:linear-gradient(180deg,#fff,#f5d35a);transform-origin:bottom center;animation:burst 1.4s ease-out infinite}
+.e237 i:nth-child(1){--r:0deg}.e237 i:nth-child(2){--r:30deg}.e237 i:nth-child(3){--r:60deg}
+.e237 i:nth-child(4){--r:90deg}.e237 i:nth-child(5){--r:120deg}.e237 i:nth-child(6){--r:150deg}
+.e237 i:nth-child(7){--r:180deg}.e237 i:nth-child(8){--r:210deg}.e237 i:nth-child(9){--r:240deg}
+.e237 i:nth-child(10){--r:270deg}.e237 i:nth-child(11){--r:300deg}.e237 i:nth-child(12){--r:330deg}
+.e237 i{transform:translate(-50%,-100%) rotate(var(--r))}
+@keyframes burst{0%{transform:translate(-50%,-100%) rotate(var(--r)) translateY(0);opacity:1}100%{transform:translate(-50%,-100%) rotate(var(--r)) translateY(-300px);opacity:0}}
+
+/* ============ E238 Lightspeed Streaks ============ */
+.e238{position:absolute;inset:0;background:radial-gradient(circle at center,#0a0e1c 0%,#000 100%);overflow:hidden}
+.e238 i{position:absolute;left:50%;top:50%;width:6px;background:linear-gradient(0deg,transparent,#fff);transform-origin:bottom center}
+@keyframes streak{0%{transform:translate(-50%,-100%) rotate(var(--r)) scaleY(0);opacity:0}30%{opacity:1}100%{transform:translate(-50%,-100%) rotate(var(--r)) scaleY(20);opacity:0}}
+
+/* ============ E239 Vintage Slide-In Title ============ */
+.e239{position:absolute;left:0;right:0;top:40%;height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  background:repeating-linear-gradient(0deg,#1f2a3a 0 8px,#131b27 8px 16px);
+  border-block:8px solid var(--card-warn);overflow:hidden;animation:blindSweep 3s ease-out infinite}
+@keyframes blindSweep{0%{transform:translateX(-100%)}50%,100%{transform:translateX(0)}}
+.e239__t{font-family:var(--card-font-display);font-weight:900;font-style:italic;font-size:160px;color:var(--card-paper);line-height:1;letter-spacing:.03em}
+.e239__s{font-family:var(--card-font-mono);font-size:38px;letter-spacing:.3em;color:var(--card-warn);text-transform:uppercase}
+
+/* ============ E240 Flash Cut Sequence ============ */
+.e240{position:absolute;inset:0}
+.e240 i{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:260px;color:#fff;opacity:0;animation:flash 4s steps(1,end) infinite}
+@keyframes flash{0%,16%{opacity:0}1%,15%{opacity:1}}
+.e240 i:nth-child(1){background:var(--card-warn);animation-delay:0s}
+.e240 i:nth-child(2){background:var(--card-accent);animation-delay:.3s}
+.e240 i:nth-child(3){background:var(--card-ok);animation-delay:.6s}
+.e240 i:nth-child(4){background:var(--card-navy-deep);animation-delay:.9s}
+.e240 i:nth-child(5){background:#fff;color:var(--card-navy);animation-delay:1.2s}
+</style>
+</head>
+<body>
+<h1>Effects Batch 06 — E201–E240 · cinematic transitions, product motion, data viz, UI motion</h1>
+<p class="sub">All loops auto-play. <b style="color:#f5d35a">★</b> = especially video-ready.</p>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E201 · Page Curl <b>★</b></div>
+  <div class="frame">
+    <div class="e201"><div class="e201__b"></div><div class="e201__a"></div></div>
+    <div class="e201__caption">turn the page</div>
+    <div class="frame__id">E201</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E202 · Split Screen <b>★</b></div>
+  <div class="frame"><div class="e202"><div class="e202__l"><div class="ph">A</div></div><div class="e202__r"><div class="ph">B</div></div></div><div class="frame__id">E202</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E203 · Shutter Reveal <b>★</b></div>
+  <div class="frame">
+    <div class="e203"></div>
+    <div class="frame__safe"><div class="ph ph--inv">SHUTTER</div></div>
+    <div class="e203__bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="frame__id">E203</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E204 · Circle Mask Reveal <b>★</b></div>
+  <div class="frame">
+    <div class="e204"></div>
+    <div class="frame__safe"><div class="ph ph--inv">FOCUS</div></div>
+    <div class="e204__top"></div>
+    <div class="frame__id">E204</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E205 · Diamond Mask <b>★</b></div>
+  <div class="frame">
+    <div class="e205"></div>
+    <div class="frame__safe"><div class="ph ph--inv">PRISM</div></div>
+    <div class="e205__top"></div>
+    <div class="frame__id">E205</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E206 · Vertical Bars <b>★</b></div>
+  <div class="frame">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,#c97d5c,#7a3f2a)"></div>
+    <div class="frame__safe"><div class="ph ph--inv">BRAND</div></div>
+    <div class="e206"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="frame__id">E206</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E207 · Letterbox Open <b>★</b></div>
+  <div class="frame">
+    <div class="e207"></div>
+    <div class="frame__safe"><div class="ph ph--inv">CINEMA</div></div>
+    <div class="e207__top"></div>
+    <div class="e207__btm"></div>
+    <div class="frame__id">E207</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E208 · Flip Board <b>★</b></div>
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e208"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="frame__id">E208</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E209 · 3D Cube Spin <b>★</b></div>
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e209"><div class="e209__c"><i>1</i><i>2</i><i>3</i><i>4</i></div></div></div><div class="frame__id">E209</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E210 · Exploded View <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e210"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="frame__id">E210</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E211 · Bar Chart Cycle <b>★</b></div>
+  <div class="frame">
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:200px"><div class="e211"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div style="position:absolute;left:60px;top:160px;font-family:var(--card-font-mono);font-size:42px;letter-spacing:.22em;color:var(--card-slate-ink)">Q1 → Q4 · GROWTH</div>
+    <div class="frame__id">E211</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E212 · Line Chart Draw <b>★</b></div>
+  <div class="frame"><div class="frame__safe">
+    <svg class="e212" viewBox="0 0 1000 480">
+      <defs><pattern id="p212" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#dde2ea" stroke-width="1"/></pattern></defs>
+      <rect width="1000" height="480" fill="url(#p212)"/>
+      <path class="a" d="M 40 380 C 200 280, 320 320, 480 220 S 760 120, 960 80"/>
+      <path class="b" d="M 40 420 C 200 360, 320 400, 480 320 S 760 240, 960 200"/>
+    </svg>
+  </div><div class="frame__id">E212</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E213 · Donut Fill <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e213">
+    <svg viewBox="0 0 400 400" width="580" height="580">
+      <circle class="track" cx="200" cy="200" r="140"/>
+      <circle class="fill"  cx="200" cy="200" r="140"/>
+    </svg>
+    <div class="e213__num">70%</div>
+  </div></div><div class="frame__id">E213</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E214 · Map Trace <b>★</b></div>
+  <div class="frame"><div class="frame__safe">
+    <svg class="e214" viewBox="0 0 1000 600">
+      <path class="country" d="M50 200 Q150 120 280 160 T520 180 T780 160 T950 220 L950 460 Q800 500 600 460 T260 480 T60 420 Z"/>
+      <circle class="pin" cx="180" cy="260" r="14"/>
+      <circle class="ping" cx="180" cy="260" r="14"/>
+      <path class="route" d="M180 260 C 320 120, 540 460, 720 200 S 880 360, 880 360"/>
+      <circle class="pin" cx="880" cy="360" r="14"/>
+      <circle class="ping" cx="880" cy="360" r="14" style="animation-delay:.6s"/>
+    </svg>
+  </div><div class="frame__id">E214</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E215 · Globe Spin <b>★</b></div>
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e215"></div></div><div class="frame__id">E215</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E216 · Toast Slide-In <b>★</b></div>
+  <div class="frame">
+    <div class="e216"><div class="e216__bg-ph"><div class="ph">app</div></div><div class="e216__t"><div class="e216__icon">✓</div><div class="e216__msg">Order confirmed.</div></div></div>
+    <div class="frame__id">E216</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E217 · Tab Swipe <b>★</b></div>
+  <div class="frame">
+    <div class="e217">
+      <div class="e217__tabs"><div class="e217__tab active">ONE</div><div class="e217__tab">TWO</div><div class="e217__tab">THREE</div><div class="e217__indicator"></div></div>
+      <div class="e217__panes"><div class="e217__strip"><div class="e217__pane">A</div><div class="e217__pane">B</div><div class="e217__pane">C</div></div></div>
+    </div>
+    <div class="frame__id">E217</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E218 · Modal Lift <b>★</b></div>
+  <div class="frame">
+    <div class="e218">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><div class="ph" style="opacity:.3">app</div></div>
+      <div class="e218__shim"></div>
+      <div class="e218__m">
+        <div><div style="font-family:var(--card-font-mono);font-size:32px;letter-spacing:.22em;color:var(--card-slate-ink);text-transform:uppercase;margin-bottom:30px">CONFIRM</div>
+        <div class="e218__title">Are you sure?</div></div>
+        <div class="e218__btns"><div class="e218__btn e218__btn--p">YES</div><div class="e218__btn e218__btn--s">CANCEL</div></div>
+      </div>
+    </div>
+    <div class="frame__id">E218</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E219 · Drawer Slide <b>★</b></div>
+  <div class="frame">
+    <div class="e219">
+      <div style="position:absolute;left:60px;top:120px;font-family:var(--card-font-display);font-size:140px;font-weight:700;color:var(--card-navy)">Menu</div>
+      <div class="e219__menu"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="frame__id">E219</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E220 · FAB Pulse <b>★</b></div>
+  <div class="frame">
+    <div style="position:absolute;inset:0;background:#eef1f6"></div>
+    <div class="frame__safe"><div class="ph" style="opacity:.3">feed</div></div>
+    <div class="e220">＋</div>
+    <div class="frame__id">E220</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E221 · Slider Thumb <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e221"><div class="e221__track"><div class="e221__fill"></div><div class="e221__thumb" style="left:8%"></div></div></div></div><div class="frame__id">E221</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E222 · Checkbox Tick <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e222">
+    <div class="e222__box"><svg viewBox="0 0 100 100" width="120" height="120"><path d="M 22 52 L 44 74 L 80 28"/></svg></div>
+    <div class="e222__lbl">Done</div>
+  </div></div><div class="frame__id">E222</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E223 · Toggle Switch <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e223"><div class="e223__knob"></div></div></div><div class="frame__id">E223</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E224 · Star Rating Fill <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e224">
+    <div class="e224__row"><span class="e224__bg">★★★★★</span><span class="e224__fg">★★★★★</span></div>
+    <div class="e224__num">4.0 / 5</div>
+  </div></div><div class="frame__id">E224</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E225 · Parallax Scene <b>★</b></div>
+  <div class="frame">
+    <div class="e225"><div class="e225__moon"></div><div class="e225__back"></div><div class="e225__mid"></div><div class="e225__front"></div></div>
+    <div class="frame__id">E225</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E226 · Counter Slot Roll <b>★</b></div>
+  <div class="frame">
+    <div class="frame__safe" style="flex-direction:column;gap:60px">
+      <div class="e226">
+        <div class="col"><i><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b></i></div>
+        <div class="col"><i><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b></i></div>
+        <div class="col"><i><b>0</b><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b>0</b></i></div>
+      </div>
+      <div style="font-family:var(--card-font-mono);font-size:38px;letter-spacing:.24em;color:var(--card-slate-ink)">USERS · LIVE</div>
+    </div>
+    <div class="frame__id">E226</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E227 · Accordion Expand <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e227">
+    <div class="row">What is this?</div>
+    <div class="row open">How does it work?<div class="body">Drop a brief in, get a layout out. Reusable, deterministic, deeply specced.</div></div>
+    <div class="row">Pricing</div>
+    <div class="row">Support</div>
+  </div></div><div class="frame__id">E227</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E228 · Search Suggest</div>
+  <div class="frame"><div class="frame__safe"><div class="e228">
+    <div class="e228__bar"><i></i><div class="e228__q">design system</div></div>
+    <div class="e228__list">
+      <div class="e228__row">design system templates</div>
+      <div class="e228__row">design system tokens</div>
+      <div class="e228__row">design system pricing</div>
+    </div>
+  </div></div><div class="frame__id">E228</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E229 · Chip Selector</div>
+  <div class="frame"><div class="frame__safe"><div class="e229">
+    <i>typography</i><i class="active">color</i><i>spacing</i><i>iconography</i><i>motion</i><i>grid</i><i>shadows</i><i>tokens</i>
+  </div></div><div class="frame__id">E229</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E230 · Notification Badge</div>
+  <div class="frame"><div class="frame__safe"><div class="e230">▢<div class="e230__b">12</div></div></div><div class="frame__id">E230</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E231 · Word Cycle <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e231">
+    <div class="e231__static">design</div>
+    <div class="e231__cycle"><ul><li>fast</li><li>bold</li><li>true</li><li>fast</li></ul></div>
+  </div></div><div class="frame__id">E231</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E232 · Paper Fold <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e232"></div></div><div class="frame__id">E232</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E233 · Elevator Doors <b>★</b></div>
+  <div class="frame">
+    <div class="e233__inner"><div class="ph ph--inv">welcome</div></div>
+    <div class="e233"><div class="e233__d"></div><div class="e233__d"></div></div>
+    <div class="frame__id">E233</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E234 · Pendulum</div>
+  <div class="frame">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#f0e8d8,#d4c8b0)"></div>
+    <div class="e234"></div>
+    <div class="frame__id">E234</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E235 · Coin Flip <b>★</b></div>
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e235"><div class="e235__c"><div class="e235__f">$</div><div class="e235__f e235__f--b">€</div></div></div></div><div class="frame__id">E235</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E236 · Stock Ticker <b>★</b></div>
+  <div class="frame">
+    <div style="position:absolute;inset:0;background:#dde2ea"></div>
+    <div class="frame__safe"><div class="ph" style="opacity:.3">market</div></div>
+    <div class="e236">
+      <div class="e236__strip">
+        <span>AAPL <b>+1.24%</b></span><span class="dn">TSLA <b>-2.10%</b></span><span>NVDA <b>+3.88%</b></span>
+        <span class="dn">META <b>-0.42%</b></span><span>AMZN <b>+0.91%</b></span><span>GOOG <b>+1.04%</b></span>
+        <span>AAPL <b>+1.24%</b></span><span class="dn">TSLA <b>-2.10%</b></span><span>NVDA <b>+3.88%</b></span>
+        <span class="dn">META <b>-0.42%</b></span><span>AMZN <b>+0.91%</b></span><span>GOOG <b>+1.04%</b></span>
+      </div>
+    </div>
+    <div class="frame__id">E236</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E237 · Firework Burst <b>★</b></div>
+  <div class="frame frame--dark"><div class="frame__safe"><div class="e237"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="frame__id">E237</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E238 · Lightspeed Streaks <b>★</b></div>
+  <div class="frame">
+    <div class="e238" id="lsHost"></div>
+    <div class="frame__safe"><div class="ph ph--inv" style="text-shadow:0 0 30px rgba(255,255,255,.6)">WARP</div></div>
+    <div class="frame__id">E238</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E239 · Vintage Slide-In Title <b>★</b></div>
+  <div class="frame">
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1f2a3a)"></div>
+    <div class="e239"><div class="e239__t">DRIFT &amp; CO.</div><div class="e239__s">EST · 2024</div></div>
+    <div class="frame__id">E239</div></div>
+</div>
+
+<div class="cell"><div class="cell__lbl">E240 · Flash Cut Sequence <b>★</b></div>
+  <div class="frame">
+    <div class="e240"><i>1</i><i>2</i><i>3</i><i>4</i><i>GO</i></div>
+    <div class="frame__id">E240</div></div>
+</div>
+
+</div>
+
+<script>
+// E238 lightspeed streaks
+(function(){const host=document.getElementById('lsHost');if(!host)return;
+  function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+  const r=rng(7);
+  for(let i=0;i<60;i++){const e=document.createElement('i');
+    const ang=r()*360;e.style.setProperty('--r',ang+'deg');
+    e.style.transform='translate(-50%,-100%) rotate('+ang+'deg) scaleY(0)';
+    e.style.height='80px';
+    e.style.animation='streak '+(1.2+r()*1.4)+'s ease-out '+(-r()*2)+'s infinite';
+    host.appendChild(e);
+  }
+})();
+</script>
+</body>
+</html>

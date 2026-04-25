@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>404 — Parcel not found · ConsentMate</title>
+<meta property="og:title" content="404 — Parcel not found · ConsentMate" />
+<meta property="og:description" content="This address isn't on the cadastre. Head back to the map." />
+<meta property="og:image" content="assets/og-image.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<style>
+  :root {
+    --paper: #eef1f5; --paper-deep:#e2e7ed; --paper-line:#c8d0da;
+    --ink:#0d1826; --ink-2:#1a2a3d; --ink-3:#4b5a6d; --ink-mute:#7d8a9a;
+    --accent:#1f3a68; --accent-ink:#122649; --accent-wash:#d5deec;
+    --warn:#9a3a3a;
+    --rule: rgba(13,24,38,.14); --rule-strong: rgba(13,24,38,.38);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; min-height: 100%; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--paper); color: var(--ink);
+    font-size: 16px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 48px 48px, 48px 48px;
+    background-attachment: fixed;
+    background-blend-mode: multiply;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  body::before{ content:""; position:fixed; inset:0; background:var(--paper); opacity:.86; pointer-events:none; z-index:-1; }
+  a { color: inherit; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-feature-settings: "zero","ss01"; }
+  .serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 32px; width: 100%; }
+
+  /* tape */
+  .tape {
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.08em;
+    background: var(--ink); color: var(--paper);
+    padding: 10px 0; text-transform:uppercase;
+  }
+  .tape .wrap { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .tape b { color: var(--warn); font-weight:600; }
+  .tape .dot { opacity:.5; padding: 0 8px; }
+
+  /* header */
+  header.site { border-bottom: 1px solid var(--rule-strong); background: var(--paper); }
+  header.site .wrap { display:flex; justify-content:space-between; align-items:center; padding: 18px 32px; max-width: 1180px; }
+  .logo { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink); }
+  .logo .word { font-family:"JetBrains Mono",monospace; font-weight:700; letter-spacing:-0.02em; font-size: 18px; }
+  .logo .word .slash { color: var(--accent); }
+  nav.main { display:flex; gap: 28px; font-family:"JetBrains Mono",monospace; font-size:13px; }
+  nav.main a { text-decoration:none; color:var(--ink-2); }
+  nav.main a:hover { color: var(--accent); }
+
+  /* main */
+  main { flex: 1; display: flex; align-items: center; padding: 72px 0; }
+  .card-404 {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .big-number {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(120px, 20vw, 220px);
+    font-weight: 600;
+    letter-spacing: -0.05em;
+    line-height: 0.85;
+    color: var(--ink);
+    margin: 0;
+    position: relative;
+  }
+  .big-number em {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .big-number::before {
+    content: "◆ PARCEL NOT FOUND";
+    position: absolute;
+    top: 12px;
+    left: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    color: var(--warn);
+    background: var(--paper-deep);
+    padding: 4px 10px;
+    border: 1px solid var(--warn);
+    border-radius: 2px;
+    line-height: 1;
+  }
+
+  .copy h2 {
+    font-family: "Inter", sans-serif;
+    font-size: clamp(26px, 3.4vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin: 0 0 12px;
+  }
+  .copy h2 em { font-family:"Instrument Serif",serif; font-style: italic; color: var(--accent); font-weight: 400; }
+  .copy p { color: var(--ink-3); margin: 0 0 24px; max-width: 48ch; line-height: 1.55; }
+
+  .coord-strip {
+    font-family:"JetBrains Mono",monospace;
+    font-size: 10px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color: var(--ink-3);
+    background: var(--paper-deep);
+    border: 1px solid var(--rule-strong);
+    padding: 8px 12px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .coord-strip b { color: var(--ink); font-weight: 600; }
+
+  .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn {
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:"JetBrains Mono",monospace;
+    font-size: 13px; font-weight: 500;
+    padding: 11px 18px;
+    border: 1px solid var(--ink);
+    background: var(--ink); color: var(--paper);
+    text-decoration:none;
+    letter-spacing:.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform .12s, box-shadow .12s;
+    border-radius: 2px;
+  }
+  .btn:hover { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--ink); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); }
+
+  /* small links list */
+  .elsewhere {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .elsewhere .lbl {
+    font-family:"JetBrains Mono",monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+  }
+  .elsewhere ul {
+    list-style: none; margin: 0; padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .elsewhere li {
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+  }
+  .elsewhere li:nth-child(4n), .elsewhere li:last-child { border-right: 0; }
+  .elsewhere a {
+    display:flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: var(--ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size: 13px;
+    transition: background .12s, color .12s;
+  }
+  .elsewhere a:hover { background: var(--ink); color: var(--paper); }
+  .elsewhere a .arrow { font-family:"Inter",sans-serif; opacity: .5; }
+  .elsewhere a:hover .arrow { opacity: 1; color: var(--paper); }
+
+  footer.site { background: var(--ink); color: color-mix(in oklab, var(--paper) 60%, transparent); font-family:"JetBrains Mono",monospace; font-size: 12px; padding: 36px 0; }
+  footer.site .wrap { display:flex; justify-content:space-between; gap: 20px; flex-wrap: wrap; max-width: 1180px; }
+  footer.site a { color: inherit; text-decoration: none; }
+  footer.site a:hover { color: var(--paper); }
+
+  @media (max-width: 720px) {
+    .card-404 { grid-template-columns: 1fr; gap: 32px; }
+    .big-number::before { font-size: 9px; top: 2px; }
+    nav.main { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="tape">
+  <div class="wrap">
+    <span><b>● 404</b> · CADASTRAL LOOKUP FAILED</span>
+    <span id="whenNow">—</span>
+  </div>
+</div>
+
+<header class="site">
+  <div class="wrap">
+    <a href="Landing Page.html" class="logo">
+      <svg class="mark" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="26" height="26" stroke="currentColor" stroke-width="1.6" fill="none"/>
+        <path d="M3 6 L6 6 L6 3 M26 3 L26 6 L29 6 M3 26 L6 26 L6 29 M26 29 L26 26 L29 26" stroke="currentColor" stroke-width="1.8" fill="none"/>
+        <line x1="16" y1="6" x2="16" y2="26" stroke="currentColor" stroke-width="0.6" stroke-dasharray="2 2" opacity="0.5"/>
+        <path d="M10 17 L14 21 L23 11" stroke="#1f3a68" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="word">consent<span class="slash">/</span>mate</span>
+    </a>
+    <nav class="main">
+      <a href="map.html">Map</a>
+      <a href="Landing Page.html#pricing">Pricing</a>
+      <a href="Landing Page.html#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <div class="card-404">
+      <div>
+        <h1 class="big-number">4<em>0</em>4</h1>
+      </div>
+      <div class="copy">
+        <div class="coord-strip">
+          <span>REQUEST <b id="reqPath">—</b></span>
+          <span>STATUS <b style="color:var(--warn)">404</b></span>
+          <span>TYPE <b>NOT FOUND</b></span>
+        </div>
+        <h2>This parcel isn't <em>on the plan.</em></h2>
+        <p>The page you were looking for isn't here. Maybe the link changed, or the council redrew their boundaries. Happens. Here's how to get back.</p>
+        <div class="btns">
+          <a href="map.html" class="btn">↓ Back to map</a>
+          <a href="Landing Page.html" class="btn ghost">Home</a>
+        </div>
+
+        <div class="elsewhere">
+          <div class="lbl">◆ Or try somewhere else</div>
+          <ul>
+            <li><a href="map.html">Check my property <span class="arrow">→</span></a></li>
+            <li><a href="Landing Page.html#pricing">Pricing <span class="arrow">→</span></a></li>
+            <li><a href="Landing Page.html#faq">FAQ <span class="arrow">→</span></a></li>
+            <li><a href="blog-resource-consent-sleepout-nz.html">Blog <span class="arrow">→</span></a></li>
+            <li><a href="privacy.html">Privacy <span class="arrow">→</span></a></li>
+            <li><a href="terms.html">Terms <span class="arrow">→</span></a></li>
+            <li><a href="mailto:hello@consentmate.co.nz">Email us <span class="arrow">→</span></a></li>
+            <li><a href="Landing Page.html#coverage">Coverage <span class="arrow">→</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© 2026 ConsentMate · Aotearoa NZ · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></span>
+    <span>Need help? <a href="mailto:hello@consentmate.co.nz">hello@consentmate.co.nz</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const now = new Date().toLocaleDateString('en-NZ',{year:'numeric',month:'2-digit',day:'2-digit'});
+  document.getElementById('whenNow').textContent = now + ' · REF 404/' + String(Math.floor(Math.random()*900)+100);
+  const p = location.pathname.replace(/^\//,'') || '—';
+  document.getElementById('reqPath').textContent = p.length > 30 ? p.slice(0,28)+'…' : p;
+})();
+</script>
+</body>
+</html>

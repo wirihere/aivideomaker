@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 07 — E241–E280 · high-impact bonus</title>
+<style>
+:root{
+  --card-navy:#1F2A3A;--card-navy-deep:#131B27;--card-slate:#4A5568;--card-slate-ink:#6B7280;
+  --card-paper:#F8F6F1;--card-paper-soft:#EFEBE2;--card-accent:#5A8FA8;--card-warn:#C97D5C;--card-ok:#4A8F70;
+  --card-font-mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --card-font-display:Georgia,"Times New Roman",serif;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--card-font-mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:820px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__lbl b{color:#f5d35a;font-weight:600;letter-spacing:.18em}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);background:#1a2030}
+.frame--light{background:var(--card-paper)}
+.frame__safe{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:120px 90px;box-sizing:border-box;z-index:5}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--card-font-mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:20}
+.frame--light .frame__id{color:rgba(31,42,58,.45)}
+.ph{font-family:var(--card-font-display);font-weight:800;font-size:200px;line-height:1;color:#fff}
+.ph--d{color:var(--card-navy)}
+
+/* ===== animations ===== */
+@keyframes scanCRT{0%{background-position:0 0}100%{background-position:0 8px}}
+@keyframes vhsRoll{0%{transform:translateY(-60px)}100%{transform:translateY(60px)}}
+@keyframes holoShift{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes inkBloom{0%{transform:scale(0);opacity:.9}100%{transform:scale(2.2);opacity:0}}
+@keyframes flame{0%,100%{transform:translateY(0) scale(1);filter:hue-rotate(0)}50%{transform:translateY(-30px) scale(1.04);filter:hue-rotate(-12deg)}}
+@keyframes flameWick{0%,100%{transform:scaleY(1) skewX(-3deg)}50%{transform:scaleY(1.08) skewX(3deg)}}
+@keyframes magfield{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-200}}
+@keyframes displace{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-15px)}}
+@keyframes blurFocus{0%,100%{filter:blur(0)}50%{filter:blur(18px)}}
+@keyframes kaleido{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes plasma{0%{background-position:0% 0%,100% 100%,50% 0%}100%{background-position:200% 100%,-100% 0%,150% 100%}}
+@keyframes vortex{0%{transform:rotate(0) scale(1)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes typeMatrix{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+@keyframes barcode{0%,49%{opacity:1}50%,100%{opacity:.85}}
+@keyframes terminalBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes loadingLine{0%{stroke-dashoffset:1000}100%{stroke-dashoffset:0}}
+@keyframes liquidMetal{0%{background-position:0% 50%,0% 50%}100%{background-position:200% 50%,-200% 50%}}
+@keyframes glassShatter{0%{transform:translate(0,0) rotate(0)}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--dr))}}
+@keyframes ribbonWave{0%,100%{d:path("M0 200 Q 200 100 400 200 T 800 200 T 1200 200")}50%{d:path("M0 200 Q 200 300 400 200 T 800 200 T 1200 200")}}
+@keyframes voronoiShift{0%{transform:translate(0,0)}50%{transform:translate(40px,30px)}100%{transform:translate(0,0)}}
+@keyframes lavaBlob{0%,100%{transform:translateY(60vh) scale(1)}50%{transform:translateY(-40vh) scale(1.2)}}
+@keyframes constellate{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes typeReveal{0%{clip-path:inset(0 100% 0 0)}100%{clip-path:inset(0 0 0 0)}}
+@keyframes spotlight{0%{transform:translate(-30%,-30%)}25%{transform:translate(30%,-20%)}50%{transform:translate(20%,30%)}75%{transform:translate(-30%,20%)}100%{transform:translate(-30%,-30%)}}
+@keyframes ringSpinSlow{0%{transform:rotate(0)}100%{transform:rotate(-360deg)}}
+@keyframes hexFlash{0%,90%,100%{opacity:.15}45%{opacity:1}}
+@keyframes neonFrame{0%,100%{box-shadow:inset 0 0 0 6px #ff2a96,0 0 30px #ff2a96,inset 0 0 60px rgba(255,42,150,.4)}50%{box-shadow:inset 0 0 0 6px #3affe6,0 0 30px #3affe6,inset 0 0 60px rgba(58,255,230,.4)}}
+@keyframes tapeSpool{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes dotMatrix{0%{opacity:0}10%,90%{opacity:1}100%{opacity:0}}
+@keyframes terminalType{from{width:0}to{width:18ch}}
+@keyframes signalBars{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+@keyframes barcodeShift{0%{transform:translateX(0)}100%{transform:translateX(-40px)}}
+@keyframes chrShimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+@keyframes spotlightBeam{0%{transform:rotate(-22deg)}50%{transform:rotate(22deg)}100%{transform:rotate(-22deg)}}
+@keyframes flicker2{0%,100%{opacity:1}3%{opacity:.4}6%{opacity:1}30%{opacity:.85}33%{opacity:1}}
+@keyframes cosmosRotate{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes paintDrip{0%{transform:translateY(-30%)}100%{transform:translateY(0)}}
+@keyframes tornPaper{0%{clip-path:polygon(0 0,100% 0,100% 70%,90% 73%,80% 68%,70% 75%,60% 70%,50% 76%,40% 71%,30% 75%,20% 70%,10% 76%,0 71%)}50%{clip-path:polygon(0 0,100% 0,100% 70%,90% 76%,80% 70%,70% 73%,60% 76%,50% 71%,40% 75%,30% 70%,20% 75%,10% 71%,0 75%)}100%{clip-path:polygon(0 0,100% 0,100% 70%,90% 73%,80% 68%,70% 75%,60% 70%,50% 76%,40% 71%,30% 75%,20% 70%,10% 76%,0 71%)}}
+@keyframes bokehFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+@keyframes cursorMove{0%{transform:translate(0,0)}25%{transform:translate(280px,40px)}50%{transform:translate(360px,260px)}75%{transform:translate(60px,200px)}100%{transform:translate(0,0)}}
+@keyframes cursorClick{0%,90%,100%{transform:scale(1)}95%{transform:scale(.6)}}
+
+/* ============= E241 CRT TV ============= */
+.e241{position:absolute;inset:0;background:radial-gradient(ellipse at center,#0c2418 0%,#000 100%);overflow:hidden}
+.e241__face{position:absolute;inset:60px;border-radius:20% / 14%;
+  background:linear-gradient(135deg,#0c5a3a,#031408);
+  box-shadow:inset 0 0 80px rgba(0,0,0,.8),inset 0 0 200px rgba(0,0,0,.6)}
+.e241__scan{position:absolute;inset:60px;border-radius:20% / 14%;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.3) 0 2px,transparent 2px 4px);
+  animation:scanCRT 1s linear infinite;mix-blend-mode:multiply}
+.e241__roll{position:absolute;inset:60px;border-radius:20% / 14%;background:linear-gradient(180deg,transparent 60%,rgba(255,255,255,.18) 80%,transparent 100%);
+  animation:vhsRoll 4s linear infinite}
+.e241__txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#aaffcf;font-family:var(--card-font-mono);font-size:240px;font-weight:600;text-shadow:0 0 20px #aaffcf,2px 0 0 #ff3a4a,-2px 0 0 #3affe6;animation:flicker2 5s steps(50,end) infinite}
+
+/* ============= E242 VHS Tracking ============= */
+.e242{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1f2a3a);overflow:hidden}
+.e242__noise{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 2px,transparent 2px 6px);mix-blend-mode:screen}
+.e242__dist{position:absolute;left:0;right:0;height:80px;background:rgba(255,255,255,.4);mix-blend-mode:overlay;animation:vhsRoll 3s linear infinite}
+.e242__txt{font-family:var(--card-font-mono);font-size:120px;color:#fff;letter-spacing:.04em;
+  text-shadow:3px 0 0 #ff3a4a,-3px 0 0 #3affe6;animation:displace 4s steps(20,end) infinite}
+.e242__hud{position:absolute;left:60px;top:60px;font-family:var(--card-font-mono);font-size:46px;color:#fff;letter-spacing:.15em}
+.e242__hud2{position:absolute;right:60px;bottom:60px;font-family:var(--card-font-mono);font-size:46px;color:#fff;letter-spacing:.15em}
+
+/* ============= E243 Holographic Sticker ============= */
+.e243{width:760px;height:760px;border-radius:60px;
+  background:linear-gradient(115deg,#ff5cb1 0%,#9b6bff 18%,#3affe6 36%,#5cffaa 56%,#f5d35a 75%,#ff5cb1 100%);
+  background-size:300% 300%;animation:holoShift 6s linear infinite;
+  box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 0 80px rgba(255,255,255,.4);
+  position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.e243::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.18) 0 4px,transparent 4px 12px);mix-blend-mode:overlay}
+.e243__t{font-family:var(--card-font-display);font-weight:900;font-size:200px;color:#fff;text-shadow:0 6px 20px rgba(0,0,0,.4);letter-spacing:-.02em;font-style:italic}
+
+/* ============= E244 Liquid Metal ============= */
+.e244{position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 40% 60% at 30% 30%,#fff 0%,#bdc3cb 30%,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 70% 70%,#cdd5dd 0%,#5e6772 40%,transparent 70%),
+    linear-gradient(135deg,#3a414a,#1a1d22);
+  background-size:200% 200%,200% 200%,100% 100%;animation:liquidMetal 8s ease-in-out infinite alternate}
+.e244__t{font-family:var(--card-font-display);font-weight:900;font-size:280px;color:transparent;
+  background:linear-gradient(180deg,#fff 0%,#7a8290 60%,#cdd5dd 100%);-webkit-background-clip:text;background-clip:text;
+  text-shadow:0 6px 0 rgba(0,0,0,.3)}
+
+/* ============= E245 Ink Bloom ============= */
+.e245{position:absolute;inset:0;background:#f4ede0;overflow:hidden}
+.e245 i{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,#1a1d22 0%,rgba(26,29,34,.6) 50%,transparent 70%);filter:blur(8px);transform-origin:center;animation:inkBloom 4s ease-out infinite}
+.e245 i:nth-child(1){left:30%;top:35%;animation-delay:0s}
+.e245 i:nth-child(2){left:55%;top:50%;animation-delay:1.2s}
+.e245 i:nth-child(3){left:42%;top:65%;animation-delay:2.4s}
+.e245__t{font-family:var(--card-font-display);font-weight:800;font-style:italic;font-size:200px;color:var(--card-navy)}
+
+/* ============= E246 Fire / Flame ============= */
+.e246{position:absolute;left:50%;bottom:200px;transform:translateX(-50%);width:480px;height:780px;display:flex;justify-content:center;align-items:flex-end}
+.e246 i{position:absolute;bottom:0;width:240px;border-radius:50% 50% 50% 50% / 80% 80% 30% 30%;transform-origin:bottom;mix-blend-mode:screen;filter:blur(8px);animation:flameWick 1.4s ease-in-out infinite}
+.e246 i:nth-child(1){height:780px;background:radial-gradient(ellipse at center bottom,#ff4400 0%,#ff8800 40%,transparent 80%);animation-delay:0s}
+.e246 i:nth-child(2){height:600px;width:200px;background:radial-gradient(ellipse at center bottom,#ffaa00 0%,#ffd14a 50%,transparent 80%);animation-delay:.2s}
+.e246 i:nth-child(3){height:380px;width:140px;background:radial-gradient(ellipse at center bottom,#ffe680 0%,#fff5cc 50%,transparent 80%);animation-delay:.4s}
+.e246__base{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:520px;height:80px;background:radial-gradient(ellipse at center top,#5a3a1a 0%,transparent 70%)}
+
+/* ============= E247 Magnetic Field ============= */
+.e247{width:100%}
+.e247 path{fill:none;stroke:#5cffaa;stroke-width:3;stroke-dasharray:20 20;animation:magfield 4s linear infinite;opacity:.7}
+.e247 .pole{fill:#ff3a4a}
+.e247 .pole2{fill:#3a8fff}
+
+/* ============= E248 Plasma Blob ============= */
+.e248{position:absolute;inset:0;background:
+  radial-gradient(circle 600px at 30% 30%,#ff5cb1,transparent 60%),
+  radial-gradient(circle 700px at 70% 70%,#3affe6,transparent 60%),
+  radial-gradient(circle 500px at 50% 50%,#9b6bff,transparent 60%),
+  #0a0820;
+  background-size:200% 200%,200% 200%,200% 200%,100% 100%;
+  animation:plasma 12s ease-in-out infinite alternate;
+  filter:blur(40px) contrast(1.2)}
+.e248__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#fff;text-shadow:0 0 60px rgba(255,255,255,.6);z-index:5}
+
+/* ============= E249 Vortex / Tunnel ============= */
+.e249{position:absolute;inset:0;background:#0a0820;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.e249__r{position:absolute;border-radius:50%;border:2px solid;animation:vortex 18s linear infinite}
+.e249__r:nth-child(1){width:200px;height:200px;border-color:#ff5cb1;animation-duration:12s}
+.e249__r:nth-child(2){width:400px;height:400px;border-color:#9b6bff;animation-duration:14s;animation-direction:reverse}
+.e249__r:nth-child(3){width:600px;height:600px;border-color:#3affe6;animation-duration:16s}
+.e249__r:nth-child(4){width:800px;height:800px;border-color:#5cffaa;animation-duration:18s;animation-direction:reverse}
+.e249__r:nth-child(5){width:1000px;height:1000px;border-color:#f5d35a;animation-duration:20s}
+.e249__r:nth-child(6){width:1200px;height:1200px;border-color:#ff5cb1;animation-duration:22s;animation-direction:reverse}
+.e249__r:nth-child(7){width:1400px;height:1400px;border-color:#9b6bff;animation-duration:24s}
+.e249__r{box-shadow:0 0 30px currentColor;clip-path:polygon(0 40%,100% 30%,100% 70%,0 60%)}
+
+/* ============= E250 Matrix Rain ============= */
+.e250{position:absolute;inset:0;background:#000;overflow:hidden;font-family:var(--card-font-mono)}
+.e250 .col{position:absolute;top:-100%;width:36px;display:flex;flex-direction:column;align-items:center;animation:typeMatrix linear infinite;color:#5cffaa;text-shadow:0 0 10px #5cffaa;font-size:42px;line-height:1;font-weight:600}
+.e250 .col i{opacity:.7}
+.e250 .col i:first-child{color:#fff;text-shadow:0 0 20px #fff;opacity:1}
+
+/* ============= E251 Barcode Animate ============= */
+.e251{width:880px;height:520px;background:#fff;display:flex;flex-direction:column;align-items:center;gap:30px;padding:60px 40px;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,.4)}
+.e251__bars{flex:1;width:100%;
+  background:repeating-linear-gradient(90deg,#000 0 6px,transparent 6px 12px,#000 12px 14px,transparent 14px 18px,#000 18px 26px,transparent 26px 30px,#000 30px 32px,transparent 32px 40px);
+  animation:barcodeShift 1.6s linear infinite}
+.e251__no{font-family:var(--card-font-mono);font-size:64px;letter-spacing:.4em;color:#000}
+
+/* ============= E252 Terminal Boot ============= */
+.e252{position:absolute;inset:60px;background:#000;border-radius:18px;padding:80px;font-family:var(--card-font-mono);color:#5cffaa;font-size:60px;line-height:1.5;overflow:hidden}
+.e252 i{display:block;white-space:nowrap;overflow:hidden;width:0;animation:terminalType 1.4s steps(28,end) forwards}
+.e252 i:nth-child(2){animation-delay:1.2s}.e252 i:nth-child(3){animation-delay:2.4s}
+.e252 i:nth-child(4){animation-delay:3.6s}.e252 i:nth-child(5){animation-delay:4.6s}
+.e252 i:nth-child(6){color:#f5d35a;animation-delay:5.6s}
+.e252 .cur{display:inline-block;width:32px;height:60px;background:#5cffaa;animation:terminalBlink 1s steps(2,end) infinite;vertical-align:middle;margin-left:4px}
+
+/* ============= E253 Ribbon Wave (SVG) ============= */
+.e253{width:100%;height:auto}
+.e253 path{fill:none;stroke-width:80;stroke-linecap:round}
+.e253 .a{stroke:url(#g253a)}
+.e253 .b{stroke:url(#g253b);opacity:.7}
+.e253 .c{stroke:url(#g253c);opacity:.5}
+
+/* ============= E254 Lava Lamp ============= */
+.e254{position:absolute;inset:0;background:linear-gradient(180deg,#3a0a4a 0%,#0a0418 100%);overflow:hidden;filter:contrast(1.3) blur(0)}
+.e254__inner{position:absolute;inset:0;filter:blur(30px) contrast(2)}
+.e254 i{position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ff5cb1,#9b6bff);
+  animation:lavaBlob ease-in-out infinite}
+.e254 i:nth-child(1){left:25%;width:300px;height:300px;animation-duration:10s}
+.e254 i:nth-child(2){left:60%;width:240px;height:240px;animation-duration:13s;animation-delay:-3s;background:radial-gradient(circle at 30% 30%,#5cffaa,#3affe6)}
+.e254 i:nth-child(3){left:45%;width:360px;height:360px;animation-duration:16s;animation-delay:-7s}
+.e254 i:nth-child(4){left:75%;width:200px;height:200px;animation-duration:11s;animation-delay:-2s;background:radial-gradient(circle at 30% 30%,#f5d35a,#ff8800)}
+
+/* ============= E255 Constellation Connect ============= */
+.e255{position:absolute;inset:0;background:radial-gradient(ellipse at center,#1a1d3a,#000)}
+.e255__svg{position:absolute;inset:0;width:100%;height:100%}
+.e255__svg .star{fill:#fff;animation:constellate 3s ease-in-out infinite}
+.e255__svg .line{stroke:rgba(180,200,255,.5);stroke-width:2;stroke-dasharray:600;animation:loadingLine 6s ease-in-out infinite}
+
+/* ============= E256 Type Reveal Mask ============= */
+.e256{position:relative}
+.e256 span{position:relative;display:block;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:transparent;
+  background:linear-gradient(90deg,var(--card-warn),var(--card-accent),var(--card-ok),var(--card-warn));
+  background-size:300% 100%;-webkit-background-clip:text;background-clip:text;
+  animation:chrShimmer 6s linear infinite,typeReveal 3s ease-in-out infinite alternate;line-height:1}
+
+/* ============= E257 Spotlight Tracker ============= */
+.e257{position:absolute;inset:0;background:#0a0e16}
+.e257__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#fff;line-height:1;letter-spacing:-.02em}
+.e257__mask{position:absolute;inset:-30%;background:radial-gradient(circle 380px at 50% 50%,transparent 0%,rgba(0,0,0,.92) 60%);pointer-events:none;animation:spotlight 6s ease-in-out infinite}
+
+/* ============= E258 Rotating Halo ============= */
+.e258{position:relative;width:780px;height:780px;display:flex;align-items:center;justify-content:center}
+.e258__r{position:absolute;width:100%;height:100%;border-radius:50%;border:6px dashed rgba(248,246,241,.6);animation:cosmosRotate 18s linear infinite}
+.e258__r2{width:88%;height:88%;border:3px solid var(--card-warn);animation:ringSpinSlow 12s linear infinite;border-radius:50%;position:absolute}
+.e258__c{width:520px;height:520px;border-radius:50%;background:linear-gradient(135deg,var(--card-warn),#7a3f2a);display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--card-font-display);font-weight:900;font-size:200px;font-style:italic;box-shadow:inset 0 0 40px rgba(0,0,0,.3),0 30px 60px rgba(0,0,0,.4)}
+
+/* ============= E259 Hex Grid Flash ============= */
+.e259{position:absolute;inset:0;background:#0a141d;overflow:hidden;display:grid;grid-template-columns:repeat(8,1fr);grid-auto-rows:120px;gap:6px;padding:30px}
+.e259 i{background:rgba(120,200,255,.15);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);animation:hexFlash 3s ease-in-out infinite}
+
+/* ============= E260 Neon Frame ============= */
+.e260{position:absolute;inset:60px;border-radius:30px;animation:neonFrame 3s ease-in-out infinite}
+.e260__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:800;font-style:italic;font-size:240px;color:#fff;text-shadow:0 0 30px #fff}
+
+/* ============= E261 Tape Spool ============= */
+.e261{position:absolute;inset:0;background:linear-gradient(135deg,#2a1a0a,#0a0a14)}
+.e261__r{position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,#0a0a0a 30%,#1a1a1a 100%);display:flex;align-items:center;justify-content:center;animation:tapeSpool 5s linear infinite}
+.e261__r::before{content:"";width:60px;height:60px;border-radius:50%;background:#5a3a1a}
+.e261__r::after{content:"";position:absolute;inset:30px;border-radius:50%;border:1px dashed rgba(248,246,241,.2)}
+.e261__r--l{left:60px;top:50%;transform:translateY(-50%)}
+.e261__r--r{right:60px;top:50%;transform:translateY(-50%);animation-direction:reverse}
+.e261__tape{position:absolute;left:440px;right:440px;top:48%;height:30px;background:linear-gradient(180deg,#3a3a3a,#0a0a0a);border-block:2px solid #5a5a5a}
+
+/* ============= E262 Loading Dots Eclipse ============= */
+.e262{display:flex;flex-direction:column;align-items:center;gap:80px}
+.e262__dots{display:flex;gap:60px}
+.e262__dots i{width:140px;height:140px;border-radius:50%;background:var(--card-accent);transform:scale(.4);animation:signalBars 1.4s ease-in-out infinite}
+.e262__dots i:nth-child(2){animation-delay:.2s;background:var(--card-warn)}
+.e262__dots i:nth-child(3){animation-delay:.4s;background:var(--card-ok)}
+.e262__lbl{font-family:var(--card-font-mono);font-size:48px;letter-spacing:.28em;color:var(--card-paper)}
+
+/* ============= E263 Cursor Demo ============= */
+.e263{position:absolute;inset:0;background:#eef1f6}
+.e263__win{position:absolute;left:120px;top:280px;right:120px;bottom:280px;background:#fff;border-radius:18px;
+  box-shadow:0 30px 60px rgba(0,0,0,.15);padding:60px;display:flex;flex-direction:column;gap:36px}
+.e263__btn{padding:36px 60px;background:var(--card-warn);color:#fff;border-radius:14px;font-family:var(--card-font-mono);font-size:48px;letter-spacing:.18em;text-transform:uppercase;align-self:flex-start}
+.e263__field{height:120px;background:#f0f3f7;border-radius:14px;border:3px solid #dbe0e8}
+.e263__cur{position:absolute;left:200px;top:600px;width:60px;height:80px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32'><path d='M2 2 L18 16 L11 17 L15 27 L11 29 L7 19 L2 22 Z' fill='%23fff' stroke='%23000' stroke-width='1.5'/></svg>") center/contain no-repeat;
+  animation:cursorMove 8s ease-in-out infinite,cursorClick 8s linear infinite}
+
+/* ============= E264 Voronoi Shift ============= */
+.e264{position:absolute;inset:0;background:#0a0e16;overflow:hidden}
+.e264 svg{position:absolute;inset:0;width:100%;height:100%;animation:voronoiShift 10s ease-in-out infinite}
+.e264 polygon{stroke:rgba(255,255,255,.2);stroke-width:1;fill:rgba(90,143,168,.1)}
+.e264 polygon:nth-child(odd){fill:rgba(201,125,92,.08)}
+
+/* ============= E265 Concentric Pulse ============= */
+.e265{position:relative;width:1080px;height:1080px;display:flex;align-items:center;justify-content:center}
+.e265 i{position:absolute;border-radius:50%;border:3px solid var(--card-accent);animation:ringPulseBig 4s ease-out infinite}
+@keyframes ringPulseBig{0%{width:0;height:0;opacity:1}100%{width:1000px;height:1000px;opacity:0}}
+.e265 i:nth-child(2){animation-delay:.8s;border-color:var(--card-warn)}
+.e265 i:nth-child(3){animation-delay:1.6s;border-color:var(--card-ok)}
+.e265 i:nth-child(4){animation-delay:2.4s;border-color:var(--card-accent)}
+.e265 i:nth-child(5){animation-delay:3.2s;border-color:var(--card-warn)}
+.e265__c{position:absolute;width:240px;height:240px;border-radius:50%;background:var(--card-paper);display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-size:120px;font-weight:700;color:var(--card-navy);box-shadow:0 30px 60px rgba(0,0,0,.4),inset 0 0 0 6px var(--card-paper-soft)}
+
+/* ============= E266 Paint Drip ============= */
+.e266{position:absolute;left:0;right:0;top:0;height:50%;background:var(--card-warn);overflow:hidden;
+  clip-path:polygon(0 0,100% 0,100% 70%,90% 73%,80% 68%,70% 75%,60% 70%,50% 76%,40% 71%,30% 75%,20% 70%,10% 76%,0 71%);
+  animation:tornPaper 4s ease-in-out infinite}
+.e266__d{position:absolute;left:14%;top:60%;width:40px;height:300px;background:var(--card-warn);border-radius:0 0 20px 20px;animation:paintDrip 4s ease-in-out infinite alternate}
+.e266__d:nth-child(2){left:38%;top:65%;height:380px;animation-duration:5s}
+.e266__d:nth-child(3){left:62%;top:62%;height:260px;animation-duration:6s}
+.e266__d:nth-child(4){left:80%;top:66%;height:340px;animation-duration:4.5s}
+
+/* ============= E267 Bokeh Float ============= */
+.e267{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 30%,#3a5878,#0a141d);overflow:hidden}
+.e267 i{position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,236,180,.9),rgba(255,236,180,.2) 50%,transparent 70%);
+  filter:blur(2px);animation:bokehFloat ease-in-out infinite}
+
+/* ============= E268 ASCII Banner ============= */
+.e268{position:absolute;inset:60px;background:#000;border-radius:14px;padding:40px;display:flex;flex-direction:column;justify-content:center;align-items:center;font-family:var(--card-font-mono);color:#5cffaa;font-size:36px;line-height:1;letter-spacing:.04em;white-space:pre;text-shadow:0 0 8px #5cffaa}
+.e268 b{display:block;animation:flicker2 5s steps(50,end) infinite}
+
+/* ============= E269 Heat Map Pulse ============= */
+.e269{position:absolute;inset:0;background:#0a0e16;overflow:hidden;display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:80px;gap:4px;padding:30px}
+.e269 i{background:rgba(120,180,255,.15);animation:hexFlash 3s ease-in-out infinite}
+
+/* ============= E270 Radio Wave ============= */
+.e270{position:relative;width:1080px;height:1080px;display:flex;align-items:center;justify-content:center}
+.e270__t{position:absolute;width:80px;height:80px;border-radius:50%;background:var(--card-warn);box-shadow:0 0 40px var(--card-warn);z-index:2}
+.e270 i{position:absolute;border-radius:50%;border:3px solid var(--card-warn);width:0;height:0;
+  animation:ringPulseBig 3s ease-out infinite}
+.e270 i:nth-child(2){animation-delay:.6s}
+.e270 i:nth-child(3){animation-delay:1.2s}
+.e270 i:nth-child(4){animation-delay:1.8s}
+.e270 i:nth-child(5){animation-delay:2.4s}
+
+/* ============= E271 Glass Shatter ============= */
+.e271{position:relative;width:780px;height:780px}
+.e271 i{position:absolute;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.9);box-shadow:0 6px 20px rgba(0,0,0,.3);animation:glassShatter 4s ease-out infinite alternate}
+.e271 i:nth-child(1){left:10%;top:10%;width:160px;height:140px;clip-path:polygon(0 0,100% 0,80% 100%,20% 100%);--dx:-200px;--dy:-100px;--dr:-30deg}
+.e271 i:nth-child(2){left:40%;top:5%;width:200px;height:160px;clip-path:polygon(20% 0,100% 0,90% 100%,0 100%);--dx:150px;--dy:-160px;--dr:20deg}
+.e271 i:nth-child(3){left:65%;top:30%;width:160px;height:200px;clip-path:polygon(0 0,100% 20%,80% 100%,10% 80%);--dx:240px;--dy:120px;--dr:35deg}
+.e271 i:nth-child(4){left:15%;top:45%;width:180px;height:200px;clip-path:polygon(0 20%,100% 0,80% 100%,0 80%);--dx:-260px;--dy:160px;--dr:-25deg}
+.e271 i:nth-child(5){left:40%;top:55%;width:240px;height:180px;clip-path:polygon(0 0,100% 30%,90% 100%,0 80%);--dx:0;--dy:240px;--dr:10deg}
+.e271 i:nth-child(6){left:65%;top:60%;width:140px;height:160px;clip-path:polygon(0 0,100% 0,90% 100%,20% 80%);--dx:200px;--dy:200px;--dr:30deg}
+
+/* ============= E272 Stage Beam ============= */
+.e272{position:absolute;inset:0;background:linear-gradient(180deg,#0a0e16,#000)}
+.e272__beam{position:absolute;left:50%;top:-200px;width:100px;height:1800px;background:linear-gradient(180deg,rgba(255,236,180,.7),rgba(255,236,180,0));transform-origin:top center;clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);animation:spotlightBeam 6s ease-in-out infinite}
+.e272__beam--b{background:linear-gradient(180deg,rgba(120,180,255,.6),rgba(120,180,255,0));animation-delay:-2s;left:30%}
+.e272__beam--c{background:linear-gradient(180deg,rgba(255,120,200,.6),rgba(255,120,200,0));animation-delay:-4s;left:70%}
+.e272__floor{position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(180deg,transparent,rgba(255,236,180,.15))}
+
+/* ============= E273 Lyric Karaoke ============= */
+.e273{position:absolute;left:0;right:0;top:30%;height:600px;display:flex;flex-direction:column;justify-content:center;gap:40px;padding:0 60px}
+.e273 .line{font-family:var(--card-font-display);font-weight:800;font-size:160px;line-height:1.1;color:rgba(248,246,241,.3);position:relative;text-align:center}
+.e273 .line .fg{position:absolute;inset:0;color:var(--card-warn);overflow:hidden;width:0;animation:typeReveal2 4s ease-in-out infinite}
+@keyframes typeReveal2{0%{width:0%}80%,100%{width:100%}}
+.e273 .line:nth-child(2) .fg{animation-delay:1s;color:#f5d35a}
+.e273 .line:nth-child(3) .fg{animation-delay:2s;color:var(--card-accent)}
+
+/* ============= E274 Camera Shake on Title ============= */
+.e274{position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#1f2a3a);animation:shakeBig .3s steps(8,end) infinite}
+@keyframes shakeBig{0%,100%{transform:translate(0)}25%{transform:translate(-12px,8px)}50%{transform:translate(10px,-10px)}75%{transform:translate(-8px,-6px)}}
+.e274__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#fff;text-shadow:0 0 40px rgba(255,80,80,.6)}
+
+/* ============= E275 Gradient Orbit ============= */
+.e275{position:absolute;inset:0;background:#0a0820;overflow:hidden}
+.e275__o{position:absolute;left:50%;top:50%;width:1200px;height:1200px;margin:-600px 0 0 -600px;border-radius:50%;
+  background:conic-gradient(from 0deg,#ff5cb1,#9b6bff,#3affe6,#5cffaa,#f5d35a,#ff5cb1);
+  filter:blur(60px);animation:cosmosRotate 16s linear infinite;mix-blend-mode:screen;opacity:.7}
+.e275__core{position:absolute;left:50%;top:50%;width:380px;height:380px;margin:-190px 0 0 -190px;border-radius:50%;background:radial-gradient(circle,#fff,#9b6bff 60%,transparent);box-shadow:0 0 80px rgba(255,255,255,.6)}
+
+/* ============= E276 Dot Matrix Display ============= */
+.e276{position:absolute;inset:0;background:#1a0a0a;display:flex;align-items:center;justify-content:center}
+.e276__panel{display:grid;grid-template-columns:repeat(40,1fr);grid-auto-rows:24px;gap:6px;padding:80px;background:#0a0505;border-radius:18px;box-shadow:inset 0 0 60px rgba(0,0,0,.8)}
+.e276 i{width:24px;height:24px;border-radius:50%;background:#3a0a0a;box-shadow:inset 0 0 4px rgba(0,0,0,.5)}
+.e276 i.on{background:#ff3a4a;box-shadow:0 0 8px #ff3a4a;animation:dotMatrix 3s ease-in-out infinite}
+
+/* ============= E277 Holographic UI ============= */
+.e277{position:absolute;inset:0;background:radial-gradient(ellipse at center,#0a1c2a,#000)}
+.e277__hud{position:absolute;inset:120px;border:2px solid rgba(120,255,210,.5);border-radius:24px;padding:60px;color:#5cffaa;font-family:var(--card-font-mono);text-shadow:0 0 8px #5cffaa;display:flex;flex-direction:column;gap:40px}
+.e277__hud::before,.e277__hud::after{content:"";position:absolute;width:60px;height:60px;border:3px solid #5cffaa}
+.e277__hud::before{top:-3px;left:-3px;border-right:none;border-bottom:none}
+.e277__hud::after{bottom:-3px;right:-3px;border-left:none;border-top:none}
+.e277__hud .row{display:flex;justify-content:space-between;font-size:48px;letter-spacing:.18em}
+.e277__hud .b{height:18px;background:rgba(120,255,210,.15);border:1px solid rgba(120,255,210,.5);position:relative;overflow:hidden}
+.e277__hud .b::after{content:"";position:absolute;left:0;top:0;bottom:0;width:60%;background:#5cffaa;animation:hexFlash 2s ease-in-out infinite}
+.e277__bigNum{font-family:var(--card-font-mono);font-size:280px;font-weight:600;color:#fff;text-shadow:0 0 30px #5cffaa;align-self:center;animation:flicker2 4s steps(40,end) infinite}
+
+/* ============= E278 Color Pop (background) ============= */
+.e278{position:absolute;inset:0;background:#1a1d22;overflow:hidden}
+.e278__bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,#3a3a3a 0 4px,#1a1d22 4px 8px);filter:saturate(0)}
+.e278__pop{position:absolute;inset:0;background:radial-gradient(circle 480px at 50% 50%,var(--card-warn) 0%,var(--card-warn) 30%,transparent 60%);mix-blend-mode:screen;animation:popMove 8s ease-in-out infinite}
+@keyframes popMove{0%,100%{transform:translate(-15%,-10%)}50%{transform:translate(15%,10%)}}
+.e278__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:280px;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.5)}
+
+/* ============= E279 Time Lapse Sky ============= */
+.e279{position:absolute;inset:0;
+  background:linear-gradient(180deg,#1a3a78 0%,#7a3a4a 30%,#f5d35a 60%,#3a4858 100%);
+  background-size:100% 400%;animation:skyShift 12s ease-in-out infinite alternate}
+@keyframes skyShift{0%{background-position:0 0%}100%{background-position:0 100%}}
+.e279__sun{position:absolute;left:50%;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ffe680,#ff8800);
+  transform:translateX(-50%);box-shadow:0 0 100px rgba(255,180,80,.7);animation:sunArc 12s ease-in-out infinite alternate}
+@keyframes sunArc{0%{top:80%}50%{top:15%}100%{top:80%}}
+.e279__floor{position:absolute;left:0;right:0;bottom:0;height:30%;background:linear-gradient(180deg,#1a2030,#000)}
+
+/* ============= E280 End Card with Logo Lockup ============= */
+.e280{position:absolute;inset:0;background:var(--card-navy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px}
+.e280__mark{width:280px;height:280px;border-radius:50%;background:var(--card-paper);display:flex;align-items:center;justify-content:center;font-family:var(--card-font-display);font-weight:900;font-size:200px;font-style:italic;color:var(--card-navy);animation:badgeBounce2 2.4s ease-in-out infinite}
+@keyframes badgeBounce2{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.e280__rule{width:60%;height:3px;background:var(--card-paper-soft);transform-origin:center;animation:ruleDraw 2s ease-out infinite alternate}
+@keyframes ruleDraw{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+.e280__t{font-family:var(--card-font-display);font-weight:700;font-size:140px;color:var(--card-paper);font-style:italic;line-height:1}
+.e280__sub{font-family:var(--card-font-mono);font-size:46px;letter-spacing:.32em;color:var(--card-warn);text-transform:uppercase}
+
+</style>
+</head>
+<body>
+<h1>Effects Batch 07 — E241–E280 · high-impact bonus pack</h1>
+<p class="sub">Bonus motion patterns picked for max video usefulness — CRT, holographic, liquid metal, fire, plasma, matrix rain, ribbon, lava lamp, glass shatter, stage beams, lyric karaoke, holographic HUD, time-lapse sky, end card. <b style="color:#f5d35a">★</b> = especially video-ready.</p>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E241 · CRT TV <b>★</b></div>
+  <div class="frame"><div class="e241"><div class="e241__face"></div><div class="e241__roll"></div><div class="e241__scan"></div><div class="e241__txt">ON AIR</div></div><div class="frame__id">E241</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E242 · VHS Tracking <b>★</b></div>
+  <div class="frame"><div class="e242">
+    <div class="e242__hud">▶ PLAY · 00:14:32</div>
+    <div class="e242__hud2">SP · 1992</div>
+    <div class="e242__noise"></div>
+    <div class="frame__safe"><div class="e242__txt">RECORD</div></div>
+    <div class="e242__dist" style="top:40%"></div>
+  </div><div class="frame__id">E242</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E243 · Holographic Sticker <b>★</b></div>
+  <div class="frame frame--light"><div class="frame__safe"><div class="e243"><div class="e243__t">collect</div></div></div><div class="frame__id">E243</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E244 · Liquid Metal <b>★</b></div>
+  <div class="frame"><div class="e244"></div><div class="frame__safe"><div class="e244__t">CHROME</div></div><div class="frame__id">E244</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E245 · Ink Bloom <b>★</b></div>
+  <div class="frame frame--light"><div class="e245"><i></i><i></i><i></i></div><div class="frame__safe"><div class="e245__t">bloom</div></div><div class="frame__id">E245</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E246 · Fire <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:#000"></div><div class="e246"><i></i><i></i><i></i></div><div class="frame__id">E246</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E247 · Magnetic Field</div>
+  <div class="frame"><div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,#0a1c2a,#000)"></div>
+  <div class="frame__safe">
+  <svg class="e247" viewBox="0 0 1000 600">
+    <path d="M250 300 Q 500 100 750 300"/>
+    <path d="M250 300 Q 500 50 750 300"/>
+    <path d="M250 300 Q 500 0 750 300"/>
+    <path d="M250 300 Q 500 500 750 300"/>
+    <path d="M250 300 Q 500 550 750 300"/>
+    <path d="M250 300 Q 500 600 750 300"/>
+    <circle class="pole" cx="250" cy="300" r="40"/>
+    <circle class="pole2" cx="750" cy="300" r="40"/>
+  </svg></div><div class="frame__id">E247</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E248 · Plasma Blob <b>★</b></div>
+  <div class="frame"><div class="e248"></div><div class="e248__t">PLASMA</div><div class="frame__id">E248</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E249 · Vortex Tunnel <b>★</b></div>
+  <div class="frame"><div class="e249"><div class="e249__r"></div><div class="e249__r"></div><div class="e249__r"></div><div class="e249__r"></div><div class="e249__r"></div><div class="e249__r"></div><div class="e249__r"></div></div>
+  <div class="frame__safe"><div class="ph" style="font-size:200px;text-shadow:0 0 30px rgba(255,255,255,.5)">WARP</div></div>
+  <div class="frame__id">E249</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E250 · Matrix Rain <b>★</b></div>
+  <div class="frame"><div class="e250" id="mxHost"></div><div class="frame__id">E250</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E251 · Barcode Animate</div>
+  <div class="frame frame--light"><div class="frame__safe"><div class="e251"><div class="e251__bars"></div><div class="e251__no">012345 67890</div></div></div><div class="frame__id">E251</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E252 · Terminal Boot <b>★</b></div>
+  <div class="frame"><div class="e252">
+    <i>$ boot --target main</i>
+    <i>$ loading kernel...</i>
+    <i>$ checking disk... ok</i>
+    <i>$ mounting volumes...</i>
+    <i>$ ready.</i>
+    <i>$ welcome, user_<span class="cur"></span></i>
+  </div><div class="frame__id">E252</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E253 · Ribbon Wave <b>★</b></div>
+  <div class="frame frame--light"><div class="frame__safe">
+    <svg class="e253" viewBox="0 0 1200 800">
+      <defs>
+        <linearGradient id="g253a" x1="0" x2="1"><stop offset="0%" stop-color="#5A8FA8"/><stop offset="100%" stop-color="#1F2A3A"/></linearGradient>
+        <linearGradient id="g253b" x1="0" x2="1"><stop offset="0%" stop-color="#C97D5C"/><stop offset="100%" stop-color="#7a3f2a"/></linearGradient>
+        <linearGradient id="g253c" x1="0" x2="1"><stop offset="0%" stop-color="#4A8F70"/><stop offset="100%" stop-color="#2a5a48"/></linearGradient>
+      </defs>
+      <path class="a" d="M0 400 Q 200 200 400 400 T 800 400 T 1200 400"><animate attributeName="d" dur="6s" repeatCount="indefinite" values="M0 400 Q 200 200 400 400 T 800 400 T 1200 400;M0 400 Q 200 600 400 400 T 800 400 T 1200 400;M0 400 Q 200 200 400 400 T 800 400 T 1200 400"/></path>
+      <path class="b" d="M0 500 Q 200 700 400 500 T 800 500 T 1200 500"><animate attributeName="d" dur="6s" repeatCount="indefinite" values="M0 500 Q 200 700 400 500 T 800 500 T 1200 500;M0 500 Q 200 300 400 500 T 800 500 T 1200 500;M0 500 Q 200 700 400 500 T 800 500 T 1200 500"/></path>
+      <path class="c" d="M0 300 Q 200 100 400 300 T 800 300 T 1200 300"><animate attributeName="d" dur="6s" repeatCount="indefinite" values="M0 300 Q 200 100 400 300 T 800 300 T 1200 300;M0 300 Q 200 500 400 300 T 800 300 T 1200 300;M0 300 Q 200 100 400 300 T 800 300 T 1200 300"/></path>
+    </svg>
+  </div><div class="frame__id">E253</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E254 · Lava Lamp <b>★</b></div>
+  <div class="frame"><div class="e254"><div class="e254__inner"><i></i><i></i><i></i><i></i></div></div><div class="frame__id">E254</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E255 · Constellation Connect <b>★</b></div>
+  <div class="frame"><div class="e255">
+    <svg class="e255__svg" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+      <line class="line" x1="220" y1="380" x2="540" y2="500"/>
+      <line class="line" x1="540" y1="500" x2="780" y2="380"/>
+      <line class="line" x1="780" y1="380" x2="900" y2="700"/>
+      <line class="line" x1="900" y1="700" x2="660" y2="900"/>
+      <line class="line" x1="660" y1="900" x2="320" y2="800"/>
+      <line class="line" x1="320" y1="800" x2="220" y2="380"/>
+      <circle class="star" cx="220" cy="380" r="10"/>
+      <circle class="star" cx="540" cy="500" r="14"/>
+      <circle class="star" cx="780" cy="380" r="10"/>
+      <circle class="star" cx="900" cy="700" r="12"/>
+      <circle class="star" cx="660" cy="900" r="10"/>
+      <circle class="star" cx="320" cy="800" r="14"/>
+    </svg>
+  </div><div class="frame__id">E255</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E256 · Type Reveal Mask <b>★</b></div>
+  <div class="frame frame--light"><div class="frame__safe"><div class="e256"><span>BRAND</span></div></div><div class="frame__id">E256</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E257 · Spotlight Tracker <b>★</b></div>
+  <div class="frame"><div class="e257"><div class="e257__t">REVEAL</div><div class="e257__mask"></div></div><div class="frame__id">E257</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E258 · Rotating Halo <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:#0a0e16"></div><div class="frame__safe"><div class="e258"><div class="e258__r"></div><div class="e258__r2"></div><div class="e258__c">DRIFT</div></div></div><div class="frame__id">E258</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E259 · Hex Grid Flash <b>★</b></div>
+  <div class="frame"><div class="e259" id="hexHost"></div><div class="frame__safe"><div class="ph" style="text-shadow:0 0 30px rgba(120,200,255,.6)">NETWORK</div></div><div class="frame__id">E259</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E260 · Neon Frame <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:#0a0820"></div><div class="e260"></div><div class="e260__t">OPEN</div><div class="frame__id">E260</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E261 · Tape Spool <b>★</b></div>
+  <div class="frame"><div class="e261">
+    <div class="e261__r e261__r--l"></div>
+    <div class="e261__r e261__r--r"></div>
+    <div class="e261__tape"></div>
+  </div><div class="frame__id">E261</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E262 · Loading Beat <b>★</b></div>
+  <div class="frame"><div class="frame__safe"><div class="e262"><div class="e262__dots"><i></i><i></i><i></i></div><div class="e262__lbl">LOADING</div></div></div><div class="frame__id">E262</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E263 · Cursor Demo <b>★</b></div>
+  <div class="frame"><div class="e263"><div class="e263__win"><div class="e263__btn">SUBMIT</div><div class="e263__field"></div><div class="e263__field"></div></div><div class="e263__cur"></div></div><div class="frame__id">E263</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E264 · Voronoi Shift</div>
+  <div class="frame"><div class="e264">
+    <svg viewBox="0 0 1080 1920" preserveAspectRatio="none">
+      <polygon points="0,0 280,0 240,400 60,520 0,300"/>
+      <polygon points="280,0 700,0 620,360 240,400"/>
+      <polygon points="700,0 1080,0 1080,420 880,500 620,360"/>
+      <polygon points="0,300 60,520 200,800 0,720"/>
+      <polygon points="60,520 240,400 620,360 700,720 480,820 200,800"/>
+      <polygon points="700,720 880,500 1080,420 1080,840 880,920"/>
+      <polygon points="0,720 200,800 280,1100 80,1180"/>
+      <polygon points="200,800 480,820 540,1140 280,1100"/>
+      <polygon points="480,820 700,720 880,920 820,1180 540,1140"/>
+      <polygon points="880,920 1080,840 1080,1280 920,1320 820,1180"/>
+      <polygon points="80,1180 280,1100 360,1500 120,1540"/>
+      <polygon points="280,1100 540,1140 600,1500 360,1500"/>
+      <polygon points="540,1140 820,1180 920,1320 880,1500 600,1500"/>
+      <polygon points="920,1320 1080,1280 1080,1620 880,1500"/>
+      <polygon points="0,1180 120,1540 0,1640"/>
+      <polygon points="120,1540 360,1500 460,1920 200,1920 0,1640"/>
+      <polygon points="360,1500 600,1500 700,1920 460,1920"/>
+      <polygon points="600,1500 880,1500 920,1920 700,1920"/>
+      <polygon points="880,1500 1080,1620 1080,1920 920,1920"/>
+    </svg>
+  </div><div class="frame__id">E264</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E265 · Concentric Pulse <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:#0a0e16"></div><div class="frame__safe"><div class="e265"><i></i><i></i><i></i><i></i><i></i><div class="e265__c">DRIFT</div></div></div><div class="frame__id">E265</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E266 · Paint Drip</div>
+  <div class="frame frame--light">
+    <div class="e266"></div>
+    <div class="e266__d"></div><div class="e266__d"></div><div class="e266__d"></div><div class="e266__d"></div>
+    <div class="frame__safe" style="align-items:flex-end;padding-bottom:240px"><div class="ph ph--d" style="font-size:160px">drip</div></div>
+    <div class="frame__id">E266</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E267 · Bokeh Float <b>★</b></div>
+  <div class="frame"><div class="e267" id="bokehHost"></div>
+  <div class="frame__safe"><div class="ph" style="font-style:italic;font-size:160px">midnight</div></div>
+  <div class="frame__id">E267</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E268 · ASCII Banner</div>
+  <div class="frame"><div class="e268"><b>██████╗ ██████╗ ██╗███████╗████████╗</b><b>██╔══██╗██╔══██╗██║██╔════╝╚══██╔══╝</b><b>██║  ██║██████╔╝██║█████╗     ██║   </b><b>██║  ██║██╔══██╗██║██╔══╝     ██║   </b><b>██████╔╝██║  ██║██║██║        ██║   </b><b>╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   </b></div><div class="frame__id">E268</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E269 · Heat Map Pulse</div>
+  <div class="frame"><div class="e269" id="heatHost"></div><div class="frame__id">E269</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E270 · Radio Wave Broadcast <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,#1a0a14,#000)"></div><div class="frame__safe"><div class="e270"><div class="e270__t"></div><i></i><i></i><i></i><i></i><i></i></div></div><div class="frame__id">E270</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E271 · Glass Shatter <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#3a4858,#0a141d)"></div>
+  <div class="frame__safe"><div class="e271"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+  <div class="frame__id">E271</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E272 · Stage Beams <b>★</b></div>
+  <div class="frame"><div class="e272">
+    <div class="e272__beam"></div>
+    <div class="e272__beam e272__beam--b"></div>
+    <div class="e272__beam e272__beam--c"></div>
+    <div class="e272__floor"></div>
+  </div>
+  <div class="frame__safe" style="align-items:flex-end;padding-bottom:240px"><div class="ph" style="font-size:200px">LIVE</div></div>
+  <div class="frame__id">E272</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E273 · Lyric Karaoke <b>★</b></div>
+  <div class="frame"><div style="position:absolute;inset:0;background:linear-gradient(180deg,#1f2a3a,#0a0e16)"></div>
+  <div class="e273">
+    <div class="line">we'll keep on running<span class="fg">we'll keep on running</span></div>
+    <div class="line">past the morning light<span class="fg">past the morning light</span></div>
+    <div class="line">into the unknown<span class="fg">into the unknown</span></div>
+  </div>
+  <div class="frame__id">E273</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E274 · Camera Shake Title <b>★</b></div>
+  <div class="frame"><div class="e274"><div class="e274__t">IMPACT</div></div><div class="frame__id">E274</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E275 · Gradient Orbit <b>★</b></div>
+  <div class="frame"><div class="e275"><div class="e275__o"></div><div class="e275__core"></div></div>
+  <div class="frame__safe"><div class="ph" style="font-size:180px;mix-blend-mode:overlay">cosmos</div></div>
+  <div class="frame__id">E275</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E276 · Dot Matrix Display <b>★</b></div>
+  <div class="frame"><div class="e276"><div class="e276__panel" id="dmHost"></div></div><div class="frame__id">E276</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E277 · Holographic HUD <b>★</b></div>
+  <div class="frame"><div class="e277"><div class="e277__hud">
+    <div class="row"><span>SYS://STATUS</span><span>OK</span></div>
+    <div class="b"></div>
+    <div class="row"><span>UPLINK</span><span>91%</span></div>
+    <div class="b"></div>
+    <div class="row"><span>SIGNAL</span><span>STRONG</span></div>
+    <div class="e277__bigNum">042</div>
+    <div class="row" style="opacity:.7"><span>SECTOR 9 · 04:21:08 UTC</span><span>RDY</span></div>
+  </div></div><div class="frame__id">E277</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E278 · Color Pop <b>★</b></div>
+  <div class="frame"><div class="e278"><div class="e278__bg"></div><div class="e278__pop"></div></div><div class="e278__t">FOCUS</div><div class="frame__id">E278</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E279 · Time-Lapse Sky <b>★</b></div>
+  <div class="frame"><div class="e279"></div><div class="e279__sun"></div><div class="e279__floor"></div>
+  <div class="frame__safe" style="align-items:flex-end;padding-bottom:200px"><div class="ph" style="font-size:140px">a day</div></div>
+  <div class="frame__id">E279</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E280 · End Card / Lockup <b>★</b></div>
+  <div class="frame"><div class="e280">
+    <div class="e280__mark">D</div>
+    <div class="e280__rule"></div>
+    <div class="e280__t">Drift &amp; Co.</div>
+    <div class="e280__sub">EST · 2024</div>
+  </div><div class="frame__id">E280</div></div></div>
+
+</div>
+
+<script>
+// E250 matrix rain
+(function(){const host=document.getElementById('mxHost');if(!host)return;
+  function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+  const r=rng(11);const chars='0123456789ABCDEFｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ';
+  for(let c=0;c<28;c++){const col=document.createElement('div');col.className='col';
+    col.style.left=(c/28*100+1.4)+'%';
+    col.style.animationDuration=(4+r()*5)+'s';col.style.animationDelay=(-r()*8)+'s';
+    const len=8+Math.floor(r()*18);
+    for(let i=0;i<len;i++){const ch=document.createElement('i');
+      ch.textContent=chars[Math.floor(r()*chars.length)];
+      ch.style.opacity=Math.max(.1,1-i/len);col.appendChild(ch);
+    }
+    host.appendChild(col);
+  }
+})();
+// E259 hex grid
+(function(){const h=document.getElementById('hexHost');if(!h)return;
+  function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+  const r=rng(7);
+  for(let i=0;i<140;i++){const e=document.createElement('i');
+    e.style.animationDelay=(-r()*3)+'s';
+    if(r()>.7)e.style.background='rgba(120,200,255,.4)';
+    h.appendChild(e);}
+})();
+// E267 bokeh
+(function(){const h=document.getElementById('bokehHost');if(!h)return;
+  function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+  const r=rng(5);
+  for(let i=0;i<24;i++){const e=document.createElement('i');
+    const sz=80+r()*200;e.style.width=sz+'px';e.style.height=sz+'px';
+    e.style.left=(r()*100)+'%';e.style.top=(r()*100)+'%';
+    e.style.opacity=(.4+r()*.5);
+    e.style.animationDuration=(4+r()*5)+'s';e.style.animationDelay=(-r()*5)+'s';
+    h.appendChild(e);}
+})();
+// E269 heat map
+(function(){const h=document.getElementById('heatHost');if(!h)return;
+  function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+  const r=rng(13);
+  for(let i=0;i<300;i++){const e=document.createElement('i');
+    const v=r();
+    if(v>.85)e.style.background='rgba(255,80,80,.7)';
+    else if(v>.7)e.style.background='rgba(255,180,80,.5)';
+    else if(v>.5)e.style.background='rgba(120,200,255,.35)';
+    e.style.animationDelay=(-r()*3)+'s';
+    h.appendChild(e);}
+})();
+// E276 dot matrix — render the word HELLO
+(function(){const h=document.getElementById('dmHost');if(!h)return;
+  // 5x40 grid: row col
+  const rows=14;const cols=40;
+  // simple mask: spell SCROLL by lighting columns approximately
+  const word='HELLO';
+  // letter bitmaps 5w x 7h
+  const F={
+    H:["10001","10001","10001","11111","10001","10001","10001"],
+    E:["11111","10000","10000","11110","10000","10000","11111"],
+    L:["10000","10000","10000","10000","10000","10000","11111"],
+    O:["01110","10001","10001","10001","10001","10001","01110"]
+  };
+  const mask=Array.from({length:rows},()=>Array(cols).fill(0));
+  let off=8;
+  for(const ch of word){const g=F[ch];if(!g){off+=4;continue}
+    for(let y=0;y<7;y++)for(let x=0;x<5;x++)if(g[y][x]==='1'){const r=3+y;const c=off+x;if(r<rows&&c<cols)mask[r][c]=1}
+    off+=6;
+  }
+  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const e=document.createElement('i');
+    if(mask[r][c]){e.classList.add('on');e.style.animationDelay=((r*0.04)+(c*0.02))+'s'}
+    h.appendChild(e);}
+})();
+</script>
+</body>
+</html>

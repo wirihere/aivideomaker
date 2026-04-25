@@ -1,0 +1,1387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:title" content="ConsentMate — Resource consent drafting, done for you" />
+<meta property="og:description" content="AI-drafted, human-reviewed NZ resource consents. Full drafts from <link rel="icon" type="image/svg+xml" href="favicon.svg">,500. Property compliance reports from $29." />
+<meta property="og:image" content="assets/og-image.png" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="ConsentMate" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="description" content="AI-drafted, human-reviewed NZ resource consents. Full drafts from <link rel="icon" type="image/svg+xml" href="favicon.svg">,500. Property compliance reports from $29." />
+
+<title>ConsentMate — Resource consent drafting, done for you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<script>
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "palette": "ordnance"
+  }/*EDITMODE-END*/;
+</script>
+<style>
+  /* ─────────────────────────────────────────────────────────
+     ConsentMate — utility / cadastral aesthetic
+     Type: JetBrains Mono (UI) · Inter (body) · Instrument Serif (hero accents)
+     Palette: near-black ink on warm paper, single survey-green accent
+     ───────────────────────────────────────────────────────── */
+
+  /* DEFAULT PALETTE — Ordnance (committed). The switcher still lives in
+     Tweaks so you can preview Paper/Clay/Mono during review, but the page
+     loads Ordnance-first with no JS needed. */
+  :root {
+    --paper: #eef1f5; --paper-deep:#e2e7ed; --paper-line:#c8d0da;
+    --ink:#0d1826; --ink-2:#1a2a3d; --ink-3:#4b5a6d; --ink-mute:#7d8a9a;
+    --accent:#1f3a68; --accent-ink:#122649; --accent-wash:#d5deec;
+    --warn:#9a3a3a;
+    --rule:         rgba(13,24,38,.14);
+    --rule-strong:  rgba(13,24,38,.38);
+  }
+
+  /* Alternate palettes — applied via <body data-palette="..."> from Tweaks */
+  body[data-palette="paper"] {
+    --paper:        #f4f1ea;
+    --paper-deep:   #ece7dc;
+    --paper-line:   #d9d2c1;
+    --ink:          #111210;
+    --ink-2:        #2a2a27;
+    --ink-3:        #585651;
+    --ink-mute:     #8a867d;
+    --accent:       #2f5d3a;
+    --accent-ink:   #1a3a22;
+    --accent-wash:  #dfe5d9;
+    --warn:         #a8471c;
+    --rule:         rgba(17,18,16,.12);
+    --rule-strong:  rgba(17,18,16,.35);
+  }
+
+  /* Palette tweaks — applied to <body data-palette="..."> */
+  body[data-palette="ordnance"] {
+    --paper: #eef1f5; --paper-deep:#e2e7ed; --paper-line:#c8d0da;
+    --ink:#0d1826; --ink-2:#1a2a3d; --ink-3:#4b5a6d; --ink-mute:#7d8a9a;
+    --accent:#1f3a68; --accent-ink:#122649; --accent-wash:#d5deec;
+    --warn:#9a3a3a;
+    --rule: rgba(13,24,38,.14); --rule-strong: rgba(13,24,38,.38);
+  }
+  body[data-palette="clay"] {
+    --paper:#f3ece1; --paper-deep:#e8dfce; --paper-line:#d4c6ac;
+    --ink:#1f1510; --ink-2:#33241b; --ink-3:#6a5647; --ink-mute:#9a8874;
+    --accent:#8a3a1c; --accent-ink:#5c2311; --accent-wash:#ead9c9;
+    --warn:#6d4414;
+    --rule: rgba(31,21,16,.14); --rule-strong: rgba(31,21,16,.38);
+  }
+  body[data-palette="mono"] {
+    --paper:#f4f4f2; --paper-deep:#e8e8e5; --paper-line:#d0d0cc;
+    --ink:#0a0a0a; --ink-2:#1e1e1e; --ink-3:#555; --ink-mute:#8a8a87;
+    --accent:#0a0a0a; --accent-ink:#000; --accent-wash:#e0e0dc;
+    --warn:#5a2a10;
+    --rule: rgba(10,10,10,.14); --rule-strong: rgba(10,10,10,.38);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.5;
+    font-feature-settings: "ss01", "cv11";
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 48px 48px, 48px 48px;
+    background-position: -1px -1px;
+    background-attachment: fixed;
+    /* tint the grid so it's barely there */
+    background-blend-mode: multiply;
+  }
+  body::before{
+    /* fade the grid */
+    content:""; position:fixed; inset:0; background:var(--paper);
+    opacity:.88; pointer-events:none; z-index:-1;
+  }
+
+  a { color: inherit; }
+  img { max-width:100%; display:block; }
+
+  .mono { font-family: "JetBrains Mono", ui-monospace, monospace; font-feature-settings: "zero","ss01"; }
+  .serif { font-family: "Instrument Serif", Georgia, serif; font-style: italic; letter-spacing:-0.01em; }
+
+  /* ── layout primitives ─────────────────────────── */
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+  .rule { border-top: 1px solid var(--rule); }
+  .rule-strong { border-top: 1px solid var(--rule-strong); }
+  .eyebrow {
+    font-family:"JetBrains Mono",monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .eyebrow .dot { display:inline-block; width:6px; height:6px; background:var(--accent); border-radius:50%; margin-right:8px; transform:translateY(-1px); }
+
+  /* ── top tape ─────────────────────────────────── */
+  .tape {
+    font-family:"JetBrains Mono",monospace;
+    font-size: 11px;
+    letter-spacing:.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .tape .wrap { display:flex; justify-content:space-between; gap:16px; flex-wrap: wrap; }
+  .tape .pulse { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--warn); margin-right:8px; animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(1.35)} }
+
+  /* ── header ───────────────────────────────────── */
+  header.site {
+    position: sticky; top:0; z-index:30;
+    background: color-mix(in oklab, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  header.site .wrap { display:flex; align-items:center; justify-content:space-between; padding: 18px 32px; }
+  .logo { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--ink); }
+  .logo .mark { width:32px; height:32px; }
+  .logo .word { font-family:"JetBrains Mono",monospace; font-weight:700; letter-spacing:-0.02em; font-size: 18px; }
+  .logo .word .slash { color: var(--accent); }
+  nav.main { display:flex; gap: 28px; font-family:"JetBrains Mono",monospace; font-size:13px; }
+  nav.main a { text-decoration:none; color:var(--ink-2); }
+  nav.main a:hover { color: var(--accent); }
+
+  .btn {
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:"JetBrains Mono",monospace;
+    font-size: 13px; font-weight: 500;
+    padding: 10px 16px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration:none;
+    border-radius: 2px;
+    transition: background .15s, color .15s, transform .15s;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--accent); border-color: var(--accent); }
+  .btn.ghost { background:transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--paper); }
+  .btn.accent { background: var(--accent); border-color: var(--accent); }
+  .btn.accent:hover { background: var(--accent-ink); }
+  .btn .arrow { transition: transform .2s; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  /* ── hero ─────────────────────────────────────── */
+  section.hero { padding: 80px 0 40px; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr .85fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .hero h1 {
+    font-family: "Inter", sans-serif;
+    font-weight: 600;
+    font-size: clamp(44px, 6vw, 72px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    margin: 20px 0 24px;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .hero h1 em {
+    font-family:"Instrument Serif", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .hero .lede {
+    font-size: 18px;
+    color: var(--ink-3);
+    max-width: 48ch;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+  .hero-ctas { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .hero-meta {
+    margin-top: 28px;
+    display:flex; gap: 32px; flex-wrap: wrap;
+    font-family:"JetBrains Mono",monospace;
+    font-size: 12px; color: var(--ink-3); letter-spacing:.02em;
+  }
+  .hero-meta b { color: var(--ink); font-weight: 500; }
+
+  /* Ledger card (price anchor) */
+  .ledger {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    padding: 0;
+    font-family:"JetBrains Mono",monospace;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 6px 6px 0 var(--rule);
+  }
+  .ledger-head {
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 14px 20px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 11px; letter-spacing:.14em; text-transform: uppercase;
+  }
+  .ledger-head .doc-num { opacity:.6; }
+  .ledger table { width: 100%; border-collapse: collapse; }
+  .ledger td, .ledger th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 13px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: baseline;
+  }
+  .ledger th { color: var(--ink-3); font-weight:500; text-transform:uppercase; font-size:10px; letter-spacing:.14em; background: var(--paper-deep); }
+  .ledger td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .ledger tr.you td { background: var(--accent-wash); color: var(--accent-ink); font-weight:500; }
+  .ledger tr.you td .tag { display:inline-block; padding:2px 6px; background: var(--accent); color: var(--paper); font-size: 9px; letter-spacing:.14em; margin-left: 6px; border-radius: 2px; }
+  .ledger tr.sub td { color: var(--ink-mute); }
+  .ledger tr:last-child td { border-bottom: 0; }
+  .ledger-foot {
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 12px 20px;
+    background: var(--paper-deep);
+    font-size: 11px; color: var(--ink-3); letter-spacing:.08em;
+  }
+  .ledger-foot .savings { color: var(--accent-ink); font-weight:600; }
+  .ledger-stamp {
+    position:absolute; right: -10px; top: 74px;
+    background: var(--warn); color: var(--paper);
+    font-family:"JetBrains Mono",monospace;
+    font-size: 10px; letter-spacing:.14em;
+    padding: 5px 12px; border-radius: 2px;
+    transform: rotate(4deg);
+    box-shadow: -2px 2px 0 rgba(0,0,0,.08);
+  }
+
+  /* ── measure bar (coordinate strip) ───────────── */
+  .coord-strip {
+    font-family:"JetBrains Mono",monospace;
+    font-size: 10px;
+    letter-spacing:.12em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    padding: 16px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .coord-strip .wrap { display:flex; gap: 48px; justify-content: space-between; flex-wrap: nowrap; white-space: nowrap; overflow: hidden; }
+  .coord-strip span b { color: var(--ink); font-weight: 500; }
+
+  /* ── section framing ──────────────────────────── */
+  section.block { padding: 96px 0; }
+  .section-head {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 48px;
+    align-items: baseline;
+    margin-bottom: 56px;
+  }
+  .section-head .n { font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.14em; color:var(--ink-3); text-transform: uppercase; }
+  .section-head h2 {
+    font-family: "Inter",sans-serif;
+    font-weight: 600;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0;
+    max-width: 22ch;
+  }
+  .section-head h2 em { font-family:"Instrument Serif",serif; font-style: italic; font-weight: 400; color: var(--accent); }
+  .section-head .kicker { margin-top: 12px; color: var(--ink-3); font-size: 16px; max-width: 54ch; }
+
+  /* ── property card (map-forward demo) ─────────── */
+  section.showcase { padding: 48px 0 96px; }
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 0;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+  }
+  .property-map {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--paper-deep);
+    border-right: 1px solid var(--ink);
+    overflow: hidden;
+  }
+  .property-map svg { display:block; width:100%; height:100%; }
+  .map-chip {
+    position:absolute; top: 16px; left: 16px;
+    font-family:"JetBrains Mono",monospace; font-size: 10px; letter-spacing:.14em;
+    color: var(--ink); background: var(--paper);
+    padding: 6px 10px; border: 1px solid var(--ink); border-radius: 2px; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .map-chip .dot { width:6px; height:6px; background: var(--accent); border-radius:50%; }
+  .map-scale {
+    position:absolute; bottom: 16px; left: 16px;
+    font-family:"JetBrains Mono",monospace; font-size: 10px; color: var(--ink-2);
+    background: color-mix(in oklab, var(--paper) 80%, transparent);
+    padding: 4px 8px; border: 1px solid var(--rule-strong);
+  }
+  .map-scale .bar { display:inline-block; width: 40px; height: 6px; background:
+    repeating-linear-gradient(90deg, var(--ink) 0 8px, var(--paper) 8px 16px);
+    border: 1px solid var(--ink); margin-right: 8px; vertical-align: middle;
+  }
+  .map-compass {
+    position:absolute; top:16px; right:16px;
+    width: 38px; height: 38px;
+    font-family:"JetBrains Mono",monospace; font-size: 10px;
+  }
+
+  .property-data {
+    padding: 28px 32px;
+    display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+  }
+  .pd-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .pd-head .addr { font-family:"Inter",sans-serif; font-size: 20px; font-weight:600; letter-spacing:-.01em; line-height: 1.25; }
+  .pd-head .id { font-family:"JetBrains Mono",monospace; font-size: 11px; color: var(--ink-3); }
+  .pd-status {
+    display:inline-flex; align-items:center; gap: 8px;
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.12em;
+    padding: 6px 10px; background: var(--accent-wash); color: var(--accent-ink);
+    border: 1px solid var(--accent); border-radius: 2px; text-transform: uppercase; font-weight: 500;
+    width: fit-content;
+  }
+  .pd-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--rule-strong);
+    border: 1px solid var(--rule-strong);
+  }
+  .pd-cell { background: var(--paper); padding: 14px 16px; }
+  .pd-cell .k { font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.14em; text-transform: uppercase; color: var(--ink-3); }
+  .pd-cell .v { font-family:"JetBrains Mono",monospace; font-size: 16px; font-weight:500; color: var(--ink); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .pd-cell .v.breach { color: var(--warn); }
+  .pd-checks { font-family:"JetBrains Mono",monospace; font-size: 12px; color: var(--ink-2); display:flex; flex-direction:column; gap: 8px; }
+  .pd-checks .row { display:flex; justify-content:space-between; border-bottom: 1px dotted var(--rule-strong); padding-bottom: 6px; }
+  .pd-checks .row .ok { color: var(--accent-ink); }
+  .pd-checks .row .no { color: var(--warn); }
+
+  /* ── how-it-works steps ───────────────────────── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .step {
+    padding: 32px 28px 40px;
+    border-right: 1px solid var(--rule-strong);
+    position: relative;
+  }
+  .step:last-child { border-right: 0; }
+  .step .num { font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.14em; color: var(--accent); margin-bottom: 20px; }
+  .step h3 { font-family:"Inter",sans-serif; font-size: 22px; font-weight: 600; letter-spacing: -.015em; margin: 0 0 10px; line-height: 1.2; }
+  .step p { color: var(--ink-3); font-size: 14px; margin: 0 0 16px; }
+  .step .tag { font-family:"JetBrains Mono",monospace; font-size: 11px; padding: 4px 8px; background: var(--ink); color: var(--paper); border-radius: 2px; letter-spacing:.08em; }
+  .step .tag.human { background: var(--accent); }
+
+  /* ── pricing ──────────────────────────────────── */
+  .prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .plan {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 28px 28px 32px;
+    display:flex; flex-direction: column; gap: 20px;
+    position: relative;
+    border-radius: 2px;
+  }
+  .plan.feat { background: var(--ink); color: var(--paper); }
+  .plan.feat .plan-rule { background: var(--paper); }
+  .plan .plan-head { display:flex; justify-content:space-between; align-items:baseline; }
+  .plan h3 { font-family:"JetBrains Mono",monospace; font-size: 12px; letter-spacing:.14em; text-transform: uppercase; margin: 0; font-weight: 500; }
+  .plan .badge { font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.14em; text-transform: uppercase; padding: 3px 8px; border: 1px solid currentColor; border-radius: 2px; opacity:.8; }
+  .plan .price { font-family:"Inter",sans-serif; font-size: 48px; font-weight:600; letter-spacing: -0.03em; line-height: 1; display:flex; align-items:baseline; gap: 10px; }
+  .plan .price .dollar { font-family:"JetBrains Mono",monospace; font-size: 18px; font-weight: 500; opacity:.6; transform: translateY(-14px); }
+  .plan .price .unit { font-family:"JetBrains Mono",monospace; font-size: 11px; opacity: .6; letter-spacing:.1em; text-transform: uppercase; }
+  .plan .blurb { font-size: 14px; opacity: .8; line-height: 1.5; }
+  .plan-rule { height: 1px; background: var(--rule-strong); }
+  .plan ul { list-style: none; margin: 0; padding: 0; display:flex; flex-direction: column; gap: 10px; font-size: 13px; }
+  .plan li { display:flex; gap: 10px; align-items:baseline; }
+  .plan li::before { content:"+"; font-family:"JetBrains Mono",monospace; color: var(--accent); font-weight:700; }
+  .plan.feat li::before { color: var(--paper); }
+  .plan .cta { margin-top: auto; }
+  .plan .cta .btn { width:100%; justify-content:center; }
+  .plan.feat .btn { background: var(--accent); border-color: var(--accent); color: var(--paper); }
+  .plan.feat .btn:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .plan.feat .btn.ghost { background:transparent; color:var(--paper); border-color:var(--paper); }
+
+  /* ── coverage table ──────────────────────────── */
+  .coverage-wrap {
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .coverage-head {
+    display:flex; justify-content:space-between; align-items:center;
+    background: var(--ink); color: var(--paper);
+    padding: 16px 24px;
+    font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.14em; text-transform: uppercase;
+  }
+  .coverage-list { column-count: 3; column-gap: 0; padding: 6px 0; }
+  .coverage-list li {
+    list-style: none;
+    font-family:"JetBrains Mono",monospace; font-size: 13px;
+    padding: 10px 24px;
+    border-bottom: 1px solid var(--rule);
+    display:flex; justify-content: space-between; align-items:center;
+    break-inside: avoid;
+    color: var(--ink-2);
+  }
+  .coverage-list li .code { color: var(--ink-mute); font-size: 10px; }
+  .coverage-list li .ok { color: var(--accent); font-size: 11px; letter-spacing:.14em; }
+  .coverage-foot {
+    padding: 14px 24px;
+    background: var(--paper-deep);
+    font-family:"JetBrains Mono",monospace; font-size: 11px; color: var(--ink-3);
+    border-top: 1px solid var(--rule-strong);
+    display:flex; justify-content:space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  /* ── trust strip ─────────────────────────────── */
+  .trust {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .trust > div {
+    padding: 28px 24px;
+    border-right: 1px solid var(--rule-strong);
+  }
+  .trust > div:last-child { border-right: 0; }
+  .trust .k { font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.14em; color: var(--ink-3); text-transform: uppercase; margin-bottom: 10px; }
+  .trust .v { font-family:"Inter",sans-serif; font-size: 28px; font-weight:600; letter-spacing:-.02em; color: var(--ink); }
+  .trust .v em { font-family:"Instrument Serif",serif; font-style: italic; font-weight: 400; color: var(--accent); }
+  .trust .note { margin-top: 8px; font-size: 13px; color: var(--ink-3); line-height: 1.45; }
+
+  /* ── deliverable preview ─────────────────────── */
+  .deliverable {
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    gap: 48px;
+    align-items: stretch;
+  }
+  .doc-stack {
+    position: relative;
+    padding: 40px;
+    background: var(--paper-deep);
+    border: 1px solid var(--ink);
+    min-height: 480px;
+  }
+  .doc-sheet {
+    position: absolute;
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--rule);
+    padding: 24px 22px;
+    font-family:"JetBrains Mono",monospace;
+    font-size: 10px;
+    color: var(--ink-2);
+  }
+  .doc-sheet h4 { font-family:"Inter",sans-serif; font-weight:600; font-size: 14px; margin: 0 0 10px; color: var(--ink); letter-spacing:-.01em; }
+  .doc-sheet .line { height: 6px; background: var(--paper-line); margin: 4px 0; border-radius: 1px; }
+  .doc-sheet .line.short { width: 60%; }
+  .doc-sheet .line.x-short { width: 30%; }
+  .doc-sheet .label { font-size: 9px; letter-spacing:.14em; color: var(--ink-mute); text-transform: uppercase; margin-top: 10px; }
+  .doc-sheet .stamp {
+    position:absolute; bottom: 12px; right: 12px;
+    font-size: 9px; letter-spacing:.14em;
+    color: var(--accent-ink); border: 1px dashed var(--accent); padding: 4px 8px;
+    text-transform: uppercase;
+  }
+  .doc-a { top: 30px; left: 40px; width: 230px; height: 320px; transform: rotate(-3deg); z-index: 1; }
+  .doc-b { top: 50px; right: 30px; width: 230px; height: 320px; transform: rotate(4deg); z-index: 2; }
+  .doc-c { bottom: 30px; left: 90px; width: 240px; height: 180px; transform: rotate(1deg); z-index: 3; }
+
+  .deliverable-copy h3 {
+    font-family:"Inter",sans-serif; font-weight:600; font-size: 32px;
+    letter-spacing: -.02em; line-height: 1.1; margin: 0 0 16px; max-width: 20ch;
+  }
+  .deliverable-copy h3 em { font-family:"Instrument Serif",serif; font-style:italic; color: var(--accent); font-weight: 400; }
+  .deliverable-copy p { color: var(--ink-3); margin: 0 0 16px; }
+  .deliverable-copy ul { list-style: none; padding: 0; margin: 24px 0 0; display:flex; flex-direction: column; gap: 10px; }
+  .deliverable-copy li {
+    font-family:"JetBrains Mono",monospace; font-size: 13px;
+    display:flex; gap: 14px; align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .deliverable-copy li .no { color: var(--ink-mute); width: 28px; }
+  .deliverable-copy li b { font-weight: 500; color: var(--ink); }
+
+  /* ── faq ─────────────────────────────────────── */
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+  details.faq {
+    padding: 22px 0;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  details.faq > summary {
+    cursor: pointer;
+    list-style: none;
+    display:flex; justify-content: space-between; gap: 16px;
+    font-family:"Inter",sans-serif;
+    font-weight: 500; font-size: 17px; color: var(--ink);
+    letter-spacing: -.005em;
+  }
+  details.faq > summary::-webkit-details-marker { display:none; }
+  details.faq > summary::after {
+    content: "+"; font-family:"JetBrains Mono",monospace; color: var(--accent); font-size: 18px;
+    transition: transform .2s;
+  }
+  details.faq[open] > summary::after { content:"–"; }
+  details.faq .ans { padding-top: 12px; color: var(--ink-3); font-size: 15px; line-height: 1.55; max-width: 56ch; }
+
+  /* ── final cta ───────────────────────────────── */
+  .final {
+    background: var(--ink); color: var(--paper);
+    padding: 96px 0;
+    border-top: 1px solid var(--ink);
+  }
+  .final .wrap { display:grid; grid-template-columns: 1.2fr .8fr; gap: 48px; align-items: end; }
+  .final h2 {
+    font-family:"Inter",sans-serif; font-weight: 500;
+    font-size: clamp(36px, 5vw, 60px); line-height: 1.05; letter-spacing:-.03em;
+    margin: 0; max-width: 18ch;
+  }
+  .final h2 em { font-family:"Instrument Serif",serif; font-style: italic; color: color-mix(in oklab, var(--accent) 70%, white); font-weight: 400; }
+  .final .meta { font-family:"JetBrains Mono",monospace; font-size: 11px; letter-spacing:.14em; text-transform: uppercase; color: color-mix(in oklab, var(--paper) 60%, transparent); margin-bottom: 32px; }
+  .final .btn { background: var(--accent); border-color: var(--accent); color: var(--paper); font-size: 14px; padding: 14px 22px; }
+  .final .btn.ghost { background: transparent; color: var(--paper); border-color: var(--paper); }
+  .final .btn.ghost:hover { background: var(--paper); color: var(--ink); }
+  .final .stack { display:flex; gap: 12px; flex-wrap: wrap; }
+  .final .columns { display:flex; flex-direction: column; gap: 16px; }
+  .final .columns p { font-family:"JetBrains Mono",monospace; font-size: 12px; color: color-mix(in oklab, var(--paper) 70%, transparent); line-height: 1.7; margin: 0; }
+
+  /* ── footer ──────────────────────────────────── */
+  footer.site {
+    background: var(--ink);
+    color: color-mix(in oklab, var(--paper) 60%, transparent);
+    font-family:"JetBrains Mono",monospace;
+    font-size: 12px;
+    padding: 48px 0 36px;
+    border-top: 1px solid color-mix(in oklab, var(--paper) 15%, transparent);
+  }
+  footer.site .wrap { display:grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 32px; }
+  footer.site h5 { font-size: 10px; letter-spacing:.14em; text-transform: uppercase; margin: 0 0 16px; color: var(--paper); font-weight: 600; }
+  footer.site a { color: color-mix(in oklab, var(--paper) 70%, transparent); text-decoration: none; display:block; padding: 5px 0; }
+  footer.site a:hover { color: var(--paper); }
+  footer.site .disclaimer { grid-column: 1 / -1; font-size: 11px; line-height: 1.65; margin-top: 32px; padding-top: 24px; border-top: 1px solid color-mix(in oklab, var(--paper) 10%, transparent); color: color-mix(in oklab, var(--paper) 45%, transparent); max-width: 80ch; }
+
+  /* ── Tweaks panel ────────────────────────────── */
+  #tweaks {
+    position: fixed; right: 20px; bottom: 20px;
+    background: var(--paper); border: 1px solid var(--ink);
+    font-family:"JetBrains Mono",monospace;
+    font-size: 11px;
+    padding: 16px; border-radius: 2px;
+    z-index: 1000;
+    box-shadow: 4px 4px 0 rgba(0,0,0,.1);
+    display: none;
+    min-width: 240px;
+  }
+  #tweaks.on { display: block; }
+  #tweaks h4 { margin: 0 0 12px; font-size: 10px; letter-spacing:.14em; text-transform: uppercase; color: var(--ink-3); display:flex; justify-content: space-between; align-items:center; }
+  #tweaks .swatches { display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  #tweaks .sw {
+    border: 1px solid var(--rule-strong);
+    padding: 10px 8px 8px;
+    cursor: pointer;
+    text-align: left;
+    background: transparent;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    display:flex; flex-direction: column; gap: 8px;
+    border-radius: 2px;
+  }
+  #tweaks .sw.active { border-color: var(--ink); color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  #tweaks .sw .chips { display:flex; gap: 3px; }
+  #tweaks .sw .chips span { flex: 1; height: 14px; border: 1px solid rgba(0,0,0,.15); }
+
+  /* ── responsive ─────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero-grid, .showcase-grid, .deliverable, .final .wrap { grid-template-columns: 1fr; }
+    .section-head { grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px;}
+    .steps, .trust { grid-template-columns: 1fr 1fr; }
+    .prices { grid-template-columns: 1fr; }
+    .coverage-list { column-count: 2; }
+    .faq-grid { grid-template-columns: 1fr; }
+    footer.site .wrap { grid-template-columns: 1fr 1fr; }
+    nav.main { display:none; }
+    .property-map { aspect-ratio: 4/3; border-right: 0; border-bottom: 1px solid var(--ink); }
+    .doc-stack { min-height: 360px; }
+  }
+  @media (max-width: 560px) {
+    .wrap { padding: 0 20px; }
+    .steps, .trust, .coverage-list { grid-template-columns: 1fr; column-count: 1; }
+    section.block, section.hero { padding: 56px 0; }
+    .hero h1 { font-size: 38px; }
+  }
+</style>
+</head>
+<body data-palette="paper">
+
+<!-- ─ TAPE ─────────────────────────────────────── -->
+<div class="tape">
+  <div class="wrap">
+    <span><span class="pulse"></span>Pilot programme · First 3 applications free · code <b style="color:var(--ink);font-weight:500">PILOT3</b></span>
+    <span>Aotearoa / NZ · 23 councils live</span>
+  </div>
+</div>
+
+<!-- ─ HEADER ───────────────────────────────────── -->
+<header class="site">
+  <div class="wrap">
+    <a href="index.html" class="logo" aria-label="ConsentMate home">
+      <svg class="mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- cadastral parcel -->
+        <rect x="3" y="3" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <!-- subdivision line -->
+        <path d="M3 22 L26 22 L26 37" fill="none" stroke="currentColor" stroke-width="1"/>
+        <!-- corner ticks -->
+        <path d="M3 3 L7 3 M3 3 L3 7 M37 3 L33 3 M37 3 L37 7 M3 37 L7 37 M3 37 L3 33 M37 37 L33 37 M37 37 L37 33" stroke="currentColor" stroke-width="1.5"/>
+        <!-- approval check -->
+        <path d="M11 12 L14.5 15.5 L22 8" fill="none" stroke="#2f5d3a" stroke-width="2.2" stroke-linecap="square"/>
+      </svg>
+      <span class="word">consent<span class="slash">/</span>mate</span>
+    </a>
+    <nav class="main">
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#coverage">Coverage</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a href="map.html" class="btn">Check my property <span class="arrow">→</span></a>
+  </div>
+</header>
+
+<!-- ─ HERO ─────────────────────────────────────── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span>Resource consent · Non-notified residential · Aotearoa</div>
+        <h1>Planner-grade consent paperwork, <em>without the planner invoice.</em></h1>
+        <p class="lede">We draft your complete Assessment of Environmental Effects, cover letter, and council application — quality-reviewed by a human, ready for you to lodge. Two to three business days. One flat fee.</p>
+
+        <div class="hero-ctas">
+          <a href="#check" class="btn accent">Check my property — free <span class="arrow">→</span></a>
+          <a href="#how" class="btn ghost">See how it works</a>
+        </div>
+
+      <div class="hero-meta">
+        <span><b>2</b> actions to check</span>
+        <span><b>~8</b> questions total</span>
+        <span><b>2–3</b> day turnaround</span>
+        <span><b>From $1,500</b> flat fee</span>
+      </div>
+      </div>
+
+      <!-- Ledger (price anchor) -->
+      <div>
+        <div class="ledger" aria-label="Quotation comparison">
+          <div class="ledger-head">
+            <span>Quote · residential RC</span>
+            <span class="doc-num">DOC-04/26</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Line item</th>
+                <th style="text-align:right;">NZD</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Traditional planning consultancy<br><span style="color:var(--ink-mute);font-size:11px;">Fixed + hourly, 4–8 wks · CoLab, Planning Plus, PBC</span></td>
+                <td class="num">3,500 — 5,500+</td>
+              </tr>
+              <tr class="sub">
+                <td>&nbsp;&nbsp;&nbsp;Scope meeting, file review, AEE drafting</td>
+                <td class="num">incl.</td>
+              </tr>
+              <tr class="you">
+                <td><b>ConsentMate — self-lodge</b><span class="tag">You are here</span><br><span style="font-weight:400;font-size:11px;opacity:.8">Flat fee · 2–3 business days · human QA</span></td>
+                <td class="num"><b>1,500</b></td>
+              </tr>
+              <tr class="sub">
+                <td>&nbsp;&nbsp;&nbsp;Done-for-you (we lodge with council)</td>
+                <td class="num">2,500</td>
+              </tr>
+              <tr class="sub">
+                <td>&nbsp;&nbsp;&nbsp;Success bonus if granted first-pass (optional)</td>
+                <td class="num">+500</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="ledger-foot">
+            <span>Council fees paid direct to council</span>
+            <span class="savings">↓ Savings est. $2,000 – $4,000</span>
+          </div>
+          <span class="ledger-stamp">pilot · 3 slots free</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ COORD STRIP ──────────────────────────────── -->
+<div class="coord-strip">
+  <div class="wrap">
+    <span>Lat <b>−36.8509°</b></span>
+    <span>Lon <b>174.7645°</b></span>
+    <span>Datum <b>NZGD2000</b></span>
+    <span>Scale <b>1 : 500</b></span>
+    <span>Sheet <b>DP 54321 · Lot 3</b></span>
+    <span>Rev <b>04 / 2026</b></span>
+  </div>
+</div>
+
+<!-- ─ SHOWCASE / property demo ─────────────────── -->
+<section class="showcase" id="check">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">01 — Map tool</div>
+      <div>
+        <h2>Two actions. <em>That's the whole check.</em></h2>
+        <div class="kicker">Type your address, then drag the building footprint where you want to build. The map fills in everything else — site area, zone, overlays, setbacks, building coverage, recession plane — so you don't have to.</div>
+      </div>
+    </div>
+
+    <!-- Two-step demo -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px;">
+      <div style="border:1px solid var(--ink); background: var(--paper); padding: 20px 22px; border-radius: 2px;">
+        <div class="mono" style="font-size:10px; letter-spacing:.14em; color:var(--accent); text-transform:uppercase; margin-bottom: 10px;">STEP 01 · ~10 sec</div>
+        <div style="font-size: 18px; font-weight:600; letter-spacing:-.01em; margin-bottom:6px;">Type your address.</div>
+        <p style="color:var(--ink-3); font-size:14px; margin:0 0 14px;">We pull your title polygon from LINZ, detect your council, zone, overlays, and site area — automatically.</p>
+        <div class="mono" style="font-size:12px; background:var(--paper-deep); border:1px solid var(--rule-strong); padding:10px 12px; border-radius:2px; color:var(--ink-2); display:flex; align-items:center; gap:10px;">
+          <span style="color:var(--ink-mute)">⌕</span> 14 Apirana Avenue, Glen Innes<span style="color:var(--accent); margin-left:auto;">✓ found</span>
+        </div>
+      </div>
+      <div style="border:1px solid var(--ink); background: var(--paper); padding: 20px 22px; border-radius: 2px;">
+        <div class="mono" style="font-size:10px; letter-spacing:.14em; color:var(--accent); text-transform:uppercase; margin-bottom: 10px;">STEP 02 · ~30 sec</div>
+        <div style="font-size: 18px; font-weight:600; letter-spacing:-.01em; margin-bottom:6px;">Drag the building into place.</div>
+        <p style="color:var(--ink-3); font-size:14px; margin:0 0 14px;">Move &amp; rotate the green footprint to where you want to build. We measure setbacks live and run the rule check.</p>
+        <div class="mono" style="font-size:12px; background:var(--paper-deep); border:1px solid var(--rule-strong); padding:10px 12px; border-radius:2px; color:var(--ink-2); display:flex; align-items:center; gap:10px;">
+          <span style="width:10px; height:10px; background:var(--accent); border:2px solid var(--paper); border-radius:50%; box-shadow:0 0 0 1px var(--ink);"></span> drag · rotate · resize<span style="color:var(--warn); margin-left:auto;">⚠︎ 1 rule flagged</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mono" style="font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3); margin-bottom:14px; display:flex; align-items:center; gap:10px;">
+      <span style="color:var(--accent)">◆</span> Live example · 14 Apirana Avenue, Glen Innes · every value below was auto-filled
+    </div>
+    <div class="showcase-grid">
+      <!-- LEFT: SVG cadastral map -->
+      <div class="property-map" aria-label="Sample property map">
+        <div class="map-chip"><span class="dot"></span>H4 · Mixed Housing Suburban · auto-detected</div>
+        <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+          <!-- background graticule -->
+          <defs>
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#d9d2c1" stroke-width=".5"/>
+            </pattern>
+            <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="6" height="6" fill="#ece7dc"/>
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#c9c1ae" stroke-width="1.5"/>
+            </pattern>
+            <pattern id="hatch-red" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#a8471c" stroke-width="1.2" opacity=".45"/>
+            </pattern>
+          </defs>
+          <rect width="400" height="400" fill="url(#grid)"/>
+
+          <!-- street strip -->
+          <rect x="0" y="310" width="400" height="60" fill="#ece7dc"/>
+          <line x1="0" y1="322" x2="400" y2="322" stroke="#c9c1ae" stroke-width="1" stroke-dasharray="6 8"/>
+          <line x1="0" y1="358" x2="400" y2="358" stroke="#c9c1ae" stroke-width="1"/>
+          <text x="20" y="346" font-family="JetBrains Mono, monospace" font-size="9" fill="#8a867d" letter-spacing="2">APIRANA AVENUE</text>
+
+          <!-- neighbour parcels -->
+          <rect x="20" y="40" width="80" height="240" fill="url(#hatch)" stroke="#8a867d" stroke-width="0.8"/>
+          <rect x="300" y="40" width="80" height="240" fill="url(#hatch)" stroke="#8a867d" stroke-width="0.8"/>
+
+          <!-- subject parcel -->
+          <rect x="110" y="40" width="180" height="270" fill="#f4f1ea" stroke="#111210" stroke-width="2"/>
+
+          <!-- recession plane / setback area -->
+          <rect x="120" y="50" width="160" height="250" fill="none" stroke="#2f5d3a" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- existing house -->
+          <rect x="135" y="70" width="130" height="70" fill="#d9d2c1" stroke="#585651" stroke-width="1.2"/>
+          <text x="200" y="112" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#585651">EXISTING DWELLING</text>
+
+          <!-- proposed sleepout (breach flagged) -->
+          <rect x="168" y="200" width="80" height="60" fill="url(#hatch-red)" stroke="#a8471c" stroke-width="2"/>
+          <rect x="168" y="200" width="80" height="60" fill="none" stroke="#a8471c" stroke-width="2"/>
+          <text x="208" y="228" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#a8471c" font-weight="600">PROPOSED SLEEPOUT</text>
+          <text x="208" y="242" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#a8471c">7.5m × 5.0m</text>
+
+          <!-- setback dim lines -->
+          <g stroke="#2f5d3a" stroke-width=".8" fill="none">
+            <line x1="248" y1="230" x2="290" y2="230"/>
+            <line x1="248" y1="226" x2="248" y2="234"/>
+            <line x1="290" y1="226" x2="290" y2="234"/>
+          </g>
+          <text x="269" y="222" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#2f5d3a" font-weight="600">1.2m ⚠︎</text>
+
+          <g stroke="#2f5d3a" stroke-width=".8" fill="none">
+            <line x1="168" y1="260" x2="168" y2="300"/>
+            <line x1="164" y1="260" x2="172" y2="260"/>
+            <line x1="164" y1="300" x2="172" y2="300"/>
+          </g>
+          <text x="158" y="282" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#2f5d3a">3.8m</text>
+
+          <!-- cardinal ticks -->
+          <g font-family="JetBrains Mono, monospace" font-size="9" fill="#8a867d">
+            <text x="200" y="52" text-anchor="middle">N</text>
+            <text x="297" y="175" text-anchor="end">E</text>
+            <text x="200" y="304" text-anchor="middle">S</text>
+            <text x="118" y="175">W</text>
+          </g>
+        </svg>
+        <div class="map-compass">
+          <svg viewBox="0 0 38 38" width="38" height="38">
+            <circle cx="19" cy="19" r="17" fill="none" stroke="#111210" stroke-width="1"/>
+            <path d="M19 4 L22 19 L19 34 L16 19 Z" fill="#111210"/>
+            <text x="19" y="14" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#f4f1ea">N</text>
+          </svg>
+        </div>
+        <div class="map-scale"><span class="bar"></span>5m</div>
+      </div>
+
+      <!-- RIGHT: data card -->
+      <div class="property-data">
+        <div>
+          <div class="pd-head">
+            <div>
+              <div class="addr">14 Apirana Avenue, Glen Innes, Auckland 1072</div>
+              <div class="id">Lot 3 · DP 54321 · Auckland Council · 814 m²</div>
+            </div>
+          </div>
+          <div class="pd-status" style="margin-top:14px;">
+            <span class="dot" style="width:6px;height:6px;background:currentColor;border-radius:50%;display:inline-block;"></span>
+            Resource consent required · 1 rule breached
+          </div>
+        </div>
+
+        <div class="pd-grid">
+          <div class="pd-cell"><div class="k">Zone</div><div class="v">H4 · MHS</div></div>
+          <div class="pd-cell"><div class="k">Site area</div><div class="v">814 m²</div></div>
+          <div class="pd-cell"><div class="k">Building coverage</div><div class="v">24%</div></div>
+          <div class="pd-cell"><div class="k">Max permitted</div><div class="v">40%</div></div>
+          <div class="pd-cell"><div class="k">Side setback</div><div class="v breach">1.2 m</div></div>
+          <div class="pd-cell"><div class="k">Rule requires</div><div class="v">≥ 1.5 m</div></div>
+        </div>
+
+        <div class="pd-checks">
+          <div class="row"><span>Height in relation to boundary</span><span class="ok">PASS</span></div>
+          <div class="row"><span>Recession plane</span><span class="ok">PASS</span></div>
+          <div class="row"><span>Building coverage</span><span class="ok">PASS</span></div>
+          <div class="row"><span>Side yard setback</span><span class="no">BREACH — 0.3m short</span></div>
+          <div class="row"><span>Flood / overlays</span><span class="ok">NONE</span></div>
+        </div>
+
+        <a href="#pricing" class="btn" style="justify-content:center;">Run this on my address <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ HOW IT WORKS ─────────────────────────────── -->
+<section class="block" id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">02 — Pipeline</div>
+      <div>
+        <h2>Four steps between <em>"do I need consent?"</em> and a lodged application.</h2>
+        <div class="kicker">No meetings, no phone tag. Fill out one form, a human reviews every draft before it lands in your inbox.</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="num">STEP / 01</div>
+        <h3>Type your address</h3>
+        <p>We pull your title polygon from LINZ, detect your council, zone, overlays, site area, and existing buildings.</p>
+        <span class="tag">FREE · ~10 SEC</span>
+      </div>
+      <div class="step">
+        <div class="num">STEP / 02</div>
+        <h3>Drag the building</h3>
+        <p>Move &amp; rotate the green footprint where you want to build. Setbacks, recession plane and coverage are measured live.</p>
+        <span class="tag">~30 SEC · LIVE</span>
+      </div>
+      <div class="step">
+        <div class="num">STEP / 03</div>
+        <h3>Answer ~8 questions</h3>
+        <p>Just the bits we can't read off the map: what it's for, materials, neighbour notes, a couple of photos. Not 30 — the map did the rest.</p>
+        <span class="tag">~5 MIN</span>
+      </div>
+      <div class="step">
+        <div class="num">STEP / 04</div>
+        <h3>We draft + human QA</h3>
+        <p>AI drafts your AEE, planning analysis, cover letter and application form. A human reviews every page before it leaves.</p>
+        <span class="tag human">2–3 BUS. DAYS</span>
+      </div>
+    </div>
+
+    <!-- Map-fills-the-form table -->
+    <div style="margin-top:40px; border: 1px solid var(--ink); background: var(--paper); border-radius: 2px; overflow: hidden;">
+      <div style="display:flex; justify-content:space-between; padding: 14px 20px; background: var(--ink); color: var(--paper);" class="mono" >
+        <span style="font-size: 11px; letter-spacing:.14em; text-transform:uppercase;">What the map fills out · so you don't have to</span>
+        <span style="font-size: 11px; letter-spacing:.14em; text-transform:uppercase; opacity:.6;">22 / 30 questions · auto</span>
+      </div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 0;">
+        <div style="padding: 20px 24px; border-right: 1px solid var(--rule-strong);">
+          <div class="mono" style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom: 14px;">■ Auto-filled by the map</div>
+          <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;" class="mono">
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Property address &amp; title</span><span style="color:var(--accent)">✓ LINZ</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Lot &amp; DP number</span><span style="color:var(--accent)">✓ LINZ</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Site area (m²)</span><span style="color:var(--accent)">✓ LINZ</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Unitary Plan zone</span><span style="color:var(--accent)">✓ council</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Overlays &amp; precincts</span><span style="color:var(--accent)">✓ council</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Existing buildings on site</span><span style="color:var(--accent)">✓ LINZ</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Building dimensions</span><span style="color:var(--accent)">✓ drag</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Floor area (m²)</span><span style="color:var(--accent)">✓ drag</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Where on the site</span><span style="color:var(--accent)">✓ drag</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Front / side / rear setbacks</span><span style="color:var(--accent)">✓ measured</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Building coverage (%)</span><span style="color:var(--accent)">✓ measured</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0;"><span>Recession plane check</span><span style="color:var(--accent)">✓ measured</span></li>
+          </ul>
+        </div>
+        <div style="padding: 20px 24px;">
+          <div class="mono" style="font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-bottom: 14px;">□ You answer · ~5 minutes</div>
+          <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;" class="mono">
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Your name, email, phone</span><span style="color:var(--ink-mute)">you</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>What are you building?</span><span style="color:var(--ink-mute)">you</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>What will it be used for?</span><span style="color:var(--ink-mute)">you</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Building height</span><span style="color:var(--ink-mute)">you</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Any earthworks?</span><span style="color:var(--ink-mute)">you</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Neighbour notes / approvals</span><span style="color:var(--ink-mute)">you</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0; border-bottom: 1px dotted var(--rule-strong);"><span>Photos of your site</span><span style="color:var(--ink-mute)">you · upload</span></li>
+            <li style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-2); padding: 6px 0;"><span>Anything else we should know</span><span style="color:var(--ink-mute)">you · optional</span></li>
+          </ul>
+          <div style="margin-top:16px; padding: 12px 14px; background: var(--accent-wash); border: 1px dashed var(--accent); border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent-ink);">
+            Traditional intake: <b>30 questions</b>. With the map: <b>~8 questions</b>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ DELIVERABLE PREVIEW ─────────────────────── -->
+<section class="block" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">03 — Deliverable</div>
+      <div>
+        <h2>What <em>actually lands in your inbox.</em></h2>
+        <div class="kicker">A complete, council-ready application pack — not a template, not advice, not a "starter kit". Just the paperwork, drafted and QA'd.</div>
+      </div>
+    </div>
+
+    <div class="deliverable">
+      <div class="doc-stack" aria-hidden="true">
+        <div class="doc-sheet doc-a">
+          <h4>Cover Letter</h4>
+          <div class="label">Applicant — File # CM-00421</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line short"></div>
+          <div class="line"></div>
+          <div class="line x-short"></div>
+          <div class="label" style="margin-top:18px;">Signed — applicant</div>
+          <div class="line short"></div>
+          <span class="stamp">DRAFTED · QA ✓</span>
+        </div>
+        <div class="doc-sheet doc-b">
+          <h4>Assessment of Environmental Effects</h4>
+          <div class="label">§ 1.0 · Proposal summary</div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line short"></div>
+          <div class="label" style="margin-top:10px;">§ 2.0 · Plan rule assessment</div>
+          <div class="line"></div>
+          <div class="line short"></div>
+          <div class="line"></div>
+          <div class="label" style="margin-top:10px;">§ 3.0 · Environmental effects</div>
+          <div class="line short"></div>
+          <div class="line"></div>
+          <span class="stamp">22 PP · QA ✓</span>
+        </div>
+        <div class="doc-sheet doc-c">
+          <h4>Application Form (Council)</h4>
+          <div class="label">Auckland Council · RC form</div>
+          <div class="line"></div>
+          <div class="line short"></div>
+          <span class="stamp">READY TO SIGN</span>
+        </div>
+      </div>
+
+      <div class="deliverable-copy">
+        <h3>Seven documents. <em>Lodgement-ready.</em></h3>
+        <p>You get everything the council needs to accept the application, and nothing they don't. Every draft is reviewed by a human before it goes out — no auto-sent paperwork until we've handled 50+ by hand.</p>
+
+        <ul>
+          <li><span class="no">01</span><div><b>Assessment of Environmental Effects</b> — full AEE, scoped to your proposal and council.</div></li>
+          <li><span class="no">02</span><div><b>Cover letter</b> to the processing planner.</div></li>
+          <li><span class="no">03</span><div><b>Planning rule analysis</b> — every rule, pass/breach, with the text.</div></li>
+          <li><span class="no">04</span><div><b>Completed application form</b> for your council (Form 9, RC, etc.).</div></li>
+          <li><span class="no">05</span><div><b>Site plan</b> generated from your title polygon, with setbacks marked.</div></li>
+          <li><span class="no">06</span><div><b>Document checklist</b> so you know exactly what to attach.</div></li>
+          <li><span class="no">07</span><div><b>Editable Google Docs</b> + a clean PDF pack for lodgement.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ PRICING ──────────────────────────────────── -->
+<section class="block" id="pricing" style="background:var(--paper-deep); border-top:1px solid var(--rule-strong); border-bottom:1px solid var(--rule-strong);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">04 — Pricing</div>
+      <div>
+        <h2>Flat fee. <em>No hourly billing.</em></h2>
+        <div class="kicker">A planner quote tops $3,500 for the same scope and hits $5,500+ with complications. We quote once, flat, up front. Council fees are paid direct to your council.</div>
+      </div>
+    </div>
+
+    <div class="prices">
+      <div class="plan">
+        <div class="plan-head"><h3>Property Report</h3><span class="badge">5 slots · free</span></div>
+        <div>
+          <div class="price"><span class="dollar">NZD</span>29 <span class="unit">/ report</span></div>
+          <div class="blurb">Know where you stand before you spend a cent on paperwork.</div>
+        </div>
+        <div class="plan-rule"></div>
+        <ul>
+          <li>Instant compliance check</li>
+          <li>Title type and zone rules</li>
+          <li>Setback measurements</li>
+          <li>Wind zone and flood risk</li>
+          <li>Council fees + contacts</li>
+          <li>Clear verdict: consent needed or not</li>
+        </ul>
+        <div class="cta"><a href="#check" class="btn ghost">Run my property →</a></div>
+      </div>
+
+      <div class="plan feat">
+        <div class="plan-head"><h3>Self-lodge</h3><span class="badge" style="background:var(--accent);border-color:var(--accent);color:var(--paper);opacity:1">Pilot · 3 free</span></div>
+        <div>
+          <div class="price"><span class="dollar">NZD</span>1,500 <span class="unit">flat</span></div>
+          <div class="blurb">Full drafted application pack. You sign and lodge with council yourself.</div>
+        </div>
+        <div class="plan-rule"></div>
+        <ul>
+          <li>Everything in Property Report, plus…</li>
+          <li>Full Assessment of Environmental Effects</li>
+          <li>Cover letter to your council planner</li>
+          <li>Completed application form</li>
+          <li>Human QA pass on every page</li>
+          <li>2–3 business day turnaround</li>
+          <li>Editable Google Docs + PDF pack</li>
+        </ul>
+        <div class="cta"><a href="#check" class="btn">Apply — pilot free →</a></div>
+      </div>
+
+      <div class="plan">
+        <div class="plan-head"><h3>Done-for-you</h3><span class="badge">+ lodgement</span></div>
+        <div>
+          <div class="price"><span class="dollar">NZD</span>2,500 <span class="unit">flat</span></div>
+          <div class="blurb">We file it with your council on your behalf. You stay the applicant.</div>
+        </div>
+        <div class="plan-rule"></div>
+        <ul>
+          <li>Everything in Self-lodge, plus…</li>
+          <li>We lodge with council via their portal</li>
+          <li>Handle s92 follow-ups if they come up</li>
+          <li>Track decision, forward correspondence</li>
+          <li>Optional: +$500 if granted first-pass</li>
+        </ul>
+        <div class="cta"><a href="#check" class="btn ghost">Choose done-for-you →</a></div>
+      </div>
+    </div>
+
+    <p class="mono" style="font-size:11px; color:var(--ink-3); text-align:center; margin-top: 28px; letter-spacing:.08em;">
+      Pilot pricing · First 5 property reports free · First 3 drafted applications free · Codes PILOT5 / PILOT3 at checkout
+    </p>
+  </div>
+</section>
+
+<!-- ─ TRUST STRIP ─────────────────────────────── -->
+<section class="block">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">05 — Trust</div>
+      <div>
+        <h2>Where we sit <em>in the regulatory lane.</em></h2>
+        <div class="kicker">We are a drafting service. We prepare documents from information you supply. You remain the applicant — councils receive it with your signature, not ours.</div>
+      </div>
+    </div>
+
+    <div class="trust">
+      <div>
+        <div class="k">Positioning</div>
+        <div class="v">We draft. <em>You decide.</em></div>
+        <div class="note">Not legal advice. Not planning advice. Not LBP design work. We prepare the paperwork — you review, sign, and submit it.</div>
+      </div>
+      <div>
+        <div class="k">QA threshold</div>
+        <div class="v">100% <em>human-reviewed.</em></div>
+        <div class="note">No auto-shipped drafts until we've done 50+ by hand. Every page of every pack is read by Woody before it leaves.</div>
+      </div>
+      <div>
+        <div class="k">Built on</div>
+        <div class="v">LINZ + <em>council APIs.</em></div>
+        <div class="note">Title polygons from Land Information NZ. Zone rules live-wired to 23 councils' district plan data, not guessed at.</div>
+      </div>
+      <div>
+        <div class="k">Data</div>
+        <div class="v">NZ-based. <em>Your file, yours.</em></div>
+        <div class="note">Your intake and documents stay in your Google Drive. We don't resell it, we don't train on it, we delete on request.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ COVERAGE ─────────────────────────────────── -->
+<section class="block" id="coverage" style="background:var(--paper-deep); border-top:1px solid var(--rule-strong); border-bottom:1px solid var(--rule-strong);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">06 — Coverage</div>
+      <div>
+        <h2>23 councils, <em>wired in live.</em></h2>
+        <div class="kicker">Zone rules, overlays, setbacks, and coverage limits pulled directly from each council's published data — not scraped from PDFs, not typed by hand.</div>
+      </div>
+    </div>
+
+    <div class="coverage-wrap">
+      <div class="coverage-head">
+        <span>Active councils · Aotearoa New Zealand</span>
+        <span>23 / 67 · +2 on deck</span>
+      </div>
+      <ul class="coverage-list">
+        <li><span>Auckland Council</span><span class="code">AKL · ✓</span></li>
+        <li><span>Wellington City</span><span class="code">WLG · ✓</span></li>
+        <li><span>Christchurch City</span><span class="code">CHC · ✓</span></li>
+        <li><span>Hamilton City</span><span class="code">HAM · ✓</span></li>
+        <li><span>Tauranga City</span><span class="code">TGA · ✓</span></li>
+        <li><span>Dunedin City</span><span class="code">DUD · ✓</span></li>
+        <li><span>Napier City</span><span class="code">NPE · ✓</span></li>
+        <li><span>Hastings District</span><span class="code">HST · ✓</span></li>
+        <li><span>Rotorua District</span><span class="code">ROT · ✓</span></li>
+        <li><span>New Plymouth District</span><span class="code">NPL · ✓</span></li>
+        <li><span>Palmerston North</span><span class="code">PMR · ✓</span></li>
+        <li><span>Nelson City</span><span class="code">NEL · ✓</span></li>
+        <li><span>Invercargill City</span><span class="code">IVC · ✓</span></li>
+        <li><span>Queenstown Lakes</span><span class="code">QTL · ✓</span></li>
+        <li><span>Whangārei District</span><span class="code">WHG · ✓</span></li>
+        <li><span>Waikato District</span><span class="code">WKD · ✓</span></li>
+        <li><span>Hutt City</span><span class="code">HUT · ✓</span></li>
+        <li><span>Upper Hutt City</span><span class="code">UHT · ✓</span></li>
+        <li><span>Porirua City</span><span class="code">PRU · ✓</span></li>
+        <li><span>Kāpiti Coast District</span><span class="code">KAP · ✓</span></li>
+        <li><span>Selwyn District</span><span class="code">SLW · ✓</span></li>
+        <li><span>Waimakariri District</span><span class="code">WMK · ✓</span></li>
+        <li><span>South Taranaki District</span><span class="code">STK · ✓</span></li>
+      </ul>
+      <div class="coverage-foot">
+        <span>Don't see yours? We still cover you — generic defaults apply, human QA fills the gap.</span>
+        <span>Updated weekly · Last sync 04 / 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ FAQ ──────────────────────────────────────── -->
+<section class="block" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="n">07 — FAQ</div>
+      <div>
+        <h2>Straight answers <em>to the usual questions.</em></h2>
+      </div>
+    </div>
+
+    <div class="faq-grid">
+      <div>
+        <details class="faq" open>
+          <summary>Is this legal or planning advice?</summary>
+          <div class="ans">No. ConsentMate is a clerical drafting service. We prepare documents from information you supply. We are not lawyers, licensed planners, or LBPs. You are the applicant and responsible for reviewing everything before submission.</div>
+        </details>
+        <details class="faq">
+          <summary>Will council actually accept this?</summary>
+          <div class="ans">Councils accept applications from the applicant — that's you. They don't care whether a firm, a planner, or ConsentMate prepared the paperwork, provided it meets their required content. Every pack we deliver matches the council's published form requirements.</div>
+        </details>
+        <details class="faq">
+          <summary>Why is this so much cheaper than a planner?</summary>
+          <div class="ans">Traditional consultancies bill hourly and price jobs for complex, notified consents. A $1,500 sleepout consent isn't commercial for them. We use AI to do the drafting and a human QA pass to catch errors — one flat fee, one pipeline, no hourly.</div>
+        </details>
+        <details class="faq">
+          <summary>What types of consent do you cover?</summary>
+          <div class="ans">Non-notified residential resource consents: sleepouts, garages, decks, minor dwellings, fence heights, recession plane breaches, minor earthworks. We don't do notified consents, subdivision, or building consents at launch.</div>
+        </details>
+      </div>
+      <div>
+        <details class="faq">
+          <summary>How long does it take?</summary>
+          <div class="ans">Two to three business days from a completed intake form to a reviewed draft in your inbox. Council then has 20 working days to process a non-notified application.</div>
+        </details>
+        <details class="faq">
+          <summary>What if council asks for more information (s92)?</summary>
+          <div class="ans">If council issues a section 92 request, we'll help you respond for a small additional fee. Done-for-you customers get s92 responses included.</div>
+        </details>
+        <details class="faq">
+          <summary>What about council fees?</summary>
+          <div class="ans">Council fees are separate and paid direct to council. For a non-notified residential application, expect a deposit of around $2,000–$4,000 depending on complexity. Our fee covers drafting only.</div>
+        </details>
+        <details class="faq">
+          <summary>What happens to my data?</summary>
+          <div class="ans">Your intake and supporting documents are stored in NZ-region Google Workspace storage. We don't resell it, we don't train AI models on it, and we delete on request.</div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─ FINAL CTA ────────────────────────────────── -->
+<section class="final">
+  <div class="wrap">
+    <div>
+      <div class="meta">Pilot · slots remaining · <span style="color:#d9a063">03 of 03 free applications</span></div>
+      <h2>Start with your address. <em>See what's actually required.</em></h2>
+    </div>
+    <div class="columns">
+      <div class="stack">
+        <a href="map.html" class="btn">Check my property — free <span class="arrow">→</span></a>
+        <a href="#pricing" class="btn ghost">See pricing</a>
+      </div>
+      <p>No credit card to check a property. Pilot slots first-come first-served. Normal pricing ($29 / $1,500 / $2,500) resumes once the 8 pilot slots are filled.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─ FOOTER ───────────────────────────────────── -->
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <a href="index.html" class="logo" style="color:var(--paper); margin-bottom:16px;">
+        <svg class="mark" viewBox="0 0 40 40" style="color:var(--paper);" aria-hidden="true">
+          <rect x="3" y="3" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M3 22 L26 22 L26 37" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M3 3 L7 3 M3 3 L3 7 M37 3 L33 3 M37 3 L37 7 M3 37 L7 37 M3 37 L3 33 M37 37 L33 37 M37 37 L37 33" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M11 12 L14.5 15.5 L22 8" fill="none" stroke="#9ab49f" stroke-width="2.2" stroke-linecap="square"/>
+        </svg>
+        <span class="word">consent<span class="slash" style="color:#9ab49f">/</span>mate</span>
+      </a>
+      <p style="max-width: 30ch; color: color-mix(in oklab, var(--paper) 55%, transparent);">Resource consent paperwork, drafted + human-QA'd. Aotearoa New Zealand.</p>
+    </div>
+    <div>
+      <h5>Service</h5>
+      <a href="#check">Check my property</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#how">How it works</a>
+      <a href="#coverage">Council coverage</a>
+    </div>
+    <div>
+      <h5>Guides</h5>
+      <a href="blog-resource-consent-sleepout-nz.html">Sleepout consent</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">s92 responses</a>
+      <a href="#">Glossary</a>
+    </div>
+    <div>
+      <h5>Legal</h5>
+      <a href="terms.html">Terms of service</a>
+      <a href="privacy.html">Privacy policy</a>
+      <a href="#">Disclaimer</a>
+      <a href="mailto:hello@consentmate.co.nz">hello@consentmate.co.nz</a>
+    </div>
+    <div class="disclaimer">
+      ConsentMate provides a clerical drafting service. We prepare resource consent application documents from information you supply. We are not lawyers, licensed planners, licensed building practitioners, or engineers, and we do not provide legal, planning, design, or engineering advice. You are the applicant and are responsible for the accuracy of all information. Council fees are not included in our service fee. Our liability is limited to the fee paid. © 2026 ConsentMate · Auckland, Aotearoa New Zealand.
+    </div>
+  </div>
+</footer>
+
+<!-- ─ TWEAKS ───────────────────────────────────── -->
+<div id="tweaks" role="dialog" aria-label="Tweaks">
+  <h4><span>Tweaks · Palette</span><span style="color:var(--ink-mute);">v1</span></h4>
+  <div class="swatches">
+    <button class="sw" data-pal="paper">
+      <div class="chips"><span style="background:#f4f1ea"></span><span style="background:#111210"></span><span style="background:#2f5d3a"></span><span style="background:#a8471c"></span></div>
+      Paper
+    </button>
+    <button class="sw" data-pal="ordnance">
+      <div class="chips"><span style="background:#eef1f5"></span><span style="background:#0d1826"></span><span style="background:#1f3a68"></span><span style="background:#9a3a3a"></span></div>
+      Ordnance
+    </button>
+    <button class="sw" data-pal="clay">
+      <div class="chips"><span style="background:#f3ece1"></span><span style="background:#1f1510"></span><span style="background:#8a3a1c"></span><span style="background:#6d4414"></span></div>
+      Clay
+    </button>
+    <button class="sw" data-pal="mono">
+      <div class="chips"><span style="background:#f4f4f2"></span><span style="background:#0a0a0a"></span><span style="background:#555"></span><span style="background:#5a2a10"></span></div>
+      Mono
+    </button>
+  </div>
+</div>
+
+<script>
+  // ── Tweaks wiring ──────────────────────────────
+  (function(){
+    const tweaks = document.getElementById('tweaks');
+    const body = document.body;
+    const swatches = tweaks.querySelectorAll('.sw');
+
+    function apply(pal){
+      body.dataset.palette = pal;
+      swatches.forEach(b => b.classList.toggle('active', b.dataset.pal === pal));
+    }
+    apply(TWEAK_DEFAULTS.palette || 'paper');
+
+    swatches.forEach(b => {
+      b.addEventListener('click', () => {
+        const pal = b.dataset.pal;
+        apply(pal);
+        try {
+          window.parent.postMessage({type:'__edit_mode_set_keys', edits:{palette: pal}}, '*');
+        } catch(e){}
+      });
+    });
+
+    // edit mode protocol
+    window.addEventListener('message', (e) => {
+      const d = e.data || {};
+      if (d.type === '__activate_edit_mode') tweaks.classList.add('on');
+      if (d.type === '__deactivate_edit_mode') tweaks.classList.remove('on');
+      if (d.type === '__edit_mode_set_keys' && d.edits && d.edits.palette) apply(d.edits.palette);
+    });
+    try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e){}
+  })();
+</script>
+</body>
+</html>

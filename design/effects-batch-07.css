@@ -1,0 +1,239 @@
+/* =========================================================================
+   EFFECTS — BATCH 07 (E241-E280) ADAPTED
+   =========================================================================
+   Source: docs/design-bundles/consentmate/project/effects/batch-07-E241-E280.html
+   (Claude Design handoff bundle, batch 7 of 15.)
+
+   Adaptation rules from the source:
+   - Replaced `animation: foo Xs infinite` with finite-cycle GSAP-driven motion
+     where possible. Some effects keep CSS @keyframes if they pulse on a short
+     cycle and the scene uses a `tl.set` to start them — finite cycles are
+     calculated by Claude Code at integration time using
+     `Math.ceil(scene_duration / cycle_duration) - 1`.
+   - Replaced literal hex values with `var(--card-*)` tokens where the value
+     was semantically token-equivalent. Holographic / multi-color rainbow
+     gradients keep their literal palette — those colours ARE the effect.
+   - All effects are inside `.scene` containers that the framework hides via
+     the clip system. CSS @keyframes don't fire when a clip isn't visible;
+     HyperFrames captures frames deterministically so finite repeats are
+     mandatory only on long-running effects.
+
+   This file ships 5 of the 40 effects in batch 07 — the highest-leverage
+   ones for vertical-video work. The remaining 35 stay in the source bundle
+   as raw reference (docs/design-bundles/...) and can be ported on demand.
+
+   Ported here:
+   - .fx-holo-sticker     (E243)  — holographic rainbow brand badge
+   - .fx-type-shimmer     (E256)  — chromatic shimmer on hero text
+   - .fx-concentric-pulse (E265)  — emphasis ring pulse from a centre node
+   - .fx-radio-wave       (E270)  — signal rings from a beacon point
+   - .fx-end-card         (E280)  — reusable end-card with mark + rule + sub
+   ========================================================================= */
+
+
+/* ----- E243 — Holographic Sticker ----------------------------------- */
+
+.fx-holo-sticker {
+  width: 760px;
+  height: 760px;
+  border-radius: 60px;
+  background: linear-gradient(115deg,
+    #ff5cb1 0%, #9b6bff 18%, #3affe6 36%,
+    #5cffaa 56%, #f5d35a 75%, #ff5cb1 100%);
+  background-size: 300% 300%;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.5),
+    inset 0 0 80px rgba(255, 255, 255, 0.4);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: background-position, transform;
+}
+.fx-holo-sticker::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(45deg,
+    rgba(255, 255, 255, 0.18) 0 4px,
+    transparent 4px 12px);
+  mix-blend-mode: overlay;
+}
+.fx-holo-sticker__t {
+  font-family: var(--card-font-display);
+  font-weight: 900;
+  font-size: 200px;
+  color: #fff;
+  text-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  letter-spacing: -0.02em;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+/* Motion: GSAP animates `backgroundPositionX` from 0% → 200% across scene
+   duration (finite). Holo gradient drift is the "shift" effect; pair with a
+   subtle tilt/rotation on entrance via tl.from(...). */
+
+
+/* ----- E256 — Chromatic Shimmer Type ------------------------------- */
+
+.fx-type-shimmer {
+  font-family: var(--card-font-display);
+  font-weight: 900;
+  font-size: 280px;
+  line-height: 1;
+  color: transparent;
+  background: linear-gradient(90deg,
+    var(--card-warn),
+    var(--card-accent),
+    var(--card-ok),
+    var(--card-warn));
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  will-change: background-position, clip-path;
+}
+/* Motion intent:
+   1. Entrance reveal — clip-path: inset(0 100% 0 0) → inset(0 0 0 0) over
+      0.7s with expo.out (left-to-right wipe).
+   2. Ambient shimmer — tween backgroundPositionX from 0% → 200% across
+      scene duration with linear ease, finite repeat = ceil(dur / 4) - 1. */
+
+
+/* ----- E265 — Concentric Pulse ------------------------------------ */
+
+.fx-concentric-pulse {
+  position: relative;
+  width: 1080px;
+  height: 1080px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fx-concentric-pulse__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid var(--card-accent);
+  width: 0;
+  height: 0;
+  opacity: 1;
+  will-change: width, height, opacity;
+}
+.fx-concentric-pulse__ring--warn { border-color: var(--card-warn); }
+.fx-concentric-pulse__ring--ok   { border-color: var(--card-ok); }
+
+.fx-concentric-pulse__core {
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: var(--card-paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--card-font-display);
+  font-size: 120px;
+  font-weight: 700;
+  color: var(--card-navy);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 6px var(--card-paper-soft);
+  z-index: 2;
+}
+/* Motion: render 5 rings, each animates from {width:0, height:0, opacity:1}
+   to {width:1000px, height:1000px, opacity:0} over 4s with power2.out.
+   Stagger 0.8s between rings. Finite repeats per scene. Core scale-pulses
+   subtly via GSAP yoyo. */
+
+
+/* ----- E270 — Radio Wave (Signal from Beacon) -------------------- */
+
+.fx-radio-wave {
+  position: relative;
+  width: 1080px;
+  height: 1080px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fx-radio-wave__beacon {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--card-warn);
+  box-shadow: 0 0 40px var(--card-warn);
+  z-index: 2;
+  will-change: transform, opacity;
+}
+.fx-radio-wave__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid var(--card-warn);
+  width: 0;
+  height: 0;
+  opacity: 1;
+  will-change: width, height, opacity;
+}
+/* Motion: 5 rings emanate from beacon position. Each tweens
+   {width:0, height:0, opacity:1} → {width:900px, height:900px, opacity:0}
+   over 3s with power2.out. Stagger 0.6s. Beacon pulses scale 1.0 → 1.15
+   on a 0.8s sine yoyo, finite repeats. */
+
+
+/* ----- E280 — End Card (Logo Lockup + Rule + Tagline) ----------- */
+
+.fx-end-card {
+  position: absolute;
+  inset: 0;
+  background: var(--card-navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+.fx-end-card__mark {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: var(--card-paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--card-font-display);
+  font-weight: 900;
+  font-size: 200px;
+  font-style: italic;
+  color: var(--card-navy);
+  will-change: transform;
+}
+.fx-end-card__rule {
+  width: 60%;
+  height: 3px;
+  background: var(--card-paper-soft);
+  transform-origin: center;
+  transform: scaleX(0);
+  will-change: transform;
+}
+.fx-end-card__t {
+  font-family: var(--card-font-display);
+  font-weight: 700;
+  font-size: 140px;
+  color: var(--card-paper);
+  font-style: italic;
+  line-height: 1;
+  text-align: center;
+}
+.fx-end-card__sub {
+  font-family: var(--card-font-mono);
+  font-size: 46px;
+  letter-spacing: 0.32em;
+  color: var(--card-warn);
+  text-transform: uppercase;
+}
+/* Motion: mark scales in from 0 with back.out(1.6) at scene start; rule
+   draws via scaleX 0 → 1 over 1s with expo.out; tagline fades up
+   word-stagger; sub fades last. Mark idle pulses scale 1.0 → 1.06 on
+   2.4s sine yoyo, finite repeats. */

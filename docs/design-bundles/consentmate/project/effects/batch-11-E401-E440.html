@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Effects Batch 11 — E401–E440 · kinetic type + branded</title>
+<style>
+:root{
+  --card-paper:#F8F6F1;--card-paper-soft:#EFEBE2;--card-warn:#C97D5C;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",monospace;
+  --serif:Georgia,"Times New Roman",serif;
+}
+html,body{margin:0;padding:0;background:#1a1d22;color:#e7e9ec;font-family:var(--mono)}
+body{padding:48px 32px 96px}
+h1{font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:22px;margin:0 0 6px;color:#fff}
+.sub{font-size:13px;color:#9aa1ad;margin:0 0 32px;max-width:820px;line-height:1.55}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:40px}
+.cell{display:flex;flex-direction:column;gap:10px}
+.cell__lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9aa1ad}
+.cell__lbl b{color:#f5d35a;font-weight:600;letter-spacing:.18em}
+.frame{width:1080px;height:1920px;transform-origin:top left;transform:scale(0.165);
+  margin-right:-902px;margin-bottom:-1603px;position:relative;overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);background:#1a2030}
+.frame--light{background:var(--card-paper)}
+.frame__id{position:absolute;left:24px;bottom:18px;font-family:var(--mono);font-size:36px;letter-spacing:.18em;color:rgba(255,255,255,.45);z-index:20}
+.frame--light .frame__id{color:rgba(31,42,58,.45)}
+
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes flash{0%,100%{opacity:0}5%{opacity:1}30%{opacity:0}}
+@keyframes scrollX{to{transform:translateX(-50%)}}
+@keyframes scrollY{to{transform:translateY(-50%)}}
+@keyframes wipeR{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.6}}
+@keyframes hueLoop{to{filter:hue-rotate(360deg)}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes drawL{from{stroke-dashoffset:1500}to{stroke-dashoffset:0}}
+@keyframes wipeReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes risefade{0%{transform:translateY(0);opacity:0}10%{opacity:1}100%{transform:translateY(-1200px);opacity:0}}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes blastOut{0%{transform:translate(0,0) scale(.4);opacity:0}10%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1);opacity:0}}
+
+/* E401 vertical type tower */
+.e401{position:absolute;inset:0;background:#0a0a14;display:flex}
+.e401 .col{flex:1;font-family:var(--serif);font-weight:900;font-size:240px;color:#fff;writing-mode:vertical-rl;line-height:.85;letter-spacing:-.02em;text-align:center;animation:scrollY 18s linear infinite}
+.e401 .col:nth-child(1){color:#c93f5c}
+.e401 .col:nth-child(2){animation-direction:reverse;color:#f5d35a;animation-duration:22s}
+.e401 .col:nth-child(3){color:#3affe6;animation-duration:26s}
+
+/* E402 stack scroll */
+.e402{position:absolute;inset:0;background:var(--card-paper);overflow:hidden;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:30px;padding:0 80px}
+.e402 .row{font-family:var(--serif);font-weight:900;font-style:italic;font-size:240px;color:#1a1d22;line-height:.95;animation:wipeReveal 4s ease-out infinite}
+.e402 .row.a{color:#c93f5c;animation-delay:.2s}
+.e402 .row.b{animation-delay:.4s}
+.e402 .row.c{color:#4a8f70;animation-delay:.6s}
+
+/* E403 marquee single line */
+.e403{position:absolute;inset:0;background:#c93f5c;display:flex;align-items:center;overflow:hidden}
+.e403 .strip{display:flex;white-space:nowrap;font-family:var(--serif);font-weight:900;font-style:italic;font-size:380px;color:#fff;animation:scrollX 30s linear infinite;gap:120px;line-height:1}
+
+/* E404 zoom punch words */
+.e404{position:absolute;inset:0;background:#000;display:flex;align-items:center;justify-content:center}
+.e404 i{position:absolute;font-family:var(--serif);font-weight:900;font-size:280px;color:#fff;animation:zoomPunch 4s ease-out infinite;line-height:1}
+@keyframes zoomPunch{0%,100%{transform:scale(0);opacity:0}10%,20%{transform:scale(1);opacity:1}25%{transform:scale(1.5);opacity:0}}
+.e404 i:nth-child(1){animation-delay:0s;color:#fff}
+.e404 i:nth-child(2){animation-delay:1s;color:#f5d35a}
+.e404 i:nth-child(3){animation-delay:2s;color:#c93f5c}
+.e404 i:nth-child(4){animation-delay:3s;color:#3affe6}
+
+/* E405 Sentence builder */
+.e405{position:absolute;inset:0;background:var(--card-paper);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;padding:120px}
+.e405 .ln{display:flex;gap:20px}
+.e405 .w{font-family:var(--serif);font-weight:900;font-size:160px;color:#1a1d22;line-height:1;animation:wordIn 6s ease-out infinite}
+.e405 .w.k{color:#c93f5c;font-style:italic}
+@keyframes wordIn{0%{opacity:0;transform:translateY(40px) scale(.9)}20%,90%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-40px) scale(.95)}}
+
+/* E406 word swap mask */
+.e406{position:absolute;inset:0;background:#0a141d;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:30px}
+.e406__pre{font-family:var(--serif);font-weight:700;font-size:120px;color:#fff;line-height:1}
+.e406__rotor{height:200px;overflow:hidden;border-bottom:6px solid #f5d35a}
+.e406__rotor .strip{font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;color:#f5d35a;line-height:200px;animation:rotorY 6s steps(4,end) infinite}
+@keyframes rotorY{from{transform:translateY(0)}to{transform:translateY(-800px)}}
+
+/* E407 fill-up letters */
+.e407{position:absolute;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center}
+.e407 i{font-family:var(--serif);font-weight:900;font-size:520px;color:transparent;-webkit-text-stroke:6px #fff;background:linear-gradient(180deg,transparent 0%,transparent 50%,#5cffaa 50%,#5cffaa 100%);background-size:100% 200%;background-position:0 0;-webkit-background-clip:text;background-clip:text;animation:fillUp 4s ease-out infinite;line-height:1}
+@keyframes fillUp{0%{background-position:0 0}50%,100%{background-position:0 100%}}
+
+/* E408 vertical reveal mask */
+.e408{position:absolute;inset:0;background:#fff;overflow:hidden}
+.e408__t{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;color:#c93f5c;line-height:1}
+.e408__c{position:absolute;left:0;right:0;height:50%;background:#fff}
+.e408__c.t{top:0;animation:slideT 4s ease-in-out infinite alternate}
+.e408__c.b{bottom:0;animation:slideB 4s ease-in-out infinite alternate}
+@keyframes slideT{from{transform:translateY(0)}to{transform:translateY(-100%)}}
+@keyframes slideB{from{transform:translateY(0)}to{transform:translateY(100%)}}
+
+/* E409 outline trace */
+.e409{position:absolute;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center}
+.e409 svg{width:90%;height:50%}
+.e409 svg text{fill:none;stroke:#f5d35a;stroke-width:3;font-family:var(--serif);font-weight:900;font-style:italic;font-size:380px;letter-spacing:-.02em;stroke-dasharray:2000;animation:drawL 4s ease-out infinite alternate;filter:drop-shadow(0 0 30px rgba(245,211,90,.5))}
+
+/* E410 wipe word reveal */
+.e410{position:absolute;inset:0;background:#0a141d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:0 60px}
+.e410 .row{display:flex;align-items:center;gap:24px;font-family:var(--serif);font-weight:900;font-size:180px;color:#fff;line-height:1;animation:wipeReveal 5s ease-out infinite}
+.e410 .row.a{animation-delay:0s}.e410 .row.b{animation-delay:.4s}.e410 .row.c{animation-delay:.8s}
+.e410 .row .blk{background:#c93f5c;color:#fff;padding:0 24px}
+
+/* E411 calligraphic stroke */
+.e411{position:absolute;inset:0;background:var(--card-paper);display:flex;align-items:center;justify-content:center}
+.e411 svg{width:80%;height:50%}
+.e411 svg path{fill:none;stroke:#1a1d22;stroke-width:6;stroke-linecap:round;stroke-dasharray:3000;animation:drawL 5s ease-in-out infinite alternate}
+
+/* E412 newspaper drop */
+.e412{position:absolute;inset:0;background:#3a3a3a;perspective:2000px;display:flex;align-items:center;justify-content:center}
+.e412__p{width:760px;height:1100px;background:#f4ede0;padding:60px;animation:newsDrop 4s ease-in infinite;transform-origin:center;font-family:var(--serif);color:#1a1d22;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+@keyframes newsDrop{0%{transform:scale(2) rotate(180deg);opacity:0}30%{transform:scale(1) rotate(0);opacity:1}90%{transform:scale(1) rotate(0);opacity:1}100%{transform:scale(.6) rotate(-90deg);opacity:0}}
+.e412__p .mast{font-family:var(--serif);font-weight:900;font-style:italic;font-size:80px;border-bottom:4px solid #1a1d22;padding-bottom:14px;margin-bottom:30px;text-align:center;letter-spacing:.04em}
+.e412__p .h{font-weight:900;font-size:120px;line-height:.95;margin-bottom:30px}
+.e412__p .b{font-size:38px;line-height:1.4;column-count:2;column-gap:30px}
+
+/* E413 vinyl spin */
+.e413{position:absolute;inset:0;background:linear-gradient(135deg,#3a1a2a,#0a0a14);display:flex;align-items:center;justify-content:center}
+.e413__v{width:780px;height:780px;border-radius:50%;background:radial-gradient(circle,#1a1a1a 0%,#0a0a0a 70%);position:relative;animation:spinSlow 4s linear infinite;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.e413__v::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle,#0a0a0a 0 4px,#1a1a1a 4px 6px);opacity:.5}
+.e413__v::after{content:"";position:absolute;left:50%;top:50%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,#c93f5c,#7a1a2a);transform:translate(-50%,-50%);box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
+.e413__hole{position:absolute;left:50%;top:50%;width:20px;height:20px;border-radius:50%;background:#000;transform:translate(-50%,-50%);z-index:5}
+
+/* E414 polaroid drop+stack */
+.e414{position:absolute;inset:0;background:#1a3a4a;overflow:hidden}
+.e414 i{position:absolute;left:50%;top:50%;width:380px;height:460px;background:#fff;border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.5);transform-origin:center;animation:polaDrop 6s ease-out infinite}
+@keyframes polaDrop{0%{transform:translate(-50%,-200%) rotate(var(--r,0)) scale(1.4);opacity:0}15%,90%{transform:translate(calc(-50% + var(--x,0)),calc(-50% + var(--y,0))) rotate(var(--r,0)) scale(1);opacity:1}100%{transform:translate(calc(-50% + var(--x,0)),calc(-50% + var(--y,0))) rotate(var(--r,0)) scale(1);opacity:1}}
+.e414 i::before{content:"";position:absolute;left:30px;right:30px;top:30px;height:300px;background:linear-gradient(135deg,#5a8fa8,#1f2a3a)}
+.e414 i::after{content:attr(data-l);position:absolute;left:0;right:0;bottom:30px;text-align:center;font-family:var(--serif);font-style:italic;font-size:36px;color:#1a1d22}
+
+/* E415 collage shred */
+.e415{position:absolute;inset:0;background:#f4ede0;display:flex;flex-direction:column;animation:shredOpen 4s ease-out infinite}
+@keyframes shredOpen{0%{gap:0}50%,100%{gap:14px}}
+.e415 i{flex:1;background:linear-gradient(135deg,#7a3a4a,#3a1a2a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:240px;color:#f5d35a;overflow:hidden}
+.e415 i:nth-child(1){background-position:0 0}
+.e415 i:nth-child(2){background:linear-gradient(135deg,#1a4a5a,#0a2a3a)}
+.e415 i:nth-child(3){background:linear-gradient(135deg,#4a3a1a,#2a1a0a)}
+.e415 i:nth-child(4){background:linear-gradient(135deg,#3a4a1a,#1a2a0a)}
+
+/* E416 Vinyl scribble */
+.e416{position:absolute;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center}
+.e416 svg{width:80%;height:60%}
+.e416 svg path{fill:none;stroke:#fff;stroke-width:8;stroke-linecap:round;stroke-dasharray:6000;animation:drawL 6s ease-in-out infinite alternate;filter:drop-shadow(0 0 12px #f5d35a)}
+
+/* E417 emoji rain */
+.e417{position:absolute;inset:0;background:linear-gradient(180deg,#5a3a78,#1a1a3a);overflow:hidden}
+.e417 i{position:absolute;font-size:140px;animation:emojiFall 5s linear infinite;text-shadow:0 0 30px rgba(255,255,255,.3)}
+@keyframes emojiFall{from{top:-10%}to{top:110%}}
+
+/* E418 photo zoom in */
+.e418{position:absolute;inset:0;background:#000;overflow:hidden}
+.e418__img{position:absolute;inset:0;background:linear-gradient(135deg,#7a3a4a,#3a1a2a 50%,#1a1d22 100%);animation:photoZoom 8s ease-in-out infinite alternate}
+@keyframes photoZoom{from{transform:scale(1)}to{transform:scale(1.4)}}
+.e418__t{position:absolute;left:60px;bottom:200px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;color:#fff;line-height:1;text-shadow:0 0 40px rgba(0,0,0,.5)}
+.e418__sub{position:absolute;left:60px;bottom:120px;font-family:var(--mono);font-size:42px;letter-spacing:.3em;color:#f5d35a;text-transform:uppercase}
+
+/* E419 hashtag burst */
+.e419{position:absolute;inset:0;background:linear-gradient(135deg,#ff5cb1,#9b6bff);display:flex;align-items:center;justify-content:center}
+.e419__t{font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;color:#fff;line-height:1;animation:pop 1.5s ease-out infinite alternate;text-shadow:0 0 60px rgba(0,0,0,.3)}
+
+/* E420 quote card carousel */
+.e420{position:absolute;inset:0;background:#f4ede0;overflow:hidden}
+.e420__r{display:flex;height:100%;animation:slideQuote 12s ease-in-out infinite}
+@keyframes slideQuote{0%,30%{transform:translateX(0)}33%,63%{transform:translateX(-100%)}66%,96%{transform:translateX(-200%)}100%{transform:translateX(0)}}
+.e420__r .slide{flex:0 0 100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px;text-align:center}
+.e420__r .slide .q{font-family:var(--serif);font-style:italic;font-size:300px;color:#c93f5c;line-height:.7;margin-bottom:30px}
+.e420__r .slide .t{font-family:var(--serif);font-weight:600;font-size:80px;color:#1a1d22;line-height:1.15;text-wrap:balance;margin-bottom:40px}
+.e420__r .slide .a{font-family:var(--mono);font-size:36px;letter-spacing:.3em;color:#1a1d22;text-transform:uppercase}
+
+/* E421 menu dropdown */
+.e421{position:absolute;inset:0;background:#0a141d}
+.e421__bar{position:absolute;left:0;right:0;top:0;height:200px;background:rgba(15,23,33,.95);backdrop-filter:blur(8px);border-bottom:2px solid rgba(255,255,255,.1);display:flex;align-items:center;padding:0 60px;justify-content:space-between}
+.e421__bar .logo{font-family:var(--serif);font-weight:900;font-style:italic;font-size:80px;color:#fff}
+.e421__bar nav{display:flex;gap:50px;font-family:var(--mono);font-size:42px;letter-spacing:.16em;color:rgba(255,255,255,.7);text-transform:uppercase}
+.e421__menu{position:absolute;left:60%;top:200px;width:480px;background:#fff;border-radius:0 0 18px 18px;animation:dropMenu 4s ease-out infinite;transform-origin:top center;box-shadow:0 30px 60px rgba(0,0,0,.4)}
+@keyframes dropMenu{0%{transform:scaleY(0)}10%,80%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+.e421__menu i{display:block;padding:36px 50px;font-family:var(--mono);font-size:42px;letter-spacing:.16em;color:#1a1d22;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,.1)}
+
+/* E422 button hover slide */
+.e422{position:absolute;inset:0;background:#f4ede0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:60px}
+.e422 .btn{position:relative;padding:50px 100px;font-family:var(--mono);font-weight:700;font-size:60px;letter-spacing:.18em;text-transform:uppercase;color:#1a1d22;border:6px solid #1a1d22;border-radius:18px;overflow:hidden;cursor:pointer}
+.e422 .btn::before{content:"";position:absolute;inset:0;background:#c93f5c;transform:translateY(100%);animation:btnSlide 3s ease-in-out infinite alternate;z-index:-1}
+.e422 .btn span{position:relative;z-index:2;display:block;animation:btnText 3s ease-in-out infinite alternate}
+@keyframes btnSlide{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes btnText{from{color:#1a1d22}to{color:#fff}}
+
+/* E423 dot grid pulse */
+.e423{position:absolute;inset:0;background:#0a0a14}
+.e423__g{position:absolute;inset:0;background:radial-gradient(circle 4px at 24px 24px,rgba(255,255,255,.3) 1px,transparent 1.4px) 0 0/48px 48px;animation:gridFade 3s ease-in-out infinite alternate}
+@keyframes gridFade{from{opacity:.4}to{opacity:1}}
+.e423__c{position:absolute;left:50%;top:50%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,#5cffaa 0%,transparent 70%);transform:translate(-50%,-50%);filter:blur(40px);animation:pulseDot 2s ease-in-out infinite}
+.e423__t{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:240px;color:#5cffaa;text-shadow:0 0 40px rgba(120,255,180,.5)}
+
+/* E424 stagger card flip */
+.e424{position:absolute;inset:0;background:linear-gradient(135deg,#1a3a4a,#0a141d);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:14px;padding:120px}
+.e424 i{background:#5cffaa;border-radius:14px;animation:cardFlip 4s ease-in-out infinite}
+@keyframes cardFlip{0%,100%{transform:rotateY(0);background:#5cffaa}50%{transform:rotateY(180deg);background:#c93f5c}}
+
+/* E425 kanji-style stroke */
+.e425{position:absolute;inset:0;background:#f4ede0;display:flex;align-items:center;justify-content:center}
+.e425 svg{width:80%;height:80%}
+.e425 svg path{fill:none;stroke:#1a1d22;stroke-width:30;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1500;animation:drawL 5s ease-in-out infinite alternate}
+
+/* E426 vintage projector flicker */
+.e426{position:absolute;inset:0;background:#000;overflow:hidden;animation:flicker .12s steps(4,end) infinite}
+@keyframes flicker{0%{filter:brightness(1)}25%{filter:brightness(1.15)}50%{filter:brightness(.85)}75%{filter:brightness(1.05)}}
+.e426__bg{position:absolute;inset:0;background:radial-gradient(ellipse at center,#5a4a3a 0%,#0a0a0a 100%)}
+.e426__grain{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px)}
+.e426__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:240px;color:#f4ede0;line-height:1;text-shadow:0 0 30px rgba(0,0,0,.5)}
+
+/* E427 zine cutout */
+.e427{position:absolute;inset:0;background:#f5d35a;overflow:hidden}
+.e427 i{position:absolute;font-family:var(--mono);font-weight:700;font-size:80px;background:#fff;color:#1a1d22;padding:14px 24px;animation:pop 3s ease-out infinite;border:4px solid #1a1d22;letter-spacing:.04em;text-transform:uppercase}
+.e427 i.b{background:#1a1d22;color:#fff;border-color:#fff}
+.e427 i.r{background:#c93f5c;color:#fff;border-color:#1a1d22}
+.e427__t{position:absolute;left:60px;right:60px;top:50%;transform:translateY(-50%);font-family:var(--serif);font-weight:900;font-style:italic;font-size:340px;color:#1a1d22;line-height:.85;text-align:center}
+
+/* E428 fashion editorial title */
+.e428{position:absolute;inset:0;background:#000;display:flex;flex-direction:column}
+.e428__top{flex:1;background:linear-gradient(135deg,#3a1a2a,#0a0a14);display:flex;align-items:flex-end;justify-content:flex-start;padding:80px;font-family:var(--serif);font-weight:900;font-size:380px;color:#fff;line-height:.85;animation:wipeReveal 4s ease-out infinite}
+.e428__bot{flex:1;background:#f4ede0;display:flex;align-items:flex-start;justify-content:flex-end;padding:80px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:380px;color:#c93f5c;line-height:.85;animation:wipeReveal 4s ease-out .3s infinite}
+.e428__num{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--mono);font-size:50px;color:#f5d35a;letter-spacing:.5em;background:#1a1d22;padding:18px 30px}
+
+/* E429 stretch text */
+.e429{position:absolute;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.e429__t{font-family:var(--serif);font-weight:900;font-size:280px;color:#fff;line-height:1;letter-spacing:-.04em;animation:stretch 3s ease-in-out infinite alternate}
+@keyframes stretch{from{transform:scaleX(.7) scaleY(1)}to{transform:scaleX(1.4) scaleY(.85)}}
+
+/* E430 typing terminal */
+.e430{position:absolute;inset:0;background:#0a0a14;padding:120px 60px;font-family:var(--mono);font-size:48px;color:#5cffaa;line-height:1.6}
+.e430 .ln{overflow:hidden;white-space:nowrap;border-right:6px solid #5cffaa;width:0;animation:typeRow 8s steps(40,end) infinite}
+.e430 .ln:nth-child(1){animation-delay:0s}
+.e430 .ln:nth-child(2){animation-delay:1s}
+.e430 .ln:nth-child(3){animation-delay:2s}
+.e430 .ln:nth-child(4){animation-delay:3s;color:#3affe6}
+.e430 .ln:nth-child(5){animation-delay:4s;color:#f5d35a}
+.e430 .ln:nth-child(6){animation-delay:5s;color:#fff}
+@keyframes typeRow{0%{width:0}30%,100%{width:100%}}
+
+/* E431 sticker pop */
+.e431{position:absolute;inset:0;background:linear-gradient(135deg,#3affe6,#5cffaa);display:flex;align-items:center;justify-content:center}
+.e431__s{position:relative;width:760px;height:760px;border-radius:50%;background:#fff;border:24px solid #1a1d22;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:240px;color:#c93f5c;animation:stickerSpin 3s ease-in-out infinite}
+@keyframes stickerSpin{0%{transform:scale(0) rotate(0)}40%,90%{transform:scale(1) rotate(720deg)}100%{transform:scale(1.1) rotate(720deg);opacity:0}}
+
+/* E432 cards row reveal */
+.e432{position:absolute;inset:0;background:linear-gradient(180deg,#3a4858,#0a141d);display:flex;align-items:center;justify-content:center;padding:0 60px;gap:30px}
+.e432 .card{flex:1;height:1100px;border-radius:30px;background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.15);padding:50px;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;font-family:var(--serif);animation:cardR 4s ease-out infinite}
+.e432 .card:nth-child(1){animation-delay:0s}
+.e432 .card:nth-child(2){animation-delay:.2s}
+.e432 .card:nth-child(3){animation-delay:.4s}
+@keyframes cardR{0%{opacity:0;transform:translateY(80px) rotateX(20deg)}30%,90%{opacity:1;transform:translateY(0) rotateX(0)}100%{opacity:0;transform:translateY(-40px) rotateX(-20deg)}}
+.e432 .card .num{font-family:var(--mono);font-size:36px;color:#5cffaa;letter-spacing:.18em;margin-bottom:30px}
+.e432 .card .h{font-weight:700;font-size:80px;line-height:1;margin-bottom:20px}
+.e432 .card .b{font-family:var(--serif);font-size:36px;color:rgba(255,255,255,.7);line-height:1.4}
+
+/* E433 tape transitions */
+.e433{position:absolute;inset:0;background:#0a141d;overflow:hidden}
+.e433__bg{position:absolute;inset:0;background:linear-gradient(135deg,#7a3a4a,#3a1a2a);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-size:280px;color:#f5d35a}
+.e433 i{position:absolute;background:rgba(245,211,90,.85);height:80px;animation:tapeIn 4s ease-out infinite;transform-origin:center;box-shadow:0 6px 12px rgba(0,0,0,.3)}
+@keyframes tapeIn{0%{transform:scale(0) rotate(var(--r,0))}30%,90%{transform:scale(1) rotate(var(--r,0))}100%{transform:scale(1) rotate(var(--r,0))}}
+
+/* E434 spiral text */
+.e434{position:absolute;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center}
+.e434__c{width:900px;height:900px;animation:spinSlow 20s linear infinite;position:relative}
+.e434__c svg{width:100%;height:100%}
+.e434__c svg text{fill:#f5d35a;font-family:var(--mono);font-size:50px;letter-spacing:.16em}
+
+/* E435 photo grid reveal */
+.e435{position:absolute;inset:0;background:#0a141d;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(5,1fr);gap:14px;padding:60px}
+.e435 i{border-radius:14px;animation:tilePop 5s ease-out infinite}
+@keyframes tilePop{0%{opacity:0;transform:scale(.6)}30%,90%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.1)}}
+.e435 i:nth-child(1){background:linear-gradient(135deg,#c93f5c,#7a1a2a);animation-delay:0s}
+.e435 i:nth-child(2){background:linear-gradient(135deg,#3a6fc9,#0a1d4a);animation-delay:.05s}
+.e435 i:nth-child(3){background:linear-gradient(135deg,#4a8f70,#1a3a2a);animation-delay:.1s}
+.e435 i:nth-child(4){background:linear-gradient(135deg,#f5d35a,#a3791e);animation-delay:.15s}
+.e435 i:nth-child(5){background:linear-gradient(135deg,#9b6bff,#3a1a6a);animation-delay:.2s}
+.e435 i:nth-child(6){background:linear-gradient(135deg,#ff8800,#5a2a00);animation-delay:.25s}
+.e435 i:nth-child(7){background:linear-gradient(135deg,#3affe6,#1a5a4a);animation-delay:.3s}
+.e435 i:nth-child(8){background:linear-gradient(135deg,#ff5cb1,#5a1a4a);animation-delay:.35s}
+.e435 i:nth-child(9){background:linear-gradient(135deg,#5cffaa,#1a4a3a);animation-delay:.4s}
+.e435 i:nth-child(10){background:linear-gradient(135deg,#3a6fc9,#0a1d4a);animation-delay:.45s}
+.e435 i:nth-child(11){background:linear-gradient(135deg,#c93f5c,#7a1a2a);animation-delay:.5s}
+.e435 i:nth-child(12){background:linear-gradient(135deg,#f5d35a,#a3791e);animation-delay:.55s}
+.e435 i:nth-child(13){background:linear-gradient(135deg,#3affe6,#1a5a4a);animation-delay:.6s}
+.e435 i:nth-child(14){background:linear-gradient(135deg,#9b6bff,#3a1a6a);animation-delay:.65s}
+.e435 i:nth-child(15){background:linear-gradient(135deg,#ff5cb1,#5a1a4a);animation-delay:.7s}
+
+/* E436 brand burst pattern */
+.e436{position:absolute;inset:0;background:#c93f5c;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.e436 i{position:absolute;font-family:var(--serif);font-weight:900;font-style:italic;font-size:80px;color:#fff;animation:blastOut 3s ease-out infinite;opacity:0}
+.e436__c{position:relative;font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;color:#fff;animation:pop 1.5s ease-out infinite alternate;z-index:5}
+
+/* E437 swipe transition */
+.e437{position:absolute;inset:0;background:#000;overflow:hidden}
+.e437 i{position:absolute;left:0;right:0;height:25%;background:#f5d35a;animation:swipeOut 4s ease-in-out infinite}
+.e437 i:nth-child(1){top:0;background:#c93f5c;animation-delay:0s}
+.e437 i:nth-child(2){top:25%;background:#3a6fc9;animation-delay:.1s}
+.e437 i:nth-child(3){top:50%;background:#4a8f70;animation-delay:.2s}
+.e437 i:nth-child(4){top:75%;background:#f5d35a;animation-delay:.3s}
+@keyframes swipeOut{0%{transform:translateX(-100%)}30%,70%{transform:translateX(0)}100%{transform:translateX(100%)}}
+.e437__t{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;color:#fff;mix-blend-mode:difference;z-index:5}
+
+/* E438 wiggling logo */
+.e438{position:absolute;inset:0;background:#0a141d;display:flex;align-items:center;justify-content:center}
+.e438__l{font-family:var(--serif);font-weight:900;font-style:italic;font-size:300px;color:#f5d35a;animation:wiggleScale 2s ease-in-out infinite;line-height:1;text-shadow:0 0 60px rgba(245,211,90,.4);letter-spacing:-.03em}
+@keyframes wiggleScale{0%,100%{transform:scale(1) rotate(-2deg)}25%{transform:scale(1.05) rotate(2deg)}50%{transform:scale(.95) rotate(-3deg)}75%{transform:scale(1.05) rotate(3deg)}}
+
+/* E439 podcast title */
+.e439{position:absolute;inset:0;background:linear-gradient(135deg,#5a3a78,#1a1a3a);padding:120px 80px;display:flex;flex-direction:column;justify-content:center;gap:40px}
+.e439__lbl{font-family:var(--mono);font-size:42px;letter-spacing:.4em;color:#5cffaa;text-transform:uppercase}
+.e439__t{font-family:var(--serif);font-weight:900;font-style:italic;font-size:200px;color:#fff;line-height:.95;animation:wipeReveal 3s ease-out infinite}
+.e439__h{font-family:var(--serif);font-weight:600;font-size:80px;color:rgba(255,255,255,.85);line-height:1.15;text-wrap:balance}
+.e439__row{display:flex;align-items:center;gap:30px;margin-top:40px}
+.e439__row .av{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#c93f5c,#7a1a2a);box-shadow:0 8px 16px rgba(0,0,0,.3)}
+.e439__row .meta{display:flex;flex-direction:column;gap:6px;font-family:var(--serif);color:#fff}
+.e439__row .meta .n{font-size:50px;font-weight:600}
+.e439__row .meta .r{font-family:var(--mono);font-size:30px;letter-spacing:.18em;color:rgba(255,255,255,.6)}
+.e439__bars{display:flex;gap:8px;align-items:flex-end;height:120px;margin-top:30px}
+.e439__bars i{flex:1;background:linear-gradient(180deg,#5cffaa,#3affe6);border-radius:6px;animation:waveBar 1.2s ease-in-out infinite}
+@keyframes waveBar{0%,100%{height:30%}50%{height:var(--h,80%)}}
+
+/* E440 finale stinger */
+.e440{position:absolute;inset:0;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.e440__bg{position:absolute;inset:0;background:repeating-linear-gradient(45deg,#c93f5c 0 60px,#1a1d22 60px 120px);animation:stripeMove 4s linear infinite}
+@keyframes stripeMove{from{background-position:0 0}to{background-position:170px 170px}}
+.e440__c{position:relative;background:#000;color:#fff;padding:80px 120px;font-family:var(--serif);font-weight:900;font-style:italic;font-size:280px;line-height:.95;text-align:center;border:8px solid #fff;animation:pop 1.8s ease-out infinite alternate;z-index:5;letter-spacing:-.02em}
+.e440__c small{display:block;font-family:var(--mono);font-style:normal;font-weight:400;font-size:50px;letter-spacing:.5em;color:#f5d35a;margin-top:30px}
+</style>
+</head>
+<body>
+<h1>Effects Batch 11 — E401–E440 · kinetic type + branded transitions</h1>
+<p class="sub">Type-driven moments, editorial scenes, and branded transitions ready for paste-into-video. <b style="color:#f5d35a">★</b> = especially video-ready.</p>
+
+<div class="grid">
+
+<div class="cell"><div class="cell__lbl">E401 · Vertical Type Tower <b>★</b></div><div class="frame"><div class="e401">
+<div class="col">DRIFT
+DRIFT
+DRIFT
+DRIFT
+DRIFT</div>
+<div class="col">2024
+2024
+2024
+2024
+2024</div>
+<div class="col">VOL.07
+VOL.07
+VOL.07
+VOL.07
+VOL.07</div>
+</div><div class="frame__id">E401</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E402 · Stack Wipe <b>★</b></div><div class="frame frame--light"><div class="e402">
+<div class="row">design</div>
+<div class="row a">moves</div>
+<div class="row b">people</div>
+<div class="row c">forward.</div>
+</div><div class="frame__id">E402</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E403 · Marquee Headline <b>★</b></div><div class="frame"><div class="e403"><div class="strip">
+<span>NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·</span>
+<span>NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·&nbsp;NEW DROP&nbsp;·</span>
+</div></div><div class="frame__id">E403</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E404 · Word Punch <b>★</b></div><div class="frame"><div class="e404"><i>BIG.</i><i>BOLD.</i><i>NEW.</i><i>NOW.</i></div><div class="frame__id">E404</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E405 · Sentence Build <b>★</b></div><div class="frame frame--light"><div class="e405">
+<div class="ln"><div class="w">make</div><div class="w k">things</div></div>
+<div class="ln"><div class="w">people</div><div class="w k">remember.</div></div>
+</div><div class="frame__id">E405</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E406 · Word Rotor <b>★</b></div><div class="frame"><div class="e406">
+<div class="e406__pre">design that</div>
+<div class="e406__rotor"><div class="strip">
+<div>moves.</div><div>sells.</div><div>scales.</div><div>lasts.</div>
+</div></div>
+</div><div class="frame__id">E406</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E407 · Fill-Up Letters <b>★</b></div><div class="frame"><div class="e407"><i>YES</i></div><div class="frame__id">E407</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E408 · Vertical Reveal <b>★</b></div><div class="frame frame--light"><div class="e408">
+<div class="e408__t">REVEAL</div>
+<div class="e408__c t"></div><div class="e408__c b"></div>
+</div><div class="frame__id">E408</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E409 · Outline Trace <b>★</b></div><div class="frame"><div class="e409"><svg viewBox="0 0 1080 400">
+<text x="540" y="280" text-anchor="middle">drift</text>
+</svg></div><div class="frame__id">E409</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E410 · Block Highlight Reveal <b>★</b></div><div class="frame"><div class="e410">
+<div class="row a">make <span class="blk">it</span> count</div>
+<div class="row b">make <span class="blk">it</span> last</div>
+<div class="row c">make <span class="blk">it</span> yours</div>
+</div><div class="frame__id">E410</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E411 · Calligraphic Stroke <b>★</b></div><div class="frame frame--light"><div class="e411">
+<svg viewBox="0 0 800 400"><path d="M 60 280 C 120 80, 220 320, 320 200 S 460 80, 540 240 S 700 360, 740 180"/></svg>
+</div><div class="frame__id">E411</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E412 · Newspaper Drop <b>★</b></div><div class="frame"><div class="e412"><div class="e412__p">
+<div class="mast">The Daily Drift</div>
+<div class="h">A new design era begins today</div>
+<div class="b">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</div>
+</div></div><div class="frame__id">E412</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E413 · Vinyl Spin <b>★</b></div><div class="frame"><div class="e413"><div class="e413__v"></div><div class="e413__hole"></div></div><div class="frame__id">E413</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E414 · Polaroid Drop Stack <b>★</b></div><div class="frame"><div class="e414">
+<i data-l="MAY 2024" style="--r:-12deg;--x:-260px;--y:-100px;animation-delay:0s"></i>
+<i data-l="STUDIO 04" style="--r:8deg;--x:200px;--y:-180px;animation-delay:.5s"></i>
+<i data-l="ATELIER" style="--r:-4deg;--x:-160px;--y:200px;animation-delay:1s"></i>
+<i data-l="DRIFT &amp; CO." style="--r:14deg;--x:240px;--y:160px;animation-delay:1.5s"></i>
+</div><div class="frame__id">E414</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E415 · Shred Reveal <b>★</b></div><div class="frame frame--light"><div class="e415">
+<i>NEW</i><i>DROP</i><i>VOL</i><i>.07</i>
+</div><div class="frame__id">E415</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E416 · Scribble Mark</div><div class="frame"><div class="e416"><svg viewBox="0 0 1080 800">
+<path d="M 60 400 Q 200 200, 380 400 T 700 400 Q 900 200, 1020 400 M 60 500 Q 200 700, 380 500 T 700 500 Q 900 700, 1020 500 M 540 100 L 540 700"/>
+</svg></div><div class="frame__id">E416</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E417 · Emoji Rain <b>★</b></div><div class="frame"><div class="e417" id="e417host"></div><div class="frame__id">E417</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E418 · Photo Ken Burns <b>★</b></div><div class="frame"><div class="e418"><div class="e418__img"></div><div class="e418__t">into the drift</div><div class="e418__sub">EPISODE 04</div></div><div class="frame__id">E418</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E419 · Hashtag Burst <b>★</b></div><div class="frame"><div class="e419"><div class="e419__t">#driftvibes</div></div><div class="frame__id">E419</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E420 · Quote Carousel <b>★</b></div><div class="frame frame--light"><div class="e420"><div class="e420__r">
+<div class="slide"><div class="q">&ldquo;</div><div class="t">Design is just thinking made visible.</div><div class="a">SAUL BASS</div></div>
+<div class="slide"><div class="q">&ldquo;</div><div class="t">Less, but better.</div><div class="a">DIETER RAMS</div></div>
+<div class="slide"><div class="q">&ldquo;</div><div class="t">Form follows function.</div><div class="a">SULLIVAN</div></div>
+</div></div><div class="frame__id">E420</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E421 · Menu Dropdown <b>★</b></div><div class="frame"><div class="e421">
+<div class="e421__bar"><div class="logo">drift</div><nav><span>WORK</span><span>ABOUT</span><span>CONTACT</span></nav></div>
+<div class="e421__menu"><i>HOME</i><i>STUDIOS</i><i>ARCHIVE</i><i>JOURNAL</i></div>
+</div><div class="frame__id">E421</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E422 · Button Slide <b>★</b></div><div class="frame frame--light"><div class="e422"><div class="btn"><span>start now</span></div></div><div class="frame__id">E422</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E423 · Dot Grid Pulse <b>★</b></div><div class="frame"><div class="e423"><div class="e423__g"></div><div class="e423__c"></div><div class="e423__t">SIGNAL</div></div><div class="frame__id">E423</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E424 · Stagger Card Flip <b>★</b></div><div class="frame"><div class="e424" id="e424host"></div><div class="frame__id">E424</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E425 · Brush Mark Trace</div><div class="frame frame--light"><div class="e425"><svg viewBox="0 0 800 800">
+<path d="M 200 200 L 600 200 M 400 100 L 400 700 M 100 500 Q 400 700, 700 500"/>
+</svg></div><div class="frame__id">E425</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E426 · Vintage Projector <b>★</b></div><div class="frame"><div class="e426"><div class="e426__bg"></div><div class="e426__grain"></div><div class="e426__t">A FILM BY DRIFT</div></div><div class="frame__id">E426</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E427 · Zine Cutouts <b>★</b></div><div class="frame"><div class="e427">
+<i style="left:60px;top:120px;animation-delay:0s">NEW!</i>
+<i class="b" style="right:80px;top:240px;animation-delay:.3s;transform:rotate(8deg)">2024</i>
+<i class="r" style="left:100px;bottom:340px;animation-delay:.6s;transform:rotate(-6deg)">VOL.07</i>
+<i style="right:60px;bottom:140px;animation-delay:.9s;transform:rotate(4deg)">DROP NOW</i>
+<div class="e427__t">drift zine</div>
+</div><div class="frame__id">E427</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E428 · Editorial Split <b>★</b></div><div class="frame"><div class="e428">
+<div class="e428__top">VOL</div>
+<div class="e428__bot">07</div>
+<div class="e428__num">04 / 2024</div>
+</div><div class="frame__id">E428</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E429 · Stretch Type <b>★</b></div><div class="frame"><div class="e429"><div class="e429__t">STRETCH</div></div><div class="frame__id">E429</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E430 · Terminal Type <b>★</b></div><div class="frame"><div class="e430">
+<div class="ln">$ drift init project</div>
+<div class="ln">→ creating workspace...</div>
+<div class="ln">→ installing dependencies...</div>
+<div class="ln">→ build complete</div>
+<div class="ln">→ deploying to production...</div>
+<div class="ln">✓ live at drift.co/v7</div>
+</div><div class="frame__id">E430</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E431 · Sticker Pop <b>★</b></div><div class="frame"><div class="e431"><div class="e431__s">SOLD<br>OUT</div></div><div class="frame__id">E431</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E432 · 3-Card Stagger Reveal <b>★</b></div><div class="frame"><div class="e432">
+<div class="card"><div class="num">01</div><div class="h">Discover</div><div class="b">Find what fits, not what's loud.</div></div>
+<div class="card"><div class="num">02</div><div class="h">Design</div><div class="b">Make it move and make it last.</div></div>
+<div class="card"><div class="num">03</div><div class="h">Deliver</div><div class="b">Ship it. Then ship it again.</div></div>
+</div><div class="frame__id">E432</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E433 · Tape Stickers <b>★</b></div><div class="frame"><div class="e433"><div class="e433__bg">PIN IT</div>
+<i style="left:40px;top:80px;width:300px;--r:-10deg"></i>
+<i style="right:60px;top:240px;width:340px;--r:8deg;animation-delay:.3s"></i>
+<i style="left:140px;bottom:280px;width:280px;--r:-4deg;animation-delay:.6s"></i>
+<i style="right:80px;bottom:120px;width:320px;--r:6deg;animation-delay:.9s"></i>
+</div><div class="frame__id">E433</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E434 · Spiral Text</div><div class="frame"><div class="e434"><div class="e434__c"><svg viewBox="0 0 900 900">
+<defs><path id="spP1" d="M 450,450 m -350,0 a 350,350 0 1,1 700,0 a 350,350 0 1,1 -700,0"/>
+<path id="spP2" d="M 450,450 m -250,0 a 250,250 0 1,1 500,0 a 250,250 0 1,1 -500,0"/>
+<path id="spP3" d="M 450,450 m -150,0 a 150,150 0 1,1 300,0 a 150,150 0 1,1 -300,0"/></defs>
+<text><textPath href="#spP1">DRIFT · DESIGN · MOTION · BRAND · STUDIO · 2024 · DRIFT · DESIGN · MOTION · BRAND ·</textPath></text>
+<text><textPath href="#spP2">VOL.07 · NEW DROP · VOL.07 · NEW DROP · VOL.07 · NEW DROP · VOL.07 · NEW DROP ·</textPath></text>
+<text><textPath href="#spP3">★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ · ★ ·</textPath></text>
+</svg></div></div><div class="frame__id">E434</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E435 · Photo Grid Pop <b>★</b></div><div class="frame"><div class="e435">
+<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+</div><div class="frame__id">E435</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E436 · Brand Burst <b>★</b></div><div class="frame"><div class="e436" id="e436host"><div class="e436__c">drift</div></div><div class="frame__id">E436</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E437 · Color Bar Swipe <b>★</b></div><div class="frame"><div class="e437"><i></i><i></i><i></i><i></i><div class="e437__t">CUT</div></div><div class="frame__id">E437</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E438 · Wiggle Logo <b>★</b></div><div class="frame"><div class="e438"><div class="e438__l">drift</div></div><div class="frame__id">E438</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E439 · Podcast Title Card <b>★</b></div><div class="frame"><div class="e439">
+<div class="e439__lbl">EPISODE 04 · APR 2024</div>
+<div class="e439__t">into the drift</div>
+<div class="e439__h">how studios stay weird at scale, with mira okafor</div>
+<div class="e439__row"><div class="av"></div><div class="meta"><div class="n">Mira Okafor</div><div class="r">DIRECTOR · DRIFT &amp; CO.</div></div></div>
+<div class="e439__bars" id="e439bars"></div>
+</div><div class="frame__id">E439</div></div></div>
+
+<div class="cell"><div class="cell__lbl">E440 · Finale Stinger <b>★</b></div><div class="frame"><div class="e440"><div class="e440__bg"></div><div class="e440__c">that's a wrap.<small>DRIFT &amp; CO. · 2024</small></div></div><div class="frame__id">E440</div></div></div>
+
+</div>
+
+<script>
+function rng(s){return()=>{s=(s*9301+49297)%233280;return s/233280}}
+// E417 emoji rain
+(function(){const host=document.getElementById('e417host');if(!host)return;
+  const r=rng(7);const e=['❤','★','✿','♥','✦','🌸','✨','♡','⭐','💫'];
+  for(let i=0;i<26;i++){const el=document.createElement('i');
+    el.textContent=e[Math.floor(r()*e.length)];
+    el.style.left=(r()*100)+'%';
+    el.style.animationDelay=(-r()*5)+'s';
+    el.style.animationDuration=(4+r()*3)+'s';
+    host.appendChild(el);}})();
+// E424 stagger flip
+(function(){const host=document.getElementById('e424host');if(!host)return;
+  const r=rng(11);
+  for(let i=0;i<12;i++){const e=document.createElement('i');
+    e.style.animationDelay=(r()*1.5)+'s';host.appendChild(e);}})();
+// E436 brand burst small text
+(function(){const host=document.getElementById('e436host');if(!host)return;
+  const r=rng(13);const words=['NEW','DROP','VOL.07','DRIFT','★','2024','GO','YES','BIG'];
+  for(let i=0;i<28;i++){const e=document.createElement('i');
+    e.textContent=words[Math.floor(r()*words.length)];
+    const a=(i/28)*Math.PI*2;const d=400+r()*700;
+    e.style.setProperty('--dx',(Math.cos(a)*d)+'px');
+    e.style.setProperty('--dy',(Math.sin(a)*d)+'px');
+    e.style.left='50%';e.style.top='50%';
+    e.style.animationDelay=(r()*1.5)+'s';
+    host.appendChild(e);}})();
+// E439 waveform bars
+(function(){const host=document.getElementById('e439bars');if(!host)return;
+  const r=rng(17);
+  for(let i=0;i<40;i++){const e=document.createElement('i');
+    e.style.setProperty('--h',(40+r()*60)+'%');
+    e.style.animationDelay=(r()*1.2)+'s';
+    host.appendChild(e);}})();
+</script>
+</body>
+</html>
