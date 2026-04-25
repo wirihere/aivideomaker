@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SaaS Product Tour — 30s landscape (kinetic-pop)</title>
+
+<!--
+  VERTICAL TEMPLATE — SAAS PRODUCT TOUR (30s, 1920×1080)
+  ======================================================
+  Vertical:      Software / B2B SaaS / DevTools / productivity / collaboration.
+  Format:        Landscape 30-second product tour.
+  Base template: kinetic-pop (snappy pace, bold display sans).
+  Recommended LUT: --lut=pop --strength=0.9
+  Scenes:
+    1.  0–5s   Tagline + brand mark — wordmark stamp + tagline cascade.
+    2.  5–15s  Three features — UI screenshot tiles + benefit text, staggered.
+    3. 15–22s  Social proof — customer logos row + "Used by N teams" counter.
+    4. 22–28s  Pricing — chip + "Free trial" callout + glitter.
+    5. 28–30s  CTA — "Start free → URL".
+
+  ASSET SLOTS:
+    - Brand wordmark text in #s1-mark (replace "BRAND").
+    - Three UI screenshots: #s2-shot-1, #s2-shot-2, #s2-shot-3
+        (clean state, no PII, dark or light to match brand).
+    - Six customer logos: #s3-logo-1 … #s3-logo-6 (SVG or PNG, mono).
+    - Used-by-count digit: #s3-counter-num (target value in text content).
+    - Pricing chip text: #s4-pricing-chip (e.g. "FREE FOREVER" / "FROM $9/MO").
+    - CTA URL: #s5-url.
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`
+       (rewrite `../../design/` → `design/` once relocated).
+    3. Fill in placeholder copy (BRAND, tagline, features, pricing, URL).
+    4. Drop UI screenshots into `assets/` and update the <img src> attrs.
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-navy, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 140px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 22px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Tagline + brand mark ---- */
+  .s1 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-mark {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 220px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+  }
+  .s1-mark-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s1-tagline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 64px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--card-paper, #FBF9F6);
+    margin-top: 36px;
+    max-width: 1400px;
+    text-align: center;
+  }
+  .s1-problem {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--card-paper-soft, #d7dce3);
+    margin-top: 20px;
+    max-width: 1100px;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  /* ---- Scene 2: Three features ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s2-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px;
+    width: 100%;
+    max-width: 1640px;
+  }
+  .s2-cell {
+    display: flex; flex-direction: column;
+    align-items: stretch; text-align: left;
+  }
+  .s2-shot {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--card-navy, #0E0E12);
+    border-radius: 18px;
+    margin-bottom: 26px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 12px 30px rgba(8, 12, 18, 0.18);
+    overflow: hidden;
+    position: relative;
+  }
+  .s2-shot::after {
+    /* Subtle "browser chrome" suggestion for placeholder screenshots. */
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .s2-shot-label {
+    font-family: var(--card-font-ui);
+    font-size: 22px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--card-paper-soft, #d7dce3);
+    opacity: 0.55;
+  }
+  .s2-feature-title {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 56px;
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    color: var(--card-navy, #0E0E12);
+    margin: 0 0 12px 0;
+  }
+  .s2-feature-body {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* ---- Scene 3: Social proof — logos + counter ---- */
+  .s3 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; width: 100%; max-width: 1640px;
+  }
+  .s3-counter-wrap {
+    display: flex; align-items: baseline; justify-content: center;
+    margin-bottom: 36px;
+  }
+  .s3-counter-num {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    color: var(--card-paper, #FBF9F6);
+    font-variant-numeric: tabular-nums;
+  }
+  .s3-counter-suffix {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: -0.02em;
+    margin-left: 8px;
+    line-height: 1.0;
+  }
+  .s3-counter-label {
+    font-family: var(--card-font-ui);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--card-paper-soft, #d7dce3);
+    margin-bottom: 56px;
+    text-align: center;
+  }
+  .s3-logos {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 36px;
+    width: 100%;
+  }
+  .s3-logo {
+    height: 90px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-ui);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--card-paper-soft, #d7dce3);
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 4: Pricing chip + free trial callout ---- */
+  .s4 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s4-glitter-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s4-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-pricing-chip {
+    display: inline-block;
+    font-family: var(--card-font-ui);
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--card-paper, #FBF9F6);
+    background: var(--card-accent, #1A9E8F);
+    padding: 18px 32px;
+    border-radius: 999px;
+    margin-bottom: 36px;
+  }
+  .s4-headline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 160px;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    color: var(--card-navy, #0E0E12);
+    margin: 0;
+    text-align: center;
+    max-width: 1500px;
+  }
+  .s4-headline-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s4-sub {
+    font-family: var(--card-font-ui);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 24px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---- Scene 5: Start free CTA + URL ---- */
+  .s5 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 180px;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+  }
+  .s5-cta-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: 0.06em;
+    margin-top: 36px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="saas-product-tour-30s" class="comp clip"
+     data-composition-id="saas-product-tour-30s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — Tagline + brand mark (0–5s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="5" data-track-index="1"
+       data-scene-grade="noir">
+    <div class="s1-content">
+      <h1 id="s1-mark" class="s1-mark"><span id="s1-mark-em" class="s1-mark-em">BRAND</span></h1>
+      <div id="s1-tagline" class="s1-tagline">The fastest way to ship.</div>
+      <div id="s1-problem" class="s1-problem">For teams who want results, not meetings.</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Three features (5–15s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="5" data-duration="10" data-track-index="1">
+    <div class="s2-row">
+      <div id="s2-cell-1" class="s2-cell">
+        <div id="s2-shot-1" class="s2-shot">
+          <span class="s2-shot-label">UI screenshot 1</span>
+        </div>
+        <h3 id="s2-t1" class="s2-feature-title">Sync in seconds</h3>
+        <p class="s2-feature-body">Real-time collaboration that doesn't lag.</p>
+      </div>
+      <div id="s2-cell-2" class="s2-cell">
+        <div id="s2-shot-2" class="s2-shot">
+          <span class="s2-shot-label">UI screenshot 2</span>
+        </div>
+        <h3 id="s2-t2" class="s2-feature-title">Built-in automations</h3>
+        <p class="s2-feature-body">Drop-in workflows that ship in minutes.</p>
+      </div>
+      <div id="s2-cell-3" class="s2-cell">
+        <div id="s2-shot-3" class="s2-shot">
+          <span class="s2-shot-label">UI screenshot 3</span>
+        </div>
+        <h3 id="s2-t3" class="s2-feature-title">Plays with your stack</h3>
+        <p class="s2-feature-body">Native integrations with the tools you already use.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Social proof (15–22s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="15" data-duration="7" data-track-index="1">
+    <div class="s3-content">
+      <div class="s3-counter-wrap">
+        <span id="s3-counter-num" class="s3-counter-num fx-counter">12,000</span><span class="s3-counter-suffix">+</span>
+      </div>
+      <div id="s3-counter-label" class="s3-counter-label">TEAMS SHIPPING WITH US</div>
+      <div class="s3-logos">
+        <div id="s3-logo-1" class="s3-logo">CUSTOMER 1</div>
+        <div id="s3-logo-2" class="s3-logo">CUSTOMER 2</div>
+        <div id="s3-logo-3" class="s3-logo">CUSTOMER 3</div>
+        <div id="s3-logo-4" class="s3-logo">CUSTOMER 4</div>
+        <div id="s3-logo-5" class="s3-logo">CUSTOMER 5</div>
+        <div id="s3-logo-6" class="s3-logo">CUSTOMER 6</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Pricing + free trial (22–28s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="22" data-duration="6" data-track-index="1">
+    <div id="s4-glitter-host" class="s4-glitter-host"></div>
+    <div class="s4-content">
+      <div id="s4-pricing-chip" class="s4-pricing-chip">FREE FOREVER PLAN</div>
+      <h2 id="s4-headline" class="s4-headline">No card. <span id="s4-headline-em" class="s4-headline-em">No catch.</span></h2>
+      <div id="s4-sub" class="s4-sub">14-day trial on every paid tier.</div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA + URL (28–30s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="28" data-duration="2" data-track-index="1">
+    <div class="s5-content">
+      <h2 id="s5-cta" class="s5-cta"><span id="s5-cta-em" class="s5-cta-em">Start</span> free.</h2>
+      <div id="s5-url" class="s5-url">yourbrand.com/signup</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["saas-product-tour-30s"] = tl;
+
+  // ---- Scene 1: 0–5s — brand stamp + tagline cascade ----------------
+  textFx.stamp(tl, "#s1-mark", { at: 0.2, duration: 0.6, fromScale: 1.4 });
+  effectFx.glitchBurst(tl, "#s1-mark-em", { at: 0.9, duration: 0.18 });
+  textFx.cascade(tl, "#s1-tagline", { at: 1.3, duration: 0.7, stagger: 0.06 });
+  tl.fromTo("#s1-problem",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    2.4);
+
+  // ---- Scene 2: 5–15s — three feature tiles staggered ---------------
+  tl.fromTo(["#s2-cell-1", "#s2-cell-2", "#s2-cell-3"],
+    { y: 70, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, stagger: 0.18, ease: "back.out(1.4)" },
+    5.3);
+  tl.fromTo(["#s2-shot-1", "#s2-shot-2", "#s2-shot-3"],
+    { scale: 0.92, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, stagger: 0.18, ease: "power3.out" },
+    5.5);
+  textFx.stagger(tl, "#s2-t1", { at: 6.0, duration: 0.5, stagger: 0.04, rotation: -8 });
+  textFx.stagger(tl, "#s2-t2", { at: 6.3, duration: 0.5, stagger: 0.04, rotation: -8 });
+  textFx.stagger(tl, "#s2-t3", { at: 6.6, duration: 0.5, stagger: 0.04, rotation: -8 });
+
+  // ---- Scene 3: 15–22s — counter + logos row ------------------------
+  tl.fromTo("#s3-counter-num",
+    { scale: 0.8, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)" },
+    15.3);
+  textFx.counter(tl, "#s3-counter-num", { at: 15.5, duration: 1.6, from: 0, ease: "power2.out" });
+  tl.fromTo("#s3-counter-label",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    16.6);
+  tl.fromTo([
+      "#s3-logo-1", "#s3-logo-2", "#s3-logo-3",
+      "#s3-logo-4", "#s3-logo-5", "#s3-logo-6"
+    ],
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.55, stagger: 0.08, ease: "power3.out" },
+    17.4);
+
+  // ---- Scene 4: 22–28s — pricing chip + free-trial callout ----------
+  tl.fromTo("#s4-pricing-chip",
+    { scale: 0.8, opacity: 0, y: -10 },
+    { scale: 1, opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.6)" },
+    22.3);
+  textFx.cascade(tl, "#s4-headline", { at: 22.9, duration: 0.7, stagger: 0.07 });
+  effectFx.glitchBurst(tl, "#s4-headline-em", { at: 23.7, duration: 0.18 });
+  glitterFx.burst(tl, "#s4-glitter-host", {
+    at: 23.5, count: 56, duration: 1.4, seed: 31, distance: 660
+  });
+  tl.fromTo("#s4-sub",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    24.8);
+
+  // ---- Scene 5: 28–30s — Start free + URL ---------------------------
+  tl.fromTo("#s5-cta",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    28.2);
+  effectFx.glitchBurst(tl, "#s5-cta-em", { at: 28.6, duration: 0.18 });
+  tl.fromTo("#s5-url",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    28.9);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-url"], { opacity: 0.92, duration: 0.3 }, 29.6);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

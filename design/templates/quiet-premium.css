@@ -1,0 +1,86 @@
+/* =========================================================================
+   TEMPLATE — QUIET PREMIUM
+   =========================================================================
+   Vibe: spacious, minimal, considered. Light sans display, generous
+   whitespace, mid pacing, near-zero shadows. Pairs with luxury, fintech,
+   B2B SaaS, anything that wants to read "expensive".
+
+   Layer order:
+     1. design/cards.css
+     2. design/templates/quiet-premium.css  ← this file
+     3. design/tokens-<brand>.css
+     4. design/effects-batch-08.css
+
+   Pacing recipe:
+     scene fast: 2.0s  · scene mid: 3.4s  · scene slow: 5.2s
+     ease in:   power1.out
+     ease out:  power1.in
+     stagger:   0.12s
+
+   Render hint:
+     node scripts/render.mjs --lut=cool --strength=0.55
+   ========================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+
+:root {
+  /* Pacing — calm, mid-tempo. */
+  --pace-fast: 2.0s;
+  --pace-mid:  3.4s;
+  --pace-slow: 5.2s;
+
+  /* Easing — gentle, refined. */
+  --ease-in:    cubic-bezier(0.33, 1, 0.68, 1);      /* power1.out */
+  --ease-out:   cubic-bezier(0.32, 0, 0.67, 0);      /* power1.in */
+  --ease-inout: cubic-bezier(0.45, 0, 0.55, 1);      /* sine.inOut */
+
+  /* Type — light Inter, never above 600 weight. */
+  --card-font-display:  "Inter", system-ui, -apple-system, sans-serif;
+  --card-font-ui:       "Inter", system-ui, -apple-system, sans-serif;
+
+  --card-title-size:    62px;
+  --card-title-weight:  300;          /* light — the whole vibe */
+  --card-title-track:   -0.022em;
+  --card-title-line:    1.10;
+
+  --card-kicker-size:   16px;
+  --card-kicker-track:  0.28em;
+
+  --card-body-size:     24px;
+  --card-body-line:     1.55;
+
+  --card-label-size:    18px;
+  --card-label-track:   0.20em;
+
+  /* Shadows — almost invisible. */
+  --vibe-shadow-soft:  0 1px 2px rgba(0, 0, 0, 0.04),
+                       0 8px 16px rgba(0, 0, 0, 0.06);
+  --vibe-shadow-press: 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.scene { background: var(--card-paper, #FAFAFA); }
+
+.fx-film-grain { opacity: 0.04; }
+
+/* Long-shadow disabled — clashes with the vibe. Use solid strokes instead. */
+.fx-long-shadow { text-shadow: none; }
+
+/* Cinemagraph muted to barely-there — saturation drops, blur up. */
+.fx-cinemagraph-bg::before {
+  animation-duration: 48s;
+  opacity: 0.35;
+  filter: blur(160px) saturate(0.7);
+}
+
+/* Generous container padding — let the content breathe. */
+.scene { padding: 96px 120px; }
+
+/* Hairline divider utility — the quiet-premium calling card. */
+.vibe-rule {
+  display: block;
+  width: 80px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.32;
+  margin: 24px 0;
+}

@@ -1,0 +1,66 @@
+{
+  "template": "kinetic-pop",
+  "vibe": "scroll-stopping, synth-driven, drum-heavy, 110-130 BPM",
+  "vibe_long": "Scroll-stopping. Synth-driven, drum-heavy, 110-130 BPM. The kick should land on every transition. Vocals OK if non-committal (no clear lyrics). Tracks should grab not welcome.",
+  "bpm_range": [110, 130],
+  "default_volume": 0.30,
+  "search_keywords": [
+    "upbeat electronic motivational energetic",
+    "tiktok trending energetic beat",
+    "epic build drop pop dance",
+    "energetic upbeat pop"
+  ],
+  "tracks": [
+    {
+      "slug": "energetic-inspiring-pop",
+      "title": "Energetic Inspiring Pop (Motivational Positive Electronic Pop)",
+      "url": "https://pixabay.com/music/electronic-energetic-inspiring-pop-motivational-positive-electronic-pop-484943/",
+      "duration": 126,
+      "bpm": 120,
+      "tags": ["electronic", "pop", "tropical", "motivational", "inspirational"],
+      "character": "Tropical-electronic pop with confident kick, scroll-native energy",
+      "best_for": "Default Kinetic Pop bed; DTC and lifestyle brands"
+    },
+    {
+      "slug": "upbeat-energetic-pop",
+      "title": "Upbeat Energetic Pop",
+      "url": "https://pixabay.com/music/pop-upbeat-energetic-pop-151329/",
+      "duration": 124,
+      "bpm": 122,
+      "tags": ["pop", "upbeat", "summer", "indie", "synth"],
+      "character": "Modern energetic upbeat summer pop, bright drums, clean electric guitar, analog synth",
+      "best_for": "Hook-heavy ads with kicks on every cut"
+    },
+    {
+      "slug": "upbeat-motivational-dance-pop",
+      "title": "Upbeat Motivational Dance Pop",
+      "url": "https://pixabay.com/music/pop-upbeat-motivational-dance-pop-227623/",
+      "duration": 144,
+      "bpm": 128,
+      "tags": ["dance", "pop", "motivational", "sport", "intro"],
+      "character": "Sport-intro pop dance with optimistic motivational arc",
+      "best_for": "Fitness, sports, anything with a CTA push"
+    },
+    {
+      "slug": "upbeat-uplifting-pop",
+      "title": "Upbeat Uplifting Pop",
+      "url": "https://pixabay.com/music/pop-upbeat-uplifting-pop-153875/",
+      "duration": 156,
+      "bpm": 118,
+      "tags": ["pop", "upbeat", "uplifting"],
+      "character": "Uplifting pop with clear build and chorus drops",
+      "best_for": "Reveal-heavy beat sheets with pre-chorus energy"
+    },
+    {
+      "slug": "kinetic-01-motivational",
+      "title": "Kinetic Motivational (kinetic-01 audition)",
+      "url": "https://pixabay.com/music/search/upbeat%20electronic%20motivational%20energetic/",
+      "duration": 128,
+      "bpm": 124,
+      "tags": ["electronic", "motivational", "upbeat"],
+      "character": "Upbeat electronic motivational energy",
+      "best_for": "Generic Kinetic Pop fallback when a stronger track isn't available",
+      "local_file": "assets/music/kinetic-01-motivational.mp3"
+    }
+  ]
+}

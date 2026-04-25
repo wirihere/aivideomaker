@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FAQ Quick — 30s vertical (quiet-premium)</title>
+
+<!--
+  STRUCTURAL TEMPLATE — FAQ QUICK (30s, 1080×1920)
+  ================================================
+  Format:        Vertical 30-second three-question FAQ explainer.
+  Base template: quiet-premium (spacious, light Inter, generous whitespace).
+  Recommended LUT: --lut=cool --strength=0.55
+  Scenes:
+    1.  0–4s   Brand chip — wordmark + kicker
+    2.  4–12s  Q1 + A1 — fade-up + hairline rule
+    3. 12–20s  Q2 + A2 — fade-up + hairline rule
+    4. 20–28s  Q3 + A3 — fade-up + hairline rule
+    5. 28–30s  CTA — wordmark + URL
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy (Q1/A1, Q2/A2, Q3/A3, CTA, URL).
+    4. Run: npx hyperframes preview     (sanity check)
+    5. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — quiet-premium sets calm pace, light Inter. -->
+<link rel="stylesheet" href="../../design/templates/quiet-premium.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FAFAFA); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #FAFAFA);
+    color: var(--card-navy, #0F1115);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 160px 96px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size, 16px);
+    letter-spacing: var(--card-kicker-track, 0.28em);
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--card-accent, #5A7BAE);
+    margin-bottom: 36px;
+    opacity: 0.9;
+  }
+
+  .vibe-rule {
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.32;
+    margin: 28px 0;
+  }
+
+  /* ---- Scene 1: Brand chip ---- */
+  .s1 {
+    background: var(--card-paper, #FAFAFA);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-mark {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 180px;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    color: var(--card-navy, #0F1115);
+    margin: 0;
+  }
+  .s1-tag {
+    font-family: var(--card-font-ui);
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 36px;
+  }
+
+  /* ---- Q+A scenes ---- */
+  .qa-content {
+    display: flex; flex-direction: column;
+    align-items: flex-start; text-align: left;
+    width: 100%; max-width: 880px;
+  }
+  .qa-num {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 96px;
+    color: var(--card-accent, #5A7BAE);
+    line-height: 1;
+    margin-bottom: 36px;
+    letter-spacing: -0.02em;
+  }
+  .qa-question {
+    font-family: var(--card-font-display);
+    font-weight: 400;
+    font-size: 84px;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--card-navy, #0F1115);
+    margin: 0;
+    max-width: 880px;
+  }
+  .qa-answer {
+    font-family: var(--card-font-ui);
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.45;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin: 28px 0 0 0;
+    max-width: 880px;
+  }
+  .qa-rule {
+    width: 80px;
+    height: 1px;
+    background: var(--card-slate-ink, #4b5a6d);
+    opacity: 0.32;
+    margin: 32px 0;
+    display: block;
+    transform-origin: left center;
+  }
+
+  /* ---- Scene 5: CTA ---- */
+  .s5 {
+    background: var(--card-navy, #0F1115);
+    color: var(--card-paper, #FAFAFA);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 140px;
+    color: var(--card-paper, #FAFAFA);
+    letter-spacing: -0.025em;
+    line-height: 1.0;
+    margin: 0;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-weight: 400;
+    font-size: 36px;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: 0.10em;
+    margin-top: 32px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="faq-quick-30s" class="comp clip"
+     data-composition-id="faq-quick-30s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — Brand chip (0–4s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="4" data-track-index="1"
+       data-scene-grade="soft">
+    <div class="s1-content">
+      <div class="scene__kicker">FREQUENTLY ASKED</div>
+      <h1 id="s1-mark" class="s1-mark">BRAND</h1>
+      <div id="s1-tag" class="s1-tag">QUESTIONS, ANSWERED</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Q1 + A1 (4–12s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="4" data-duration="8" data-track-index="1">
+    <div class="qa-content">
+      <div id="s2-num" class="qa-num">01</div>
+      <h2 id="s2-q" class="qa-question">How does it actually work?</h2>
+      <div id="s2-rule" class="qa-rule"></div>
+      <p id="s2-a" class="qa-answer">A clear, one-sentence answer that respects the viewer's time. No fluff, no jargon — just the mechanism.</p>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Q2 + A2 (12–20s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="12" data-duration="8" data-track-index="1">
+    <div class="qa-content">
+      <div id="s3-num" class="qa-num">02</div>
+      <h2 id="s3-q" class="qa-question">What does it cost?</h2>
+      <div id="s3-rule" class="qa-rule"></div>
+      <p id="s3-a" class="qa-answer">A direct answer with the actual number — and what's included for that price. Honest beats clever every time.</p>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Q3 + A3 (20–28s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="20" data-duration="8" data-track-index="1">
+    <div class="qa-content">
+      <div id="s4-num" class="qa-num">03</div>
+      <h2 id="s4-q" class="qa-question">Is it right for me?</h2>
+      <div id="s4-rule" class="qa-rule"></div>
+      <p id="s4-a" class="qa-answer">The honest qualifier — who it's for, who it isn't. Confident enough to send the wrong people elsewhere.</p>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA (28–30s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="28" data-duration="2" data-track-index="1">
+    <div class="s5-content">
+      <h2 id="s5-cta" class="s5-cta">Read more.</h2>
+      <div id="s5-url" class="s5-url">yourbrand.com/faq</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["faq-quick-30s"] = tl;
+
+  // ---- Scene 1: 0–4s — brand chip -----------------------------------
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
+    0.4);
+  textFx.cascade(tl, "#s1-mark", { at: 0.9, duration: 0.7, stagger: 0.10 });
+  tl.fromTo("#s1-tag",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
+    2.2);
+
+  // ---- Scene 2: 4–12s — Q1 + A1 -------------------------------------
+  tl.fromTo("#s2-num",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
+    4.2);
+  textFx.cascade(tl, "#s2-q", { at: 4.8, duration: 0.8, stagger: 0.10 });
+  tl.fromTo("#s2-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.7, ease: "power1.out" },
+    7.0);
+  tl.fromTo("#s2-a",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
+    7.4);
+
+  // ---- Scene 3: 12–20s — Q2 + A2 ------------------------------------
+  tl.fromTo("#s3-num",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
+    12.2);
+  textFx.cascade(tl, "#s3-q", { at: 12.8, duration: 0.8, stagger: 0.10 });
+  tl.fromTo("#s3-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.7, ease: "power1.out" },
+    15.0);
+  tl.fromTo("#s3-a",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
+    15.4);
+
+  // ---- Scene 4: 20–28s — Q3 + A3 ------------------------------------
+  tl.fromTo("#s4-num",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
+    20.2);
+  textFx.cascade(tl, "#s4-q", { at: 20.8, duration: 0.8, stagger: 0.10 });
+  tl.fromTo("#s4-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.7, ease: "power1.out" },
+    23.0);
+  tl.fromTo("#s4-a",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
+    23.4);
+
+  // ---- Scene 5: 28–30s — CTA ----------------------------------------
+  tl.fromTo("#s5-cta",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
+    28.2);
+  tl.fromTo("#s5-url",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power1.out" },
+    28.7);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-url"], { opacity: 0.92, duration: 0.3 }, 29.5);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

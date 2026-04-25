@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Testimonial — 45s landscape (warm-community)</title>
+
+<!--
+  STRUCTURAL TEMPLATE — TESTIMONIAL (45s, 1920×1080)
+  ==================================================
+  Format:        Landscape 45-second customer testimonial.
+  Base template: warm-community (organic, human, editorial serif, soft motion).
+  Recommended LUT: --lut=warm --strength=0.9
+  Scenes:
+    1.  0–8s   Setup — "meet our customer" frame + photo placeholder
+    2.  8–22s  Quote pull-out — long-shadow open quote + per-letter stagger
+    3. 22–34s  Outcome stat — counter + ambient sparkle
+    4. 34–42s  Name reveal — name + role chip + portrait re-entry
+    5. 42–45s  CTA — wordmark + URL
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy (NAME, ROLE, QUOTE, STAT).
+    4. Run: npx hyperframes preview     (sanity check)
+    5. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — warm-community sets soft pace, editorial serif. -->
+<link rel="stylesheet" href="../../design/templates/warm-community.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FBF9F6); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #1B2A3D);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 160px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size, 24px);
+    letter-spacing: var(--card-kicker-track, 0.18em);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.95;
+  }
+
+  /* ---- Scene 1: Setup — meet our customer ---- */
+  .s1 {
+    background: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 96px;
+    width: 100%; max-width: 1500px;
+    justify-content: center;
+  }
+  .s1-photo {
+    width: 420px; height: 420px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,
+      var(--card-accent, #1A9E8F) 0%,
+      var(--card-paper-soft, #F5EFE6) 100%);
+    box-shadow: var(--vibe-shadow-soft, 0 18px 36px rgba(28,30,38,0.10));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-size: 200px;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .s1-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s1-headline {
+    font-family: var(--card-font-display);
+    font-size: 84px;
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    line-height: 1.06;
+    color: var(--card-navy, #1B2A3D);
+    margin: 0;
+    max-width: 720px;
+  }
+  .s1-support {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.45;
+    margin-top: 28px;
+    max-width: 680px;
+  }
+
+  /* ---- Scene 2: Quote pull-out — long-shadow + per-letter stagger ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    max-width: 1500px;
+  }
+  .s2-quote-mark {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 280px;
+    color: var(--card-accent, #1A9E8F);
+    line-height: 0.6;
+    margin-bottom: 36px;
+  }
+  .s2-quote {
+    font-family: var(--card-font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 84px;
+    line-height: 1.16;
+    color: var(--card-navy, #1B2A3D);
+    letter-spacing: -0.012em;
+    margin: 0;
+    max-width: 1500px;
+    text-align: center;
+  }
+
+  /* ---- Scene 3: Outcome stat with ambient sparkle ---- */
+  .s3 {
+    background: var(--card-navy, #1B2A3D);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-sparkle-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s3-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-kicker {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    letter-spacing: 0.32em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 36px;
+  }
+  .s3-stat {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 320px;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-stat-suffix {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 200px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: -0.03em;
+    margin-left: 10px;
+  }
+  .s3-label {
+    font-family: var(--card-font-ui);
+    font-weight: 600;
+    font-size: 36px;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-top: 24px;
+    max-width: 1100px;
+  }
+
+  /* ---- Scene 4: Name reveal — name + role chip + portrait ---- */
+  .s4 {
+    background: var(--card-paper, #FBF9F6);
+  }
+  .s4-content {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 80px;
+    width: 100%; max-width: 1500px;
+    justify-content: center;
+  }
+  .s4-photo {
+    width: 360px; height: 360px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,
+      var(--card-accent, #1A9E8F) 0%,
+      var(--card-paper-soft, #F5EFE6) 100%);
+    box-shadow: var(--vibe-shadow-soft, 0 18px 36px rgba(28,30,38,0.10));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-size: 170px;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .s4-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s4-name {
+    font-family: var(--card-font-display);
+    font-size: 110px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    color: var(--card-navy, #1B2A3D);
+    margin: 0;
+  }
+  .s4-role-chip {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 5: CTA + URL ---- */
+  .s5 {
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 130px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    margin: 0;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: 0.06em;
+    margin-top: 28px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="testimonial-45s" class="comp clip"
+     data-composition-id="testimonial-45s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="45" data-track-index="0">
+
+  <!-- Scene 1 — Setup (0–8s): meet our customer -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="8" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="s1-content">
+      <div id="s1-photo" class="s1-photo">A</div>
+      <div class="s1-text">
+        <div class="scene__kicker">CUSTOMER STORY</div>
+        <h1 id="s1-headline" class="s1-headline">Meet a customer whose story rings true.</h1>
+        <p id="s1-support" class="s1-support">A short setup line — what they were trying to do, what got in the way.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Quote pull-out (8–22s): long-shadow + stagger -->
+  <div id="s2" class="scene s2 clip"
+       data-start="8" data-duration="14" data-track-index="1">
+    <div class="s2-content">
+      <div id="s2-quote-mark" class="s2-quote-mark fx-long-shadow">&ldquo;</div>
+      <blockquote id="s2-quote" class="s2-quote">It changed how I approach the whole thing. Honestly the easiest decision I've made all year.</blockquote>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Outcome stat (22–34s): counter + ambient sparkle -->
+  <div id="s3" class="scene s3 clip"
+       data-start="22" data-duration="12" data-track-index="1">
+    <div id="s3-sparkle-host" class="s3-sparkle-host"></div>
+    <div class="s3-content">
+      <div id="s3-kicker" class="s3-kicker">THE OUTCOME</div>
+      <div style="display:flex;align-items:baseline;justify-content:center;">
+        <span id="s3-stat" class="s3-stat fx-counter">62</span><span id="s3-stat-suffix" class="s3-stat-suffix">%</span>
+      </div>
+      <div id="s3-label" class="s3-label">LESS TIME ON ADMIN, EVERY WEEK</div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Name reveal (34–42s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="34" data-duration="8" data-track-index="1">
+    <div class="s4-content">
+      <div id="s4-photo" class="s4-photo">A</div>
+      <div class="s4-text">
+        <div id="s4-name" class="s4-name">Alex Rivera</div>
+        <span id="s4-role" class="s4-role-chip">FOUNDER · STUDIO NORTH</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA (42–45s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="42" data-duration="3" data-track-index="1">
+    <div class="s5-content">
+      <h2 id="s5-cta" class="s5-cta">Read the full story.</h2>
+      <div id="s5-url" class="s5-url">yourbrand.com/customers</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["testimonial-45s"] = tl;
+
+  // ---- Scene 1: 0–8s — setup, photo + headline ---------------------
+  tl.fromTo("#s1-photo",
+    { scale: 0.7, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.9, ease: "back.out(1.4)" },
+    0.4);
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    0.8);
+  textFx.cascade(tl, "#s1-headline", { at: 1.2, duration: 0.8, stagger: 0.10 });
+  tl.fromTo("#s1-support",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    3.4);
+
+  // ---- Scene 2: 8–22s — quote pull-out ------------------------------
+  tl.fromTo("#s2-quote-mark",
+    { scale: 0.6, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 1.0, ease: "back.out(1.4)" },
+    8.4);
+  textFx.stagger(tl, "#s2-quote",
+    { at: 9.4, duration: 0.7, stagger: 0.018, rotation: -3, fromY: 14 });
+
+  // ---- Scene 3: 22–34s — outcome stat + ambient sparkle ------------
+  glitterFx.ambient(tl, "#s3-sparkle-host", {
+    at: 22.0, count: 42, duration: 12.0, seed: 19
+  });
+  tl.fromTo("#s3-kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    22.4);
+  tl.fromTo(["#s3-stat", "#s3-stat-suffix"],
+    { scale: 0.85, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.8, stagger: 0.10, ease: "back.out(1.5)" },
+    22.8);
+  textFx.counter(tl, "#s3-stat", { at: 23.2, duration: 2.0, from: 0, ease: "power2.out" });
+  tl.fromTo("#s3-label",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    25.6);
+
+  // ---- Scene 4: 34–42s — name reveal --------------------------------
+  tl.fromTo("#s4-photo",
+    { x: -80, scale: 0.85, opacity: 0 },
+    { x: 0, scale: 1, opacity: 1, duration: 0.9, ease: "power3.out" },
+    34.3);
+  textFx.cascade(tl, "#s4-name", { at: 35.0, duration: 0.7, stagger: 0.08 });
+  tl.fromTo("#s4-role",
+    { y: 18, scale: 0.9, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)" },
+    36.2);
+
+  // ---- Scene 5: 42–45s — CTA ----------------------------------------
+  tl.fromTo("#s5-cta",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    42.2);
+  tl.fromTo("#s5-url",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    42.8);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-url"], { opacity: 0.92, duration: 0.4 }, 44.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

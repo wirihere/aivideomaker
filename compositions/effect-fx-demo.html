@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>effect-fx demo</title>
+
+<link rel="stylesheet" href="../design/cards.css">
+<link rel="stylesheet" href="../design/templates/documentary.css">
+<link rel="stylesheet" href="../design/tokens-kindred.css">
+<link rel="stylesheet" href="../design/effects-batch-08.css">
+<link rel="stylesheet" href="../design/modules/all.css">
+
+<script src="../design/vendor/gsap.min.js"></script>
+<script src="../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #0E0E12; color: #FBF9F6; font-family: var(--card-font-ui); }
+  .demo {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: #0E0E12;
+  }
+  .scene {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    opacity: 0;
+  }
+  .scene[data-active="true"] { opacity: 1; }
+  .label-chip {
+    position: absolute; top: 60px; left: 80px;
+    font-family: var(--card-font-mono);
+    font-size: 16px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.65);
+    border: 1px solid rgba(251, 249, 246, 0.2);
+    padding: 8px 14px;
+    border-radius: 999px;
+  }
+
+  /* Scene A — multiplane dolly */
+  .stage-a .plane-bg   { font-size: 240px; color: rgba(26, 158, 143, 0.18); font-family: var(--card-font-display); font-weight: 600; }
+  .stage-a .plane-mid  { font-size: 96px;  color: var(--card-paper-soft, #F5EFE6); font-family: var(--card-font-display); font-weight: 500; }
+  .stage-a .plane-near { font-size: 28px;  color: rgba(251, 249, 246, 0.72); font-family: var(--card-font-mono); letter-spacing: 0.18em; text-transform: uppercase; }
+
+  /* Scene B — ink bleed */
+  .scene-b .ink-target {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 140px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.018em;
+  }
+
+  /* Scene C — glitch burst */
+  .scene-c .glitch-target {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 200px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: -0.03em;
+  }
+
+  /* Scene D — cinemagraph */
+  .scene-d {
+    --brand-primary: #1A9E8F;
+    --brand-secondary: #FBF9F6;
+    --brand-accent: #E98B6A;
+    --brand-tertiary: #14806F;
+  }
+  .scene-d .cg-content {
+    position: relative; z-index: 2;
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 96px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.02em;
+  }
+</style>
+</head>
+<body>
+<div id="demo" class="demo clip"
+     data-composition-id="effect-fx-demo"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="13" data-track-index="0">
+
+  <!-- Scene A — multiplane dolly (0–3s) -->
+  <div id="scene-a" class="scene scene-a clip"
+       data-start="0" data-duration="3" data-track-index="1">
+    <div class="label-chip">multiplaneDolly</div>
+    <div class="fx-multiplane">
+      <div id="stage-a" class="stage stage-a">
+        <div class="plane plane-bg">DEPTH</div>
+        <div class="plane plane-mid">Multiplane</div>
+        <div class="plane plane-near">CSS perspective camera</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene B — ink bleed (3–6s) — per-scene WARM grade -->
+  <div id="scene-b" class="scene scene-b clip"
+       data-start="3" data-duration="3" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="label-chip">inkBleed · warm grade</div>
+    <div id="ink-target" class="ink-target fx-bleed-ready">Ink Bleed</div>
+  </div>
+
+  <!-- Scene C — glitch burst (6–9s) — per-scene NOIR grade -->
+  <div id="scene-c" class="scene scene-c clip"
+       data-start="6" data-duration="3" data-track-index="1"
+       data-scene-grade="noir">
+    <div class="label-chip">glitchBurst · noir grade</div>
+    <div id="glitch-target" class="glitch-target">SIGNAL</div>
+  </div>
+
+  <!-- Scene D — cinemagraph (9–13s) -->
+  <div id="scene-d" class="scene scene-d clip"
+       data-start="9" data-duration="4" data-track-index="1">
+    <div class="label-chip">cinemagraphRotate</div>
+    <div id="cinemagraph-bg" class="fx-cinemagraph-bg"></div>
+    <div class="cg-content">Perpetual motion.</div>
+  </div>
+</div>
+
+<!-- SVG filter defs required by inkBleed + glitchBurst -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["effect-fx-demo"] = tl;
+
+  // Scene A: multiplane dolly (0–3s)
+  effectFx.multiplaneDolly(tl, "#stage-a", {
+    at: 0.0, duration: 3.0, from: -200, to: 80, ease: "power2.out"
+  });
+
+  // Scene B: ink bleed (3–6s) — drop in headline at 3.2 with bleed
+  effectFx.inkBleed(tl, "#ink-target", {
+    at: 3.2, duration: 0.9, from: 80, to: 0
+  });
+
+  // Scene C: glitch burst (6–9s) — short burst at 7.0
+  tl.from("#glitch-target", { scale: 1.4, opacity: 0, duration: 0.4, ease: "back.out(2)" }, 6.4);
+  effectFx.glitchBurst(tl, "#glitch-target", { at: 7.0, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#glitch-target", { at: 7.5, duration: 0.18 });
+
+  // Scene D: cinemagraph rotation (9–13s) — 1.5 turns over 4s
+  effectFx.cinemagraphRotate(tl, "#cinemagraph-bg", {
+    at: 9.0, duration: 4.0, turns: 1.5, ease: "none"
+  });
+  tl.from("#scene-d .cg-content", { y: 40, opacity: 0, duration: 0.8, ease: "power3.out" }, 9.4);
+
+
+  // Standalone autoplay — only when loaded directly in a top-level browser tab.
+  // Studio + renderer wrap us in an iframe and drive seek themselves; we stay paused.
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

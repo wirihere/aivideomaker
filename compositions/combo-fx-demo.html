@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>combo-fx demo</title>
+
+<link rel="stylesheet" href="../design/cards.css">
+<link rel="stylesheet" href="../design/templates/documentary.css">
+<link rel="stylesheet" href="../design/tokens-kindred.css">
+<link rel="stylesheet" href="../design/effects-batch-07.css">
+<link rel="stylesheet" href="../design/effects-batch-08.css">
+<link rel="stylesheet" href="../design/modules/all.css">
+
+<script src="../design/vendor/gsap.min.js"></script>
+<script src="../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #0E0E12; color: #FBF9F6; font-family: var(--card-font-ui); }
+  .demo {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: #0E0E12;
+  }
+
+  /* Each combo gets its own .scene clip — framework hides inactive ones. */
+  .scene {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* Label chip — identifies the combo on every scene. */
+  .label-chip {
+    position: absolute; top: 60px; left: 80px;
+    font-family: var(--card-font-mono);
+    font-size: 18px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.85);
+    border: 1px solid rgba(251, 249, 246, 0.32);
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(13, 24, 38, 0.55);
+    backdrop-filter: blur(8px);
+    z-index: 1500;
+  }
+
+  /* Common typography for each scene's hero text. */
+  .hero {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 220px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+  .hero-sub {
+    font-family: var(--card-font-mono);
+    font-size: 32px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(251, 249, 246, 0.66);
+    margin-top: 28px;
+  }
+
+  /* Scene 1 — superImpact (stat) */
+  .scene-1 .stat-stack { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .scene-1 .stat-num   { font-family: var(--card-font-display); font-weight: 700; font-size: 320px; line-height: 1; color: #1A9E8F; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+  .scene-1 .stat-label { font-family: var(--card-font-mono); font-size: 36px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(251, 249, 246, 0.7); }
+
+  /* Scene 2 — cinematicReveal */
+  .scene-2 .cr-stage   { width: 100%; height: 100%; }
+  .scene-2 .plane-bg   { font-family: var(--card-font-display); font-size: 360px; color: rgba(26, 158, 143, 0.16); font-weight: 600; }
+  .scene-2 .plane-mid  { font-family: var(--card-font-display); font-size: 180px; color: var(--card-paper, #FBF9F6); font-weight: 500; }
+  .scene-2 .plane-near { font-family: var(--card-font-mono); font-size: 36px; color: rgba(251, 249, 246, 0.72); letter-spacing: 0.22em; text-transform: uppercase; }
+
+  /* Scene 3 — hyperGlitch */
+  .scene-3 .hyper-host { background: #08111c; padding: 80px 140px; border-radius: 24px; border: 1px solid rgba(251, 249, 246, 0.14); }
+  .scene-3 .hyper-text { font-family: var(--card-font-display); font-weight: 600; font-size: 240px; color: #d85656; letter-spacing: -0.03em; }
+
+  /* Scene 4 — dreamSequence */
+  .scene-4 {
+    --brand-primary:   #5b8cc7;
+    --brand-secondary: #ffd66e;
+    --brand-accent:    #ff8eb4;
+    --brand-tertiary:  #6cd3c5;
+  }
+  .scene-4 .dream-stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .scene-4 .dream-text {
+    position: relative; z-index: 2;
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 200px;
+    color: transparent;
+    background: linear-gradient(90deg, #ffd66e, #ff8eb4, #6cd3c5, #ffd66e);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+            background-clip: text;
+    letter-spacing: -0.02em;
+    will-change: background-position, clip-path;
+  }
+
+  /* Scene 5 — kineticBurst */
+  .scene-5 .kinetic-host { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+  .scene-5 .kinetic-text { font-family: var(--card-font-display); font-weight: 700; font-size: 280px; color: #ffd66e; letter-spacing: -0.03em; }
+
+  /* Scene 6 — slamCut */
+  .scene-6 .slam-stage { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .scene-6 .slam-content { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .scene-6 .slam-words { font-family: var(--card-font-display); font-weight: 600; font-size: 180px; color: var(--card-paper); letter-spacing: -0.02em; }
+
+  /* Scene 7 — signalPulse */
+  .scene-7 .pulse-host { position: relative; width: 760px; height: 760px; display: flex; align-items: center; justify-content: center; color: #ffd66e; }
+  .scene-7 .pulse-beacon { width: 80px; height: 80px; border-radius: 50%; background: #ffd66e; box-shadow: 0 0 60px #ffd66e; z-index: 2; }
+  .scene-7 .pulse-stack  { position: absolute; bottom: -180px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .scene-7 .pulse-cap    { font-family: var(--card-font-mono); font-size: 36px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(251, 249, 246, 0.85); }
+  .scene-7 .pulse-num    { font-family: var(--card-font-display); font-weight: 700; font-size: 120px; color: #ffd66e; font-variant-numeric: tabular-nums; line-height: 1; }
+
+  /* Scene 8 — paperTear */
+  .scene-8 .tear-stage { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .scene-8 .tear-stack { position: relative; display: flex; align-items: center; justify-content: center; }
+  .scene-8 .tear-out, .scene-8 .tear-in { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; }
+  .scene-8 .tear-out { font-family: var(--card-font-display); font-weight: 500; font-size: 200px; color: rgba(251, 249, 246, 0.9); letter-spacing: -0.02em; }
+  .scene-8 .tear-in  { font-family: var(--card-font-display); font-weight: 700; font-size: 220px; color: #1A9E8F; letter-spacing: -0.03em; }
+
+  /* Scene 9 — confettiFinale */
+  .scene-9 {
+    --brand-primary:   #1A9E8F;
+    --brand-secondary: #ffd66e;
+    --brand-accent:    #ff8eb4;
+    --brand-tertiary:  #14806F;
+  }
+  .scene-9 .finale-stage { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .scene-9 .finale-stack { display: flex; flex-direction: column; align-items: center; gap: 30px; z-index: 2; position: relative; }
+  .scene-9 .finale-mark  { font-family: var(--card-font-display); font-weight: 700; font-style: italic; font-size: 220px; color: var(--card-paper); letter-spacing: -0.03em; line-height: 1; text-shadow: 0 8px 30px rgba(0,0,0,0.55); }
+  .scene-9 .finale-rule  { width: 360px; }
+  .scene-9 .finale-tag   { font-family: var(--card-font-display); font-weight: 500; font-size: 80px; color: var(--card-paper); letter-spacing: -0.01em; }
+
+  /* Scene 10 — holoFlash */
+  .scene-10 .holo-host {
+    position: relative;
+    width: 760px; height: 760px; border-radius: 60px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(115deg, #ff5cb1 0%, #9b6bff 18%, #3affe6 36%, #5cffaa 56%, #f5d35a 75%, #ff5cb1 100%);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), inset 0 0 80px rgba(255, 255, 255, 0.4);
+    overflow: hidden;
+  }
+  .scene-10 .holo-host::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 4px, transparent 4px 12px);
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .scene-10 .holo-mark {
+    position: relative; z-index: 1;
+    font-family: var(--card-font-display);
+    font-weight: 900; font-style: italic; font-size: 260px;
+    color: #fff; letter-spacing: -0.02em;
+    text-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+</style>
+</head>
+<body>
+<div id="demo" class="demo clip"
+     data-composition-id="combo-fx-demo"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- ===== Scene 1 — superImpact (0–3s) ===== -->
+  <div id="scene-1" class="scene scene-1 clip"
+       data-start="0" data-duration="3" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="label-chip">superImpact · stat reveal</div>
+    <div class="stat-stack">
+      <div id="s1-num" class="stat-num">12,500</div>
+      <div class="stat-label">Customers Served</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 2 — cinematicReveal (3–6s) ===== -->
+  <div id="scene-2" class="scene scene-2 clip"
+       data-start="3" data-duration="3" data-track-index="1"
+       data-scene-grade="teal-orange">
+    <div class="label-chip">cinematicReveal · headline</div>
+    <div class="fx-multiplane">
+      <div id="s2-stage" class="cr-stage">
+        <div class="plane plane-bg">DEPTH</div>
+        <div class="plane plane-mid"><span id="s2-headline">Cinematic</span></div>
+        <div class="plane plane-near">camera pushes in</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 3 — hyperGlitch (6–9s) ===== -->
+  <div id="scene-3" class="scene scene-3 clip"
+       data-start="6" data-duration="3" data-track-index="1"
+       data-scene-grade="noir">
+    <div class="label-chip">hyperGlitch · disruption</div>
+    <div id="s3-host" class="hyper-host">
+      <div id="s3-text" class="hyper-text">SIGNAL</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 4 — dreamSequence (9–12s) ===== -->
+  <div id="scene-4" class="scene scene-4 clip"
+       data-start="9" data-duration="3" data-track-index="1">
+    <div class="label-chip">dreamSequence · ambient</div>
+    <div id="s4-cg" class="fx-cinemagraph-bg"></div>
+    <div class="dream-stage">
+      <div id="s4-text" class="dream-text">Dream</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 5 — kineticBurst (12–15s) ===== -->
+  <div id="scene-5" class="scene scene-5 clip"
+       data-start="12" data-duration="3" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="label-chip">kineticBurst · word emphasis</div>
+    <div id="s5-host" class="kinetic-host">
+      <div id="s5-text" class="kinetic-text">KINETIC</div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 6 — slamCut (15–18s) ===== -->
+  <div id="scene-6" class="scene scene-6 clip"
+       data-start="15" data-duration="3" data-track-index="1">
+    <div class="label-chip">slamCut · transition</div>
+    <div class="scene__stage slam-stage">
+      <div class="slam-content">
+        <div id="s6-words" class="slam-words">Hard cut. New scene.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 7 — signalPulse (18–21s) ===== -->
+  <div id="scene-7" class="scene scene-7 clip"
+       data-start="18" data-duration="3" data-track-index="1">
+    <div class="label-chip">signalPulse · beacon</div>
+    <div id="s7-host" class="pulse-host">
+      <div class="pulse-beacon"></div>
+      <div class="pulse-stack">
+        <span id="s7-cap" class="pulse-cap">Live · 2,400 nearby</span>
+        <span id="s7-num" class="pulse-num">2,400</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 8 — paperTear (21–24s) ===== -->
+  <div id="scene-8" class="scene scene-8 clip"
+       data-start="21" data-duration="3" data-track-index="1"
+       data-scene-grade="teal-orange">
+    <div class="label-chip">paperTear · scene swap</div>
+    <div class="scene__stage tear-stage">
+      <div class="tear-stack" style="width:1200px;height:300px;">
+        <div id="s8-out" class="tear-out fx-bleed-ready">Before</div>
+        <div id="s8-in"  class="tear-in">After</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 9 — confettiFinale (24–27s) ===== -->
+  <div id="scene-9" class="scene scene-9 clip"
+       data-start="24" data-duration="3" data-track-index="1">
+    <div class="label-chip">confettiFinale · outro</div>
+    <div id="s9-cg" class="fx-cinemagraph-bg"></div>
+    <div class="scene__stage finale-stage">
+      <div class="finale-stack">
+        <div id="s9-mark" class="finale-mark">brand/co</div>
+        <div id="s9-rule" class="finale-rule combo-fx-confetti-rule" style="color: rgba(251,249,246,0.55);"></div>
+        <div id="s9-tag" class="finale-tag">Built with care.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Scene 10 — holoFlash (27–30s) ===== -->
+  <div id="scene-10" class="scene scene-10 clip"
+       data-start="27" data-duration="3" data-track-index="1">
+    <div class="label-chip">holoFlash · brand chip</div>
+    <div class="scene__stage" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;">
+      <div id="s10-host" class="holo-host">
+        <div id="s10-mark" class="holo-mark">N</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SVG filter defs required by combos using inkBleed / glitchBurst -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["combo-fx-demo"] = tl;
+
+  // Each combo runs in its own 3-second window. Times here line up with the
+  // .scene[data-start] values above.
+
+  // Scene 1 — superImpact at 0.6 of the 3s window so the peak is mid-scene.
+  comboFx.superImpact(tl, "#s1-num", {
+    at: 0.6, duration: 1.6, intensity: 1.1, seed: 11, from: 0,
+  });
+
+  // Scene 2 — cinematicReveal across the full 3s window.
+  comboFx.cinematicReveal(tl, "#s2-stage", {
+    at: 3.0, duration: 2.4, intensity: 1.0, seed: 22,
+    headline: "#s2-headline",
+  });
+
+  // Scene 3 — hyperGlitch with 3 bursts.
+  comboFx.hyperGlitch(tl, "#s3-host", {
+    at: 6.4, duration: 1.8, intensity: 1.2, bursts: 3,
+  });
+  // Inline pop-in for the SIGNAL text so it's visible to glitch over.
+  tl.fromTo("#s3-text",
+    { scale: 1.4, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" },
+    6.0);
+
+  // Scene 4 — dreamSequence across 9–12s.
+  comboFx.dreamSequence(tl, "#scene-4", {
+    at: 9.0, duration: 2.8, intensity: 1.0, seed: 44,
+    cinemagraph: "#s4-cg",
+    headline: "#s4-text",
+  });
+
+  // Scene 5 — kineticBurst at 12.4 (peak ~13.0).
+  comboFx.kineticBurst(tl, "#s5-text", {
+    at: 12.4, duration: 1.4, intensity: 1.1, seed: 55,
+  });
+
+  // Scene 6 — slamCut at 15.2 (the cut "lands" on the new content).
+  comboFx.slamCut(tl, "#scene-6", {
+    at: 15.2, duration: 1.0, intensity: 1.0,
+    content: "#s6-words",
+  });
+
+  // Scene 7 — signalPulse at 18.4 with caption + counter.
+  comboFx.signalPulse(tl, "#s7-host", {
+    at: 18.4, duration: 2.0, intensity: 1.1, seed: 77,
+    caption: "#s7-cap",
+    counter: "#s7-num",
+    ringCount: 5,
+  });
+
+  // Scene 8 — paperTear at 21.4 — old to new, dolly back.
+  comboFx.paperTear(tl, "#scene-8", {
+    at: 21.4, duration: 1.8, intensity: 1.0, seed: 88,
+    outgoing: "#s8-out",
+    incoming: "#s8-in",
+    stage: "#scene-8",
+  });
+  // Pre-position incoming so it's hidden until the stamp.
+  tl.set("#s8-in", { scale: 0, opacity: 0 }, 21.0);
+
+  // Scene 9 — confettiFinale at 24.0 with full lockup.
+  comboFx.confettiFinale(tl, "#scene-9", {
+    at: 24.0, duration: 2.8, intensity: 1.15, seed: 99,
+    lockup: "#s9-mark",
+    rule: "#s9-rule",
+    tagline: "#s9-tag",
+    cinemagraph: "#s9-cg",
+  });
+
+  // Scene 10 — holoFlash at 27.2 (gives 200ms of host-visible drift first).
+  comboFx.holoFlash(tl, "#s10-host", {
+    at: 27.2, duration: 2.4, intensity: 1.1, seed: 101,
+    lockup: "#s10-mark",
+  });
+
+  // Standalone autoplay — only when loaded directly in a top-level browser tab.
+  // Studio + renderer wrap us in an iframe and drive seek themselves; we stay paused.
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

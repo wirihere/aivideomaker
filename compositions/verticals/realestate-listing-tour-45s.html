@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Real Estate — Listing Tour 45s landscape (quiet-premium)</title>
+
+<!--
+  VERTICAL TEMPLATE — REAL ESTATE / LISTING TOUR (45s, 1920×1080)
+  ===============================================================
+  Format:        Landscape 45-second premium property listing tour.
+  Base template: quiet-premium (calm pace, light Inter, generous whitespace).
+  Recommended LUT: --lut=cool --strength=0.7
+  Music vibe:    quiet-premium (luxury / architectural)
+  Scenes:
+    1.  0–6s   Address + price reveal — slow zoom + long-shadow heading
+    2.  6–18s  Key stats — 5-cell grid (beds / baths / car / land / floor) + counter
+    3. 18–30s  Feature row — four highlights ("North-facing", "New kitchen", ...)
+    4. 30–38s  Open home + agent — name, phone, brokerage
+    5. 38–45s  CTA — "View listing" with cinemagraph background
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Adjust `../../design/` paths back to `design/` once relocated.
+    3. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`
+       (or a brokerage tokens file).
+    4. Fill in placeholder copy (ADDRESS, PRICE, STATS, FEATURES, AGENT, URL).
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — quiet-premium sets calm pace, light Inter. -->
+<link rel="stylesheet" href="../../design/templates/quiet-premium.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FAFAFA); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #FAFAFA);
+    color: var(--card-navy, #0F1115);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 140px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size, 18px);
+    letter-spacing: var(--card-kicker-track, 0.28em);
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--card-accent, #5A7BAE);
+    margin-bottom: 30px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Address + price reveal — slow zoom + long-shadow ---- */
+  .s1 {
+    background: var(--card-paper, #FAFAFA);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    max-width: 1600px;
+  }
+  .s1-address {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 130px;
+    letter-spacing: -0.025em;
+    line-height: 1.0;
+    color: var(--card-navy, #0F1115);
+    margin: 0;
+    max-width: 1600px;
+  }
+  .s1-suburb {
+    font-family: var(--card-font-ui);
+    font-weight: 400;
+    font-size: 40px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 28px;
+  }
+  .s1-rule {
+    width: 120px;
+    height: 1px;
+    background: var(--card-slate-ink, #4b5a6d);
+    opacity: 0.32;
+    margin: 36px 0;
+    transform-origin: left center;
+    display: block;
+  }
+  .s1-price {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 96px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--card-accent, #5A7BAE);
+    margin: 0;
+  }
+
+  /* ---- Scene 2: Key stats — 5-cell grid with counters ---- */
+  .s2 {
+    background: var(--card-paper, #FAFAFA);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%;
+  }
+  .s2-kicker { margin-bottom: 60px; }
+  .s2-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 48px;
+    width: 100%;
+    max-width: 1640px;
+  }
+  .s2-cell {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 32px 8px 28px;
+    border-top: 1px solid rgba(15, 17, 21, 0.10);
+  }
+  .s2-cell-icon {
+    font-family: var(--card-font-ui);
+    font-size: 40px;
+    line-height: 1;
+    color: var(--card-accent, #5A7BAE);
+    margin-bottom: 22px;
+    opacity: 0.85;
+  }
+  .s2-cell-num {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 140px;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--card-navy, #0F1115);
+    font-variant-numeric: tabular-nums;
+  }
+  .s2-cell-unit {
+    font-family: var(--card-font-ui);
+    font-weight: 400;
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 16px;
+  }
+  .s2-cell-label {
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 8px;
+    opacity: 0.78;
+  }
+
+  /* ---- Scene 3: Feature row — 4 highlights ---- */
+  .s3 {
+    background: var(--card-navy, #0F1115);
+    color: var(--card-paper, #FAFAFA);
+  }
+  .s3-kicker { color: var(--card-accent, #5A7BAE); }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%;
+  }
+  .s3-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 56px;
+    width: 100%;
+    max-width: 1640px;
+  }
+  .s3-cell {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 16px 8px;
+  }
+  .s3-cell-num {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 60px;
+    letter-spacing: -0.01em;
+    color: var(--card-accent, #5A7BAE);
+    line-height: 1;
+    margin-bottom: 28px;
+  }
+  .s3-cell-title {
+    font-family: var(--card-font-display);
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1.12;
+    letter-spacing: -0.012em;
+    color: var(--card-paper, #FAFAFA);
+    max-width: 320px;
+  }
+  .s3-cell-rule {
+    width: 50px;
+    height: 1px;
+    background: var(--card-paper-soft, #d7dce3);
+    opacity: 0.32;
+    margin: 22px 0 0 0;
+    display: block;
+  }
+
+  /* ---- Scene 4: Open home + agent ---- */
+  .s4 {
+    background: var(--card-paper, #FAFAFA);
+    color: var(--card-navy, #0F1115);
+  }
+  .s4-content {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 100px;
+    width: 100%; max-width: 1500px;
+    justify-content: center;
+  }
+  .s4-photo {
+    width: 360px; height: 360px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,
+      var(--card-accent, #5A7BAE) 0%,
+      var(--card-paper-soft, #E6EAF2) 100%);
+    box-shadow: var(--vibe-shadow-soft, 0 8px 24px rgba(15,17,21,0.10));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 170px;
+    color: var(--card-paper, #FAFAFA);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .s4-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s4-open {
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--card-accent, #5A7BAE);
+    margin-bottom: 24px;
+  }
+  .s4-when {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 88px;
+    letter-spacing: -0.018em;
+    line-height: 1.0;
+    color: var(--card-navy, #0F1115);
+    margin: 0 0 32px 0;
+    max-width: 760px;
+  }
+  .s4-agent-name {
+    font-family: var(--card-font-display);
+    font-weight: 400;
+    font-size: 50px;
+    letter-spacing: -0.01em;
+    color: var(--card-navy, #0F1115);
+    margin: 0;
+  }
+  .s4-agent-phone {
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 32px;
+    letter-spacing: 0.06em;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .s4-agent-brokerage {
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 14px;
+    opacity: 0.78;
+  }
+
+  /* ---- Scene 5: CTA + URL with cinemagraph background ---- */
+  .s5 {
+    background: var(--card-navy, #0F1115);
+    color: var(--card-paper, #FAFAFA);
+  }
+  .s5 .fx-cinemagraph-bg {
+    --brand-primary:   #5A7BAE;
+    --brand-secondary: #1B2330;
+    --brand-accent:    #B89B7A;
+    --brand-tertiary:  #4b5a6d;
+  }
+  .s5-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 132px;
+    letter-spacing: -0.022em;
+    line-height: 1.02;
+    color: var(--card-paper, #FAFAFA);
+    text-align: center;
+    margin: 0;
+  }
+  .s5-cta-em {
+    color: var(--card-accent, #5A7BAE);
+    display: inline-block;
+  }
+  .s5-rule {
+    width: 100px;
+    height: 1px;
+    background: var(--card-paper-soft, #d7dce3);
+    opacity: 0.45;
+    margin: 32px 0;
+    transform-origin: left center;
+    display: block;
+  }
+  .s5-url {
+    font-family: var(--card-font-mono, "JetBrains Mono", ui-monospace, monospace);
+    font-weight: 400;
+    font-size: 38px;
+    letter-spacing: 0.06em;
+    color: var(--card-paper-soft, #d7dce3);
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="realestate-listing-tour-45s" class="comp clip"
+     data-composition-id="realestate-listing-tour-45s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="45" data-track-index="0">
+
+  <!-- Scene 1 — Address + price reveal (0–6s): slow zoom + long-shadow -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="6" data-track-index="1"
+       data-scene-grade="cool">
+    <div class="s1-content">
+      <div class="scene__kicker">FOR SALE</div>
+      <h1 id="s1-address" class="s1-address">12 Harbour View Road</h1>
+      <div id="s1-suburb" class="s1-suburb">PT CHEVALIER · AUCKLAND</div>
+      <div id="s1-rule" class="s1-rule"></div>
+      <div id="s1-price" class="s1-price">$2,450,000</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Key stats grid (6–18s): 5-cell + counters -->
+  <div id="s2" class="scene s2 clip"
+       data-start="6" data-duration="12" data-track-index="1"
+       data-scene-grade="cool">
+    <div class="s2-content">
+      <div class="scene__kicker s2-kicker">AT A GLANCE</div>
+      <div class="s2-grid">
+        <div id="s2-c1" class="s2-cell">
+          <div class="s2-cell-icon" aria-hidden="true">◇</div>
+          <div id="s2-c1-num" class="s2-cell-num fx-counter">4</div>
+          <div class="s2-cell-label">Bedrooms</div>
+        </div>
+        <div id="s2-c2" class="s2-cell">
+          <div class="s2-cell-icon" aria-hidden="true">◇</div>
+          <div id="s2-c2-num" class="s2-cell-num fx-counter">2</div>
+          <div class="s2-cell-label">Bathrooms</div>
+        </div>
+        <div id="s2-c3" class="s2-cell">
+          <div class="s2-cell-icon" aria-hidden="true">◇</div>
+          <div id="s2-c3-num" class="s2-cell-num fx-counter">2</div>
+          <div class="s2-cell-label">Car Garage</div>
+        </div>
+        <div id="s2-c4" class="s2-cell">
+          <div class="s2-cell-icon" aria-hidden="true">◇</div>
+          <div id="s2-c4-num" class="s2-cell-num fx-counter">607</div>
+          <div class="s2-cell-unit">m&sup2;</div>
+          <div class="s2-cell-label">Land</div>
+        </div>
+        <div id="s2-c5" class="s2-cell">
+          <div class="s2-cell-icon" aria-hidden="true">◇</div>
+          <div id="s2-c5-num" class="s2-cell-num fx-counter">220</div>
+          <div class="s2-cell-unit">m&sup2;</div>
+          <div class="s2-cell-label">Floor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Feature row (18–30s): 4 highlights -->
+  <div id="s3" class="scene s3 clip"
+       data-start="18" data-duration="12" data-track-index="1">
+    <div class="s3-content">
+      <div class="scene__kicker s3-kicker">WHAT YOU&rsquo;LL LOVE</div>
+      <div class="s3-row">
+        <div id="s3-c1" class="s3-cell">
+          <div class="s3-cell-num">01</div>
+          <div id="s3-c1-title" class="s3-cell-title">North-facing aspect</div>
+          <div class="s3-cell-rule"></div>
+        </div>
+        <div id="s3-c2" class="s3-cell">
+          <div class="s3-cell-num">02</div>
+          <div id="s3-c2-title" class="s3-cell-title">Brand new kitchen</div>
+          <div class="s3-cell-rule"></div>
+        </div>
+        <div id="s3-c3" class="s3-cell">
+          <div class="s3-cell-num">03</div>
+          <div id="s3-c3-title" class="s3-cell-title">Walk to the village</div>
+          <div class="s3-cell-rule"></div>
+        </div>
+        <div id="s3-c4" class="s3-cell">
+          <div class="s3-cell-num">04</div>
+          <div id="s3-c4-title" class="s3-cell-title">Indoor-outdoor flow</div>
+          <div class="s3-cell-rule"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Open home + agent (30–38s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="30" data-duration="8" data-track-index="1">
+    <div class="s4-content">
+      <div id="s4-photo" class="s4-photo">A</div>
+      <div class="s4-text">
+        <div id="s4-open" class="s4-open">Open Home</div>
+        <h2 id="s4-when" class="s4-when">Saturday 12 &ndash; 1 pm</h2>
+        <div id="s4-agent-name" class="s4-agent-name">Alex Rivera</div>
+        <div id="s4-agent-phone" class="s4-agent-phone">+64 21 555 0144</div>
+        <div id="s4-agent-brokerage" class="s4-agent-brokerage">RIVERA &amp; CO PROPERTY</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA (38–45s): cinemagraph background -->
+  <div id="s5" class="scene s5 clip"
+       data-start="38" data-duration="7" data-track-index="1"
+       data-scene-grade="cool">
+    <div id="s5-cg" class="fx-cinemagraph-bg"></div>
+    <div class="s5-content">
+      <div class="scene__kicker" style="color: var(--card-accent, #5A7BAE);">View the Listing</div>
+      <h2 id="s5-cta" class="s5-cta">Book a <span id="s5-cta-em" class="s5-cta-em">private viewing</span>.</h2>
+      <div id="s5-rule" class="s5-rule"></div>
+      <div id="s5-url" class="s5-url">rivera-co.co.nz/12-harbour</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["realestate-listing-tour-45s"] = tl;
+
+  // ---- Scene 1: 0–6s — address + price reveal (slow zoom) -----------
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
+    0.4);
+  textFx.cascade(tl, "#s1-address", { at: 0.9, duration: 0.9, stagger: 0.06 });
+  // Slow zoom on the address — ground truth is scale 1 at the hero frame.
+  tl.fromTo("#s1-address",
+    { scale: 1.04 },
+    { scale: 1.0, duration: 5.0, ease: "sine.out" },
+    0.9);
+  tl.fromTo("#s1-suburb",
+    { y: 18, opacity: 0, letterSpacing: "0.32em" },
+    { y: 0, opacity: 1, letterSpacing: "0.18em", duration: 0.9, ease: "power2.out" },
+    1.8);
+  tl.fromTo("#s1-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.8, ease: "power1.inOut" },
+    2.6);
+  tl.fromTo("#s1-price",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1.0, ease: "power3.out" },
+    3.2);
+
+  // ---- Scene 2: 6–18s — key stats grid + counters --------------------
+  tl.fromTo("#s2 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
+    6.3);
+  tl.fromTo([".s2-cell"],
+    { y: 36, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, stagger: 0.12, ease: "power3.out" },
+    6.7);
+  textFx.counter(tl, "#s2-c1-num", { at: 7.4, duration: 1.4, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s2-c2-num", { at: 7.6, duration: 1.4, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s2-c3-num", { at: 7.8, duration: 1.4, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s2-c4-num", { at: 8.0, duration: 1.8, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s2-c5-num", { at: 8.2, duration: 1.8, from: 0, ease: "power2.out" });
+
+  // ---- Scene 3: 18–30s — feature row, four columns -------------------
+  tl.fromTo("#s3 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
+    18.3);
+  tl.fromTo([".s3-cell"],
+    { y: 44, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, stagger: 0.18, ease: "power3.out" },
+    18.7);
+  textFx.cascade(tl, "#s3-c1-title", { at: 19.4, duration: 0.7, stagger: 0.04 });
+  textFx.cascade(tl, "#s3-c2-title", { at: 19.8, duration: 0.7, stagger: 0.04 });
+  textFx.cascade(tl, "#s3-c3-title", { at: 20.2, duration: 0.7, stagger: 0.04 });
+  textFx.cascade(tl, "#s3-c4-title", { at: 20.6, duration: 0.7, stagger: 0.04 });
+  tl.fromTo([".s3-cell-rule"],
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 0.32, duration: 0.7, stagger: 0.16, ease: "power1.out" },
+    21.6);
+
+  // ---- Scene 4: 30–38s — open home + agent ---------------------------
+  tl.fromTo("#s4-photo",
+    { x: -60, scale: 0.9, opacity: 0 },
+    { x: 0, scale: 1, opacity: 1, duration: 1.0, ease: "power3.out" },
+    30.3);
+  tl.fromTo("#s4-open",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    30.7);
+  textFx.cascade(tl, "#s4-when", { at: 31.0, duration: 0.8, stagger: 0.06 });
+  tl.fromTo("#s4-agent-name",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    32.6);
+  tl.fromTo("#s4-agent-phone",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    33.0);
+  tl.fromTo("#s4-agent-brokerage",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power1.out" },
+    33.4);
+
+  // ---- Scene 5: 38–45s — CTA + cinemagraph ---------------------------
+  effectFx.cinemagraphRotate(tl, "#s5-cg", {
+    at: 38.0, duration: 7.0, turns: 0.25, ease: "none"
+  });
+  tl.fromTo("#s5 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
+    38.3);
+  textFx.cascade(tl, "#s5-cta", { at: 38.8, duration: 0.9, stagger: 0.06 });
+  tl.fromTo("#s5-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 0.45, duration: 0.8, ease: "power1.inOut" },
+    40.3);
+  tl.fromTo("#s5-url",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 0.92, duration: 0.7, ease: "power2.out" },
+    40.9);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-url", "#s5-rule"], { opacity: 0.92, duration: 0.4 }, 44.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

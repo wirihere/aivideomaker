@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wellness — Fitness Transformation 30s vertical (kinetic-pop)</title>
+
+<!--
+  VERTICAL TEMPLATE — WELLNESS / FITNESS TRANSFORMATION (30s, 1080×1920)
+  ======================================================================
+  Vertical:      Health / Fitness / Wellness — gym, PT, transformation
+                 program, group fitness studio.
+  Format:        Portrait 30-second transformation reel.
+  Base template: kinetic-pop (snappy pace, heavy display sans, hard shadows).
+  Recommended LUT: --lut=pop --strength=1.0
+  Music:         kinetic-pop (driving, motivational).
+
+  Conversion drivers (fitness):
+    1. Outcome proof — before/after pairs (real, consented).
+    2. Program clarity — what's actually included (coach, plan, community).
+    3. Low-friction entry — "First class free" / "$X first month".
+    4. Easy next step — clear URL, single CTA verb.
+
+  Health-claim conservatism (read first):
+    - "Real change" / "transformation" is fine — promising specific weights or
+      health metrics is not. Keep claims to what people did, not what we cured.
+    - Before/after must be CONSENTED and IDENTIFIED with the same person.
+    - Avoid medical claims (e.g. "lower blood pressure" / "reverse diabetes").
+
+  Scenes:
+    1.  0–4s   Hook — "12 weeks. Real change."
+    2.  4–12s  Before/after pairs — 3 examples with cross-fade.
+    3. 12–20s  What's included — coaching · plan · community (3-up).
+    4. 20–26s  Pricing/offer — "First class free" or "$X first month".
+    5. 26–30s  CTA — "Start your week 1 → URL" with glitter burst.
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy (DURATION, BEFORE/AFTER captions, INCLUSIONS, OFFER, URL).
+    4. Run: npx hyperframes preview     (sanity check)
+    5. Run: npx hyperframes render      (final MP4)
+
+  Asset slots:
+    - 3× before/after pairs (replace .pair-before / .pair-after letter chips
+      with consented client photos)
+    - Optional treatment / gym hero shot for Scene 1 background
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 120px 80px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 32px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Hook ---- */
+  .s1 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-duration {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 320px;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    color: var(--card-accent, #1A9E8F);
+    margin: 0 0 24px 0;
+  }
+  .s1-duration-label {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 110px;
+    letter-spacing: -0.025em;
+    line-height: 1.0;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0 0 56px 0;
+    text-transform: uppercase;
+  }
+  .s1-tagline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 130px;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--card-paper, #FBF9F6);
+    text-align: center;
+    margin: 0;
+    max-width: 920px;
+  }
+
+  /* ---- Scene 2: Before/After pairs ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 90px;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--card-navy, #0E0E12);
+    text-transform: uppercase;
+    margin: 0 0 56px 0;
+    text-align: center;
+  }
+  .s2-pair {
+    display: flex; flex-direction: row;
+    align-items: stretch; gap: 18px;
+    width: 100%;
+    margin-bottom: 28px;
+  }
+  .pair-before, .pair-after {
+    flex: 1;
+    aspect-ratio: 1 / 1;
+    border-radius: 18px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 120px;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .pair-before {
+    background: linear-gradient(135deg, #4b5a6d 0%, #243038 100%);
+    filter: saturate(0.6);
+  }
+  .pair-after {
+    background: linear-gradient(135deg,
+      var(--card-accent, #1A9E8F) 0%,
+      #0F8A7C 100%);
+  }
+  .pair-stamp {
+    position: absolute;
+    bottom: 18px; left: 18px;
+    font-family: var(--card-font-ui);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--card-paper, #FBF9F6);
+    background: rgba(0,0,0,0.4);
+    padding: 6px 14px;
+    border-radius: 4px;
+  }
+  .s2-caption {
+    font-family: var(--card-font-ui);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--card-slate-ink, #4b5a6d);
+    text-align: center;
+    margin-top: 18px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 3: What's included ---- */
+  .s3 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%;
+  }
+  .s3-headline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 110px;
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    color: var(--card-paper, #FBF9F6);
+    text-transform: uppercase;
+    margin: 0 0 56px 0;
+    text-align: center;
+  }
+  .s3-stack {
+    display: flex; flex-direction: column;
+    gap: 28px;
+    width: 100%;
+  }
+  .s3-row {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 28px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 28px 32px;
+  }
+  .s3-row-num {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: var(--card-accent, #1A9E8F);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--card-paper, #FBF9F6);
+    font-family: var(--card-font-display);
+    font-size: 44px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .s3-row-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s3-row-title {
+    font-family: var(--card-font-display);
+    font-size: 50px;
+    font-weight: 800;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    text-transform: uppercase;
+  }
+  .s3-row-detail {
+    font-family: var(--card-font-ui);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--card-paper-soft, #d7dce3);
+    line-height: 1.3;
+    margin-top: 8px;
+    text-align: left;
+  }
+
+  /* ---- Scene 4: Pricing / offer ---- */
+  .s4 {
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-offer {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 220px;
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+    color: var(--card-paper, #FBF9F6);
+    text-transform: uppercase;
+    margin: 0 0 24px 0;
+  }
+  .s4-offer-detail {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 90px;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--card-paper, #FBF9F6);
+    text-transform: uppercase;
+    margin: 0 0 32px 0;
+  }
+  .s4-fineprint {
+    font-family: var(--card-font-ui);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  /* ---- Scene 5: CTA + glitter burst ---- */
+  .s5 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s5-burst-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s5-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 150px;
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    color: var(--card-paper, #FBF9F6);
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .s5-arrow {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 150px;
+    color: var(--card-accent, #1A9E8F);
+    line-height: 0.96;
+    margin: 0;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 40px;
+    margin-top: 36px;
+    letter-spacing: 0.06em;
+    color: var(--card-paper-soft, #d7dce3);
+    opacity: 0.95;
+  }
+</style>
+</head>
+<body>
+
+<div id="wellness-fitness-transformation-30s" class="comp clip"
+     data-composition-id="wellness-fitness-transformation-30s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — Hook (0–4s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="4" data-track-index="1">
+    <div class="s1-content">
+      <h1 id="s1-duration" class="s1-duration">12</h1>
+      <div id="s1-duration-label" class="s1-duration-label">WEEKS</div>
+      <h2 id="s1-tagline" class="s1-tagline">Real change.</h2>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Before/after pairs (4–12s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="4" data-duration="8" data-track-index="1">
+    <div class="s2-content">
+      <h2 id="s2-headline" class="s2-headline">Three of ours.</h2>
+      <div class="s2-pair" id="s2-pair1">
+        <div class="pair-before">
+          A
+          <span class="pair-stamp">BEFORE</span>
+        </div>
+        <div class="pair-after">
+          A
+          <span class="pair-stamp">AFTER</span>
+        </div>
+      </div>
+      <div class="s2-pair" id="s2-pair2">
+        <div class="pair-before">
+          M
+          <span class="pair-stamp">BEFORE</span>
+        </div>
+        <div class="pair-after">
+          M
+          <span class="pair-stamp">AFTER</span>
+        </div>
+      </div>
+      <div class="s2-pair" id="s2-pair3">
+        <div class="pair-before">
+          K
+          <span class="pair-stamp">BEFORE</span>
+        </div>
+        <div class="pair-after">
+          K
+          <span class="pair-stamp">AFTER</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — What's included (12–20s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="12" data-duration="8" data-track-index="1">
+    <div class="s3-content">
+      <h2 id="s3-headline" class="s3-headline">What you get.</h2>
+      <div class="s3-stack">
+        <div class="s3-row" id="s3-r1">
+          <div class="s3-row-num">1</div>
+          <div class="s3-row-text">
+            <div class="s3-row-title">Personal coach</div>
+            <div class="s3-row-detail">Weekly check-ins, plan tweaks, accountability.</div>
+          </div>
+        </div>
+        <div class="s3-row" id="s3-r2">
+          <div class="s3-row-num">2</div>
+          <div class="s3-row-text">
+            <div class="s3-row-title">Custom plan</div>
+            <div class="s3-row-detail">Workouts &amp; nutrition built around your week.</div>
+          </div>
+        </div>
+        <div class="s3-row" id="s3-r3">
+          <div class="s3-row-num">3</div>
+          <div class="s3-row-text">
+            <div class="s3-row-title">Community</div>
+            <div class="s3-row-detail">A crew that shows up. So you keep showing up.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Pricing / offer (20–26s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="20" data-duration="6" data-track-index="1">
+    <div class="s4-content">
+      <h2 id="s4-offer" class="s4-offer">First class</h2>
+      <div id="s4-offer-detail" class="s4-offer-detail">FREE.</div>
+      <div id="s4-fineprint" class="s4-fineprint">No card. No catch. Just turn up.</div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA + glitter burst (26–30s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="26" data-duration="4" data-track-index="1">
+    <div id="s5-burst-host" class="s5-burst-host"></div>
+    <div class="s5-content">
+      <h2 id="s5-cta" class="s5-cta">START WEEK 1</h2>
+      <div id="s5-arrow" class="s5-arrow">→</div>
+      <div id="s5-url" class="s5-url">yourgym.co.nz/start</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["wellness-fitness-transformation-30s"] = tl;
+
+  // ---- Scene 1: 0–4s — hook -----------------------------------------
+  textFx.stamp(tl, "#s1-duration", { at: 0.2, duration: 0.5, fromScale: 1.5 });
+  effectFx.glitchBurst(tl, "#s1-duration", { at: 0.7, duration: 0.16 });
+  tl.fromTo("#s1-duration-label",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    1.0);
+  textFx.cascade(tl, "#s1-tagline", { at: 1.6, duration: 0.6, stagger: 0.08 });
+
+  // ---- Scene 2: 4–12s — before/after pairs --------------------------
+  textFx.cascade(tl, "#s2-headline", { at: 4.2, duration: 0.6, stagger: 0.08 });
+  // Pair 1 cross-fade reveal
+  tl.fromTo("#s2-pair1",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" },
+    5.4);
+  tl.fromTo("#s2-pair1 .pair-after",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.6, ease: "power2.out" },
+    6.0);
+  // Pair 2
+  tl.fromTo("#s2-pair2",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" },
+    7.0);
+  tl.fromTo("#s2-pair2 .pair-after",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.6, ease: "power2.out" },
+    7.6);
+  // Pair 3
+  tl.fromTo("#s2-pair3",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" },
+    8.6);
+  tl.fromTo("#s2-pair3 .pair-after",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.6, ease: "power2.out" },
+    9.2);
+
+  // ---- Scene 3: 12–20s — what's included ----------------------------
+  textFx.cascade(tl, "#s3-headline", { at: 12.3, duration: 0.6, stagger: 0.08 });
+  tl.fromTo(["#s3-r1", "#s3-r2", "#s3-r3"],
+    { x: -32, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.6, stagger: 0.20, ease: "power3.out" },
+    14.0);
+
+  // ---- Scene 4: 20–26s — pricing / offer ----------------------------
+  textFx.stamp(tl, "#s4-offer", { at: 20.2, duration: 0.5, fromScale: 1.3 });
+  textFx.cascade(tl, "#s4-offer-detail", { at: 21.0, duration: 0.6, stagger: 0.08 });
+  effectFx.glitchBurst(tl, "#s4-offer-detail", { at: 21.8, duration: 0.16 });
+  tl.fromTo("#s4-fineprint",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    22.6);
+
+  // ---- Scene 5: 26–30s — CTA + glitter burst ------------------------
+  glitterFx.burst(tl, "#s5-burst-host", {
+    at: 26.0, count: 70, duration: 1.6, seed: 27, distance: 760
+  });
+  textFx.stamp(tl, "#s5-cta", { at: 26.3, duration: 0.5, fromScale: 1.4 });
+  tl.fromTo("#s5-arrow",
+    { x: -40, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" },
+    27.0);
+  tl.fromTo("#s5-url",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    27.6);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-arrow", "#s5-url"], { opacity: 0.92, duration: 0.3 }, 29.5);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

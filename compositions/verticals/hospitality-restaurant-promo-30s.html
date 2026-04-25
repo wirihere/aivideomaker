@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hospitality — Restaurant Promo 30s landscape (documentary)</title>
+
+<!--
+  VERTICAL TEMPLATE — HOSPITALITY · RESTAURANT PROMO (30s, 1920×1080)
+  ===================================================================
+  Format:        Landscape 30-second restaurant / dining-room promo.
+  Base template: documentary (slow pacing, editorial serif, restrained motion).
+  Recommended LUT: --lut=warm --strength=0.85
+  Scenes:
+    1.  0–6s   Restaurant name + tagline + interior placeholder hero
+    2.  6–16s  Menu highlights — 4 dishes with prices, stagger entrance (warm grade)
+    3. 16–22s  "Open daily 5pm–late · <suburb>" + OpenTable / booking CTA
+    4. 22–28s  Special offer ("Set menu Tue $45pp")
+    5. 28–30s  "Book online → URL"
+
+  Hospitality conversion drivers (full-service restaurant):
+    - Visual appetite: 4 hero dishes — closeup, props, sauce drag, well-lit.
+    - Atmosphere: dining room hero, eye-level shot, warm tungsten light.
+    - Booking ease: name the platform (OpenTable / direct), give one URL.
+    - Dietary signals: ★ vegan / GF chips on dish tiles when relevant.
+
+  Asset slots (replace the placeholder coloured cards with images):
+    - #s1-hero        interior hero — eye-level dining room, golden hour
+    - #s2-dish-1..4   four dish closeups — flatlay, contrast plate
+    - #s3-bg          exterior shot at twilight (optional)
+    - #s4-bg          set-menu plate or chef's-table shot
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy ([RESTAURANT], [TAGLINE], dish names, prices,
+       hours, booking URL).
+    4. Drop dish photography into the .dish-card divs (background-image).
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — documentary sets slow pace, editorial serif. -->
+<link rel="stylesheet" href="../../design/templates/documentary.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #1A130C); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #1A130C);
+    color: var(--card-paper, #FBF1E0);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 140px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-mono);
+    font-size: var(--card-kicker-size, 20px);
+    letter-spacing: var(--card-kicker-track, 0.32em);
+    text-transform: uppercase;
+    color: var(--card-accent, #C77D3A);
+    margin-bottom: 32px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Name + tagline + interior hero ---- */
+  .s1 {
+    background: var(--card-navy, #1A130C);
+    color: var(--card-paper, #FBF1E0);
+  }
+  .s1-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    width: 100%; max-width: 1640px;
+    align-items: center;
+  }
+  .s1-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s1-name {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 150px;
+    letter-spacing: -0.012em;
+    line-height: 1.0;
+    color: var(--card-paper, #FBF1E0);
+    margin: 0;
+  }
+  .s1-rule {
+    width: 120px; height: 3px;
+    background: var(--card-accent, #C77D3A);
+    margin: 36px 0;
+    transform-origin: left center;
+    will-change: transform;
+  }
+  .s1-tagline {
+    font-family: var(--card-font-ui);
+    font-weight: 400;
+    font-size: 38px;
+    line-height: 1.4;
+    color: var(--card-paper-soft, #d7c8b0);
+    margin: 0;
+    max-width: 580px;
+  }
+  .s1-hero {
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    border-radius: 12px;
+    background:
+      radial-gradient(ellipse at 35% 30%, rgba(199, 125, 58, 0.42) 0%, rgba(26, 19, 12, 0) 55%),
+      radial-gradient(ellipse at 75% 75%, rgba(199, 125, 58, 0.18) 0%, rgba(26, 19, 12, 0) 60%),
+      linear-gradient(160deg,
+        rgba(60, 42, 24, 1) 0%,
+        rgba(40, 28, 16, 1) 50%,
+        rgba(22, 16, 10, 1) 100%);
+    box-shadow: var(--vibe-shadow-soft, 0 32px 64px rgba(8, 12, 18, 0.18));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-ui);
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: rgba(251, 241, 224, 0.40);
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 2: Menu highlights — 4 dish cards ---- */
+  .s2 {
+    background: var(--card-paper, #FBF1E0);
+    color: var(--card-navy, #1A130C);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%;
+  }
+  .s2-kicker {
+    font-family: var(--card-font-mono);
+    font-size: 22px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--card-accent, #C77D3A);
+    margin-bottom: 36px;
+  }
+  .s2-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    width: 100%;
+    max-width: 1660px;
+  }
+  .s2-card {
+    display: flex; flex-direction: column;
+    align-items: stretch;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card-paper-soft, #F5EFE6);
+    box-shadow: var(--vibe-shadow-soft, 0 32px 64px rgba(8, 12, 18, 0.18));
+  }
+  .s2-card-img {
+    height: 320px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-ui);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: rgba(251, 241, 224, 0.55);
+    text-transform: uppercase;
+  }
+  .s2-card-1 .s2-card-img {
+    background: linear-gradient(135deg, #C77D3A 0%, #864A1E 100%);
+  }
+  .s2-card-2 .s2-card-img {
+    background: linear-gradient(135deg, #DCA55A 0%, #8E5A28 100%);
+  }
+  .s2-card-3 .s2-card-img {
+    background: linear-gradient(135deg, #B26834 0%, #5C3018 100%);
+  }
+  .s2-card-4 .s2-card-img {
+    background: linear-gradient(135deg, #E0B070 0%, #9C6A30 100%);
+  }
+  .s2-card-body {
+    padding: 24px 28px 28px;
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .s2-card-name {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 38px;
+    line-height: 1.05;
+    color: var(--card-navy, #1A130C);
+    margin: 0 0 10px 0;
+  }
+  .s2-card-tag {
+    font-family: var(--card-font-mono);
+    font-size: 16px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #6b5a48);
+    margin: 0 0 14px 0;
+  }
+  .s2-card-price {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 36px;
+    color: var(--card-accent, #C77D3A);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+
+  /* ---- Scene 3: Hours + booking CTA ---- */
+  .s3 {
+    background: var(--card-navy, #1A130C);
+    color: var(--card-paper, #FBF1E0);
+  }
+  .s3-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 75% 50%, rgba(199, 125, 58, 0.24) 0%, rgba(26, 19, 12, 0) 60%),
+      var(--card-navy, #1A130C);
+    z-index: 0;
+  }
+  .s3-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-hours {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 130px;
+    line-height: 1.0;
+    letter-spacing: -0.012em;
+    color: var(--card-paper, #FBF1E0);
+    margin: 0 0 28px 0;
+    max-width: 1500px;
+  }
+  .s3-suburb {
+    font-family: var(--card-font-mono);
+    font-weight: 500;
+    font-size: 30px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--card-accent, #C77D3A);
+    margin: 0 0 56px 0;
+  }
+  .s3-cta-pill {
+    display: inline-block;
+    padding: 26px 56px;
+    border-radius: 999px;
+    background: var(--card-accent, #C77D3A);
+    color: var(--card-paper, #FBF1E0);
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 4: Special offer ---- */
+  .s4 {
+    background: var(--card-paper, #FBF1E0);
+    color: var(--card-navy, #1A130C);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-stamp {
+    font-family: var(--card-font-mono);
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    color: var(--card-accent, #C77D3A);
+    margin-bottom: 28px;
+  }
+  .s4-offer {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 130px;
+    line-height: 1.0;
+    letter-spacing: -0.014em;
+    color: var(--card-navy, #1A130C);
+    margin: 0;
+    max-width: 1500px;
+  }
+  .s4-offer-em {
+    font-style: normal;
+    color: var(--card-accent, #C77D3A);
+    display: inline-block;
+  }
+  .s4-detail {
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 36px;
+    color: var(--card-slate-ink, #6b5a48);
+    line-height: 1.4;
+    margin-top: 32px;
+    max-width: 1100px;
+  }
+
+  /* ---- Scene 5: Book online + URL ---- */
+  .s5 {
+    background: var(--card-accent, #C77D3A);
+    color: var(--card-paper, #FBF1E0);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-book {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 140px;
+    line-height: 0.98;
+    letter-spacing: -0.016em;
+    color: var(--card-paper, #FBF1E0);
+    margin: 0 0 28px 0;
+  }
+  .s5-arrow {
+    font-style: normal;
+    display: inline-block;
+    margin: 0 0.16em;
+  }
+  .s5-url {
+    font-family: var(--card-font-mono);
+    font-weight: 500;
+    font-size: 44px;
+    letter-spacing: 0.06em;
+    color: var(--card-paper, #FBF1E0);
+    opacity: 0.95;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<div id="hospitality-restaurant-promo-30s" class="comp clip"
+     data-composition-id="hospitality-restaurant-promo-30s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — Name + interior hero (0–6s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="6" data-track-index="1">
+    <div class="s1-grid">
+      <div class="s1-text">
+        <div class="scene__kicker">EST. [YEAR]</div>
+        <h1 id="s1-name" class="s1-name">[Restaurant Name]</h1>
+        <div id="s1-rule" class="s1-rule"></div>
+        <p id="s1-tagline" class="s1-tagline">[A short tagline — what kind of room, what kind of plate, who it's for.]</p>
+      </div>
+      <div id="s1-hero" class="s1-hero">[ INTERIOR HERO ]</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Menu highlights (6–16s) — warm grade -->
+  <div id="s2" class="scene s2 clip"
+       data-start="6" data-duration="10" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="s2-content">
+      <div id="s2-kicker" class="s2-kicker">FROM THE PASS TONIGHT</div>
+      <div class="s2-grid">
+        <div id="s2-card-1" class="s2-card s2-card-1">
+          <div class="s2-card-img">[ DISH 1 ]</div>
+          <div class="s2-card-body">
+            <h3 class="s2-card-name">[Dish One]</h3>
+            <div class="s2-card-tag">★ Bestseller</div>
+            <div class="s2-card-price">$22</div>
+          </div>
+        </div>
+        <div id="s2-card-2" class="s2-card s2-card-2">
+          <div class="s2-card-img">[ DISH 2 ]</div>
+          <div class="s2-card-body">
+            <h3 class="s2-card-name">[Dish Two]</h3>
+            <div class="s2-card-tag">GF · Vegan</div>
+            <div class="s2-card-price">$24</div>
+          </div>
+        </div>
+        <div id="s2-card-3" class="s2-card s2-card-3">
+          <div class="s2-card-img">[ DISH 3 ]</div>
+          <div class="s2-card-body">
+            <h3 class="s2-card-name">[Dish Three]</h3>
+            <div class="s2-card-tag">Chef's pick</div>
+            <div class="s2-card-price">$28</div>
+          </div>
+        </div>
+        <div id="s2-card-4" class="s2-card s2-card-4">
+          <div class="s2-card-img">[ DISH 4 ]</div>
+          <div class="s2-card-body">
+            <h3 class="s2-card-name">[Dish Four]</h3>
+            <div class="s2-card-tag">Sharing plate</div>
+            <div class="s2-card-price">$32</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Hours + booking CTA (16–22s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="16" data-duration="6" data-track-index="1">
+    <div id="s3-bg" class="s3-bg"></div>
+    <div class="s3-content">
+      <div class="scene__kicker">VISIT</div>
+      <h2 id="s3-hours" class="s3-hours">Open daily 5pm – late</h2>
+      <div id="s3-suburb" class="s3-suburb">[Suburb · City]</div>
+      <div id="s3-cta" class="s3-cta-pill">Reserve on OpenTable</div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Special offer (22–28s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="22" data-duration="6" data-track-index="1">
+    <div class="s4-content">
+      <div id="s4-stamp" class="s4-stamp">TUESDAYS ONLY</div>
+      <h2 id="s4-offer" class="s4-offer">Set menu <span id="s4-offer-em" class="s4-offer-em">$45pp</span></h2>
+      <p id="s4-detail" class="s4-detail">Three courses, paired drinks optional. Bookings recommended.</p>
+    </div>
+  </div>
+
+  <!-- Scene 5 — Book online + URL (28–30s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="28" data-duration="2" data-track-index="1">
+    <div class="s5-content">
+      <h2 id="s5-book" class="s5-book">Book online<span id="s5-arrow" class="s5-arrow">&nbsp;→</span></h2>
+      <div id="s5-url" class="s5-url">yourrestaurant.com/book</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["hospitality-restaurant-promo-30s"] = tl;
+
+  // ---- Scene 1: 0–6s — name + tagline + hero ------------------------
+  tl.fromTo("#s1-hero",
+    { x: 60, opacity: 0, scale: 1.04 },
+    { x: 0, opacity: 1, scale: 1, duration: 1.4, ease: "power3.out" },
+    0.0);
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    0.4);
+  textFx.cascade(tl, "#s1-name", { at: 0.9, duration: 0.9, stagger: 0.10 });
+  tl.fromTo("#s1-rule",
+    { scaleX: 0 },
+    { scaleX: 1, duration: 0.7, ease: "power2.out" },
+    2.4);
+  tl.fromTo("#s1-tagline",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    2.9);
+
+  // ---- Scene 2: 6–16s — menu highlights, stagger entrance -----------
+  tl.fromTo("#s2-kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    6.2);
+  tl.fromTo(["#s2-card-1", "#s2-card-2", "#s2-card-3", "#s2-card-4"],
+    { y: 80, scale: 0.95, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.9, stagger: 0.5, ease: "power3.out" },
+    6.6);
+
+  // ---- Scene 3: 16–22s — hours + booking CTA ------------------------
+  tl.fromTo("#s3-bg",
+    { opacity: 0 },
+    { opacity: 1, duration: 1.0, ease: "power2.out" },
+    16.0);
+  tl.fromTo("#s3 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    16.3);
+  textFx.cascade(tl, "#s3-hours", { at: 16.7, duration: 0.8, stagger: 0.06 });
+  tl.fromTo("#s3-suburb",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    18.2);
+  tl.fromTo("#s3-cta",
+    { y: 28, scale: 0.92, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.6)" },
+    19.0);
+
+  // ---- Scene 4: 22–28s — special offer ------------------------------
+  tl.fromTo("#s4-stamp",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    22.3);
+  textFx.cascade(tl, "#s4-offer", { at: 22.8, duration: 0.9, stagger: 0.08 });
+  tl.fromTo("#s4-detail",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    24.4);
+
+  // ---- Scene 5: 28–30s — book online + URL --------------------------
+  textFx.cascade(tl, "#s5-book", { at: 28.1, duration: 0.7, stagger: 0.06 });
+  tl.fromTo("#s5-arrow",
+    { x: -20, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    28.7);
+  tl.fromTo("#s5-url",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    29.0);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-book", "#s5-url"], { opacity: 0.94, duration: 0.4 }, 29.5);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

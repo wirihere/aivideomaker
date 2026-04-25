@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hospitality — Cafe Vibe 15s vertical (warm-community)</title>
+
+<!--
+  VERTICAL TEMPLATE — HOSPITALITY · CAFE VIBE (15s, 1080×1920)
+  ============================================================
+  Format:        Vertical 15-second cafe / brunch spot reel.
+  Base template: warm-community (organic, human, editorial serif, soft motion).
+  Recommended LUT: --lut=warm --strength=1.0
+  Scenes:
+    1.  0–3s   Moody hook — "Your Tuesday morning" stamp over warm grade
+    2.  3–9s   Three-up dish reveals — placeholder squares, stagger entrance
+    3.  9–13s  Location chip — "<Cafe> · <suburb> · 7am-3pm"
+    4. 13–15s  URL underline + brand wordmark
+
+  Hospitality conversion drivers (cafe / brunch):
+    - Visual appetite: dish closeups + pastry/coffee cup shots, shot from above.
+    - Atmosphere: warm interior, golden hour light, regulars at tables.
+    - Booking ease: one address line + hours; no friction copy ("walk in" works).
+
+  Asset slots (replace the placeholder coloured squares with images):
+    - #s1-bg          hero atmosphere shot (interior, eye-level)
+    - #s2-dish-1      dish closeup #1 — flatlay, golden tone (e.g. avo toast)
+    - #s2-dish-2      dish closeup #2 — flatlay (e.g. pastry / latte art)
+    - #s2-dish-3      dish closeup #3 — flatlay (e.g. brunch plate)
+    - #s4-mark        wordmark / logo-text element
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy ([CAFE NAME], [SUBURB], [HOURS], [URL]).
+    4. Drop dish photography into the .dish-tile divs (background-image).
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — warm-community sets soft pace, editorial serif. -->
+<link rel="stylesheet" href="../../design/templates/warm-community.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FBF9F6); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #1B2A3D);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 120px 80px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #C77D3A);
+    margin-bottom: 32px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Moody hook ---- */
+  .s1 {
+    background: var(--card-navy, #2B1E12);
+    color: var(--card-paper, #FBF1E0);
+  }
+  .s1-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 35%, rgba(199, 125, 58, 0.42) 0%, rgba(43, 30, 18, 0) 55%),
+      radial-gradient(ellipse at 75% 80%, rgba(199, 125, 58, 0.20) 0%, rgba(43, 30, 18, 0) 55%),
+      linear-gradient(180deg, rgba(43, 30, 18, 0.4) 0%, rgba(43, 30, 18, 0.85) 100%),
+      var(--card-navy, #2B1E12);
+    z-index: 0;
+  }
+  .s1-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-kicker {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    letter-spacing: 0.36em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #C77D3A);
+    margin-bottom: 36px;
+    opacity: 0.95;
+  }
+  .s1-hook {
+    font-family: var(--card-font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 170px;
+    line-height: 1.0;
+    letter-spacing: -0.018em;
+    color: var(--card-paper, #FBF1E0);
+    text-align: center;
+    margin: 0;
+    max-width: 920px;
+  }
+  .s1-hook-emph {
+    font-style: normal;
+    color: var(--card-accent, #C77D3A);
+    display: inline-block;
+  }
+
+  /* ---- Scene 2: Three-up dish reveals ---- */
+  .s2 {
+    background: var(--card-paper, #FBF1E0);
+    color: var(--card-navy, #2B1E12);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%;
+  }
+  .s2-kicker {
+    font-family: var(--card-font-ui);
+    font-size: 28px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #C77D3A);
+    margin-bottom: 50px;
+    opacity: 0.9;
+  }
+  .s2-dish-stack {
+    display: flex; flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    align-items: center;
+  }
+  .s2-dish {
+    width: 720px; height: 360px;
+    border-radius: 28px;
+    box-shadow: var(--vibe-shadow-soft, 0 18px 36px rgba(28,30,38,0.10));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-ui);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--card-paper, #FBF1E0);
+    text-transform: uppercase;
+    opacity: 0.95;
+  }
+  .s2-dish-1 {
+    background: linear-gradient(135deg,
+      rgba(199, 125, 58, 1) 0%,
+      rgba(160, 90, 36, 1) 60%,
+      rgba(110, 60, 24, 1) 100%);
+  }
+  .s2-dish-2 {
+    background: linear-gradient(135deg,
+      rgba(220, 165, 90, 1) 0%,
+      rgba(180, 120, 50, 1) 60%,
+      rgba(120, 70, 28, 1) 100%);
+  }
+  .s2-dish-3 {
+    background: linear-gradient(135deg,
+      rgba(190, 110, 50, 1) 0%,
+      rgba(140, 80, 32, 1) 60%,
+      rgba(80, 45, 18, 1) 100%);
+  }
+
+  /* ---- Scene 3: Location chip ---- */
+  .s3 {
+    background: var(--card-paper, #FBF1E0);
+    color: var(--card-navy, #2B1E12);
+  }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-cafe {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 140px;
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--card-navy, #2B1E12);
+    margin: 0 0 32px 0;
+    max-width: 920px;
+  }
+  .s3-meta {
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 22px;
+  }
+  .s3-suburb {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 44px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--card-accent, #C77D3A);
+    margin: 0;
+  }
+  .s3-hours-pill {
+    display: inline-block;
+    padding: 22px 44px;
+    border-radius: 999px;
+    background: var(--card-navy, #2B1E12);
+    color: var(--card-paper, #FBF1E0);
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 4: URL underline + brand mark ---- */
+  .s4 {
+    background: var(--card-accent, #C77D3A);
+    color: var(--card-paper, #FBF1E0);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-mark {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 150px;
+    line-height: 1.0;
+    letter-spacing: -0.018em;
+    color: var(--card-paper, #FBF1E0);
+    margin: 0 0 36px 0;
+  }
+  .s4-url-wrap {
+    display: inline-block;
+    position: relative;
+  }
+  .s4-url {
+    font-family: var(--card-font-ui);
+    font-weight: 600;
+    font-size: 56px;
+    letter-spacing: 0.04em;
+    color: var(--card-paper, #FBF1E0);
+    margin: 0;
+    padding-bottom: 12px;
+  }
+  .s4-url-underline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 6px;
+    background: var(--card-paper, #FBF1E0);
+    transform-origin: left center;
+    will-change: transform;
+  }
+</style>
+</head>
+<body>
+
+<div id="hospitality-cafe-vibe-15s" class="comp clip"
+     data-composition-id="hospitality-cafe-vibe-15s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="15" data-track-index="0">
+
+  <!-- Scene 1 — Moody hook (0–3s) — warm grade -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="3" data-track-index="1"
+       data-scene-grade="warm">
+    <div id="s1-bg" class="s1-bg"></div>
+    <div class="s1-content">
+      <div id="s1-kicker" class="s1-kicker">GOOD MORNING</div>
+      <h1 id="s1-hook" class="s1-hook">Your Tuesday <span id="s1-hook-emph" class="s1-hook-emph">morning.</span></h1>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Three-up dish reveals (3–9s) — warm grade -->
+  <div id="s2" class="scene s2 clip"
+       data-start="3" data-duration="6" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="s2-content">
+      <div id="s2-kicker" class="s2-kicker">ON THE COUNTER TODAY</div>
+      <div class="s2-dish-stack">
+        <div id="s2-dish-1" class="s2-dish s2-dish-1">[ DISH ONE — FLATLAY ]</div>
+        <div id="s2-dish-2" class="s2-dish s2-dish-2">[ DISH TWO — FLATLAY ]</div>
+        <div id="s2-dish-3" class="s2-dish s2-dish-3">[ DISH THREE — FLATLAY ]</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Location chip (9–13s) — warm grade -->
+  <div id="s3" class="scene s3 clip"
+       data-start="9" data-duration="4" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="s3-content">
+      <h2 id="s3-cafe" class="s3-cafe">[Cafe Name]</h2>
+      <div class="s3-meta">
+        <div id="s3-suburb" class="s3-suburb">[Suburb]</div>
+        <div id="s3-hours" class="s3-hours-pill">7am – 3pm · Daily</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — URL underline + brand mark (13–15s) — warm grade -->
+  <div id="s4" class="scene s4 clip"
+       data-start="13" data-duration="2" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="s4-content">
+      <div id="s4-mark" class="s4-mark">[Cafe]</div>
+      <div class="s4-url-wrap">
+        <div id="s4-url" class="s4-url">yourcafe.com</div>
+        <div id="s4-url-underline" class="s4-url-underline"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["hospitality-cafe-vibe-15s"] = tl;
+
+  // ---- Scene 1: 0–3s — moody hook -----------------------------------
+  tl.fromTo("#s1-bg",
+    { opacity: 0, scale: 1.06 },
+    { opacity: 1, scale: 1, duration: 1.4, ease: "power2.out" },
+    0.0);
+  tl.fromTo("#s1-kicker",
+    { y: 20, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    0.4);
+  textFx.cascade(tl, "#s1-hook", { at: 0.9, duration: 0.8, stagger: 0.10 });
+
+  // ---- Scene 2: 3–9s — three-up dish reveals ------------------------
+  tl.fromTo("#s2-kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    3.2);
+  tl.fromTo(["#s2-dish-1", "#s2-dish-2", "#s2-dish-3"],
+    { y: 80, scale: 0.94, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.9, stagger: 0.45, ease: "power3.out" },
+    3.6);
+
+  // ---- Scene 3: 9–13s — location chip -------------------------------
+  textFx.cascade(tl, "#s3-cafe", { at: 9.2, duration: 0.8, stagger: 0.08 });
+  tl.fromTo("#s3-suburb",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    10.4);
+  tl.fromTo("#s3-hours",
+    { y: 22, scale: 0.92, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)" },
+    11.0);
+
+  // ---- Scene 4: 13–15s — URL underline + brand mark -----------------
+  textFx.cascade(tl, "#s4-mark", { at: 13.1, duration: 0.6, stagger: 0.07 });
+  tl.fromTo("#s4-url",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    13.7);
+  tl.fromTo("#s4-url-underline",
+    { scaleX: 0 },
+    { scaleX: 1, duration: 0.6, ease: "power2.out" },
+    14.0);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s4-mark", "#s4-url"], { opacity: 0.94, duration: 0.3 }, 14.6);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

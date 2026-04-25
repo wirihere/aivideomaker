@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HyperFrames — Simple Preview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg:        #0e1116;
+    --panel:    #181c24;
+    --panel-2:  #1f242e;
+    --border:   #2a313d;
+    --text:     #e6e8ec;
+    --text-dim: #8a93a3;
+    --accent:   #6cb6ff;
+    --accent-2: #2f6fb8;
+    --good:     #5fcf80;
+    --warn:     #f5a35c;
+    --shadow:   0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:        #f4f5f7;
+      --panel:    #ffffff;
+      --panel-2:  #f0f2f5;
+      --border:   #d8dde4;
+      --text:     #1a1f2a;
+      --text-dim: #5d6776;
+      --accent:   #2563eb;
+      --accent-2: #1d4ed8;
+      --shadow:   0 8px 32px rgba(0,0,0,0.12);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    overflow: hidden;
+  }
+
+  .stage {
+    position: fixed;
+    inset: 0 0 72px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 16px;
+  }
+
+  .frame-wrap {
+    position: relative;
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transform-origin: center center;
+    /* width/height/transform set by JS */
+  }
+
+  iframe.preview {
+    display: block;
+    border: 0;
+    background: #000;
+    /* Iframe uses the composition's intrinsic px size; container scales it. */
+  }
+
+  .toolbar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(6px);
+    z-index: 10;
+  }
+
+  .toolbar .group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+    color: var(--text);
+    height: 36px;
+    min-width: 36px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.12s, border-color 0.12s, color 0.12s;
+    user-select: none;
+  }
+  .btn:hover { background: var(--border); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent-2);
+  }
+  .btn.primary:hover { background: var(--accent-2); }
+
+  .btn .icon {
+    font-size: 14px;
+    line-height: 1;
+    display: inline-block;
+  }
+
+  .scrub {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  input[type="range"].slider {
+    flex: 1 1 auto;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    outline: none;
+    cursor: pointer;
+    min-width: 120px;
+  }
+  input[type="range"].slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--panel);
+    cursor: pointer;
+    box-shadow: 0 0 0 1px var(--accent-2);
+  }
+  input[type="range"].slider::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--panel);
+    cursor: pointer;
+  }
+
+  .time {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    min-width: 130px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    user-select: none;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .chip .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--text-dim);
+    flex: none;
+  }
+  .chip .dot.ok    { background: var(--good); }
+  .chip .dot.warn  { background: var(--warn); }
+  .chip .dot.error { background: #f56565; animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .status {
+    position: fixed;
+    top: 12px; right: 12px;
+    z-index: 11;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .status .pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(20,24,32,0.7);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  .empty {
+    color: var(--text-dim);
+    font-size: 14px;
+    text-align: center;
+    max-width: 480px;
+    line-height: 1.5;
+  }
+  .empty code {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  .kbd {
+    display: inline-block;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin: 0 2px;
+  }
+
+  /* Hide ugly scrollbars on iframe */
+  iframe.preview::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="frame-wrap" id="frameWrap" style="display:none;">
+    <iframe class="preview" id="preview" title="HyperFrames composition"></iframe>
+  </div>
+  <div class="empty" id="empty">
+    Loading <code>../index.html</code>…
+  </div>
+</div>
+
+<div class="status">
+  <div class="pill" id="hint"><span class="kbd">Space</span> play/pause &nbsp; <span class="kbd">R</span> reload &nbsp; <span class="kbd">←</span>/<span class="kbd">→</span> ±0.5s</div>
+</div>
+
+<div class="toolbar" role="toolbar" aria-label="Playback controls">
+  <div class="group">
+    <button class="btn primary" id="playBtn" title="Play / Pause (Space)">
+      <span class="icon" id="playIcon">▶</span>
+      <span id="playLabel">Play</span>
+    </button>
+    <button class="btn" id="restartBtn" title="Restart (0)">
+      <span class="icon">⟲</span>
+    </button>
+    <button class="btn" id="reloadBtn" title="Reload iframe (R)">
+      <span class="icon">↻</span>
+    </button>
+  </div>
+
+  <div class="scrub">
+    <input type="range" class="slider" id="scrub" min="0" max="1000" step="1" value="0" aria-label="Scrub timeline">
+    <div class="time" id="time">0:00.0 / 0:00.0</div>
+  </div>
+
+  <div class="group">
+    <div class="chip" id="chip" title="Composition ID">
+      <span class="dot" id="chipDot"></span>
+      <span id="chipText">no composition</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // --- DOM refs -----------------------------------------------------------
+  const stage      = document.getElementById("stage");
+  const frameWrap  = document.getElementById("frameWrap");
+  const iframe     = document.getElementById("preview");
+  const empty      = document.getElementById("empty");
+  const playBtn    = document.getElementById("playBtn");
+  const playIcon   = document.getElementById("playIcon");
+  const playLabel  = document.getElementById("playLabel");
+  const restartBtn = document.getElementById("restartBtn");
+  const reloadBtn  = document.getElementById("reloadBtn");
+  const scrub      = document.getElementById("scrub");
+  const timeEl     = document.getElementById("time");
+  const chip       = document.getElementById("chip");
+  const chipDot    = document.getElementById("chipDot");
+  const chipText   = document.getElementById("chipText");
+
+  // --- State --------------------------------------------------------------
+  let timeline    = null;     // gsap.timeline (paused) inside iframe
+  let timelineId  = null;     // composition id key in __timelines
+  let duration    = 0;        // seconds
+  let compW       = 1920;
+  let compH       = 1080;
+  let scrubbing   = false;    // user is dragging the slider
+  let rafId       = 0;
+  let attachAttempts = 0;
+
+  // --- Utilities ----------------------------------------------------------
+  function fmtTime(s) {
+    if (!Number.isFinite(s)) s = 0;
+    s = Math.max(0, s);
+    const m = Math.floor(s / 60);
+    const sec = (s - m * 60);
+    return `${m}:${sec.toFixed(1).padStart(4, "0")}`;
+  }
+
+  function setChip(text, level = "neutral") {
+    chipText.textContent = text;
+    chipDot.className = "dot";
+    if (level === "ok")    chipDot.classList.add("ok");
+    if (level === "warn")  chipDot.classList.add("warn");
+    if (level === "error") chipDot.classList.add("error");
+  }
+
+  function setPlayUI(playing) {
+    playIcon.textContent = playing ? "❚❚" : "▶";
+    playLabel.textContent = playing ? "Pause" : "Play";
+  }
+
+  // --- Iframe sizing ------------------------------------------------------
+  function fitFrame() {
+    if (!frameWrap || frameWrap.style.display === "none") return;
+    const stageRect = stage.getBoundingClientRect();
+    const padX = 32, padY = 32;
+    const availW = Math.max(100, stageRect.width  - padX);
+    const availH = Math.max(100, stageRect.height - padY);
+    const scale = Math.min(availW / compW, availH / compH);
+    iframe.style.width  = compW + "px";
+    iframe.style.height = compH + "px";
+    frameWrap.style.width  = compW + "px";
+    frameWrap.style.height = compH + "px";
+    frameWrap.style.transform = `scale(${scale})`;
+  }
+  window.addEventListener("resize", fitFrame);
+
+  // --- Attach to timeline inside iframe -----------------------------------
+  function attachTimeline() {
+    attachAttempts++;
+    let win;
+    try { win = iframe.contentWindow; } catch { win = null; }
+
+    if (!win) {
+      if (attachAttempts < 200) return setTimeout(attachTimeline, 50);
+      setChip("iframe not accessible", "error");
+      return;
+    }
+
+    const doc = win.document;
+    const ready = doc && doc.readyState === "complete";
+    const tls = win.__timelines;
+    const root = doc && doc.querySelector("[data-composition-id]");
+
+    if (!ready || !tls || !root) {
+      if (attachAttempts < 400) return setTimeout(attachTimeline, 50);
+      setChip("no timeline found", "error");
+      empty.style.display = "block";
+      empty.textContent = "Could not find a timeline in ../index.html. The page must register window.__timelines[id] and have a [data-composition-id] root element.";
+      return;
+    }
+
+    // Pick the timeline matching the composition root.
+    const id = root.getAttribute("data-composition-id") || Object.keys(tls)[0];
+    const tl = tls[id];
+    if (!tl || typeof tl.duration !== "function") {
+      if (attachAttempts < 400) return setTimeout(attachTimeline, 50);
+      setChip("timeline not registered", "error");
+      return;
+    }
+
+    timeline   = tl;
+    timelineId = id;
+
+    // Read intrinsic composition size (data-width / data-height).
+    const w = parseInt(root.getAttribute("data-width"),  10);
+    const h = parseInt(root.getAttribute("data-height"), 10);
+    if (Number.isFinite(w) && w > 0) compW = w;
+    if (Number.isFinite(h) && h > 0) compH = h;
+
+    duration = Math.max(0.001, tl.duration());
+
+    // Make sure it's paused at 0 — the standalone autoplay guard checks
+    // `window === window.top`, which is false when wrapped here, so it should
+    // already be paused; but be defensive in case a future composition
+    // forgets the guard.
+    try { tl.pause(0); } catch {}
+
+    setChip(id || "(unknown)", "ok");
+    chip.title = `Composition: ${id}\nDuration: ${duration.toFixed(2)}s\nSize: ${compW}×${compH}`;
+    empty.style.display = "none";
+    frameWrap.style.display = "block";
+    fitFrame();
+    startTicker();
+  }
+
+  // --- Ticker -------------------------------------------------------------
+  function startTicker() {
+    cancelAnimationFrame(rafId);
+    const tick = () => {
+      if (!timeline) return;
+      let t = 0;
+      try { t = timeline.time(); } catch {}
+      const playing = timeline.isActive && timeline.isActive();
+
+      if (!scrubbing) {
+        const v = Math.max(0, Math.min(1000, Math.round((t / duration) * 1000)));
+        if (Number(scrub.value) !== v) scrub.value = String(v);
+      }
+      timeEl.textContent = `${fmtTime(t)} / ${fmtTime(duration)}`;
+      setPlayUI(!!playing);
+
+      // Auto-pause UI state when timeline reaches end.
+      if (t >= duration - 0.001 && playing) {
+        try { timeline.pause(); } catch {}
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+  }
+
+  // --- Controls -----------------------------------------------------------
+  function play() {
+    if (!timeline) return;
+    // If at end, restart.
+    let t = 0;
+    try { t = timeline.time(); } catch {}
+    if (t >= duration - 0.001) {
+      try { timeline.play(0); } catch {}
+    } else {
+      try { timeline.play(); } catch {}
+    }
+  }
+  function pause() {
+    if (!timeline) return;
+    try { timeline.pause(); } catch {}
+  }
+  function togglePlay() {
+    if (!timeline) return;
+    const playing = timeline.isActive && timeline.isActive();
+    if (playing) pause(); else play();
+  }
+  function restart() {
+    if (!timeline) return;
+    try { timeline.pause(0); } catch {}
+  }
+  function nudge(dt) {
+    if (!timeline) return;
+    let t = 0;
+    try { t = timeline.time(); } catch {}
+    const next = Math.max(0, Math.min(duration, t + dt));
+    try { timeline.pause(next); } catch {}
+  }
+  function reload() {
+    // Cache-bust to force a fresh fetch of the composition + assets.
+    timeline = null;
+    timelineId = null;
+    duration = 0;
+    attachAttempts = 0;
+    frameWrap.style.display = "none";
+    empty.style.display = "block";
+    empty.textContent = "Reloading…";
+    setChip("loading…", "warn");
+    iframe.src = `../index.html?t=${Date.now()}`;
+    iframe.addEventListener("load", onIframeLoad, { once: true });
+  }
+
+  playBtn.addEventListener("click", togglePlay);
+  restartBtn.addEventListener("click", restart);
+  reloadBtn.addEventListener("click", reload);
+
+  scrub.addEventListener("input", (e) => {
+    if (!timeline) return;
+    scrubbing = true;
+    const v = Number(e.target.value) / 1000;
+    const target = v * duration;
+    try { timeline.pause(target); } catch {}
+    timeEl.textContent = `${fmtTime(target)} / ${fmtTime(duration)}`;
+  });
+  scrub.addEventListener("change", () => { scrubbing = false; });
+  scrub.addEventListener("pointerup",   () => { scrubbing = false; });
+  scrub.addEventListener("pointercancel", () => { scrubbing = false; });
+
+  // Keyboard shortcuts.
+  document.addEventListener("keydown", (e) => {
+    // Don't hijack typing in form fields.
+    const t = e.target;
+    if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) {
+      // …unless it's our own scrub slider, where Space could collide with browser default.
+      if (t !== scrub) return;
+    }
+    if (e.code === "Space") {
+      e.preventDefault();
+      togglePlay();
+    } else if (e.key === "r" || e.key === "R") {
+      e.preventDefault();
+      reload();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      nudge(e.shiftKey ? -2 : -0.5);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      nudge(e.shiftKey ? 2 : 0.5);
+    } else if (e.key === "0" || e.key === "Home") {
+      e.preventDefault();
+      restart();
+    }
+  });
+
+  // --- Boot ---------------------------------------------------------------
+  function onIframeLoad() {
+    // Give scripts a tick to register __timelines, then attach.
+    attachAttempts = 0;
+    setTimeout(attachTimeline, 30);
+  }
+  iframe.addEventListener("load", onIframeLoad);
+  setChip("loading…", "warn");
+  iframe.src = `../index.html?t=${Date.now()}`;
+
+  // Fit on initial layout (after fonts/etc.).
+  window.addEventListener("load", fitFrame);
+
+  // ── Hot-reload via Server-Sent Events ────────────────────────────────
+  // The preview server (scripts/preview.mjs) watches index.html, design/,
+  // compositions/, scripts/lib/ and broadcasts "change" events via SSE.
+  // On each event we cache-bust the iframe src so the user sees the edit
+  // without ever reaching for the reload button.
+  let hotReloadDebounce = null;
+  function setupHotReload() {
+    try {
+      const es = new EventSource("/__hf-changes");
+      es.addEventListener("hello", () => {
+        console.log("[hot-reload] connected");
+      });
+      es.addEventListener("change", (ev) => {
+        let file = "?";
+        try { file = JSON.parse(ev.data).file || "?"; } catch {}
+        clearTimeout(hotReloadDebounce);
+        hotReloadDebounce = setTimeout(() => {
+          console.log(`[hot-reload] reloading iframe (changed: ${file})`);
+          // Cache-bust + re-attach. The existing iframe load handler re-binds
+          // the timeline, restarts the fit loop, etc.
+          iframe.src = `../index.html?t=${Date.now()}`;
+        }, 200);
+      });
+      es.onerror = () => {
+        // Server might be restarting; back off and retry.
+        es.close();
+        setTimeout(setupHotReload, 1500);
+      };
+    } catch (err) {
+      console.warn("[hot-reload] disabled:", err);
+    }
+  }
+  setupHotReload();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trades Trust Builder — 45s landscape (warm-community)</title>
+
+<!--
+  VERTICAL TEMPLATE — TRADES / TRUST BUILDER (45s, 1920×1080)
+  ===========================================================
+  Format:        Landscape 45-second relationship-driven local trades
+                 piece. Best for established family businesses, owner-
+                 operators with a strong personal brand: builders,
+                 sparkies, plumbers, painters, mechanics with reviews
+                 and a service area to defend.
+  Base template: warm-community (organic, human, editorial serif, soft).
+  Recommended LUT: --lut=warm --strength=0.9
+  Music:         warm-community family.
+
+  Conversion drivers:
+    1. Owner face + name + years in trade.
+    2. Range of services (6-up grid — proves they're not a one-trick op).
+    3. Trust signals (license, insurance, rating, area count).
+    4. Real Google review pull-quote.
+    5. Phone-led CTA at the end.
+
+  Scenes:
+    1.  0–6s   Owner intro — photo + name + years
+    2.  6–18s  Services offered — 6-up grid with stagger
+    3. 18–28s  Trust signals — licenses + cert + rating + area
+    4. 28–38s  Social proof — Google review pull-quote
+    5. 38–45s  CTA — "Free quote — call <number>" + URL
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+       cp compositions/verticals/trades-trust-builder-45s.html index.html
+    2. Update design paths (`../../design/` → `design/`).
+    3. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+    4. Fill in placeholder copy (NAME, YEARS, SERVICES, LICENSES, RATING,
+       AREAS, REVIEW QUOTE, REVIEWER, PHONE, URL).
+    5. Replace `.s1-photo` placeholder gradient with real <img> tag.
+    6. Run: npx hyperframes preview     (sanity check)
+    7. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — warm-community sets soft pace, editorial serif. -->
+<link rel="stylesheet" href="../../design/templates/warm-community.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FBF9F6); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #1B2A3D);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 160px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.95;
+  }
+
+  /* ---- Scene 1: Owner intro ---- */
+  .s1 {
+    background: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 96px;
+    width: 100%; max-width: 1500px;
+    justify-content: center;
+  }
+  .s1-photo {
+    width: 460px; height: 460px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,
+      var(--card-accent, #1A9E8F) 0%,
+      var(--card-paper-soft, #F5EFE6) 100%);
+    box-shadow: var(--vibe-shadow-soft, 0 18px 36px rgba(28,30,38,0.10));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-size: 200px;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1;
+    flex-shrink: 0;
+    /* Replace this whole block contents with <img src="assets/owner.jpg" /> */
+  }
+  .s1-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s1-name {
+    font-family: var(--card-font-display);
+    font-size: 110px;
+    font-weight: 600;
+    letter-spacing: -0.018em;
+    line-height: 1.0;
+    color: var(--card-navy, #1B2A3D);
+    margin: 0;
+  }
+  .s1-trade {
+    font-family: var(--card-font-display);
+    font-style: italic;
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin: 18px 0 0 0;
+    line-height: 1.3;
+  }
+  .s1-years-chip {
+    display: inline-block;
+    margin-top: 32px;
+    padding: 16px 32px;
+    border-radius: 999px;
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 2: Services 6-up grid ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%; max-width: 1600px;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 78px;
+    letter-spacing: -0.018em;
+    line-height: 1.04;
+    color: var(--card-navy, #1B2A3D);
+    margin: 0 0 56px 0;
+  }
+  .s2-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+  }
+  .s2-cell {
+    padding: 36px 32px;
+    border-radius: 18px;
+    background: var(--card-paper-soft, #F5EFE6);
+    border: 1px solid color-mix(in srgb, var(--card-slate-ink, #4b5a6d) 14%, transparent);
+    text-align: left;
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+  .s2-cell-num {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: 0.10em;
+    line-height: 1;
+  }
+  .s2-cell-name {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 38px;
+    line-height: 1.14;
+    color: var(--card-navy, #1B2A3D);
+    margin: 0;
+  }
+  .s2-cell-detail {
+    font-family: var(--card-font-ui);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin: 0;
+  }
+
+  /* ---- Scene 3: Trust signals ---- */
+  .s3 {
+    background: var(--card-navy, #1B2A3D);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-sparkle-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s3-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%; max-width: 1600px;
+  }
+  .s3-kicker {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    letter-spacing: 0.32em;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 36px;
+  }
+  .s3-headline {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 76px;
+    letter-spacing: -0.018em;
+    line-height: 1.0;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0 0 56px 0;
+  }
+  .s3-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    width: 100%;
+  }
+  .s3-stat {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    padding: 28px 16px;
+  }
+  .s3-stat-num {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 120px;
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+  }
+  .s3-stat-suffix {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 90px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: -0.02em;
+    margin-left: 4px;
+  }
+  .s3-stat-label {
+    font-family: var(--card-font-ui);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 14px;
+    line-height: 1.3;
+    max-width: 260px;
+  }
+  .s3-cert-text {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 56px;
+    letter-spacing: -0.012em;
+    line-height: 1.0;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+  }
+
+  /* ---- Scene 4: Google review ---- */
+  .s4 {
+    background: var(--card-paper-soft, #F5EFE6);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%; max-width: 1500px;
+  }
+  .s4-stars {
+    font-family: var(--card-font-display);
+    font-size: 80px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: 0.18em;
+    line-height: 1;
+    margin-bottom: 28px;
+  }
+  .s4-quote-mark {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 200px;
+    color: var(--card-accent, #1A9E8F);
+    line-height: 0.6;
+    margin-bottom: 24px;
+  }
+  .s4-quote {
+    font-family: var(--card-font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 1.18;
+    color: var(--card-navy, #1B2A3D);
+    letter-spacing: -0.012em;
+    margin: 0;
+    max-width: 1500px;
+  }
+  .s4-attrib {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 36px;
+  }
+
+  /* ---- Scene 5: CTA ---- */
+  .s5 {
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: 14px;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 110px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    margin: 0 0 8px 0;
+  }
+  .s5-phone {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 150px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.02em;
+    line-height: 0.96;
+    margin: 0;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-weight: 600;
+    font-size: 32px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: 0.10em;
+    margin-top: 28px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="trades-trust-builder-45s" class="comp clip"
+     data-composition-id="trades-trust-builder-45s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="45" data-track-index="0">
+
+  <!-- Scene 1 — Owner intro (0–6s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="6" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="s1-content">
+      <div id="s1-photo" class="s1-photo">D</div>
+      <div class="s1-text">
+        <div class="scene__kicker">MEET THE OWNER</div>
+        <h1 id="s1-name" class="s1-name">Dave Walker</h1>
+        <p id="s1-trade" class="s1-trade">Master electrician, North Shore.</p>
+        <span id="s1-years" class="s1-years-chip">22 YEARS ON THE TOOLS</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Services 6-up grid (6–18s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="6" data-duration="12" data-track-index="1">
+    <div class="s2-content">
+      <h2 id="s2-headline" class="s2-headline">What we handle.</h2>
+      <div id="s2-grid" class="s2-grid">
+        <div class="s2-cell">
+          <div class="s2-cell-num">01</div>
+          <h3 class="s2-cell-name">Switchboards</h3>
+          <p class="s2-cell-detail">Upgrades, RCD installs, fault finding.</p>
+        </div>
+        <div class="s2-cell">
+          <div class="s2-cell-num">02</div>
+          <h3 class="s2-cell-name">New builds</h3>
+          <p class="s2-cell-detail">Full wire-up, prewire to certify.</p>
+        </div>
+        <div class="s2-cell">
+          <div class="s2-cell-num">03</div>
+          <h3 class="s2-cell-name">Renovations</h3>
+          <p class="s2-cell-detail">Clean retrofits, no torn-up walls.</p>
+        </div>
+        <div class="s2-cell">
+          <div class="s2-cell-num">04</div>
+          <h3 class="s2-cell-name">Solar &amp; battery</h3>
+          <p class="s2-cell-detail">Grid-tied PV, hybrid systems, EV chargers.</p>
+        </div>
+        <div class="s2-cell">
+          <div class="s2-cell-num">05</div>
+          <h3 class="s2-cell-name">Lighting design</h3>
+          <p class="s2-cell-detail">Plans, dimmers, smart-home, outdoor.</p>
+        </div>
+        <div class="s2-cell">
+          <div class="s2-cell-num">06</div>
+          <h3 class="s2-cell-name">Maintenance</h3>
+          <p class="s2-cell-detail">Property checks, landlord compliance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Trust signals (18–28s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="18" data-duration="10" data-track-index="1">
+    <div id="s3-sparkle-host" class="s3-sparkle-host"></div>
+    <div class="s3-content">
+      <div id="s3-kicker" class="s3-kicker">YOU CAN COUNT ON US</div>
+      <h2 id="s3-headline" class="s3-headline">Licensed, insured, vouched-for.</h2>
+      <div id="s3-row" class="s3-row">
+        <div class="s3-stat">
+          <div style="display:flex;align-items:baseline;justify-content:center;">
+            <span id="s3-stat-1" class="s3-stat-num fx-counter">22</span>
+          </div>
+          <div class="s3-stat-label">YEARS REGISTERED</div>
+        </div>
+        <div class="s3-stat">
+          <div style="display:flex;align-items:baseline;justify-content:center;">
+            <span id="s3-stat-2" class="s3-stat-num fx-counter">4.9</span><span id="s3-stat-2-suffix" class="s3-stat-suffix">★</span>
+          </div>
+          <div class="s3-stat-label">GOOGLE RATING</div>
+        </div>
+        <div class="s3-stat">
+          <div style="display:flex;align-items:baseline;justify-content:center;">
+            <span id="s3-stat-3" class="s3-stat-num fx-counter">340</span><span id="s3-stat-3-suffix" class="s3-stat-suffix">+</span>
+          </div>
+          <div class="s3-stat-label">JOBS COMPLETED</div>
+        </div>
+        <div class="s3-stat">
+          <div style="display:flex;align-items:baseline;justify-content:center;">
+            <span id="s3-stat-4" class="s3-stat-num fx-counter">12</span>
+          </div>
+          <div class="s3-stat-label">SUBURBS SERVED</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Google review (28–38s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="28" data-duration="10" data-track-index="1">
+    <div class="s4-content">
+      <div id="s4-stars" class="s4-stars">★ ★ ★ ★ ★</div>
+      <div id="s4-quote-mark" class="s4-quote-mark fx-long-shadow">&ldquo;</div>
+      <blockquote id="s4-quote" class="s4-quote">Showed up on time, fixed it the same day, charged exactly what he quoted. Have recommended him to half the street.</blockquote>
+      <div id="s4-attrib" class="s4-attrib">— GOOGLE REVIEW · BIRKENHEAD</div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA (38–45s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="38" data-duration="7" data-track-index="1">
+    <div class="s5-content">
+      <h2 id="s5-cta" class="s5-cta">Free quote — call us.</h2>
+      <div id="s5-phone" class="s5-phone">0800 555 123</div>
+      <div id="s5-url" class="s5-url">yourbrand.co.nz</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["trades-trust-builder-45s"] = tl;
+
+  // ---- Scene 1: 0–6s — owner intro ----------------------------------
+  tl.fromTo("#s1-photo",
+    { scale: 0.7, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.9, ease: "back.out(1.4)" },
+    0.4);
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    0.8);
+  textFx.cascade(tl, "#s1-name", { at: 1.2, duration: 0.8, stagger: 0.10 });
+  tl.fromTo("#s1-trade",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    2.6);
+  tl.fromTo("#s1-years",
+    { y: 18, scale: 0.9, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)" },
+    3.6);
+
+  // ---- Scene 2: 6–18s — services 6-up grid --------------------------
+  textFx.cascade(tl, "#s2-headline", { at: 6.4, duration: 0.8, stagger: 0.10 });
+  textFx.stagger(tl, "#s2-grid",
+    { at: 7.6, duration: 0.6, stagger: 0.06, rotation: 0, fromY: 18 });
+  tl.fromTo("#s2-grid .s2-cell",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, stagger: 0.20, ease: "power3.out" },
+    7.8);
+
+  // ---- Scene 3: 18–28s — trust signals ------------------------------
+  glitterFx.ambient(tl, "#s3-sparkle-host", {
+    at: 18.0, count: 38, duration: 10.0, seed: 23
+  });
+  tl.fromTo("#s3-kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    18.3);
+  textFx.cascade(tl, "#s3-headline", { at: 18.8, duration: 0.8, stagger: 0.10 });
+  tl.fromTo("#s3-row .s3-stat",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, stagger: 0.20, ease: "power3.out" },
+    20.6);
+  textFx.counter(tl, "#s3-stat-1", { at: 21.2, duration: 1.4, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s3-stat-2", { at: 21.4, duration: 1.4, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s3-stat-3", { at: 21.6, duration: 1.6, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s3-stat-4", { at: 21.8, duration: 1.4, from: 0, ease: "power2.out" });
+
+  // ---- Scene 4: 28–38s — Google review ------------------------------
+  tl.fromTo("#s4-stars",
+    { scale: 0.85, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.5)" },
+    28.3);
+  tl.fromTo("#s4-quote-mark",
+    { scale: 0.6, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.9, ease: "back.out(1.4)" },
+    28.9);
+  textFx.stagger(tl, "#s4-quote",
+    { at: 29.8, duration: 0.7, stagger: 0.018, rotation: -2, fromY: 14 });
+  tl.fromTo("#s4-attrib",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    34.4);
+
+  // ---- Scene 5: 38–45s — CTA ----------------------------------------
+  tl.fromTo("#s5-cta",
+    { y: 28, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    38.3);
+  tl.fromTo("#s5-phone",
+    { scale: 0.88, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.4)" },
+    38.9);
+  effectFx.glitchBurst(tl, "#s5-phone", { at: 39.9, duration: 0.18 });
+  tl.fromTo("#s5-url",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    40.4);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-phone", "#s5-url"], { opacity: 0.92, duration: 0.4 }, 44.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

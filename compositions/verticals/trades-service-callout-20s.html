@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trades Service Callout — 20s vertical (kinetic-pop)</title>
+
+<!--
+  VERTICAL TEMPLATE — TRADES / SERVICE CALLOUT (20s, 1080×1920)
+  =============================================================
+  Format:        Vertical 20-second urgency-driven service callout for
+                 plumbers, electricians, locksmiths, roofers, glaziers,
+                 emergency repair trades.
+  Base template: kinetic-pop (snappy pace, heavy display sans, hard shadows).
+  Recommended LUT: --lut=pop --strength=1.0
+  Music:         kinetic-pop family (urgent, percussive).
+
+  Conversion drivers (in priority order):
+    1. PHONE NUMBER, big and on screen the longest.
+    2. URGENT problem language ("burst pipe", "power out").
+    3. SERVICE AREA (suburb / city / region).
+    4. TRUST chip ("Licensed · Insured · 24/7").
+
+  Scenes:
+    1.  0–4s   Hook — stamp problems ("Burst pipe? Power out?")
+    2.  4–10s  Service list — 4–5 line items, icon stagger
+    3. 10–14s  Service area + trust chip
+    4. 14–18s  Phone number HUGE + "Call now"
+    5. 18–20s  URL underline
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+       cp compositions/verticals/trades-service-callout-20s.html index.html
+    2. Update design paths (`../../design/` → `design/`).
+    3. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+    4. Fill in placeholder copy (PROBLEM-1/2/3, SERVICES, AREA, PHONE, URL).
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-navy, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 120px 80px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #E98B6A);
+    margin-bottom: 32px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Hook — problem stamps ---- */
+  .s1 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: 30px;
+  }
+  .s1-problem {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 140px;
+    letter-spacing: -0.03em;
+    line-height: 0.96;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .s1-problem--accent {
+    color: var(--card-warn, #E98B6A);
+  }
+
+  /* ---- Scene 2: Service list ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+    width: 100%; max-width: 880px;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 110px;
+    letter-spacing: -0.025em;
+    line-height: 0.98;
+    color: var(--card-navy, #0E0E12);
+    margin: 0 0 56px 0;
+    text-transform: uppercase;
+  }
+  .s2-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    gap: 28px;
+    width: 100%;
+  }
+  .s2-item {
+    display: flex; align-items: center;
+    gap: 28px;
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 1.1;
+    color: var(--card-navy, #0E0E12);
+  }
+  .s2-bullet {
+    flex: 0 0 auto;
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 38px;
+    line-height: 1;
+  }
+
+  /* ---- Scene 3: Service area + trust chip ---- */
+  .s3 {
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: 36px;
+  }
+  .s3-area-label {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--card-paper, #FBF9F6);
+    opacity: 0.92;
+  }
+  .s3-area {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    letter-spacing: -0.03em;
+    line-height: 0.96;
+    color: var(--card-paper, #FBF9F6);
+    text-align: center;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .s3-chip {
+    display: inline-flex;
+    margin-top: 28px;
+    padding: 22px 44px;
+    border-radius: 999px;
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+    font-family: var(--card-font-ui);
+    font-weight: 800;
+    font-size: 36px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 4: Phone HUGE ---- */
+  .s4 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s4-burst-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s4-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: 16px;
+  }
+  .s4-cta-label {
+    font-family: var(--card-font-ui);
+    font-weight: 800;
+    font-size: 64px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--card-warn, #E98B6A);
+    margin: 0;
+  }
+  .s4-phone {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 180px;
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    color: var(--card-paper, #FBF9F6);
+    margin: 8px 0 0 0;
+    white-space: nowrap;
+  }
+  .s4-sub {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--card-paper-soft, #d7dce3);
+    margin-top: 24px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 5: URL underline ---- */
+  .s5 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-mark {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 130px;
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    color: var(--card-navy, #0E0E12);
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 50px;
+    margin-top: 28px;
+    letter-spacing: 0.06em;
+    color: var(--card-accent, #1A9E8F);
+  }
+  .s5-underline {
+    width: 0; height: 6px;
+    background: var(--card-accent, #1A9E8F);
+    margin-top: 14px;
+    transform-origin: left center;
+  }
+</style>
+</head>
+<body>
+
+<div id="trades-service-callout-20s" class="comp clip"
+     data-composition-id="trades-service-callout-20s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="20" data-track-index="0">
+
+  <!-- Scene 1 — Hook (0–4s): problem stamps -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="4" data-track-index="1"
+       data-scene-grade="noir">
+    <div class="s1-content">
+      <div class="scene__kicker">EMERGENCY?</div>
+      <h1 id="s1-p1" class="s1-problem">Burst pipe?</h1>
+      <h1 id="s1-p2" class="s1-problem s1-problem--accent">Power out?</h1>
+      <h1 id="s1-p3" class="s1-problem">Roof leak?</h1>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Service list (4–10s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="4" data-duration="6" data-track-index="1">
+    <div class="s2-content">
+      <h2 id="s2-headline" class="s2-headline">We fix it.</h2>
+      <ul id="s2-list" class="s2-list">
+        <li class="s2-item"><span class="s2-bullet">1</span><span>Emergency plumbing</span></li>
+        <li class="s2-item"><span class="s2-bullet">2</span><span>Hot water repair</span></li>
+        <li class="s2-item"><span class="s2-bullet">3</span><span>Drain unblocking</span></li>
+        <li class="s2-item"><span class="s2-bullet">4</span><span>Leak detection</span></li>
+        <li class="s2-item"><span class="s2-bullet">5</span><span>Bathroom installs</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Service area + trust chip (10–14s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="10" data-duration="4" data-track-index="1">
+    <div class="s3-content">
+      <div id="s3-label" class="s3-area-label">SERVING</div>
+      <h2 id="s3-area" class="s3-area">Auckland-wide</h2>
+      <span id="s3-chip" class="s3-chip">LICENSED · INSURED · 24/7</span>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Phone HUGE (14–18s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="14" data-duration="4" data-track-index="1">
+    <div id="s4-burst-host" class="s4-burst-host"></div>
+    <div class="s4-content">
+      <div id="s4-cta-label" class="s4-cta-label">CALL NOW</div>
+      <h2 id="s4-phone" class="s4-phone">0800 555 123</h2>
+      <div id="s4-sub" class="s4-sub">FREE QUOTE · SAME-DAY CALLOUT</div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — URL underline (18–20s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="18" data-duration="2" data-track-index="1">
+    <div class="s5-content">
+      <h2 id="s5-mark" class="s5-mark">YOURBRAND</h2>
+      <div id="s5-url" class="s5-url">yourbrand.co.nz</div>
+      <div id="s5-underline" class="s5-underline"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["trades-service-callout-20s"] = tl;
+
+  // ---- Scene 1: 0–4s — problem stamps -------------------------------
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+    0.2);
+  textFx.stamp(tl, "#s1-p1", { at: 0.5, duration: 0.4, fromScale: 1.5 });
+  effectFx.glitchBurst(tl, "#s1-p1", { at: 0.9, duration: 0.18 });
+  textFx.stamp(tl, "#s1-p2", { at: 1.4, duration: 0.4, fromScale: 1.5 });
+  effectFx.glitchBurst(tl, "#s1-p2", { at: 1.8, duration: 0.18 });
+  textFx.stamp(tl, "#s1-p3", { at: 2.3, duration: 0.4, fromScale: 1.5 });
+  effectFx.glitchBurst(tl, "#s1-p3", { at: 2.7, duration: 0.18 });
+
+  // ---- Scene 2: 4–10s — service list --------------------------------
+  textFx.cascade(tl, "#s2-headline", { at: 4.2, duration: 0.6, stagger: 0.08 });
+  tl.fromTo("#s2-list .s2-item",
+    { x: -40, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.5, stagger: 0.18, ease: "power3.out" },
+    5.2);
+
+  // ---- Scene 3: 10–14s — service area + trust chip ------------------
+  tl.fromTo("#s3-label",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    10.2);
+  textFx.cascade(tl, "#s3-area", { at: 10.6, duration: 0.7, stagger: 0.08 });
+  effectFx.inkBleed(tl, "#s3-area", { at: 10.6, duration: 0.7, from: 50, to: 0 });
+  tl.fromTo("#s3-chip",
+    { y: 24, scale: 0.85, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.6)" },
+    12.2);
+
+  // ---- Scene 4: 14–18s — phone HUGE + CTA ---------------------------
+  glitterFx.burst(tl, "#s4-burst-host", {
+    at: 14.0, count: 60, duration: 1.6, seed: 41, distance: 720
+  });
+  textFx.stamp(tl, "#s4-cta-label", { at: 14.2, duration: 0.4, fromScale: 1.4 });
+  effectFx.glitchBurst(tl, "#s4-cta-label", { at: 14.5, duration: 0.18 });
+  tl.fromTo("#s4-phone",
+    { scale: 0.85, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.6)" },
+    14.8);
+  effectFx.glitchBurst(tl, "#s4-phone", { at: 15.6, duration: 0.18 });
+  tl.fromTo("#s4-sub",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    16.4);
+
+  // ---- Scene 5: 18–20s — URL underline ------------------------------
+  textFx.stamp(tl, "#s5-mark", { at: 18.0, duration: 0.4, fromScale: 1.4 });
+  tl.fromTo("#s5-url",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+    18.5);
+  tl.fromTo("#s5-underline",
+    { width: 0 },
+    { width: 360, duration: 0.6, ease: "power3.out" },
+    18.9);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-mark", "#s5-url", "#s5-underline"], { opacity: 0.92, duration: 0.3 }, 19.7);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

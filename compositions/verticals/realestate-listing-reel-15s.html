@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Real Estate — Listing Reel 15s vertical (kinetic-pop)</title>
+
+<!--
+  VERTICAL TEMPLATE — REAL ESTATE / SOCIAL REEL (15s, 1080×1920)
+  ==============================================================
+  Format:        Portrait 15-second listing reel — TikTok / Reels / Shorts.
+  Base template: kinetic-pop (snappy pace, heavy display sans, hard contrast).
+  Recommended LUT: --lut=pop --strength=1.0
+  Music vibe:    kinetic-pop (fast social reels)
+  Scenes:
+    1.  0–3s   Address slam — stamp + glitch on suburb
+    2.  3–8s   Stats counter — beds / baths / sqft
+    3.  8–12s  Open home + agent name
+    4. 12–15s  CTA — URL
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Adjust `../../design/` paths back to `design/` once relocated.
+    3. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+    4. Fill in placeholder copy (ADDRESS, STATS, OPEN, AGENT, URL).
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-navy, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 120px 80px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 30px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Address slam ---- */
+  .s1 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-address {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 180px;
+    line-height: 0.94;
+    letter-spacing: -0.03em;
+    color: var(--card-navy);
+    text-align: center;
+    margin: 0;
+    max-width: 920px;
+  }
+  .s1-suburb {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 110px;
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    color: var(--card-accent, #1A9E8F);
+    text-align: center;
+    margin-top: 28px;
+    display: inline-block;
+  }
+  .s1-price {
+    font-family: var(--card-font-ui);
+    font-weight: 800;
+    font-size: 56px;
+    letter-spacing: 0.04em;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 36px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Scene 2: Stats counter — beds / baths / sqft ---- */
+  .s2 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%;
+  }
+  .s2-kicker { color: var(--card-accent, #1A9E8F); margin-bottom: 60px; }
+  .s2-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    width: 100%;
+    max-width: 920px;
+  }
+  .s2-cell {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    border-top: 2px solid rgba(255, 255, 255, 0.18);
+    padding-top: 24px;
+  }
+  .s2-cell-num {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--card-paper, #FBF9F6);
+    font-variant-numeric: tabular-nums;
+  }
+  .s2-cell-label {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--card-paper-soft, #d7dce3);
+    margin-top: 16px;
+  }
+  .s2-cell-unit {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 80px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: -0.02em;
+    margin-left: 4px;
+  }
+
+  /* ---- Scene 3: Open home + agent name ---- */
+  .s3 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-kicker {
+    color: var(--card-accent, #1A9E8F);
+    font-size: 32px;
+    letter-spacing: 0.32em;
+    margin-bottom: 32px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .s3-when {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 160px;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    color: var(--card-navy);
+    text-align: center;
+    margin: 0;
+    max-width: 920px;
+  }
+  .s3-agent {
+    font-family: var(--card-font-ui);
+    font-weight: 800;
+    font-size: 48px;
+    letter-spacing: 0.06em;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 36px;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scene 4: CTA — URL ---- */
+  .s4 {
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s4-burst-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s4-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-cta {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 130px;
+    line-height: 0.96;
+    letter-spacing: -0.025em;
+    color: var(--card-paper, #FBF9F6);
+    text-shadow: 0 6px 24px rgba(15, 22, 33, 0.30);
+    margin: 0;
+    max-width: 920px;
+  }
+  .s4-url {
+    font-family: var(--card-font-mono, ui-monospace, monospace);
+    font-size: 44px;
+    margin-top: 36px;
+    letter-spacing: 0.04em;
+    color: var(--card-paper, #FBF9F6);
+    opacity: 0.95;
+  }
+</style>
+</head>
+<body>
+
+<div id="realestate-listing-reel-15s" class="comp clip"
+     data-composition-id="realestate-listing-reel-15s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="15" data-track-index="0">
+
+  <!-- Scene 1 — Address slam (0–3s): stamp + glitch -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="3" data-track-index="1">
+    <div class="s1-content">
+      <div class="scene__kicker">JUST LISTED</div>
+      <h1 id="s1-address" class="s1-address">12 Harbour View Rd</h1>
+      <span id="s1-suburb" class="s1-suburb">Pt Chev</span>
+      <div id="s1-price" class="s1-price">$2,450,000</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Stats counter (3–8s): beds / baths / sqft -->
+  <div id="s2" class="scene s2 clip"
+       data-start="3" data-duration="5" data-track-index="1">
+    <div class="s2-content">
+      <div class="scene__kicker s2-kicker">AT A GLANCE</div>
+      <div class="s2-grid">
+        <div id="s2-c1" class="s2-cell">
+          <div id="s2-c1-num" class="s2-cell-num fx-counter">4</div>
+          <div class="s2-cell-label">Beds</div>
+        </div>
+        <div id="s2-c2" class="s2-cell">
+          <div id="s2-c2-num" class="s2-cell-num fx-counter">2</div>
+          <div class="s2-cell-label">Baths</div>
+        </div>
+        <div id="s2-c3" class="s2-cell">
+          <div style="display:flex;align-items:baseline;justify-content:center;">
+            <span id="s2-c3-num" class="s2-cell-num fx-counter">220</span><span class="s2-cell-unit">m&sup2;</span>
+          </div>
+          <div class="s2-cell-label">Floor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Open home + agent (8–12s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="8" data-duration="4" data-track-index="1">
+    <div class="s3-content">
+      <div id="s3-kicker" class="s3-kicker">OPEN HOME</div>
+      <h2 id="s3-when" class="s3-when">Sat <span style="color: var(--card-accent, #1A9E8F);">12&ndash;1pm</span></h2>
+      <div id="s3-agent" class="s3-agent">Alex Rivera</div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — CTA (12–15s): URL -->
+  <div id="s4" class="scene s4 clip"
+       data-start="12" data-duration="3" data-track-index="1">
+    <div id="s4-burst-host" class="s4-burst-host"></div>
+    <div class="s4-content">
+      <h2 id="s4-cta" class="s4-cta">View listing</h2>
+      <div id="s4-url" class="s4-url">rivera-co.co.nz</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["realestate-listing-reel-15s"] = tl;
+
+  // ---- Scene 1: 0–3s — address slam (stamp + glitch) ----------------
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+    0.2);
+  textFx.stamp(tl, "#s1-address", { at: 0.4, duration: 0.5, fromScale: 1.4 });
+  textFx.stamp(tl, "#s1-suburb", { at: 0.9, duration: 0.5, fromScale: 1.5 });
+  effectFx.glitchBurst(tl, "#s1-suburb", { at: 1.4, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#s1-suburb", { at: 1.9, duration: 0.18 });
+  tl.fromTo("#s1-price",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    1.6);
+
+  // ---- Scene 2: 3–8s — stats counter --------------------------------
+  tl.fromTo("#s2 .scene__kicker",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+    3.2);
+  tl.fromTo([".s2-cell"],
+    { y: 50, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, stagger: 0.14, ease: "back.out(1.4)" },
+    3.5);
+  textFx.counter(tl, "#s2-c1-num", { at: 4.0, duration: 1.2, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s2-c2-num", { at: 4.2, duration: 1.2, from: 0, ease: "power2.out" });
+  textFx.counter(tl, "#s2-c3-num", { at: 4.4, duration: 1.6, from: 0, ease: "power2.out" });
+
+  // ---- Scene 3: 8–12s — open home + agent ---------------------------
+  tl.fromTo("#s3-kicker",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+    8.2);
+  textFx.stamp(tl, "#s3-when", { at: 8.4, duration: 0.5, fromScale: 1.3 });
+  effectFx.glitchBurst(tl, "#s3-when", { at: 9.0, duration: 0.18 });
+  tl.fromTo("#s3-agent",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    9.5);
+
+  // ---- Scene 4: 12–15s — CTA + URL ----------------------------------
+  glitterFx.burst(tl, "#s4-burst-host", {
+    at: 12.1, count: 56, duration: 1.4, seed: 41, distance: 540
+  });
+  textFx.stamp(tl, "#s4-cta", { at: 12.2, duration: 0.5, fromScale: 1.4 });
+  tl.fromTo("#s4-url",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    13.0);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s4-cta", "#s4-url"], { opacity: 0.92, duration: 0.3 }, 14.5);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

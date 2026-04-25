@@ -1,0 +1,86 @@
+/* =========================================================================
+   TEMPLATE — KINETIC POP
+   =========================================================================
+   Vibe: fast, loud, contrasty. Bold sans display, condensed body, snappy
+   pacing, hard shadows. Pairs with consumer / app / sports / fitness brands.
+
+   Layer order:
+     1. design/cards.css
+     2. design/templates/kinetic-pop.css  ← this file
+     3. design/tokens-<brand>.css
+     4. design/effects-batch-08.css
+
+   Pacing recipe (use in your GSAP timeline):
+     scene fast: 0.7s  · scene mid: 1.4s  · scene slow: 2.4s
+     ease in:   back.out(1.7)
+     ease out:  power4.in
+     stagger:   0.05s
+
+   Render hint:
+     node scripts/render.mjs --lut=pop --strength=1.0
+   ========================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800;900&family=Bebas+Neue&display=swap");
+
+:root {
+  /* Pacing — snappy. */
+  --pace-fast: 0.7s;
+  --pace-mid:  1.4s;
+  --pace-slow: 2.4s;
+
+  /* Easing — snap in, slam out. */
+  --ease-in:    cubic-bezier(0.34, 1.56, 0.64, 1);   /* back.out(1.7) */
+  --ease-out:   cubic-bezier(0.5, 0, 0.75, 0);       /* power4.in */
+  --ease-inout: cubic-bezier(0.85, 0, 0.15, 1);      /* power4.inOut */
+
+  /* Type — heavy sans display, tight tracking. */
+  --card-font-display:  "Bebas Neue", "Inter Tight", Impact, sans-serif;
+  --card-font-ui:       "Inter Tight", system-ui, sans-serif;
+
+  --card-title-size:    96px;
+  --card-title-weight:  800;
+  --card-title-track:   -0.025em;
+  --card-title-line:    0.98;
+
+  --card-kicker-size:   22px;
+  --card-kicker-track:  0.32em;
+
+  --card-body-size:     34px;
+  --card-body-line:     1.20;
+
+  --card-label-size:    30px;
+  --card-label-track:   0.20em;
+
+  /* Shadows — hard, punchy. */
+  --vibe-shadow-soft:  0 8px 0 rgba(0, 0, 0, 0.85);
+  --vibe-shadow-press: 0 3px 0 rgba(0, 0, 0, 0.85);
+}
+
+.scene { background: var(--card-paper, #0E0E12); }
+
+.fx-film-grain { opacity: 0.10; }
+
+/* Long-shadow gets exaggerated for kinetic-pop — extrudes further, harder. */
+.fx-long-shadow {
+  text-shadow:
+    2px 2px 0 rgba(0,0,0,0.85),
+    4px 4px 0 rgba(0,0,0,0.85),
+    7px 7px 0 rgba(0,0,0,0.78),
+    11px 11px 0 rgba(0,0,0,0.70),
+    16px 16px 0 rgba(0,0,0,0.60),
+    22px 22px 0 rgba(0,0,0,0.48),
+    30px 30px 0 rgba(0,0,0,0.32),
+    40px 40px 0 rgba(0,0,0,0.18);
+}
+
+.fx-cinemagraph-bg::before { animation-duration: 12s; }
+
+/* Add a default screen-shake utility for impact moments — used by text-stamp. */
+@keyframes vibe-shake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20%      { transform: translate3d(-6px, 2px, 0); }
+  40%      { transform: translate3d(5px, -3px, 0); }
+  60%      { transform: translate3d(-3px, 4px, 0); }
+  80%      { transform: translate3d(4px, -1px, 0); }
+}
+.vibe-shake { animation: vibe-shake 0.18s steps(8) 1 both; }

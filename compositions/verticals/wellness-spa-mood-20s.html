@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wellness — Spa Mood 20s vertical (quiet-premium)</title>
+
+<!--
+  VERTICAL TEMPLATE — WELLNESS / SPA MOOD (20s, 1080×1920)
+  ========================================================
+  Vertical:      Health / Fitness / Wellness — spa, day spa, beauty
+                 salon, massage clinic, mindfulness studio.
+  Format:        Portrait 20-second atmospheric mood reel.
+  Base template: quiet-premium (spacious, light Inter, generous whitespace,
+                 near-zero shadows).
+  Recommended LUT: --lut=cool --strength=0.55
+  Music:         quiet-premium (ambient, slow, breathy).
+
+  Conversion drivers (spa / beauty):
+    1. Atmosphere — the feeling of slowing down (the SELL is the mood).
+    2. Treatment menu — concrete services, calmly listed.
+    3. Price + booking — clear, not pushy.
+    4. Easy-to-find URL.
+
+  Calm rules (read first):
+    - No loud effects on the treatment list (Scene 2). Soft fades, hairlines.
+    - Short copy. Generous whitespace. Light type weights.
+    - No glitter burst. No glitch. No stamp. Use cinemagraph + cool grade.
+
+  Scenes:
+    1.  0–5s   Atmospheric hook — "Slow down" + ambient cinemagraph.
+    2.  5–12s  Treatments — 4 services with subtle stagger (NO loud effects).
+    3. 12–17s  Booking + price chip.
+    4. 17–20s  URL.
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy (HOOK, TREATMENTS, PRICE, BOOKING, URL).
+    4. Run: npx hyperframes preview     (sanity check)
+    5. Run: npx hyperframes render      (final MP4)
+
+  Asset slots:
+    - Calm hero shot / treatment-room cinemagraph (Scene 1, optional)
+    - Subtle product / interior crop for Scene 2 background (optional)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — quiet-premium sets calm pace, light Inter. -->
+<link rel="stylesheet" href="../../design/templates/quiet-premium.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FAFAFA); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #FAFAFA);
+    color: var(--card-navy, #0F1115);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 160px 96px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size, 16px);
+    letter-spacing: var(--card-kicker-track, 0.32em);
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--card-accent, #5A7BAE);
+    margin-bottom: 36px;
+    opacity: 0.9;
+  }
+
+  /* ---- Scene 1: Atmospheric hook ---- */
+  .s1 {
+    background: var(--card-paper, #FAFAFA);
+    overflow: hidden;
+  }
+  .s1 .fx-cinemagraph-bg {
+    --brand-primary:   #C7B7A4;
+    --brand-secondary: #E5DDD0;
+    --brand-accent:    #5A7BAE;
+    --brand-tertiary:  #4b5a6d;
+    opacity: 0.55;
+  }
+  .s1-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-hook {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 200px;
+    letter-spacing: -0.025em;
+    line-height: 0.96;
+    color: var(--card-navy, #0F1115);
+    margin: 0;
+  }
+  .s1-tag {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin-top: 40px;
+  }
+
+  /* ---- Scene 2: Treatments ---- */
+  .s2 {
+    background: var(--card-paper, #FAFAFA);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+    width: 100%; max-width: 880px;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 80px;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    color: var(--card-navy, #0F1115);
+    margin: 0 0 56px 0;
+  }
+  .s2-list {
+    list-style: none;
+    padding: 0; margin: 0;
+    width: 100%;
+  }
+  .s2-item {
+    display: flex; flex-direction: row;
+    justify-content: space-between; align-items: baseline;
+    padding: 26px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  .s2-item:last-child {
+    border-bottom: none;
+  }
+  .s2-item-name {
+    font-family: var(--card-font-display);
+    font-size: 44px;
+    font-weight: 400;
+    color: var(--card-navy, #0F1115);
+    letter-spacing: -0.012em;
+    line-height: 1.1;
+    flex: 1;
+  }
+  .s2-item-duration {
+    font-family: var(--card-font-ui);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--card-slate-ink, #4b5a6d);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-left: 24px;
+  }
+
+  /* ---- Scene 3: Booking + price chip ---- */
+  .s3 {
+    background: var(--card-paper, #FAFAFA);
+  }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-rule {
+    width: 80px;
+    height: 1px;
+    background: var(--card-slate-ink, #4b5a6d);
+    opacity: 0.32;
+    margin-bottom: 36px;
+    transform-origin: center;
+  }
+  .s3-headline {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 120px;
+    color: var(--card-navy, #0F1115);
+    letter-spacing: -0.025em;
+    line-height: 1.0;
+    margin: 0 0 40px 0;
+  }
+  .s3-price-chip {
+    display: inline-block;
+    padding: 18px 36px;
+    border-radius: 999px;
+    background: transparent;
+    border: 1px solid var(--card-slate-ink, #4b5a6d);
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 30px;
+    color: var(--card-navy, #0F1115);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .s3-meta {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--card-slate-ink, #4b5a6d);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* ---- Scene 4: URL ---- */
+  .s4 {
+    background: var(--card-navy, #0F1115);
+    color: var(--card-paper, #FAFAFA);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-mark {
+    font-family: var(--card-font-display);
+    font-weight: 300;
+    font-size: 100px;
+    letter-spacing: -0.025em;
+    color: var(--card-paper, #FAFAFA);
+    margin: 0;
+  }
+  .s4-url {
+    font-family: var(--card-font-ui);
+    font-weight: 400;
+    font-size: 34px;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: 0.10em;
+    margin-top: 28px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="wellness-spa-mood-20s" class="comp clip"
+     data-composition-id="wellness-spa-mood-20s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="20" data-track-index="0">
+
+  <!-- Scene 1 — Atmospheric hook (0–5s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="5" data-track-index="1"
+       data-scene-grade="soft">
+    <div id="s1-cg" class="fx-cinemagraph-bg"></div>
+    <div class="s1-content">
+      <h1 id="s1-hook" class="s1-hook">Slow down.</h1>
+      <div id="s1-tag" class="s1-tag">A QUIETER HOUR — NEAR YOU.</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Treatments (5–12s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="5" data-duration="7" data-track-index="1"
+       data-scene-grade="cool">
+    <div class="s2-content">
+      <div class="scene__kicker">SIGNATURE TREATMENTS</div>
+      <h2 id="s2-headline" class="s2-headline">Care, considered.</h2>
+      <ul class="s2-list">
+        <li class="s2-item" id="s2-i1">
+          <span class="s2-item-name">Aromatherapy massage</span>
+          <span class="s2-item-duration">60 MIN</span>
+        </li>
+        <li class="s2-item" id="s2-i2">
+          <span class="s2-item-name">Deep tissue release</span>
+          <span class="s2-item-duration">75 MIN</span>
+        </li>
+        <li class="s2-item" id="s2-i3">
+          <span class="s2-item-name">Restorative facial</span>
+          <span class="s2-item-duration">60 MIN</span>
+        </li>
+        <li class="s2-item" id="s2-i4">
+          <span class="s2-item-name">Hot stone &amp; recover</span>
+          <span class="s2-item-duration">90 MIN</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Booking + price chip (12–17s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="12" data-duration="5" data-track-index="1">
+    <div class="s3-content">
+      <div id="s3-rule" class="s3-rule"></div>
+      <h2 id="s3-headline" class="s3-headline">Book a quiet hour.</h2>
+      <div id="s3-price-chip" class="s3-price-chip">FROM $120 · 60 MIN</div>
+      <div id="s3-meta" class="s3-meta">PONSONBY · OPEN 7 DAYS</div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — URL (17–20s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="17" data-duration="3" data-track-index="1">
+    <div class="s4-content">
+      <h2 id="s4-mark" class="s4-mark">BRAND</h2>
+      <div id="s4-url" class="s4-url">yourspa.co.nz/book</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["wellness-spa-mood-20s"] = tl;
+
+  // ---- Scene 1: 0–5s — atmospheric hook -----------------------------
+  effectFx.cinemagraphRotate(tl, "#s1-cg", {
+    at: 0.0, duration: 5.0, turns: 0.18, ease: "none"
+  });
+  tl.fromTo("#s1-hook",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1.4, ease: "power1.out" },
+    0.4);
+  tl.fromTo("#s1-tag",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1.0, ease: "power1.out" },
+    1.8);
+
+  // ---- Scene 2: 5–12s — treatments (subtle stagger, NO loud fx) ----
+  tl.fromTo("#s2 .scene__kicker",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
+    5.2);
+  tl.fromTo("#s2-headline",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 1.0, ease: "power1.out" },
+    5.8);
+  tl.fromTo(["#s2-i1", "#s2-i2", "#s2-i3", "#s2-i4"],
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, stagger: 0.22, ease: "power1.out" },
+    7.2);
+
+  // ---- Scene 3: 12–17s — booking + price chip -----------------------
+  tl.fromTo("#s3-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.9, ease: "power1.out" },
+    12.2);
+  tl.fromTo("#s3-headline",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
+    12.8);
+  tl.fromTo("#s3-price-chip",
+    { y: 18, scale: 0.96, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "power1.out" },
+    13.8);
+  tl.fromTo("#s3-meta",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
+    14.6);
+
+  // ---- Scene 4: 17–20s — URL ----------------------------------------
+  tl.fromTo("#s4-mark",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
+    17.2);
+  tl.fromTo("#s4-url",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
+    17.9);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s4-mark", "#s4-url"], { opacity: 0.92, duration: 0.4 }, 19.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

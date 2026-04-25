@@ -1,0 +1,83 @@
+/* =========================================================================
+   TEMPLATE — WARM COMMUNITY
+   =========================================================================
+   Vibe: organic, human, grounded. Editorial-style. Serif display, sans body,
+   slow-mid pacing, soft shadows. Pairs naturally with charity / community /
+   wellness / education brands.
+
+   Layer order:
+     1. design/cards.css                  (structural base)
+     2. design/templates/warm-community.css   ← this file (vibe overlay)
+     3. design/tokens-<brand>.css         (brand palette + fonts override)
+     4. design/effects-batch-08.css       (cinematic primitives)
+
+   This file ONLY sets vibe-level tokens. Brand palette comes from the
+   tokens-<brand>.css that loads after — do NOT hardcode brand colours here.
+
+   Pacing recipe (use these in your GSAP timeline by hand):
+     scene fast: 1.6s  · scene mid: 2.8s  · scene slow: 4.4s
+     ease in:   power2.out
+     ease out:  power2.in
+     stagger:   0.10s
+
+   Render hint:
+     node scripts/render.mjs --lut=warm --strength=1.0
+   ========================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&display=swap");
+
+:root {
+  /* Pacing tokens (consumed by JS — readable via getComputedStyle). */
+  --pace-fast: 1.6s;
+  --pace-mid:  2.8s;
+  --pace-slow: 4.4s;
+
+  /* Default cinematic motion language — slow attack, gentle settle. */
+  --ease-in:    cubic-bezier(0.22, 1, 0.36, 1);     /* power2.out */
+  --ease-out:   cubic-bezier(0.55, 0, 1, 0.45);     /* power2.in */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);     /* sine.inOut-ish */
+
+  /* Type scale — large editorial serif, generous body. */
+  --card-font-display:  "Fraunces", Georgia, "Times New Roman", serif;
+  --card-font-ui:       "Nunito", system-ui, -apple-system, sans-serif;
+
+  --card-title-size:    72px;
+  --card-title-weight:  500;
+  --card-title-track:   -0.018em;
+  --card-title-line:    1.06;
+
+  --card-kicker-size:   24px;
+  --card-kicker-track:  0.18em;
+
+  --card-body-size:     30px;
+  --card-body-line:     1.45;
+
+  --card-label-size:    28px;
+  --card-label-track:   0.14em;
+
+  /* Shadows — soft, organic. */
+  --vibe-shadow-soft:  0 18px 36px rgba(28, 30, 38, 0.10),
+                       0 4px 10px  rgba(28, 30, 38, 0.06);
+  --vibe-shadow-press: 0 6px 18px  rgba(28, 30, 38, 0.14);
+}
+
+/* Default scene background treatment — let brand --card-paper win,
+   but if no brand override, fall back to a warm cream. */
+.scene { background: var(--card-paper, #FBF9F6); }
+
+/* Default film-grain intensity for this vibe — light. */
+.fx-film-grain { opacity: 0.06; }
+
+/* Soften the long-shadow extrusion to fit the warm vibe. */
+.fx-long-shadow {
+  text-shadow:
+    1px 1px 0 rgba(0,0,0,0.32),
+    2px 2px 0 rgba(0,0,0,0.28),
+    4px 4px 0 rgba(0,0,0,0.22),
+    7px 7px 0 rgba(0,0,0,0.16),
+    11px 11px 0 rgba(0,0,0,0.10),
+    16px 16px 0 rgba(0,0,0,0.06);
+}
+
+/* Default cinemagraph rotation tempo — slow, perpetual. */
+.fx-cinemagraph-bg::before { animation-duration: 24s; }

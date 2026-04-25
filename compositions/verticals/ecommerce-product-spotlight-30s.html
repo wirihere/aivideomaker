@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>E-commerce Product Spotlight — 30s landscape (kinetic-pop)</title>
+
+<!--
+  VERTICAL TEMPLATE — E-COMMERCE PRODUCT SPOTLIGHT (30s, 1920×1080)
+  ================================================================
+  Vertical:      E-commerce / DTC / Shopify / marketplace product brands.
+  Format:        Landscape 30-second product spotlight ad.
+  Base template: kinetic-pop (snappy pace, heavy display sans, hard shadows).
+  Recommended LUT: --lut=pop --strength=1.0
+  Scenes:
+    1.  0–5s   Brand chip + product hero (multiplane dolly on product image)
+    2.  5–15s  3-up benefits with icon + headline + body (textFx.stagger)
+    3. 15–22s  Social proof — star rating + review pull
+    4. 22–28s  Price block + offer ("$49 — Free shipping")
+    5. 28–30s  CTA — "Shop now → brand.com" with glitchBurst on the verb
+
+  Asset slots (placeholders, swap when populating):
+    #s1-brand-chip       brand wordmark (text or replace with <img> logo)
+    #s1-product-image    product hero image (background-image URL)
+    #s2 .benefit-icon    three icon glyphs (or swap for SVG/img)
+    #s3-stars            5-star rating (★★★★★)
+    #s3-rating           "4.9" numeric rating
+    #s3-count            "2,000 reviews" review count
+    #s3-quote            short pull quote (one sentence, ~80 chars)
+    #s4-price            sale price (e.g., "$49")
+    #s4-strikethrough    pre-discount price (optional, e.g., "$79")
+    #s4-offer            offer line ("Free shipping" / "Free returns")
+    #s5-cta              CTA — "Shop now"
+    #s5-url              brand URL — "brand.com"
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Update relative paths: `../../design/` -> `design/`.
+    3. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+    4. Fill in product image URL, benefit icons + copy, rating, price, CTA.
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-navy, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 140px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size, 22px);
+    letter-spacing: var(--card-kicker-track, 0.32em);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Brand chip + product hero ---- */
+  .s1 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s1 .plane-bg {
+    font-family: var(--card-font-display);
+    font-size: 460px; font-weight: 800;
+    color: rgba(26, 158, 143, 0.10);
+    letter-spacing: -0.04em;
+    text-align: center;
+    line-height: 0.9;
+  }
+  .s1-stage-inner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 80px;
+    width: 100%;
+    max-width: 1640px;
+  }
+  .s1-product-image {
+    width: 720px; height: 720px;
+    border-radius: 32px;
+    /* Placeholder gradient — swap with real product photo via background-image url(...) */
+    background:
+      radial-gradient(circle at 50% 40%, var(--card-paper-soft, #F5EFE6) 0%, transparent 70%),
+      linear-gradient(135deg, var(--card-accent, #1A9E8F) 0%, var(--card-navy, #1B2A3D) 100%);
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--card-paper, #FBF9F6);
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 96px;
+    letter-spacing: -0.025em;
+  }
+  .s1-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    flex: 1 1 auto;
+    max-width: 740px;
+  }
+  .s1-brand-chip {
+    font-family: var(--card-font-display);
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 32px;
+  }
+  .s1-product-name {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 168px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--card-navy, #0E0E12);
+    margin: 0;
+  }
+  .s1-product-name-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s1-tag {
+    font-family: var(--card-font-ui);
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.3;
+    margin-top: 24px;
+  }
+
+  /* ---- Scene 2: 3-up benefits ---- */
+  .s2 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s2-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px;
+    width: 100%;
+    max-width: 1640px;
+    position: relative; z-index: 2;
+  }
+  .s2-cell {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s2-icon {
+    width: 140px; height: 140px;
+    border-radius: 30px;
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 68px; line-height: 1;
+    margin-bottom: 32px;
+  }
+  .s2-title {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 80px;
+    letter-spacing: -0.02em;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1;
+    margin-bottom: 18px;
+  }
+  .s2-body {
+    font-family: var(--card-font-ui);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--card-paper-soft, #d7dce3);
+    line-height: 1.4;
+    max-width: 380px;
+  }
+
+  /* ---- Scene 3: Social proof ---- */
+  .s3 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s3-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    position: relative; z-index: 2;
+    max-width: 1500px;
+  }
+  .s3-stars {
+    font-family: var(--card-font-display);
+    font-size: 200px;
+    line-height: 1;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+  }
+  .s3-rating-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 36px;
+  }
+  .s3-rating {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 140px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--card-navy, #0E0E12);
+  }
+  .s3-count {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 36px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--card-slate-ink, #4b5a6d);
+  }
+  .s3-quote {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 1.2;
+    color: var(--card-navy, #0E0E12);
+    max-width: 1200px;
+  }
+  .s3-quote-mark {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+
+  /* ---- Scene 4: Price + offer ---- */
+  .s4 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    position: relative; z-index: 2;
+  }
+  .s4-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 36px;
+    margin-bottom: 30px;
+  }
+  .s4-price {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 360px;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    color: var(--card-accent, #1A9E8F);
+  }
+  .s4-strikethrough {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 120px;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: -0.03em;
+    text-decoration: line-through;
+    text-decoration-thickness: 6px;
+    opacity: 0.7;
+  }
+  .s4-offer {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 78px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s4-offer-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+
+  /* ---- Scene 5: CTA — Shop now + URL ---- */
+  .s5 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s5-burst-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s5-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 220px;
+    color: var(--card-navy, #0E0E12);
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    margin: 0;
+  }
+  .s5-cta-verb {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s5-arrow {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+    margin: 0 12px;
+  }
+  .s5-url {
+    font-family: var(--card-font-mono, var(--card-font-ui));
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--card-slate-ink, #4b5a6d);
+    letter-spacing: 0.06em;
+    margin-top: 36px;
+    opacity: 0.94;
+  }
+</style>
+</head>
+<body>
+
+<div id="ecommerce-product-spotlight-30s" class="comp clip"
+     data-composition-id="ecommerce-product-spotlight-30s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — Brand chip + product hero (0–5s) — pop grade for product punch -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="5" data-track-index="1"
+       data-scene-grade="pop">
+    <div class="fx-multiplane">
+      <div id="s1-stage" class="stage">
+        <div class="plane plane-bg">NEW</div>
+        <div class="plane plane-base">
+          <div class="s1-stage-inner">
+            <div id="s1-product-image" class="s1-product-image">PRODUCT</div>
+            <div class="s1-text">
+              <div id="s1-brand-chip" class="s1-brand-chip">BRAND</div>
+              <h1 id="s1-product-name" class="s1-product-name">The <span id="s1-product-name-em" class="s1-product-name-em">Everyday</span></h1>
+              <p id="s1-tag" class="s1-tag">A short product line — the one promise customers repeat to friends.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — 3-up benefits (5–15s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="5" data-duration="10" data-track-index="1">
+    <div class="scene__kicker" id="s2-kicker">WHY YOU'LL LOVE IT</div>
+    <div class="s2-row">
+      <div id="s2-cell-1" class="s2-cell">
+        <div class="s2-icon" aria-hidden="true">⚡</div>
+        <div id="s2-t1" class="s2-title">FAST</div>
+        <div class="s2-body">Benefit one — the speed or convenience promise.</div>
+      </div>
+      <div id="s2-cell-2" class="s2-cell">
+        <div class="s2-icon" aria-hidden="true">★</div>
+        <div id="s2-t2" class="s2-title">PREMIUM</div>
+        <div class="s2-body">Benefit two — the quality or material claim.</div>
+      </div>
+      <div id="s2-cell-3" class="s2-cell">
+        <div class="s2-icon" aria-hidden="true">✓</div>
+        <div id="s2-t3" class="s2-title">GUARANTEED</div>
+        <div class="s2-body">Benefit three — risk-removal (returns, warranty).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Social proof (15–22s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="15" data-duration="7" data-track-index="1">
+    <div class="s3-content">
+      <div id="s3-stars" class="s3-stars">★★★★★</div>
+      <div class="s3-rating-row">
+        <span id="s3-rating" class="s3-rating fx-counter" data-from="0" data-to="4.9">4.9</span>
+        <span id="s3-count" class="s3-count">FROM 2,000+ REVIEWS</span>
+      </div>
+      <p id="s3-quote" class="s3-quote"><span id="s3-quote-mark" class="s3-quote-mark">&ldquo;</span>The one I reach for every single day.<span class="s3-quote-mark">&rdquo;</span></p>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Price + offer (22–28s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="22" data-duration="6" data-track-index="1">
+    <div class="s4-content">
+      <div class="scene__kicker" id="s4-kicker" style="color: var(--card-accent, #1A9E8F);">YOURS FOR</div>
+      <div class="s4-price-row">
+        <span id="s4-strikethrough" class="s4-strikethrough">$79</span>
+        <span id="s4-price" class="s4-price">$49</span>
+      </div>
+      <div id="s4-offer" class="s4-offer"><span id="s4-offer-em" class="s4-offer-em">Free shipping</span> — every order</div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA (28–30s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="28" data-duration="2" data-track-index="1">
+    <div id="s5-burst-host" class="s5-burst-host"></div>
+    <div class="s5-content">
+      <h2 id="s5-cta" class="s5-cta"><span id="s5-cta-verb" class="s5-cta-verb">Shop</span> now <span class="s5-arrow">→</span></h2>
+      <div id="s5-url" class="s5-url">brand.com</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["ecommerce-product-spotlight-30s"] = tl;
+
+  // ---- Scene 1: 0–5s — brand chip + product hero (multiplane dolly) ----
+  effectFx.multiplaneDolly(tl, "#s1-stage", {
+    at: 0.0, duration: 4.6, from: -200, to: 60, ease: "power2.out"
+  });
+  tl.fromTo("#s1-brand-chip",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    0.4);
+  tl.fromTo("#s1-product-image",
+    { x: -120, opacity: 0, scale: 0.9 },
+    { x: 0, opacity: 1, scale: 1, duration: 0.7, ease: "back.out(1.4)" },
+    0.5);
+  textFx.cascade(tl, "#s1-product-name", { at: 1.0, duration: 0.6, stagger: 0.07 });
+  effectFx.glitchBurst(tl, "#s1-product-name-em", { at: 1.9, duration: 0.18 });
+  tl.fromTo("#s1-tag",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    2.4);
+
+  // ---- Scene 2: 5–15s — 3-up benefits (stagger) ------------------------
+  tl.fromTo("#s2-kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    5.3);
+  tl.fromTo(["#s2-cell-1", "#s2-cell-2", "#s2-cell-3"],
+    { y: 60, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, stagger: 0.2, ease: "power3.out" },
+    5.7);
+  textFx.stagger(tl, "#s2-t1", { at: 6.2, duration: 0.5, stagger: 0.04, rotation: -10 });
+  textFx.stagger(tl, "#s2-t2", { at: 6.7, duration: 0.5, stagger: 0.04, rotation: -10 });
+  textFx.stagger(tl, "#s2-t3", { at: 7.2, duration: 0.5, stagger: 0.04, rotation: -10 });
+
+  // ---- Scene 3: 15–22s — social proof (stars + rating + quote) ----------
+  tl.fromTo("#s3-stars",
+    { scale: 0.7, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.6)" },
+    15.2);
+  tl.fromTo(["#s3-rating", "#s3-count"],
+    { y: 26, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.55, stagger: 0.12, ease: "power3.out" },
+    15.7);
+  textFx.counter(tl, "#s3-rating", { at: 16.0, duration: 1.4, from: 0, ease: "power2.out" });
+  textFx.cascade(tl, "#s3-quote", { at: 17.6, duration: 0.7, stagger: 0.06 });
+
+  // ---- Scene 4: 22–28s — price + offer (stamp on price) -----------------
+  tl.fromTo("#s4-kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.45, ease: "power2.out" },
+    22.2);
+  tl.fromTo("#s4-strikethrough",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    22.5);
+  textFx.stamp(tl, "#s4-price", { at: 22.9, duration: 0.55, fromScale: 1.5 });
+  effectFx.glitchBurst(tl, "#s4-price", { at: 23.6, duration: 0.18 });
+  tl.fromTo("#s4-offer",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" },
+    24.2);
+  effectFx.glitchBurst(tl, "#s4-offer-em", { at: 24.9, duration: 0.18 });
+
+  // ---- Scene 5: 28–30s — CTA (glitter burst + glitch on verb) -----------
+  tl.fromTo("#s5-cta",
+    { scale: 0.92, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.4)" },
+    28.1);
+  glitterFx.burst(tl, "#s5-burst-host", {
+    at: 28.3, count: 70, duration: 1.4, seed: 31, distance: 740
+  });
+  effectFx.glitchBurst(tl, "#s5-cta-verb", { at: 28.6, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#s5-cta-verb", { at: 29.0, duration: 0.18 });
+  tl.fromTo("#s5-url",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    28.9);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-url"], { opacity: 0.92, duration: 0.3 }, 29.6);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

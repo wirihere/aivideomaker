@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hero Promo — 30s landscape (kinetic-pop)</title>
+
+<!--
+  STRUCTURAL TEMPLATE — HERO PROMO (30s, 1920×1080)
+  =================================================
+  Format:        Landscape 30-second hero promo / launch ad.
+  Base template: kinetic-pop (snappy pace, heavy display sans, hard shadows).
+  Recommended LUT: --lut=pop --strength=1.0
+  Scenes:
+    1. 0–8s   Hero — multiplane dolly + cascade headline + brand mark
+    2. 8–18s  Three-up benefits — stagger + ambient sparkle bg
+    3. 18–26s Social proof / stat — counter recipe
+    4. 26–30s CTA — glitter burst + glitch on CTA verb
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy (HEADLINE, BENEFIT-1, STAT, etc.).
+    4. Run: npx hyperframes preview     (sanity check)
+    5. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-navy, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 140px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size);
+    letter-spacing: var(--card-kicker-track);
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.9;
+  }
+
+  /* ---- Scene 1: Hero with multiplane dolly + cascade headline ---- */
+  .s1 .plane-bg {
+    font-family: var(--card-font-display);
+    font-size: 420px; font-weight: 800;
+    color: rgba(26, 158, 143, 0.10);
+    letter-spacing: -0.04em;
+    text-align: center;
+    line-height: 0.9;
+  }
+  .s1-headline {
+    font-family: var(--card-font-display);
+    font-size: var(--card-title-size, 120px);
+    font-weight: var(--card-title-weight, 800);
+    letter-spacing: var(--card-title-track);
+    line-height: var(--card-title-line, 0.98);
+    color: var(--card-navy);
+    text-align: center;
+    max-width: 1500px;
+    margin: 0;
+  }
+  .s1-support {
+    font-family: var(--card-font-ui);
+    font-size: 38px;
+    font-weight: 500;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.3;
+    text-align: center;
+    margin-top: 24px;
+    max-width: 1100px;
+  }
+  .s1-mark {
+    font-family: var(--card-font-display);
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 36px;
+  }
+
+  /* ---- Scene 2: Three-up benefits + ambient sparkle ---- */
+  .s2 .three-up {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 64px;
+    width: 100%;
+    max-width: 1640px;
+    position: relative; z-index: 2;
+  }
+  .s2 .three-up__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .s2 .three-up__icon {
+    width: 130px; height: 130px;
+    border-radius: 26px;
+    background: var(--card-paper-soft, #F5EFE6);
+    border: 1px solid rgba(27, 42, 61, 0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; line-height: 1;
+    margin-bottom: 32px;
+  }
+  .s2 .three-up__title {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 76px;
+    letter-spacing: -0.02em;
+    color: var(--card-navy);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .s2 .three-up__body {
+    font-family: var(--card-font-ui);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.4;
+    max-width: 380px;
+  }
+  .s2-sparkle {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ---- Scene 3: Social proof / stat counter ---- */
+  .s3 .stat-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    position: relative; z-index: 2;
+  }
+  .s3-kicker {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 36px;
+  }
+  .s3-stat {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 360px;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+    color: var(--card-navy);
+  }
+  .s3-stat-suffix {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 220px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: -0.04em;
+    margin-left: 12px;
+  }
+  .s3-label {
+    font-family: var(--card-font-ui);
+    font-weight: 600;
+    font-size: 36px;
+    color: var(--card-slate-ink, #4b5a6d);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 20px;
+  }
+
+  /* ---- Scene 4: CTA + URL with glitter burst + glitch ---- */
+  .s4 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s4-glitter-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s4-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-cta {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    color: var(--card-paper);
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    margin: 0;
+  }
+  .s4-cta-verb {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s4-url {
+    font-family: var(--card-font-mono);
+    font-size: 40px;
+    color: var(--card-paper-soft, #F5EFE6);
+    letter-spacing: 0.04em;
+    margin-top: 36px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="hero-promo-30s" class="comp clip"
+     data-composition-id="hero-promo-30s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — Hero (0–8s): multiplane dolly + cascade headline -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="8" data-track-index="1">
+    <div class="fx-multiplane">
+      <div id="s1-stage" class="stage">
+        <div class="plane plane-bg">HEADLINE</div>
+        <div class="plane plane-base">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div class="scene__kicker">INTRODUCING</div>
+            <h1 id="s1-headline" class="s1-headline">Your big idea in five words.</h1>
+            <p id="s1-support" class="s1-support">A short supporting line that sets the stakes — what changes for whom.</p>
+            <div id="s1-mark" class="s1-mark">BRAND</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Three-up benefits (8–18s): stagger + ambient sparkle bg -->
+  <div id="s2" class="scene s2 clip"
+       data-start="8" data-duration="10" data-track-index="1">
+    <div id="s2-sparkle" class="s2-sparkle"></div>
+    <div class="three-up">
+      <div id="s2-col-1" class="three-up__col">
+        <div class="three-up__icon" aria-hidden="true">⚡</div>
+        <div id="s2-b1-title" class="three-up__title">FAST</div>
+        <div class="three-up__body">Benefit one — what makes it quick or easy.</div>
+      </div>
+      <div id="s2-col-2" class="three-up__col">
+        <div class="three-up__icon" aria-hidden="true">🛡️</div>
+        <div id="s2-b2-title" class="three-up__title">SAFE</div>
+        <div class="three-up__body">Benefit two — why it's trustworthy or proven.</div>
+      </div>
+      <div id="s2-col-3" class="three-up__col">
+        <div class="three-up__icon" aria-hidden="true">✨</div>
+        <div id="s2-b3-title" class="three-up__title">SIMPLE</div>
+        <div class="three-up__body">Benefit three — the human payoff for the viewer.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Social proof / stat counter (18–26s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="18" data-duration="8" data-track-index="1">
+    <div class="stat-content">
+      <div id="s3-kicker" class="s3-kicker">PEOPLE WHO TRUST US</div>
+      <div style="display:flex;align-items:baseline;justify-content:center;">
+        <span id="s3-stat" class="s3-stat fx-counter">12,500</span><span id="s3-stat-suffix" class="s3-stat-suffix">+</span>
+      </div>
+      <div id="s3-label" class="s3-label">AND COUNTING</div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — CTA + URL (26–30s): glitter burst + glitch on CTA verb -->
+  <div id="s4" class="scene s4 clip"
+       data-start="26" data-duration="4" data-track-index="1">
+    <div id="s4-glitter-host" class="s4-glitter-host"></div>
+    <div class="s4-content">
+      <h2 id="s4-cta" class="s4-cta"><span id="s4-cta-verb" class="s4-cta-verb">Try</span> it today.</h2>
+      <div id="s4-url" class="s4-url">yourbrand.com</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["hero-promo-30s"] = tl;
+
+  // ---- Scene 1: 0–8s — multiplane dolly + cascade headline -----------
+  effectFx.multiplaneDolly(tl, "#s1-stage", {
+    at: 0.0, duration: 7.4, from: -220, to: 60, ease: "power2.out"
+  });
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    0.4);
+  textFx.cascade(tl, "#s1-headline", { at: 0.8, duration: 0.7, stagger: 0.08 });
+  tl.fromTo("#s1-support",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    1.8);
+  tl.fromTo("#s1-mark",
+    { scale: 0.7, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" },
+    2.6);
+
+  // ---- Scene 2: 8–18s — three-up stagger + ambient sparkle ----------
+  glitterFx.ambient(tl, "#s2-sparkle", {
+    at: 8.0, count: 36, duration: 10.0, seed: 11
+  });
+  tl.fromTo(["#s2-col-1", "#s2-col-2", "#s2-col-3"],
+    { y: 60, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, stagger: 0.18, ease: "power3.out" },
+    8.3);
+  textFx.stagger(tl, "#s2-b1-title", { at: 8.7,  duration: 0.5, stagger: 0.04, rotation: -10 });
+  textFx.stagger(tl, "#s2-b2-title", { at: 9.1,  duration: 0.5, stagger: 0.04, rotation: -10 });
+  textFx.stagger(tl, "#s2-b3-title", { at: 9.5,  duration: 0.5, stagger: 0.04, rotation: -10 });
+
+  // ---- Scene 3: 18–26s — stat counter -------------------------------
+  tl.fromTo("#s3-kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    18.3);
+  tl.fromTo(["#s3-stat", "#s3-stat-suffix"],
+    { scale: 0.85, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, stagger: 0.08, ease: "back.out(1.6)" },
+    18.6);
+  textFx.counter(tl, "#s3-stat", { at: 19.0, duration: 2.4, from: 0, ease: "power2.out" });
+  tl.fromTo("#s3-label",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    21.6);
+
+  // ---- Scene 4: 26–30s — CTA, glitter burst + glitch on verb --------
+  tl.fromTo("#s4-cta",
+    { scale: 0.92, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" },
+    26.2);
+  glitterFx.burst(tl, "#s4-glitter-host", {
+    at: 26.4, count: 70, duration: 1.6, seed: 13, distance: 720
+  });
+  effectFx.glitchBurst(tl, "#s4-cta-verb", { at: 26.9, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#s4-cta-verb", { at: 27.3, duration: 0.18 });
+  tl.fromTo("#s4-url",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    27.4);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s4-cta", "#s4-url"], { opacity: 0.92, duration: 0.4 }, 29.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

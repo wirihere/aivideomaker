@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SaaS Case Study — 60s landscape (documentary)</title>
+
+<!--
+  VERTICAL TEMPLATE — SAAS CASE STUDY (60s, 1920×1080)
+  ====================================================
+  Vertical:      Software / B2B SaaS / DevTools / productivity / collaboration.
+  Format:        Landscape 60-second case study — customer problem → outcome.
+  Base template: documentary (slow pacing, editorial serif, restrained motion).
+  Recommended LUT: --lut=teal-orange --strength=0.85
+  Scenes:
+    1.  0–10s   "Customer X had a problem" — narrative open + cinemagraph bg.
+    2. 10–25s   The challenge — three bullets with stagger + multiplane bg.
+    3. 25–40s   "Then they switched" — outcome counter (e.g. "12 hrs/wk saved").
+    4. 40–50s   Customer quote pull-out — long-shadow + portrait + role.
+    5. 50–58s   "Want similar results? Try free." + URL.
+    6. 58–60s   Brand mark — closing card.
+
+  ASSET SLOTS:
+    - Customer name + logo: #s1-customer-name, #s1-customer-logo (top-left chip).
+    - Quote photo: #s4-portrait (88×88 or larger circular crop).
+    - Customer name: #s4-name. Role: #s4-role.
+    - Brand mark: #s6-mark.
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`
+       (rewrite `../../design/` → `design/` once relocated).
+    3. Fill in placeholder copy (customer name, problem, bullets, outcome
+       number + label, quote, name + role, URL).
+    4. Drop customer logo + portrait into `assets/` and update src.
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — documentary sets slow pace, editorial serif. -->
+<link rel="stylesheet" href="../../design/templates/documentary.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0F1115); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0F1115);
+    color: var(--card-paper, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 160px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-mono);
+    font-size: 18px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 36px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Customer had a problem — narrative open ---- */
+  .s1 {
+    background: var(--card-navy, #0F1115);
+  }
+  .s1 .fx-cinemagraph-bg {
+    --brand-primary:   #14806F;
+    --brand-secondary: #243038;
+    --brand-accent:    #E98B6A;
+    --brand-tertiary:  #4b5a6d;
+  }
+  .s1-customer-chip {
+    position: absolute;
+    top: 70px; left: 70px;
+    z-index: 3;
+    display: flex; align-items: center;
+    gap: 18px;
+    padding: 14px 24px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+  }
+  .s1-customer-logo {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--card-accent, #1A9E8F);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-mono);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-customer-name {
+    font-family: var(--card-font-mono);
+    font-size: 20px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-headline {
+    font-family: var(--card-font-display);
+    font-size: 96px;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    line-height: 1.06;
+    color: var(--card-paper, #FBF9F6);
+    max-width: 1500px;
+    margin: 0;
+  }
+  .s1-supporting {
+    font-family: var(--card-font-ui);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--card-paper-soft, #d7dce3);
+    line-height: 1.5;
+    margin-top: 32px;
+    max-width: 1100px;
+    text-align: center;
+  }
+
+  /* ---- Scene 2: The challenge — bullets ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0F1115);
+  }
+  .s2 .plane-bg {
+    font-family: var(--card-font-display);
+    font-size: 360px; font-weight: 500;
+    color: rgba(20, 128, 111, 0.10);
+    letter-spacing: -0.03em;
+    text-align: center;
+  }
+  .s2-stack {
+    display: flex; flex-direction: column;
+    align-items: flex-start; max-width: 1500px;
+    width: 100%;
+  }
+  .s2-kicker {
+    font-family: var(--card-font-mono);
+    font-size: 22px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-size: 96px;
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    line-height: 1.04;
+    color: var(--card-navy, #0F1115);
+    margin: 0 0 40px 0;
+    max-width: 1500px;
+  }
+  .s2-bullets {
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex; flex-direction: column;
+    gap: 18px;
+  }
+  .s2-bullet {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.4;
+    padding-left: 36px;
+    position: relative;
+  }
+  .s2-bullet::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--card-accent, #1A9E8F);
+    font-weight: 600;
+  }
+
+  /* ---- Scene 3: Outcome counter ---- */
+  .s3 {
+    background: var(--card-navy, #0F1115);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-glitter-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s3-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-kicker {
+    font-family: var(--card-font-mono);
+    font-size: 22px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 36px;
+  }
+  .s3-prelude {
+    font-family: var(--card-font-display);
+    font-size: 56px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--card-paper-soft, #d7dce3);
+    margin-bottom: 24px;
+    text-align: center;
+    max-width: 1400px;
+  }
+  .s3-stat-row {
+    display: flex; align-items: baseline; justify-content: center;
+    gap: 8px;
+  }
+  .s3-stat {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 280px;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--card-paper, #FBF9F6);
+    font-variant-numeric: tabular-nums;
+  }
+  .s3-stat-suffix {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 160px;
+    color: var(--card-accent, #1A9E8F);
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+  }
+  .s3-stat-label {
+    font-family: var(--card-font-mono);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 28px;
+    text-align: center;
+  }
+
+  /* ---- Scene 4: Customer quote pull-out ---- */
+  .s4 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0F1115);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    max-width: 1500px;
+  }
+  .s4-quote-mark {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 220px;
+    color: var(--card-accent, #1A9E8F);
+    line-height: 0.6;
+    margin-bottom: 28px;
+  }
+  .s4-quote {
+    font-family: var(--card-font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 68px;
+    line-height: 1.2;
+    color: var(--card-navy, #0F1115);
+    letter-spacing: -0.012em;
+    margin: 0 0 44px 0;
+    max-width: 1500px;
+  }
+  .s4-attrib-row {
+    display: flex; align-items: center; gap: 22px;
+    justify-content: center;
+  }
+  .s4-portrait {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    background: var(--card-accent, #1A9E8F);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 40px;
+    color: var(--card-paper, #FBF9F6);
+    overflow: hidden;
+  }
+  .s4-attrib-text {
+    text-align: left;
+  }
+  .s4-attrib-name {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--card-navy, #0F1115);
+  }
+  .s4-attrib-role {
+    font-family: var(--card-font-mono);
+    font-size: 20px;
+    color: var(--card-slate-ink, #4b5a6d);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* ---- Scene 5: CTA "Try free" + URL ---- */
+  .s5 {
+    background: var(--card-navy, #0F1115);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 116px;
+    letter-spacing: -0.018em;
+    line-height: 1.05;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+    max-width: 1500px;
+  }
+  .s5-cta-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s5-url {
+    font-family: var(--card-font-mono);
+    font-size: 36px;
+    color: var(--card-paper-soft, #d7dce3);
+    letter-spacing: 0.06em;
+    margin-top: 32px;
+    opacity: 0.92;
+    text-align: center;
+  }
+
+  /* ---- Scene 6: Brand mark close ---- */
+  .s6 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0F1115);
+  }
+  .s6-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s6-mark {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 200px;
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    color: var(--card-navy, #0F1115);
+    margin: 0;
+  }
+  .s6-mark-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+
+<div id="saas-case-study-60s" class="comp clip"
+     data-composition-id="saas-case-study-60s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="60" data-track-index="0">
+
+  <!-- Scene 1 — "Customer X had a problem" (0–10s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="10" data-track-index="1"
+       data-scene-grade="teal-orange">
+    <div id="s1-cg" class="fx-cinemagraph-bg"></div>
+    <div id="s1-customer-chip" class="s1-customer-chip">
+      <div id="s1-customer-logo" class="s1-customer-logo">CX</div>
+      <div id="s1-customer-name" class="s1-customer-name">CUSTOMER NAME</div>
+    </div>
+    <div class="s1-content">
+      <div class="scene__kicker">CASE STUDY</div>
+      <h1 id="s1-headline" class="s1-headline">Customer X had a problem.</h1>
+      <p id="s1-supporting" class="s1-supporting">A short setup line — what kind of team they are, what they were trying to do.</p>
+    </div>
+  </div>
+
+  <!-- Scene 2 — The challenge (10–25s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="10" data-duration="15" data-track-index="1">
+    <div class="fx-multiplane">
+      <div id="s2-stage" class="stage">
+        <div class="plane plane-bg">CHALLENGE</div>
+        <div class="plane plane-base">
+          <div class="s2-stack">
+            <div id="s2-kicker" class="s2-kicker">THE CHALLENGE</div>
+            <h2 id="s2-headline" class="s2-headline fx-bleed-ready">Stuck doing the same work — by hand — every week.</h2>
+            <ul class="s2-bullets">
+              <li id="s2-b1" class="s2-bullet">Manual exports between tools, with errors creeping in.</li>
+              <li id="s2-b2" class="s2-bullet">No single source of truth — every team had its own spreadsheet.</li>
+              <li id="s2-b3" class="s2-bullet">Engineers spending Fridays cleaning data instead of shipping.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Outcome counter (25–40s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="25" data-duration="15" data-track-index="1">
+    <div id="s3-glitter-host" class="s3-glitter-host"></div>
+    <div class="s3-content">
+      <div id="s3-kicker" class="s3-kicker">THEN THEY SWITCHED</div>
+      <p id="s3-prelude" class="s3-prelude">Within the first quarter…</p>
+      <div class="s3-stat-row">
+        <span id="s3-stat-num" class="s3-stat fx-counter">12</span><span class="s3-stat-suffix">hrs/wk</span>
+      </div>
+      <div id="s3-stat-label" class="s3-stat-label">SAVED PER ENGINEER</div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Customer quote (40–50s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="40" data-duration="10" data-track-index="1">
+    <div class="s4-content">
+      <div id="s4-quote-mark" class="s4-quote-mark fx-long-shadow">&ldquo;</div>
+      <blockquote id="s4-quote" class="s4-quote">A short, specific quote about the change in the team's day-to-day.</blockquote>
+      <div class="s4-attrib-row">
+        <div id="s4-portrait" class="s4-portrait">FL</div>
+        <div class="s4-attrib-text">
+          <div id="s4-name" class="s4-attrib-name">First Last</div>
+          <div id="s4-role" class="s4-attrib-role">ROLE — CUSTOMER</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — Try free CTA (50–58s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="50" data-duration="8" data-track-index="1">
+    <div class="s5-content">
+      <div class="scene__kicker">WANT SIMILAR RESULTS?</div>
+      <h2 id="s5-cta" class="s5-cta"><span id="s5-cta-em" class="s5-cta-em">Try</span> it free.</h2>
+      <div id="s5-url" class="s5-url">yourbrand.com/start</div>
+    </div>
+  </div>
+
+  <!-- Scene 6 — Brand mark close (58–60s) -->
+  <div id="s6" class="scene s6 clip"
+       data-start="58" data-duration="2" data-track-index="1">
+    <div class="s6-content">
+      <h2 id="s6-mark" class="s6-mark"><span id="s6-mark-em" class="s6-mark-em">BRAND</span></h2>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["saas-case-study-60s"] = tl;
+
+  // ---- Scene 1: 0–10s — narrative open ------------------------------
+  effectFx.cinemagraphRotate(tl, "#s1-cg", {
+    at: 0.0, duration: 10.0, turns: 0.4, ease: "none"
+  });
+  tl.fromTo("#s1-customer-chip",
+    { x: -40, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    0.4);
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    0.9);
+  textFx.cascade(tl, "#s1-headline", { at: 1.5, duration: 0.9, stagger: 0.10 });
+  tl.fromTo("#s1-supporting",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
+    3.6);
+
+  // ---- Scene 2: 10–25s — the challenge -------------------------------
+  effectFx.multiplaneDolly(tl, "#s2-stage", {
+    at: 10.0, duration: 7.5, from: -240, to: 40, ease: "power2.out"
+  });
+  tl.fromTo("#s2-kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    10.5);
+  tl.fromTo("#s2-headline",
+    { y: 32, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
+    11.0);
+  effectFx.inkBleed(tl, "#s2-headline", { at: 11.0, duration: 1.1, from: 70, to: 0 });
+  tl.fromTo(["#s2-b1", "#s2-b2", "#s2-b3"],
+    { x: -32, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.8, stagger: 0.22, ease: "power2.out" },
+    13.0);
+
+  // ---- Scene 3: 25–40s — outcome counter -----------------------------
+  glitterFx.ambient(tl, "#s3-glitter-host", {
+    at: 25.0, count: 50, duration: 15.0, seed: 41
+  });
+  tl.fromTo("#s3-kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    25.4);
+  tl.fromTo("#s3-prelude",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    26.2);
+  tl.fromTo("#s3-stat-num",
+    { scale: 0.85, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.4)" },
+    27.4);
+  tl.fromTo(".s3-stat-suffix",
+    { x: -20, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    27.8);
+  textFx.counter(tl, "#s3-stat-num", { at: 28.0, duration: 1.6, from: 0, ease: "power2.out" });
+  tl.fromTo("#s3-stat-label",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    29.8);
+
+  // ---- Scene 4: 40–50s — customer quote ------------------------------
+  tl.fromTo("#s4-quote-mark",
+    { scale: 0.6, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.9, ease: "back.out(1.4)" },
+    40.4);
+  textFx.stagger(tl, "#s4-quote",
+    { at: 41.2, duration: 0.6, stagger: 0.012, rotation: -4, fromY: 12 });
+  tl.fromTo("#s4-portrait",
+    { scale: 0.6, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.4)" },
+    46.2);
+  tl.fromTo("#s4-name",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    46.6);
+  tl.fromTo("#s4-role",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" },
+    46.95);
+
+  // ---- Scene 5: 50–58s — Try free CTA --------------------------------
+  tl.fromTo("#s5 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+    50.3);
+  tl.fromTo("#s5-cta",
+    { y: 32, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.9, ease: "power3.out" },
+    50.9);
+  tl.fromTo("#s5-url",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    52.0);
+
+  // ---- Scene 6: 58–60s — brand mark close ----------------------------
+  textFx.stamp(tl, "#s6-mark", { at: 58.2, duration: 0.6, fromScale: 1.2 });
+  // Final fade — only the last scene may animate elements out.
+  tl.to("#s6-mark", { opacity: 0.92, duration: 0.4 }, 59.5);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SaaS Feature Launch — 20s portrait (kinetic-pop)</title>
+
+<!--
+  VERTICAL TEMPLATE — SAAS FEATURE LAUNCH (20s, 1080×1920)
+  ========================================================
+  Vertical:      Software / B2B SaaS / DevTools / productivity / collaboration.
+  Format:        Portrait 20-second feature launch ("we just shipped X").
+  Base template: kinetic-pop (snappy pace, bold display sans).
+  Recommended LUT: --lut=pop --strength=0.95
+  Scenes:
+    1.  0–3s   "NEW: <feature>" — stamp + glitch.
+    2.  3–10s  What it does — multiplane reveal of UI mock + headline cascade.
+    3. 10–15s  "Now available — try it" — chip + glitter burst.
+    4. 15–20s  URL — CTA wordmark + URL.
+
+  ASSET SLOTS:
+    - Feature name in #s1-feature.
+    - UI screenshot at #s2-shot (1080×1920 portrait or 16:10 cropped).
+    - Brand wordmark in #s4-mark.
+    - URL in #s4-url.
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`
+       (rewrite `../../design/` → `design/` once relocated).
+    3. Fill in placeholder copy (feature name, what-it-does, URL).
+    4. Drop UI screenshot into `assets/` and update the <img src> attr.
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-navy, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 140px 80px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: "NEW: <feature>" stamp ---- */
+  .s1 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-stamp {
+    display: inline-block;
+    font-family: var(--card-font-ui);
+    font-weight: 800;
+    font-size: 44px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--card-paper, #FBF9F6);
+    background: var(--card-accent, #1A9E8F);
+    padding: 22px 40px;
+    border-radius: 999px;
+    margin-bottom: 64px;
+  }
+  .s1-feature {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 220px;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+    max-width: 920px;
+  }
+  .s1-feature-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+
+  /* ---- Scene 2: What it does — multiplane reveal ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s2 .plane-bg {
+    font-family: var(--card-font-display);
+    font-size: 360px; font-weight: 800;
+    color: rgba(26, 158, 143, 0.10);
+    letter-spacing: -0.04em;
+    text-align: center;
+    line-height: 0.9;
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%;
+  }
+  .s2-shot {
+    width: 100%;
+    aspect-ratio: 9 / 11;
+    background: var(--card-navy, #0E0E12);
+    border-radius: 22px;
+    box-shadow: 0 18px 48px rgba(8, 12, 18, 0.30);
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .s2-shot::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .s2-shot-label {
+    font-family: var(--card-font-ui);
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--card-paper-soft, #d7dce3);
+    opacity: 0.55;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 92px;
+    letter-spacing: -0.025em;
+    line-height: 0.96;
+    color: var(--card-navy, #0E0E12);
+    margin: 0;
+    text-align: center;
+    max-width: 920px;
+  }
+  .s2-headline-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s2-support {
+    font-family: var(--card-font-ui);
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.35;
+    margin-top: 22px;
+    max-width: 880px;
+    text-align: center;
+  }
+
+  /* ---- Scene 3: "Now available — try it" ---- */
+  .s3 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-burst-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s3-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-availability {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 180px;
+    letter-spacing: -0.03em;
+    line-height: 0.96;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+  }
+  .s3-availability-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s3-callout {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 38px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--card-paper-soft, #d7dce3);
+    margin-top: 32px;
+  }
+
+  /* ---- Scene 4: URL CTA ---- */
+  .s4 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-mark {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 160px;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    color: var(--card-navy, #0E0E12);
+    margin: 0 0 36px 0;
+  }
+  .s4-mark-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s4-url {
+    font-family: var(--card-font-ui);
+    font-weight: 800;
+    font-size: 48px;
+    letter-spacing: 0.06em;
+    color: var(--card-slate-ink, #4b5a6d);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div id="saas-feature-launch-20s" class="comp clip"
+     data-composition-id="saas-feature-launch-20s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="20" data-track-index="0">
+
+  <!-- Scene 1 — "NEW: <feature>" stamp (0–3s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="3" data-track-index="1"
+       data-scene-grade="noir">
+    <div class="s1-content">
+      <div id="s1-stamp" class="s1-stamp">NEW</div>
+      <h1 id="s1-feature" class="s1-feature"><span id="s1-feature-em" class="s1-feature-em">FEATURE</span></h1>
+    </div>
+  </div>
+
+  <!-- Scene 2 — What it does (3–10s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="3" data-duration="7" data-track-index="1">
+    <div class="fx-multiplane">
+      <div id="s2-stage" class="stage">
+        <div class="plane plane-bg">NEW</div>
+        <div class="plane plane-base">
+          <div class="s2-content">
+            <div id="s2-shot" class="s2-shot">
+              <span class="s2-shot-label">UI screenshot</span>
+            </div>
+            <h2 id="s2-headline" class="s2-headline">Do the thing in <span id="s2-headline-em" class="s2-headline-em">one click.</span></h2>
+            <p id="s2-support" class="s2-support">A one-line description of what changes for the user.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — "Now available — try it" + glitter burst (10–15s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="10" data-duration="5" data-track-index="1">
+    <div id="s3-burst-host" class="s3-burst-host"></div>
+    <div class="s3-content">
+      <div class="scene__kicker">AVAILABLE</div>
+      <h2 id="s3-availability" class="s3-availability"><span id="s3-availability-em" class="s3-availability-em">TODAY</span></h2>
+      <div id="s3-callout" class="s3-callout">TRY IT NOW</div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — URL CTA (15–20s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="15" data-duration="5" data-track-index="1">
+    <div class="s4-content">
+      <h2 id="s4-mark" class="s4-mark"><span id="s4-mark-em" class="s4-mark-em">BRAND</span></h2>
+      <div id="s4-url" class="s4-url">yourbrand.com/whats-new</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["saas-feature-launch-20s"] = tl;
+
+  // ---- Scene 1: 0–3s — "NEW: feature" stamp + glitch ----------------
+  tl.fromTo("#s1-stamp",
+    { scale: 0.7, opacity: 0, y: -16 },
+    { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.6)" },
+    0.2);
+  textFx.stamp(tl, "#s1-feature", { at: 0.7, duration: 0.6, fromScale: 1.4 });
+  effectFx.glitchBurst(tl, "#s1-feature-em", { at: 1.3, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#s1-feature-em", { at: 1.9, duration: 0.18 });
+
+  // ---- Scene 2: 3–10s — multiplane reveal of UI ---------------------
+  effectFx.multiplaneDolly(tl, "#s2-stage", {
+    at: 3.0, duration: 6.6, from: -200, to: 50, ease: "power2.out"
+  });
+  tl.fromTo("#s2-shot",
+    { scale: 0.92, opacity: 0, y: 30 },
+    { scale: 1, opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+    3.4);
+  textFx.cascade(tl, "#s2-headline", { at: 4.4, duration: 0.7, stagger: 0.07 });
+  effectFx.glitchBurst(tl, "#s2-headline-em", { at: 5.4, duration: 0.18 });
+  tl.fromTo("#s2-support",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    6.0);
+
+  // ---- Scene 3: 10–15s — "Now available" + glitter burst ------------
+  tl.fromTo("#s3 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    10.2);
+  tl.fromTo("#s3-availability",
+    { scale: 0.9, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)" },
+    10.5);
+  glitterFx.burst(tl, "#s3-burst-host", {
+    at: 11.0, count: 60, duration: 1.6, seed: 19, distance: 540
+  });
+  effectFx.glitchBurst(tl, "#s3-availability-em", { at: 11.4, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#s3-availability-em", { at: 11.9, duration: 0.18 });
+  tl.fromTo("#s3-callout",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    12.4);
+
+  // ---- Scene 4: 15–20s — URL CTA ------------------------------------
+  textFx.stamp(tl, "#s4-mark", { at: 15.2, duration: 0.6, fromScale: 1.3 });
+  effectFx.glitchBurst(tl, "#s4-mark-em", { at: 15.8, duration: 0.18 });
+  tl.fromTo("#s4-url",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    16.3);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s4-mark", "#s4-url"], { opacity: 0.92, duration: 0.4 }, 19.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+{
+  "template": "quiet-premium",
+  "vibe": "hushed, ambient pad, sparse piano, 50-70 BPM, no vocals",
+  "vibe_long": "Hushed. Ambient pad, sparse piano, occasional bell or felt-piano. 50-70 BPM, often beatless. No vocals at all. Volume default 0.12 — barely there. Tracks should frame silence not fill it.",
+  "bpm_range": [50, 70],
+  "default_volume": 0.12,
+  "search_keywords": [
+    "ambient piano minimal atmospheric",
+    "cinematic sparse quiet emotional",
+    "meditation minimal calm atmospheric",
+    "minimal piano cello"
+  ],
+  "tracks": [
+    {
+      "slug": "minimal-piano-emotional-ambient-cinematic-peaceful-calm-smooth",
+      "title": "Minimal Piano Emotional Ambient Cinematic Peaceful Calm Smooth",
+      "url": "https://pixabay.com/music/small-emotions-minimal-piano-emotional-ambient-cinematic-peaceful-calm-smooth-117301/",
+      "duration": 168,
+      "bpm": 60,
+      "tags": ["ambient", "piano", "minimal", "peaceful", "cinematic"],
+      "character": "Minimal felt-piano with peaceful calm air, cinematic but understated",
+      "best_for": "Default Quiet Premium bed; luxury, hospitality, fashion"
+    },
+    {
+      "slug": "ambient-grand-piano-solo-meditation",
+      "title": "Ambient Grand Piano Solo for Meditation or Background",
+      "url": "https://pixabay.com/music/solo-piano-ambient-grand-piano-solo-for-meditation-or-background-2733/",
+      "duration": 240,
+      "bpm": 56,
+      "tags": ["ambient", "piano", "solo", "meditation", "background"],
+      "character": "Grand piano solo, meditative, generous silences between phrases",
+      "best_for": "Held-typography scenes, brand-reveal silences"
+    },
+    {
+      "slug": "ambient-piano-meditation",
+      "title": "Ambient Piano Meditation",
+      "url": "https://pixabay.com/music/meditationspiritual-ambient-piano-meditation-7359/",
+      "duration": 210,
+      "bpm": 58,
+      "tags": ["ambient", "piano", "meditation", "spiritual"],
+      "character": "Soft ambient piano with meditative drift",
+      "best_for": "Hold-3-images / quiet-luxury openings"
+    },
+    {
+      "slug": "minimal-piano-and-cello",
+      "title": "Minimal Piano and Cello",
+      "url": "https://pixabay.com/music/ambient-minimal-piano-and-cello-109312/",
+      "duration": 156,
+      "bpm": 64,
+      "tags": ["ambient", "piano", "cello", "minimal", "neoclassical"],
+      "character": "Spare piano with felted cello — neoclassical understatement",
+      "best_for": "Premium hospitality, high-touch services where one extra layer is wanted"
+    },
+    {
+      "slug": "meditative-ambient-journey-airy-synth-flowing-piano",
+      "title": "Meditative Ambient Journey with Airy Synth Drones and Flowing Piano",
+      "url": "https://pixabay.com/music/solo-piano-meditative-ambient-journey-with-airy-synth-drones-and-flowing-piano-416038/",
+      "duration": 220,
+      "bpm": 54,
+      "tags": ["ambient", "piano", "synth", "meditative", "drones"],
+      "character": "Airy synth pad under flowing piano, beatless drift",
+      "best_for": "Long quiet scenes (8-10s) where you want presence not motion"
+    },
+    {
+      "slug": "premium-01-ambient",
+      "title": "Premium Ambient (premium-01 audition)",
+      "url": "https://pixabay.com/music/search/ambient%20piano%20minimal%20atmospheric/",
+      "duration": 175,
+      "bpm": 62,
+      "tags": ["ambient", "piano", "minimal", "atmospheric"],
+      "character": "Ambient atmospheric pad with sparse piano motif",
+      "best_for": "Quiet Premium fallback bed",
+      "local_file": "assets/music/premium-01-ambient.mp3"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "template": "documentary",
+  "vibe": "serious, evidence-based, cinematic strings + piano, 60-80 BPM",
+  "vibe_long": "Serious, evidence-based. Cinematic strings, piano, restrained percussion. 60-80 BPM. No drums-on-beat — instrumental drama only. Tracks should anchor not push.",
+  "bpm_range": [60, 80],
+  "default_volume": 0.22,
+  "search_keywords": [
+    "cinematic piano strings documentary",
+    "emotional piano slow build cinematic",
+    "reflective orchestral inspirational documentary",
+    "documentary emotional"
+  ],
+  "tracks": [
+    {
+      "slug": "cinematic-documentary-emotional-underscore",
+      "title": "Cinematic Documentary – Emotional Underscore for Storytelling",
+      "url": "https://pixabay.com/music/ambient-cinematic-documentary-emotional-underscore-for-storytelling-466076/",
+      "duration": 180,
+      "bpm": 70,
+      "tags": ["cinematic", "documentary", "ambient", "piano", "emotional"],
+      "character": "Cinematic ambient piano underscore, hypnosis-ready, emotional storytelling",
+      "best_for": "Default Documentary Considered bed; B2B explainers, regulated industries"
+    },
+    {
+      "slug": "emotional-cinematic-documentary-nature-ambient-piano",
+      "title": "Emotional - Cinematic Documentary Nature Ambient Piano",
+      "url": "https://pixabay.com/music/adventure-emotional-cinematic-documentary-nature-ambient-piano-199292/",
+      "duration": 195,
+      "bpm": 68,
+      "tags": ["cinematic", "documentary", "piano", "nature", "ambient"],
+      "character": "Reflective piano over ambient pad, nature documentary feel",
+      "best_for": "Long-form explainers, evidence segments, slow reveals"
+    },
+    {
+      "slug": "dramatic-story-emotional-cinematic-documentary-epic-piano",
+      "title": "Dramatic Story – Emotional Cinematic Documentary Epic Piano",
+      "url": "https://pixabay.com/music/main-title-dramatic-story-emotional-cinematic-documentary-epic-piano-125772/",
+      "duration": 168,
+      "bpm": 76,
+      "tags": ["cinematic", "epic", "piano", "dramatic", "main-title"],
+      "character": "Building piano with restrained string swell — main-title gravitas",
+      "best_for": "Hook scenes that need narrative weight; case-study openings"
+    },
+    {
+      "slug": "emotional-documentary-background",
+      "title": "Emotional Documentary Background",
+      "url": "https://pixabay.com/music/pulses-emotional-documentary-background-261628/",
+      "duration": 152,
+      "bpm": 72,
+      "tags": ["documentary", "background", "pulses", "emotional"],
+      "character": "Subtle pulse + piano, sits cleanly behind narration",
+      "best_for": "Mid-scene narration where the story needs space"
+    },
+    {
+      "slug": "documentary-01-strings",
+      "title": "Documentary Strings (documentary-01 audition)",
+      "url": "https://pixabay.com/music/search/cinematic%20piano%20strings%20documentary/",
+      "duration": 197,
+      "bpm": 64,
+      "tags": ["cinematic", "strings", "piano", "documentary"],
+      "character": "Cinematic strings + piano, slow and considered",
+      "best_for": "Anchor scenes for senior decision-maker briefs",
+      "local_file": "assets/music/documentary-01-strings.mp3"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+/* =========================================================================
+   TEMPLATE — DOCUMENTARY
+   =========================================================================
+   Vibe: cinematic, considered, restrained. Editorial serif display, mono
+   captions, slow pacing, teal/orange grade. Pairs with mission-led brands,
+   reportage, founder stories, social-impact work.
+
+   Layer order:
+     1. design/cards.css
+     2. design/templates/documentary.css  ← this file
+     3. design/tokens-<brand>.css
+     4. design/effects-batch-08.css
+
+   Pacing recipe:
+     scene fast: 2.4s  · scene mid: 4.0s  · scene slow: 6.5s
+     ease in:   power3.out
+     ease out:  power3.in
+     stagger:   0.16s
+
+   Render hint:
+     node scripts/render.mjs --lut=teal-orange --strength=0.85
+   ========================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* Pacing — slow, deliberate. */
+  --pace-fast: 2.4s;
+  --pace-mid:  4.0s;
+  --pace-slow: 6.5s;
+
+  /* Easing — cinematic, smooth. */
+  --ease-in:    cubic-bezier(0.16, 1, 0.3, 1);       /* power3.out */
+  --ease-out:   cubic-bezier(0.7, 0, 0.84, 0);       /* power3.in */
+  --ease-inout: cubic-bezier(0.83, 0, 0.17, 1);      /* power3.inOut */
+
+  /* Type — Playfair display, Source Sans body, JetBrains Mono captions. */
+  --card-font-display:  "Playfair Display", Georgia, serif;
+  --card-font-ui:       "Source Sans 3", system-ui, sans-serif;
+  --card-font-mono:     "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  --card-title-size:    64px;
+  --card-title-weight:  500;
+  --card-title-track:   -0.012em;
+  --card-title-line:    1.10;
+
+  --card-kicker-size:   18px;        /* mono kicker */
+  --card-kicker-track:  0.22em;
+
+  --card-body-size:     28px;
+  --card-body-line:     1.50;
+
+  --card-label-size:    22px;        /* mono label */
+  --card-label-track:   0.10em;
+
+  /* Shadows — barely there, atmospheric. */
+  --vibe-shadow-soft:  0 32px 64px rgba(8, 12, 18, 0.18);
+  --vibe-shadow-press: 0 8px 24px rgba(8, 12, 18, 0.10);
+}
+
+/* Documentary kicker uses mono — override the cards.css default sans. */
+.card__kicker, .scene__kicker {
+  font-family: var(--card-font-mono);
+}
+
+.scene { background: var(--card-paper, #0F1115); }
+
+/* Heavier film grain on documentary — the look benefits from texture. */
+.fx-film-grain { opacity: 0.14; }
+
+/* Long-shadow muted — documentary doesn't need the punch. */
+.fx-long-shadow {
+  text-shadow:
+    1px 1px 0 rgba(0,0,0,0.42),
+    2px 2px 0 rgba(0,0,0,0.38),
+    4px 4px 0 rgba(0,0,0,0.30),
+    7px 7px 0 rgba(0,0,0,0.20),
+    11px 11px 0 rgba(0,0,0,0.10);
+}
+
+.fx-cinemagraph-bg::before { animation-duration: 36s; }
+
+/* Letterbox bars — pairs cleanly with the documentary feel. Apply at scene
+   level by adding .vibe-letterbox to the .scene wrapper. */
+.vibe-letterbox::before,
+.vibe-letterbox::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8%;
+  background: #000;
+  z-index: 100;
+  pointer-events: none;
+}
+.vibe-letterbox::before { top: 0; }
+.vibe-letterbox::after  { bottom: 0; }

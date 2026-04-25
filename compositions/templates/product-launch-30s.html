@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Product Launch — 30s landscape (kinetic-pop)</title>
+
+<!--
+  STRUCTURAL TEMPLATE — PRODUCT LAUNCH (30s, 1920×1080)
+  =====================================================
+  Format:        Landscape 30-second product launch / "available now".
+  Base template: kinetic-pop (snappy pace, heavy display sans, hard shadows).
+  Recommended LUT: --lut=pop --strength=1.0
+  Scenes:
+    1.  0–4s   Brand chip — wordmark stamp + glitch
+    2.  4–14s  Product reveal — multiplane dolly + cascade headline
+    3. 14–24s  Three-feature row — stagger + ambient sparkle
+    4. 24–30s  Available now + URL — glitter burst on the date
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+    2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
+    3. Fill in placeholder copy (BRAND, PRODUCT, FEATURES, DATE, URL).
+    4. Run: npx hyperframes preview     (sanity check)
+    5. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — kinetic-pop sets fast pacing + heavy display sans. -->
+<link rel="stylesheet" href="../../design/templates/kinetic-pop.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #0E0E12);
+    color: var(--card-navy, #FBF9F6);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 140px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size, 22px);
+    letter-spacing: var(--card-kicker-track, 0.32em);
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.92;
+  }
+
+  /* ---- Scene 1: Brand chip ---- */
+  .s1 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s1-mark {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 280px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+  }
+  .s1-mark-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s1-tag {
+    font-family: var(--card-font-ui);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--card-paper-soft, #d7dce3);
+    margin-top: 30px;
+  }
+
+  /* ---- Scene 2: Product reveal — multiplane dolly + cascade ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s2 .plane-bg {
+    font-family: var(--card-font-display);
+    font-size: 460px; font-weight: 800;
+    color: rgba(26, 158, 143, 0.12);
+    letter-spacing: -0.04em;
+    text-align: center;
+    line-height: 0.9;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+    color: var(--card-navy);
+    text-align: center;
+    margin: 0;
+    max-width: 1700px;
+  }
+  .s2-headline-em {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s2-support {
+    font-family: var(--card-font-ui);
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--card-slate-ink, #4b5a6d);
+    line-height: 1.3;
+    text-align: center;
+    margin-top: 28px;
+    max-width: 1100px;
+  }
+
+  /* ---- Scene 3: Three-feature row + ambient sparkle ---- */
+  .s3 {
+    background: var(--card-navy, #0E0E12);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s3-sparkle-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s3-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 64px;
+    width: 100%;
+    max-width: 1640px;
+    position: relative; z-index: 2;
+  }
+  .s3-cell {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s3-icon {
+    width: 130px; height: 130px;
+    border-radius: 26px;
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; line-height: 1;
+    margin-bottom: 32px;
+  }
+  .s3-title {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 76px;
+    letter-spacing: -0.02em;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1;
+    margin-bottom: 14px;
+  }
+  .s3-body {
+    font-family: var(--card-font-ui);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--card-paper-soft, #d7dce3);
+    line-height: 1.4;
+    max-width: 380px;
+  }
+
+  /* ---- Scene 4: Available now + URL — glitter burst ---- */
+  .s4 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #0E0E12);
+  }
+  .s4-burst-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .s4-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+  }
+  .s4-availability {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 160px;
+    color: var(--card-navy, #0E0E12);
+    letter-spacing: -0.025em;
+    line-height: 0.95;
+    margin: 0;
+  }
+  .s4-date {
+    color: var(--card-accent, #1A9E8F);
+    display: inline-block;
+  }
+  .s4-url {
+    font-family: var(--card-font-ui);
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--card-slate-ink, #4b5a6d);
+    letter-spacing: 0.06em;
+    margin-top: 36px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="product-launch-30s" class="comp clip"
+     data-composition-id="product-launch-30s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — Brand chip (0–4s): stamp + glitch -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="4" data-track-index="1"
+       data-scene-grade="noir">
+    <div class="s1-content">
+      <h1 id="s1-mark" class="s1-mark"><span id="s1-mark-em" class="s1-mark-em">BRAND</span></h1>
+      <div id="s1-tag" class="s1-tag">PRESENTS</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Product reveal (4–14s): multiplane + cascade -->
+  <div id="s2" class="scene s2 clip"
+       data-start="4" data-duration="10" data-track-index="1">
+    <div class="fx-multiplane">
+      <div id="s2-stage" class="stage">
+        <div class="plane plane-bg">NEW</div>
+        <div class="plane plane-base">
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div class="scene__kicker">INTRODUCING</div>
+            <h2 id="s2-headline" class="s2-headline">Meet the <span id="s2-headline-em" class="s2-headline-em">next thing.</span></h2>
+            <p id="s2-support" class="s2-support">A short product line — the one promise customers will repeat to friends.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — Three-feature row (14–24s): stagger + ambient sparkle -->
+  <div id="s3" class="scene s3 clip"
+       data-start="14" data-duration="10" data-track-index="1">
+    <div id="s3-sparkle-host" class="s3-sparkle-host"></div>
+    <div class="s3-row">
+      <div id="s3-cell-1" class="s3-cell">
+        <div class="s3-icon" aria-hidden="true">⚡</div>
+        <div id="s3-t1" class="s3-title">FAST</div>
+        <div class="s3-body">Feature one — the speed promise.</div>
+      </div>
+      <div id="s3-cell-2" class="s3-cell">
+        <div class="s3-icon" aria-hidden="true">★</div>
+        <div id="s3-t2" class="s3-title">SHARP</div>
+        <div class="s3-body">Feature two — what makes it stand out.</div>
+      </div>
+      <div id="s3-cell-3" class="s3-cell">
+        <div class="s3-icon" aria-hidden="true">✓</div>
+        <div id="s3-t3" class="s3-title">EASY</div>
+        <div class="s3-body">Feature three — the human payoff.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Available now + URL (24–30s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="24" data-duration="6" data-track-index="1">
+    <div id="s4-burst-host" class="s4-burst-host"></div>
+    <div class="s4-content">
+      <div class="scene__kicker" style="color: var(--card-accent, #1A9E8F);">AVAILABLE</div>
+      <h2 id="s4-availability" class="s4-availability"><span id="s4-date" class="s4-date">TODAY</span></h2>
+      <div id="s4-url" class="s4-url">yourbrand.com/launch</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["product-launch-30s"] = tl;
+
+  // ---- Scene 1: 0–4s — brand stamp + glitch -------------------------
+  textFx.stamp(tl, "#s1-mark", { at: 0.2, duration: 0.6, fromScale: 1.5 });
+  effectFx.glitchBurst(tl, "#s1-mark-em", { at: 0.9, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#s1-mark-em", { at: 1.5, duration: 0.18 });
+  tl.fromTo("#s1-tag",
+    { y: 20, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    1.6);
+
+  // ---- Scene 2: 4–14s — product reveal ------------------------------
+  effectFx.multiplaneDolly(tl, "#s2-stage", {
+    at: 4.0, duration: 9.4, from: -240, to: 60, ease: "power2.out"
+  });
+  tl.fromTo("#s2 .scene__kicker",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    4.4);
+  textFx.cascade(tl, "#s2-headline", { at: 4.8, duration: 0.7, stagger: 0.08 });
+  effectFx.glitchBurst(tl, "#s2-headline-em", { at: 5.7, duration: 0.18 });
+  tl.fromTo("#s2-support",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    6.4);
+
+  // ---- Scene 3: 14–24s — three-feature row + sparkle ---------------
+  glitterFx.ambient(tl, "#s3-sparkle-host", {
+    at: 14.0, count: 36, duration: 10.0, seed: 23
+  });
+  tl.fromTo(["#s3-cell-1", "#s3-cell-2", "#s3-cell-3"],
+    { y: 60, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, stagger: 0.16, ease: "power3.out" },
+    14.3);
+  textFx.stagger(tl, "#s3-t1", { at: 14.7, duration: 0.5, stagger: 0.04, rotation: -10 });
+  textFx.stagger(tl, "#s3-t2", { at: 15.1, duration: 0.5, stagger: 0.04, rotation: -10 });
+  textFx.stagger(tl, "#s3-t3", { at: 15.5, duration: 0.5, stagger: 0.04, rotation: -10 });
+
+  // ---- Scene 4: 24–30s — available now + URL + glitter burst -------
+  tl.fromTo("#s4 .scene__kicker",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    24.2);
+  tl.fromTo("#s4-availability",
+    { scale: 0.92, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.4)" },
+    24.5);
+  glitterFx.burst(tl, "#s4-burst-host", {
+    at: 25.0, count: 72, duration: 1.6, seed: 27, distance: 760
+  });
+  effectFx.glitchBurst(tl, "#s4-date", { at: 25.4, duration: 0.18 });
+  effectFx.glitchBurst(tl, "#s4-date", { at: 25.9, duration: 0.18 });
+  tl.fromTo("#s4-url",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    26.4);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s4-availability", "#s4-url"], { opacity: 0.92, duration: 0.4 }, 29.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Trades Before / After — 30s landscape (documentary)</title>
+
+<!--
+  VERTICAL TEMPLATE — TRADES / BEFORE-AFTER (30s, 1920×1080)
+  ==========================================================
+  Format:        Landscape 30-second portfolio piece — landscaping,
+                 painting, plastering, paving, deck builds, flooring,
+                 pest control, roofing, exterior cleans.
+  Base template: documentary (slow editorial pace, mid-weight serif).
+  Recommended LUT: --lut=teal-orange --strength=0.85
+  Music:         documentary / warm-community family.
+
+  Conversion drivers:
+    1. Visible craftsmanship — before frame to after frame.
+    2. Process credibility — the steps you took.
+    3. Customer voice + suburb (proximity = trust).
+    4. Phone + URL CTA at end.
+
+  Scenes:
+    1.  0–4s   "Before" label + state — image placeholder area
+    2.  4–10s  Process — 3 step cards (what we did) with stagger
+    3. 10–18s  "After" reveal + outcome
+    4. 18–26s  Customer quote + name + suburb
+    5. 26–30s  CTA — phone + URL
+
+  TO USE THIS TEMPLATE:
+    1. Copy this file to your project root as `index.html`.
+       cp compositions/verticals/trades-before-after-30s.html index.html
+    2. Update design paths (`../../design/` → `design/`).
+    3. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
+    4. Fill in placeholder copy (BEFORE state, STEPS, AFTER state, QUOTE,
+       NAME, SUBURB, PHONE, URL).
+    5. Replace `.s1-photo` and `.s3-photo` placeholder gradients with real
+       <img> tags pointing at your before / after photo assets.
+    6. Run: npx hyperframes preview     (sanity check)
+    7. Run: npx hyperframes render      (final MP4)
+-->
+
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 2. Vibe template — documentary sets slow pace + editorial serif. -->
+<link rel="stylesheet" href="../../design/templates/documentary.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper, #FBF9F6); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #1B2A3D);
+  }
+
+  .scene {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 160px;
+    box-sizing: border-box;
+  }
+
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 26px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--card-accent, #1A9E8F);
+    margin-bottom: 28px;
+    opacity: 0.95;
+  }
+
+  /* ---- Scene 1: Before ---- */
+  .s1 {
+    background: var(--card-navy, #1B2A3D);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s1-content {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 80px;
+    width: 100%; max-width: 1600px;
+    justify-content: center;
+  }
+  .s1-photo {
+    width: 600px; height: 600px;
+    border-radius: 24px;
+    background: linear-gradient(135deg,
+      var(--card-slate-ink, #4b5a6d) 0%,
+      var(--card-navy, #1B2A3D) 100%);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.40);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-size: 220px;
+    color: var(--card-paper-soft, #d7dce3);
+    line-height: 1;
+    flex-shrink: 0;
+    /* Replace this whole block contents with <img src="assets/before.jpg" /> */
+  }
+  .s1-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s1-stamp {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 180px;
+    letter-spacing: -0.03em;
+    line-height: 0.94;
+    color: var(--card-paper, #FBF9F6);
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .s1-state {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-style: italic;
+    font-size: 56px;
+    line-height: 1.16;
+    color: var(--card-paper-soft, #d7dce3);
+    margin: 28px 0 0 0;
+    max-width: 660px;
+  }
+
+  /* ---- Scene 2: Process ---- */
+  .s2 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #1B2A3D);
+  }
+  .s2-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    width: 100%; max-width: 1600px;
+  }
+  .s2-headline {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 84px;
+    letter-spacing: -0.02em;
+    line-height: 1.04;
+    color: var(--card-navy, #1B2A3D);
+    margin: 0 0 64px 0;
+  }
+  .s2-steps {
+    display: flex; flex-direction: row;
+    gap: 36px;
+    width: 100%;
+    justify-content: center;
+  }
+  .s2-step {
+    flex: 1 1 0;
+    max-width: 460px;
+    padding: 40px 36px;
+    border-radius: 18px;
+    background: var(--card-paper-soft, #F5EFE6);
+    border: 1px solid color-mix(in srgb, var(--card-slate-ink, #4b5a6d) 18%, transparent);
+    text-align: left;
+  }
+  .s2-step-num {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 64px;
+    color: var(--card-accent, #1A9E8F);
+    line-height: 1;
+    margin: 0 0 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .s2-step-title {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 38px;
+    line-height: 1.16;
+    color: var(--card-navy, #1B2A3D);
+    margin: 0 0 14px 0;
+  }
+  .s2-step-body {
+    font-family: var(--card-font-ui);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--card-slate-ink, #4b5a6d);
+    margin: 0;
+  }
+
+  /* ---- Scene 3: After ---- */
+  .s3 {
+    background: var(--card-paper, #FBF9F6);
+    color: var(--card-navy, #1B2A3D);
+  }
+  .s3-content {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 80px;
+    width: 100%; max-width: 1600px;
+    justify-content: center;
+  }
+  .s3-photo {
+    width: 660px; height: 660px;
+    border-radius: 24px;
+    background: linear-gradient(135deg,
+      var(--card-accent, #1A9E8F) 0%,
+      var(--card-paper-soft, #F5EFE6) 100%);
+    box-shadow: 0 24px 60px rgba(28,30,38,0.18);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--card-font-display);
+    font-size: 240px;
+    color: var(--card-paper, #FBF9F6);
+    line-height: 1;
+    flex-shrink: 0;
+    /* Replace this whole block contents with <img src="assets/after.jpg" /> */
+  }
+  .s3-text {
+    display: flex; flex-direction: column;
+    align-items: flex-start;
+  }
+  .s3-stamp {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 200px;
+    letter-spacing: -0.03em;
+    line-height: 0.94;
+    color: var(--card-accent, #1A9E8F);
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .s3-state {
+    font-family: var(--card-font-display);
+    font-weight: 500;
+    font-size: 60px;
+    line-height: 1.16;
+    color: var(--card-navy, #1B2A3D);
+    margin: 28px 0 0 0;
+    max-width: 720px;
+  }
+
+  /* ---- Scene 4: Customer quote ---- */
+  .s4 {
+    background: var(--card-navy, #1B2A3D);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s4-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    max-width: 1500px;
+  }
+  .s4-quote-mark {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 220px;
+    color: var(--card-accent, #1A9E8F);
+    line-height: 0.6;
+    margin-bottom: 32px;
+  }
+  .s4-quote {
+    font-family: var(--card-font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1.18;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.012em;
+    margin: 0;
+    max-width: 1500px;
+    text-align: center;
+  }
+  .s4-attrib {
+    display: flex; flex-direction: column;
+    align-items: center;
+    margin-top: 44px;
+    gap: 8px;
+  }
+  .s4-name {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 38px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .s4-suburb {
+    font-family: var(--card-font-ui);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: var(--card-paper-soft, #d7dce3);
+    margin: 0;
+    opacity: 0.85;
+  }
+
+  /* ---- Scene 5: CTA ---- */
+  .s5 {
+    background: var(--card-accent, #1A9E8F);
+    color: var(--card-paper, #FBF9F6);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: 12px;
+  }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 600;
+    font-size: 96px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    margin: 0 0 12px 0;
+  }
+  .s5-phone {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 140px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: -0.02em;
+    line-height: 1.0;
+    margin: 0;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-weight: 600;
+    font-size: 32px;
+    color: var(--card-paper, #FBF9F6);
+    letter-spacing: 0.10em;
+    margin-top: 24px;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+
+<div id="trades-before-after-30s" class="comp clip"
+     data-composition-id="trades-before-after-30s"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Scene 1 — BEFORE (0–4s) -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="4" data-track-index="1"
+       data-scene-grade="cool">
+    <div class="s1-content">
+      <div id="s1-photo" class="s1-photo">B</div>
+      <div class="s1-text">
+        <div class="scene__kicker">BEFORE</div>
+        <h1 id="s1-stamp" class="s1-stamp">Before</h1>
+        <p id="s1-state" class="s1-state">Tired and overgrown — the yard hadn't been touched in years.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 2 — Process (4–10s) -->
+  <div id="s2" class="scene s2 clip"
+       data-start="4" data-duration="6" data-track-index="1">
+    <div class="s2-content">
+      <h2 id="s2-headline" class="s2-headline">What we did.</h2>
+      <div id="s2-steps" class="s2-steps">
+        <div class="s2-step">
+          <div class="s2-step-num">01</div>
+          <div class="s2-step-title">Stripped &amp; cleared</div>
+          <p class="s2-step-body">Pulled the old turf, dug out the roots, levelled the ground.</p>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-num">02</div>
+          <div class="s2-step-title">Built the structure</div>
+          <p class="s2-step-body">Laid the paths, edged the beds, ran fresh irrigation.</p>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-num">03</div>
+          <div class="s2-step-title">Planted &amp; finished</div>
+          <p class="s2-step-body">Native planting, fresh turf, finished to spec in five days.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3 — AFTER reveal (10–18s) -->
+  <div id="s3" class="scene s3 clip"
+       data-start="10" data-duration="8" data-track-index="1">
+    <div class="s3-content">
+      <div id="s3-photo" class="s3-photo">A</div>
+      <div class="s3-text">
+        <div class="scene__kicker">AFTER</div>
+        <h2 id="s3-stamp" class="s3-stamp fx-bleed-ready">After</h2>
+        <p id="s3-state" class="s3-state">A garden the family actually uses — finished in five working days.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4 — Customer quote (18–26s) -->
+  <div id="s4" class="scene s4 clip"
+       data-start="18" data-duration="8" data-track-index="1"
+       data-scene-grade="warm">
+    <div class="s4-content">
+      <div id="s4-quote-mark" class="s4-quote-mark fx-long-shadow">&ldquo;</div>
+      <blockquote id="s4-quote" class="s4-quote">They turned up when they said they would, and the price didn't move once.</blockquote>
+      <div class="s4-attrib">
+        <p id="s4-name" class="s4-name">— Sarah M.</p>
+        <p id="s4-suburb" class="s4-suburb">MT EDEN, AUCKLAND</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 5 — CTA (26–30s) -->
+  <div id="s5" class="scene s5 clip"
+       data-start="26" data-duration="4" data-track-index="1">
+    <div class="s5-content">
+      <h2 id="s5-cta" class="s5-cta">Free quote.</h2>
+      <div id="s5-phone" class="s5-phone">0800 555 123</div>
+      <div id="s5-url" class="s5-url">yourbrand.co.nz</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (required by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["trades-before-after-30s"] = tl;
+
+  // ---- Scene 1: 0–4s — BEFORE ----------------------------------------
+  tl.fromTo("#s1-photo",
+    { scale: 0.85, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.9, ease: "power3.out" },
+    0.3);
+  tl.fromTo("#s1 .scene__kicker",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    0.8);
+  textFx.cascade(tl, "#s1-stamp", { at: 1.0, duration: 0.7, stagger: 0.10 });
+  tl.fromTo("#s1-state",
+    { y: 22, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    2.2);
+
+  // ---- Scene 2: 4–10s — process steps -------------------------------
+  textFx.cascade(tl, "#s2-headline", { at: 4.3, duration: 0.7, stagger: 0.08 });
+  tl.fromTo("#s2-steps .s2-step",
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, stagger: 0.30, ease: "power3.out" },
+    5.4);
+
+  // ---- Scene 3: 10–18s — AFTER --------------------------------------
+  tl.fromTo("#s3-photo",
+    { scale: 0.88, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 1.0, ease: "power3.out" },
+    10.2);
+  tl.fromTo("#s3 .scene__kicker",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    10.8);
+  tl.fromTo("#s3-stamp",
+    { scale: 0.88, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.4)" },
+    11.0);
+  effectFx.inkBleed(tl, "#s3-stamp", { at: 11.0, duration: 0.9, from: 60, to: 0 });
+  tl.fromTo("#s3-state",
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+    12.6);
+
+  // ---- Scene 4: 18–26s — customer quote -----------------------------
+  tl.fromTo("#s4-quote-mark",
+    { scale: 0.6, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.9, ease: "back.out(1.4)" },
+    18.4);
+  textFx.stagger(tl, "#s4-quote",
+    { at: 19.2, duration: 0.6, stagger: 0.014, rotation: -2, fromY: 12 });
+  tl.fromTo("#s4-name",
+    { y: 18, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+    23.4);
+  tl.fromTo("#s4-suburb",
+    { y: 14, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    23.8);
+
+  // ---- Scene 5: 26–30s — CTA ----------------------------------------
+  tl.fromTo("#s5-cta",
+    { y: 26, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+    26.3);
+  tl.fromTo("#s5-phone",
+    { scale: 0.88, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.4)" },
+    26.8);
+  effectFx.glitchBurst(tl, "#s5-phone", { at: 27.6, duration: 0.18 });
+  tl.fromTo("#s5-url",
+    { y: 16, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+    28.0);
+  // Final fade — only the last scene may animate elements out.
+  tl.to(["#s5-cta", "#s5-phone", "#s5-url"], { opacity: 0.92, duration: 0.4 }, 29.4);
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>
