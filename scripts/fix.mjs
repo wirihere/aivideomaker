@@ -25,6 +25,9 @@
 //   subcomp-currentscript §4 document.currentScript is null inside sub-comp wrappers
 //   video-bleed-guard     §4 <video> inside class="clip" data-start ancestor without inline opacity:0 + tl.set gate pair
 //   repeat-no-final-set   §4 GSAP tween with `repeat: N` (no yoyo) on opacity/scale without a tl.set landing keyframe
+//   narration-mid-tween   §8 <audio class="clip"> ends during an active visual tween — produces stutter (warn)
+//   track-index-collision §4 two clip elements share data-track-index AND time-overlap (error)
+//   scene-overlap-visual  §8 two clips on different tracks overlap >0.5s without `<!-- scene-stack-ok -->` opt-in (warn)
 //
 // What it WON'T do:
 //   - Rewrite tl.from() → tl.fromTo() (semantics differ, end values are ambiguous).
@@ -863,6 +866,308 @@ function detectRepeatNoFinalSet(text) {
   return findings;
 }
 
+// --- Animation-choreography detectors (§8 long-term parking lot) -----------
+// All three operate on the *same* primitives: clip-element timing extracted
+// from `data-start`/`data-duration`/`data-track-index` attributes and (for
+// narration-mid-tween) GSAP tween call sites parsed out of inline scripts.
+
+// Walk ('s and )'s with string awareness; return matching close index (exclusive).
+// Used by the tween-call extractor — handles strings/templates without choking.
+function findMatchingParen(src, openIdx) {
+  let depth = 1;
+  let i = openIdx + 1;
+  let inStr = null;
+  while (i < src.length && depth > 0) {
+    const c = src[i];
+    if (inStr) {
+      if (c === "\\") { i += 2; continue; }
+      if (c === inStr) inStr = null;
+    } else {
+      if (c === '"' || c === "'" || c === "`") inStr = c;
+      else if (c === "(") depth++;
+      else if (c === ")") depth--;
+    }
+    i++;
+  }
+  return depth === 0 ? i - 1 : -1;
+}
+
+// Split a comma-separated argument string at top-level only — string- and
+// brace-aware so `tl.fromTo("x", { y: 0 }, 1.2)` produces 3 parts cleanly.
+function splitTopLevelCommas(src) {
+  const parts = [];
+  let cur = "";
+  let dd = 0;
+  let inStr = null;
+  for (let i = 0; i < src.length; i++) {
+    const c = src[i];
+    if (inStr) {
+      cur += c;
+      if (c === "\\") { cur += src[i + 1] || ""; i++; continue; }
+      if (c === inStr) inStr = null;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === "`") { inStr = c; cur += c; continue; }
+    if (c === "(" || c === "[" || c === "{") dd++;
+    else if (c === ")" || c === "]" || c === "}") dd--;
+    if (c === "," && dd === 0) { parts.push(cur); cur = ""; }
+    else cur += c;
+  }
+  if (cur.length) parts.push(cur);
+  return parts;
+}
+
+// Extract every clip-bearing element with timing from the HTML body.
+// Returns [{ tagName, idLabel, start, end, duration, track, idx }].
+// Whole-token "clip" check avoids `class="clipboard"` false-positives.
+function extractClipElements(text) {
+  const items = [];
+  const tagRe = /<([a-z][\w-]*)\b([^>]*)>/gi;
+  let m;
+  while ((m = tagRe.exec(text)) !== null) {
+    const tagName = m[1].toLowerCase();
+    if (tagName === "audio") continue; // audio handled by audio-track / audio-no-clip
+    const attrs = m[2] || "";
+    const cls = attrValue(attrs, "class") || "";
+    if (!/(^|\s)clip(\s|$)/.test(cls)) continue;
+    const startStr = attrValue(attrs, "data-start");
+    const durStr = attrValue(attrs, "data-duration");
+    const trackStr = attrValue(attrs, "data-track-index");
+    if (startStr == null || durStr == null || trackStr == null) continue;
+    const start = parseFloat(startStr);
+    const dur = parseFloat(durStr);
+    if (Number.isNaN(start) || Number.isNaN(dur)) continue;
+    const id = attrValue(attrs, "id");
+    items.push({
+      tagName,
+      idLabel: id ? `#${id}` : `<${tagName}>`,
+      start,
+      end: start + dur,
+      duration: dur,
+      track: String(trackStr),
+      idx: m.index,
+      attrs,
+    });
+  }
+  return items;
+}
+
+// Same as extractClipElements but for <audio class="clip" data-start ...>.
+// We parse audio separately because the detector below needs them paired
+// with their *opening tag* index for line reporting.
+function extractAudioClips(text) {
+  const items = [];
+  const tags = extractAudioTags(text);
+  for (const t of tags) {
+    const cls = attrValue(t.attrs, "class") || "";
+    if (!/(^|\s)clip(\s|$)/.test(cls)) continue;
+    const startStr = attrValue(t.attrs, "data-start");
+    const durStr = attrValue(t.attrs, "data-duration");
+    if (startStr == null || durStr == null) continue;
+    const start = parseFloat(startStr);
+    const dur = parseFloat(durStr);
+    if (Number.isNaN(start) || Number.isNaN(dur)) continue;
+    const id = attrValue(t.attrs, "id");
+    items.push({
+      idLabel: id ? `#${id}` : "<audio>",
+      start,
+      end: start + dur,
+      idx: t.idx,
+    });
+  }
+  return items;
+}
+
+// Extract GSAP tween call sites with literal-number positions.
+// Returns [{ method, varsObj, position, duration, openIdx (in text) }].
+// Tweens with non-literal positions (labels, expressions) are skipped — the
+// detector is advisory and false-negatives are preferred over false-positives.
+function extractTweens(text) {
+  const out = [];
+  const blocks = extractInlineScripts(text);
+  for (const blk of blocks) {
+    const callRe = /\b([A-Za-z_$][\w$]*)\.(to|from|fromTo)\s*\(/g;
+    let cm;
+    while ((cm = callRe.exec(blk.body)) !== null) {
+      const ident = cm[1];
+      const method = cm[2];
+      const openParenIdx = cm.index + cm[0].length - 1;
+      const closeIdx = findMatchingParen(blk.body, openParenIdx);
+      if (closeIdx < 0) continue;
+      const argStr = blk.body.slice(openParenIdx + 1, closeIdx);
+      const parts = splitTopLevelCommas(argStr).map(p => p.trim());
+      if (parts.length < 2) continue;
+      // For .to / .from: parts = [target, vars, position?]. .fromTo: [target, fromVars, toVars, position?].
+      const positionIdx = method === "fromTo" ? 3 : 2;
+      const varsIdx = method === "fromTo" ? 2 : 1;
+      const position = parts[positionIdx];
+      const vars = parts[varsIdx] || "";
+      // Only literal numbers — anything else (labels, ${vars}, "+=0.5") is skipped.
+      if (position === undefined) continue;
+      if (!/^[0-9]+(?:\.[0-9]+)?$/.test(position)) continue;
+      const tweenStart = parseFloat(position);
+      // Pull duration from vars object — required for "ends during tween" math.
+      const durM = vars.match(/\bduration\s*:\s*([0-9.]+)/);
+      if (!durM) continue;
+      const tweenDur = parseFloat(durM[1]);
+      if (!Number.isFinite(tweenDur) || tweenDur <= 0) continue;
+      // Skip ambient/background drifts. The narration-mid-tween rule targets
+      // discrete entrance/exit/reveal animations (typically <4s). Long tweens
+      // (e.g. a 22s film-grain drift, a 10s camera dolly) span every audio
+      // clip in the comp and would flood the report; they aren't the
+      // "audience hears silence while a fade is still completing" case.
+      if (tweenDur >= 4) continue;
+      // Reject tweens that don't animate visual content. Skip animations on
+      // backgroundPosition/filter — those are typically looping ambient
+      // effects, not the discrete reveals this rule targets.
+      const animatesVisual = /\b(opacity|x|y|z|scale|scaleX|scaleY|rotate|rotation|width|height|top|left|right|bottom|clipPath|skew|skewX|skewY)\s*:/.test(vars);
+      if (!animatesVisual) continue;
+      const openAbs = blk.bodyStart + cm.index;
+      out.push({
+        ident,
+        method,
+        tweenStart,
+        tweenEnd: tweenStart + tweenDur,
+        tweenDur,
+        openAbs,
+        // Source span (open paren to close paren) for opt-out comment scan.
+        spanStart: blk.bodyStart + cm.index,
+        spanEnd: blk.bodyStart + closeIdx + 1,
+      });
+    }
+  }
+  return out;
+}
+
+// --- narration-mid-tween: <audio class="clip"> end-time falls inside an
+// active GSAP tween (not at its boundary). Audience hears silence while a
+// visual is still completing. Tolerance: ±0.15s (treated as "synced").
+// Opt-out: `// narration-mid-tween-ok` comment on the tween line.
+function detectNarrationMidTween(text) {
+  const findings = [];
+  const audios = extractAudioClips(text);
+  if (audios.length === 0) return findings;
+  const tweens = extractTweens(text);
+  if (tweens.length === 0) return findings;
+
+  const TOL = 0.15;
+
+  for (const a of audios) {
+    const audioEnd = a.end;
+    for (const tw of tweens) {
+      // Inside the tween's interval, with neither boundary close enough to call "synced".
+      const insideTween = audioEnd > tw.tweenStart + TOL && audioEnd < tw.tweenEnd - TOL;
+      if (!insideTween) continue;
+      // Boundary tolerance check: if within 150ms of either end, treat as synced.
+      if (Math.abs(audioEnd - tw.tweenEnd) <= TOL) continue;
+      if (Math.abs(audioEnd - tw.tweenStart) <= TOL) continue;
+      // Opt-out — `// narration-mid-tween-ok` anywhere on the line(s) of the tween call.
+      const lineStart = text.lastIndexOf("\n", tw.spanStart - 1) + 1;
+      const lineEnd = text.indexOf("\n", tw.spanEnd);
+      const tweenSrc = text.slice(lineStart, lineEnd === -1 ? text.length : lineEnd);
+      if (/\/\/[^\n]*\bnarration-mid-tween-ok\b/.test(tweenSrc)) continue;
+
+      findings.push({
+        id: "narration-mid-tween",
+        severity: "warn",
+        line: lineOf(text, a.idx),
+        message: `audio ${a.idLabel} ends at t=${audioEnd.toFixed(2)}s during tween at t=${tw.tweenStart.toFixed(2)}–${tw.tweenEnd.toFixed(2)}s — narration ending mid-animation creates visual stutter (§8)`,
+        suggestion: `align audio end with tween end (±0.15s), shorten the audio, or annotate the tween with \`// narration-mid-tween-ok\` if the dwell is intentional`,
+        fixable: false,
+      });
+      // One audio can fire on multiple tweens — but report each pair only once.
+    }
+  }
+  return findings;
+}
+
+// --- track-index-collision: two clip elements share data-track-index AND
+// have overlapping time ranges. HyperFrames assumes one clip per track at a
+// time (LEARNINGS §4 "Same track-index = one channel"). Audio is excluded
+// here — the existing audio-track detector covers that case.
+// Opt-out: `<!-- track-collision-ok -->` HTML comment within ~200 chars
+// preceding either of the two colliding clips (author vouches once).
+function detectTrackIndexCollision(text) {
+  const findings = [];
+  const items = extractClipElements(text);
+  if (items.length < 2) return findings;
+  // Group by track-index.
+  const byTrack = new Map();
+  for (const it of items) {
+    if (!byTrack.has(it.track)) byTrack.set(it.track, []);
+    byTrack.get(it.track).push(it);
+  }
+  for (const [track, list] of byTrack) {
+    if (list.length < 2) continue;
+    list.sort((a, b) => a.start - b.start);
+    for (let i = 1; i < list.length; i++) {
+      const prev = list[i - 1];
+      const cur = list[i];
+      if (cur.start >= prev.end - 1e-6) continue;
+      // Opt-out: comment near either clip's opening tag.
+      const lookbackPrev = text.slice(Math.max(0, prev.idx - 200), prev.idx);
+      const lookbackCur = text.slice(Math.max(0, cur.idx - 200), cur.idx);
+      if (/<!--\s*track-collision-ok\s*-->/i.test(lookbackPrev)) continue;
+      if (/<!--\s*track-collision-ok\s*-->/i.test(lookbackCur)) continue;
+      findings.push({
+        id: "track-index-collision",
+        severity: "error",
+        line: lineOf(text, cur.idx),
+        message: `clip ${cur.idLabel} on track ${track} overlaps sibling ${prev.idLabel} at t=${prev.start.toFixed(2)}–${prev.end.toFixed(2)}s — same track-index = one channel (§4)`,
+        suggestion: `move ${cur.idLabel} to a different data-track-index, retime so they don't overlap, or add \`<!-- track-collision-ok -->\` immediately before one of the clips if the overlap is intentional`,
+        fixable: false,
+      });
+    }
+  }
+  return findings;
+}
+
+// --- scene-overlap-visual: two clips on DIFFERENT track indices overlap by
+// more than 0.5s. The second-rendered clip wins z-order, the first's exit
+// animation may not play, and the author may not realise. Warn-tier — many
+// production templates legitimately stack overlays (brand-header on a
+// long-running track, scenes on a sequenced track). Opt-out per pair via
+// `<!-- scene-stack-ok -->` immediately before either clip.
+function detectSceneOverlapVisual(text) {
+  const findings = [];
+  const items = extractClipElements(text);
+  if (items.length < 2) return findings;
+  // Pair-wise, but only different tracks. O(n²) is fine for compositions —
+  // production files cap at a few dozen clip elements.
+  const seenPairs = new Set();
+  for (let i = 0; i < items.length; i++) {
+    for (let j = i + 1; j < items.length; j++) {
+      const a = items[i];
+      const b = items[j];
+      if (a.track === b.track) continue; // track-index-collision territory
+      const lo = Math.max(a.start, b.start);
+      const hi = Math.min(a.end, b.end);
+      const overlap = hi - lo;
+      if (overlap <= 0.5 + 1e-6) continue;
+      // Opt-out marker on either clip.
+      const lookbackA = text.slice(Math.max(0, a.idx - 200), a.idx);
+      const lookbackB = text.slice(Math.max(0, b.idx - 200), b.idx);
+      if (/<!--\s*scene-stack-ok\s*-->/i.test(lookbackA)) continue;
+      if (/<!--\s*scene-stack-ok\s*-->/i.test(lookbackB)) continue;
+      // De-dupe: report each unordered pair once, attached to the later clip.
+      const key = a.idx < b.idx ? `${a.idx}|${b.idx}` : `${b.idx}|${a.idx}`;
+      if (seenPairs.has(key)) continue;
+      seenPairs.add(key);
+      const later = a.idx < b.idx ? b : a;
+      const earlier = a.idx < b.idx ? a : b;
+      findings.push({
+        id: "scene-overlap-visual",
+        severity: "warn",
+        line: lineOf(text, later.idx),
+        message: `clip ${later.idLabel} (track ${later.track}) overlaps ${earlier.idLabel} (track ${earlier.track}) by ${overlap.toFixed(2)}s — z-order may hide one's exit animation (§8)`,
+        suggestion: `if the stacking is intentional (e.g. brand-header overlay on top of scenes), add \`<!-- scene-stack-ok -->\` immediately before either clip; otherwise sequence them or shorten one`,
+        fixable: false,
+      });
+    }
+  }
+  return findings;
+}
+
 const DETECTORS = [
   { id: "script-close",          fn: detectScriptCloseInComments, kinds: ["html"] },
   { id: "from-opacity",          fn: detectFromOpacity,           kinds: ["html"] },
@@ -878,6 +1183,9 @@ const DETECTORS = [
   { id: "subcomp-currentscript", fn: detectSubcompCurrentscript,  kinds: ["html"] },
   { id: "video-bleed-guard",     fn: detectVideoBleedGuard,       kinds: ["html"] },
   { id: "repeat-no-final-set",   fn: detectRepeatNoFinalSet,      kinds: ["html"] },
+  { id: "narration-mid-tween",   fn: detectNarrationMidTween,     kinds: ["html"] },
+  { id: "track-index-collision", fn: detectTrackIndexCollision,   kinds: ["html"] },
+  { id: "scene-overlap-visual",  fn: detectSceneOverlapVisual,    kinds: ["html"] },
 ];
 
 const FIX_APPLIERS = {
