@@ -129,6 +129,51 @@ The grade pass can start as soon as render's video-only MP4 is ready (which is B
 2. Wall-clock measurably reduced.
 3. Works on the laptop AND on render-farm hardware.
 
+### Phase 3 finding 2026-04-26 — overlap not possible at this layer
+
+After reading `scripts/render.mjs` end-to-end, the proposed overlap doesn't match the
+actual dependency graph. Recording the finding so future sessions don't re-investigate.
+
+**Actual post-pass graph in `scripts/render.mjs`:**
+
+```
+hyperframes render (subprocess, opaque)
+        │  writes: renders/<ts>.mp4   ← already fully muxed (video + audio)
+        ▼
+post-grade.mjs <rendered>
+        │  reads:  renders/<ts>.mp4
+        │  writes: renders/<ts>-graded.mp4
+        ▼
+ffmpeg (watermark, in render.mjs)
+        │  reads:  renders/<ts>-graded.mp4   (= currentTopMp4)
+        │  writes: renders/<ts>-graded-wm.mp4
+        ▼
+finalisation (rename / unlink)
+```
+
+**Why the plan's overlap doesn't apply here:**
+
+1. **There is no audio-mux step in `scripts/render.mjs`.** The plan claims "render → grade
+   → watermark → mux" with audio mux already parallel. In reality `hyperframes render` is
+   a single opaque subprocess — no `audio mux` ffmpeg call exists in `render.mjs`. Whatever
+   hyperframes does internally finishes before the script sees a new MP4 in `renders/`
+   (the script detects completion via `newestMp4Since(before)` after `runWithProgress`
+   resolves). There is no video-only intermediate for grade to consume early.
+
+2. **Grade and watermark are strictly sequential by data dependency.** Watermark's input is
+   `currentTopMp4`, which is set to `gradedPath` after the grade pass writes it
+   (`render.mjs:416`). Watermark literally reads what grade writes. No shared input we
+   could fork from — the chain is the chain.
+
+**What would actually unlock this overlap:** a hyperframes mode that emits the video-only
+MP4 as a separate artefact before the audio mux completes, so grade could start on the
+video-only file while hyperframes finishes muxing audio in parallel. That's a hyperframes
+upstream change, not something `render.mjs` can do from outside the subprocess.
+
+**Decision:** no code change to `scripts/render.mjs`. Phase 3 as written is closed. If we
+want the speedup later, the lever is upstream (expose video-only intermediate from
+`hyperframes render`), not in this wrapper script.
+
 ## Phase 4 — DAG-aware orchestrator (DEFERRED)
 
 **Effort:** L (~half day). **Speedup:** marginal beyond Phase 1+2+3.
