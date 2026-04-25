@@ -246,30 +246,41 @@ table here.
 | `preview:simple` | preview | Standalone preview server — a minimal alternative to `npx hyperframes preview`. |
 | `smoke` | preview | Smoke test — fast pre-render sanity check for the active composition. |
 | `smoke:baseline` | preview | (smoke + `--update-baseline`) |
+| `smoke:cli` | preview | CLI smoke runner — 11 fast tests over the new tools (≤5s) |
 | `smoke:contrast` | preview | (smoke + `--contrast`) |
 | `smoke:diff` | preview | (smoke + `--diff`) |
 | `smoke:shots` | preview | (smoke + `--screenshots`) |
 | `render` | render | Render wrapper — runs `hyperframes render`, then auto-applies post-grade, |
 | `render:queue` | render | Render queue — sequentially render multiple composition files to MP4. |
-| `render:vite` | render | Custom renderer (Phase 1 + 2 + 3) — Playwright frame capture + ffmpeg encode |
+| `render:vite` | render | Custom renderer (Phase 1 + 2 + 3 + 4 + 5) — Playwright + CDP screenshots + ffmpeg |
 | `renders:list` | renders | renders-prune.mjs — list / dry-run / prune MP4s in renders/. (`--list`) |
 | `renders:prune` | renders | renders-prune.mjs — list / dry-run / prune MP4s in renders/. |
 | `video` | video | Master pipeline orchestrator — turn a URL into a rendered MP4 in one command. |
 | `cache:clear` | cache | Content-addressed cache for fetched assets. (`clear`) |
 | `cache:stats` | cache | Content-addressed cache for fetched assets. (`stats`) |
-| `pick:music` | fetch | Music auto-pick supervisor — reads a curated shortlist JSON for a given template |
+| `pick:music` | fetch | Music auto-pick supervisor — reads shortlist or auto-built catalog. |
+| `music:catalog` | fetch | Builds `assets/music/.catalog/<vibe>.json` from Pixabay search. |
 | `pull:assets` | fetch | Brand asset puller — given a URL + slug, downloads the brand's reusable |
-| `check` | lint | chains: lint + lint:strict + check:heads + smoke |
+| `voices:preview` | fetch | Voice library curator — synthesise samples with every Edge TTS voice. |
+| `audio:duck` | fetch | Spectral ducking CLI — voice cuts through music without flattening. |
+| `check` | lint | chains: lint + lint:strict + check:heads + smoke + smoke:cli |
 | `fix` | lint | fix.mjs — auto-fix scanner for HyperFrames compositions. |
 | `fix:apply` | lint | fix.mjs — auto-fix scanner (`--apply`). |
 | `lint` | lint | hyperframes lint (vendor CLI) |
 | `lint:strict` | lint | lint-strict.mjs — CI-gateable strict linter for the recurring §4 pitfalls. |
 | `catalog` | catalog | Build a visual reference catalog of every GSAP recipe in design/modules/. |
 | `comp:check` | catalog | Composition versioning manifest. (`check`) |
+| `comp:diff` | catalog | Structural diff between two HyperFrames compositions. |
 | `comp:list` | catalog | Composition versioning manifest. (`list`) |
 | `comp:write` | catalog | Composition versioning manifest. (`write`) |
-| `check:heads` | other | Composition versioning manifest. (`heads` — drift-detects the 25 head fragments) |
-| `copy:gen` | other | Copy generation supervisor — Anthropic-API-driven framework copy gen. |
+| `usage` | catalog | Asset/module/token usage tracker — find unused or hot files. |
+| `usage:unused` | catalog | Asset/module/token usage tracker. (`--unused`) |
+| `backup:save` | backup | Snapshot the authored surface (HTML + tokens + LEARNINGS) to `.backups/`. |
+| `backup:list` | backup | List local snapshots. |
+| `backup:restore` | backup | Restore a snapshot (dry-run by default; `--apply` mutates). |
+| `backup:prune` | backup | Prune old snapshots (`--keep-last=N`). |
+| `check:heads` | other | Drift detector for the 25 templates' shared `<head>` fragment. |
+| `copy:gen` | other | Anthropic-API-driven framework copy generator. |
 | `help` | other | Self-documenting help for `npm run <script>`. |
 
 For deep usage of any script, run `node scripts/<name>.mjs --help` or skim
