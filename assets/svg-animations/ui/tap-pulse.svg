@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Tap pulse — finger taps a target, two ripples expand. Loops.
+  Viewport: 240 × 240.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <g transform="translate(120 130)">
+    <!-- Target ripples -->
+    <circle r="20" fill="none" stroke="#06b6d4" stroke-width="3">
+      <animate attributeName="r" from="20" to="80" dur="1.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="20" fill="none" stroke="#06b6d4" stroke-width="3">
+      <animate attributeName="r" from="20" to="80" dur="1.4s" begin="0.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="1.4s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="20" fill="#06b6d4"/>
+
+    <!-- Finger tap (drops onto target) -->
+    <g transform="translate(0 -80)">
+      <animateTransform attributeName="transform" type="translate"
+        values="0 -80;0 -40;0 -80"
+        keyTimes="0;0.4;1"
+        dur="1.4s" repeatCount="indefinite"
+        calcMode="spline" keySplines="0.4 0 0.6 1; 0.4 0 0.6 1"/>
+      <circle r="14" fill="#fbbf24" stroke="#0f172a" stroke-width="2"/>
+      <line x1="0" y1="0" x2="0" y2="-30" stroke="#fbbf24" stroke-width="14" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

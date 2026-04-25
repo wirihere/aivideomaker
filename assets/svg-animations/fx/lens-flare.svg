@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Lens flare sweep — anamorphic blue flare + horizontal streak sweeps diagonally.
+  Total: 2.4s. Holds off-screen.
+  Viewport: 1280 × 720.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <radialGradient id="flare-core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0"   stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="0.4" stop-color="#67e8f9" stop-opacity="0.8"/>
+      <stop offset="1"   stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="streak" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"   stop-color="#67e8f9" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="1"   stop-color="#67e8f9" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark background for contrast -->
+  <rect width="1280" height="720" fill="#0f172a"/>
+
+  <!-- Small supporting dots on the path -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.2;0.8;1"
+             begin="0s" dur="2.4s" fill="freeze"/>
+    <g>
+      <animateTransform attributeName="transform" type="translate"
+        from="-400 900" to="1700 -200" begin="0s" dur="2.4s" fill="freeze"
+        calcMode="spline" keySplines="0.4 0 0.6 1"/>
+
+      <!-- Horizontal streak -->
+      <rect x="-600" y="-6" width="1200" height="12" rx="6" fill="url(#streak)" opacity="0.8"/>
+
+      <!-- Core flare -->
+      <circle r="90" fill="url(#flare-core)"/>
+      <circle r="40" fill="#ffffff"/>
+
+      <!-- Ring echo 1 -->
+      <circle cx="140" cy="100" r="30" fill="#67e8f9" opacity="0.3"/>
+      <circle cx="-180" cy="-120" r="22" fill="#06b6d4" opacity="0.4"/>
+      <circle cx="220" cy="-80" r="14" fill="#a5f3fc" opacity="0.5"/>
+      <circle cx="-300" cy="40"  r="10" fill="#67e8f9" opacity="0.35"/>
+
+      <!-- Ghost ring -->
+      <circle r="160" fill="none" stroke="#06b6d4" stroke-width="2" opacity="0.25"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #0b1f3f;
+        font-family: "Inter", "Segoe UI", -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: #f5f1e8;
+      }
+      #root { position: relative; width: 1080px; height: 1920px; }
+
+      /* ---------- Ambient background ---------- */
+      .bg-grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgba(245,241,232,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(245,241,232,0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+      .bg-glow {
+        position: absolute; width: 1400px; height: 1400px;
+        left: -160px; top: 260px;
+        background: radial-gradient(circle, rgba(255,184,77,0.18) 0%, rgba(255,184,77,0) 60%);
+        filter: blur(20px);
+        pointer-events: none;
+      }
+      .progress-bar {
+        position: absolute; top: 0; left: 0; height: 8px;
+        width: 100%; background: rgba(245,241,232,0.08);
+      }
+      .progress-bar .fill {
+        height: 100%; width: 0%;
+        background: #ffb84d;
+        transform-origin: left center;
+      }
+
+      .scene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 80px; text-align: center; }
+      .scene-inner { width: 100%; }
+
+      /* ---------- Scene 1: DECLINED stamp ---------- */
+      .s1-stamp {
+        display: inline-block;
+        padding: 28px 80px;
+        border: 12px solid #e23a2e;
+        color: #e23a2e;
+        font-weight: 900;
+        font-size: 200px;
+        letter-spacing: 0.08em;
+        transform: rotate(-8deg);
+        background: rgba(11,31,63,0.9);
+        text-shadow: 0 0 40px rgba(226,58,46,0.3);
+      }
+      .s1-sub {
+        margin-top: 100px;
+        font-size: 82px;
+        font-weight: 900;
+        line-height: 1;
+      }
+      .s1-sub .letter { display: inline-block; }
+
+      /* ---------- Scene 2: Counter ---------- */
+      .s2-label {
+        font-size: 56px;
+        font-weight: 600;
+        opacity: 0.7;
+        margin-bottom: 40px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+      }
+      .s2-number {
+        font-size: 420px;
+        font-weight: 900;
+        line-height: 0.85;
+        color: #ffb84d;
+        letter-spacing: -0.04em;
+      }
+      .s2-unit {
+        font-size: 120px;
+        font-weight: 900;
+        margin-top: 20px;
+      }
+      .s2-tally {
+        margin-top: 80px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+      }
+      .s2-tally .dot {
+        width: 40px; height: 40px;
+        background: #f5f1e8;
+        border-radius: 50%;
+        opacity: 0.25;
+      }
+      .s2-tally .dot.active { background: #ffb84d; opacity: 1; }
+      .s2-caption {
+        margin-top: 60px;
+        font-size: 42px;
+        font-weight: 500;
+        opacity: 0.75;
+      }
+
+      /* ---------- Scene 3: Wall breaking ---------- */
+      .s3-wall {
+        position: relative;
+        width: 900px; height: 520px;
+        margin: 0 auto;
+      }
+      .s3-brick {
+        position: absolute;
+        background: #2a3a58;
+        border: 2px solid #1a2a48;
+      }
+      .s3-text {
+        position: absolute;
+        top: 50%; left: 0; right: 0;
+        transform: translateY(-50%);
+        font-size: 96px;
+        font-weight: 900;
+        z-index: 10;
+        opacity: 0;
+      }
+      .s3-text .word { display: inline-block; margin: 0 10px; }
+      .s3-sub {
+        margin-top: 80px;
+        font-size: 46px;
+        font-weight: 500;
+        opacity: 0;
+      }
+
+      /* ---------- Scene 4: Three-step process ---------- */
+      .s4-title {
+        font-size: 64px;
+        font-weight: 900;
+        margin-bottom: 80px;
+        color: #ffb84d;
+      }
+      .s4-steps { display: flex; flex-direction: column; gap: 40px; }
+      .s4-step {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        padding: 40px 50px;
+        background: rgba(245,241,232,0.06);
+        border: 2px solid rgba(255,184,77,0.35);
+        border-radius: 28px;
+        text-align: left;
+      }
+      .s4-step .num {
+        flex-shrink: 0;
+        width: 110px; height: 110px;
+        border-radius: 50%;
+        background: #ffb84d;
+        color: #0b1f3f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 72px;
+        font-weight: 900;
+      }
+      .s4-step .txt {
+        font-size: 52px;
+        font-weight: 700;
+        line-height: 1.1;
+      }
+      .s4-step .sub {
+        font-size: 30px;
+        font-weight: 500;
+        opacity: 0.65;
+        margin-top: 8px;
+      }
+
+      /* ---------- Scene 5: CTA ---------- */
+      .s5-logo {
+        font-size: 180px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        line-height: 0.9;
+      }
+      .s5-logo .mate { color: #ffb84d; }
+      .s5-url {
+        margin-top: 80px;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 76px;
+        font-weight: 700;
+        color: #ffb84d;
+        letter-spacing: 0.02em;
+      }
+      .s5-url .cursor {
+        display: inline-block;
+        width: 6px; height: 72px;
+        background: #ffb84d;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      .s5-tag {
+        margin-top: 70px;
+        font-size: 48px;
+        font-weight: 600;
+        padding: 20px 60px;
+        background: #f5f1e8;
+        color: #0b1f3f;
+        display: inline-block;
+        border-radius: 12px;
+        letter-spacing: 0.02em;
+      }
+
+      /* ---------- Persistent watermark ---------- */
+      .watermark {
+        position: absolute;
+        bottom: 60px; left: 0; right: 0;
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0.4em;
+        opacity: 0.45;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Ambient layers: always visible -->
+      <div id="bg" class="clip" data-start="0" data-duration="30" data-track-index="0">
+        <div class="bg-grid"></div>
+        <div class="bg-glow"></div>
+      </div>
+
+      <!-- Background music. Replace assets/music/track.mp3 with a real track from
+           Pixabay — see assets/music/music-library.md for mood → search-term map. -->
+      <audio
+        id="bg-music"
+        class="clip bg-music"
+        src="assets/music/track.mp3"
+        data-start="0"
+        data-duration="30"
+        data-track-index="4"
+      ></audio>
+
+      <!-- Top progress bar: always visible, animates across whole duration -->
+      <div id="progress" class="clip" data-start="0" data-duration="30" data-track-index="6">
+        <div class="progress-bar"><div class="fill"></div></div>
+      </div>
+
+      <!-- Scene 1: DECLINED stamp (0-4s) -->
+      <div id="s1" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div class="scene-inner">
+          <div class="s1-stamp">DECLINED</div>
+          <div class="s1-sub">
+            <span class="letter">D</span><span class="letter">O</span><span class="letter">N</span><span class="letter">'</span><span class="letter">T</span>&nbsp;
+            <span class="letter">A</span><span class="letter">C</span><span class="letter">C</span><span class="letter">E</span><span class="letter">P</span><span class="letter">T</span>&nbsp;
+            <span class="letter">T</span><span class="letter">H</span><span class="letter">A</span><span class="letter">T</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 2: 3 months counter (4-10s) -->
+      <div id="s2" class="scene clip" data-start="4" data-duration="6" data-track-index="1">
+        <div class="scene-inner">
+          <div class="s2-label">YOU HAVE EXACTLY</div>
+          <div class="s2-number">3</div>
+          <div class="s2-unit">MONTHS</div>
+          <div class="s2-tally">
+            <div class="dot d1"></div>
+            <div class="dot d2"></div>
+            <div class="dot d3"></div>
+          </div>
+          <div class="s2-caption">to apply for a review. Then it's gone.</div>
+        </div>
+      </div>
+
+      <!-- Scene 3: Wall breaking (10-15s) -->
+      <div id="s3" class="scene clip" data-start="10" data-duration="5" data-track-index="1">
+        <div class="scene-inner">
+          <div class="s3-wall">
+            <!-- Bricks in a 4x3 grid, 220w x 170h -->
+            <div class="s3-brick b" style="left:0;    top:0;   width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:225px;top:0;   width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:450px;top:0;   width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:675px;top:0;   width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:-110px;top:175px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:115px; top:175px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:340px; top:175px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:565px; top:175px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:790px; top:175px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:0;    top:350px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:225px;top:350px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:450px;top:350px;width:220px; height:170px;"></div>
+            <div class="s3-brick b" style="left:675px;top:350px;width:220px; height:170px;"></div>
+
+            <div class="s3-text">
+              <span class="word">A</span>
+              <span class="word">REVIEW</span>
+              <span class="word">IS</span>
+              <span class="word">YOUR</span>
+              <span class="word" style="color:#ffb84d;">RIGHT.</span>
+            </div>
+          </div>
+          <div class="s3-sub">Not a favour. Not a long shot.</div>
+        </div>
+      </div>
+
+      <!-- Scene 4: Three steps (15-24s) -->
+      <div id="s4" class="scene clip" data-start="15" data-duration="9" data-track-index="1">
+        <div class="scene-inner">
+          <div class="s4-title">HOW IT WORKS</div>
+          <div class="s4-steps">
+            <div class="s4-step st1">
+              <div class="num">1</div>
+              <div><div class="txt">Send us the letter</div><div class="sub">Takes 2 minutes</div></div>
+            </div>
+            <div class="s4-step st2">
+              <div class="num">2</div>
+              <div><div class="txt">We write the review</div><div class="sub">You read and sign</div></div>
+            </div>
+            <div class="s4-step st3">
+              <div class="num">3</div>
+              <div><div class="txt">ACC pays our fee</div><div class="sub">You pay nothing</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 5: CTA logo + URL (24-30s) -->
+      <div id="s5" class="scene clip" data-start="24" data-duration="6" data-track-index="1">
+        <div class="scene-inner">
+          <div class="s5-logo">CLAIM<span class="mate"> MATE</span></div>
+          <div class="s5-url"><span class="typed"></span><span class="cursor"></span></div>
+          <div class="s5-tag">$0 TO YOU. EVER.</div>
+        </div>
+      </div>
+
+      <!-- Persistent watermark (shows from scene 2 onward) -->
+      <div id="wm" class="clip" data-start="4" data-duration="26" data-track-index="5">
+        <div class="watermark">NZ · LAY ADVOCATE · CLAIMMATE.CO.NZ</div>
+      </div>
+    </div>
+
+    <script>
+      // Music volume — adjust when you drop a real Pixabay track in.
+      // 0.4 sits under voice; 0.7 for music-only videos.
+      const __music = document.querySelector("audio.bg-music");
+      if (__music) __music.volume = 0.4;
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===== Persistent progress bar across whole video =====
+      tl.fromTo(".progress-bar .fill",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 30, ease: "none" }, 0);
+
+      // ===== Ambient glow pulse =====
+      tl.to(".bg-glow",
+        { opacity: 0.4, duration: 2, yoyo: true, repeat: 14, ease: "sine.inOut" }, 0);
+
+      // ===== Scene 1: DECLINED stamp (0-4s) =====
+      tl.from(".s1-stamp",
+        { scale: 3, opacity: 0, rotate: -30, duration: 0.35, ease: "back.out(2)" }, 0.1);
+      tl.to(".s1-stamp",
+        { scale: 1.04, duration: 0.08, yoyo: true, repeat: 1 }, 0.5);
+      tl.from(".s1-sub .letter",
+        { opacity: 0, y: 60, rotate: 10, stagger: 0.035, duration: 0.4, ease: "back.out(1.8)" }, 0.9);
+      tl.to("#s1",
+        { opacity: 0, duration: 0.3 }, 3.7);
+
+      // ===== Scene 2: Counter (4-10s) =====
+      tl.from(".s2-label",
+        { opacity: 0, y: 30, duration: 0.4 }, 4.1);
+      tl.from(".s2-number",
+        { scale: 0.3, opacity: 0, duration: 0.5, ease: "back.out(2.2)" }, 4.4);
+      tl.to(".s2-number",
+        { scale: 1.05, duration: 0.1, yoyo: true, repeat: 1 }, 5.0);
+      tl.from(".s2-unit",
+        { opacity: 0, y: -20, duration: 0.4 }, 5.2);
+      // Tally dots fill one by one
+      tl.to(".s2-tally .d1", { background: "#ffb84d", opacity: 1, duration: 0.2 }, 5.8);
+      tl.to(".s2-tally .d2", { background: "#ffb84d", opacity: 1, duration: 0.2 }, 6.2);
+      tl.to(".s2-tally .d3", { background: "#ffb84d", opacity: 1, duration: 0.2 }, 6.6);
+      tl.from(".s2-caption",
+        { opacity: 0, y: 20, duration: 0.5 }, 7.0);
+      // Subtle float on the big number through the scene
+      tl.to(".s2-number",
+        { y: -20, duration: 1.5, yoyo: true, repeat: 1, ease: "sine.inOut" }, 6.5);
+      tl.to("#s2",
+        { opacity: 0, duration: 0.4 }, 9.6);
+
+      // ===== Scene 3: Wall breaking (10-15s) =====
+      // Wall assembles brick by brick (fast)
+      tl.from(".s3-brick",
+        { scale: 0, opacity: 0, stagger: 0.03, duration: 0.25, ease: "back.out(1.6)" }, 10.1);
+      // Bricks fly apart
+      tl.to(".s3-brick",
+        {
+          x: (i) => (i % 2 === 0 ? -1 : 1) * (200 + (i * 30)),
+          y: (i) => -200 - (i * 25),
+          rotate: (i) => (i % 2 === 0 ? -1 : 1) * 45,
+          opacity: 0,
+          duration: 0.7,
+          stagger: 0.02,
+          ease: "power2.in"
+        }, 11.6);
+      // Text reveals as wall breaks
+      tl.to(".s3-text", { opacity: 1, duration: 0.2 }, 11.9);
+      tl.from(".s3-text .word",
+        { opacity: 0, scale: 0.5, y: 40, stagger: 0.12, duration: 0.4, ease: "back.out(1.8)" }, 12.0);
+      tl.to(".s3-sub",
+        { opacity: 1, duration: 0.5 }, 13.3);
+      tl.to("#s3",
+        { opacity: 0, duration: 0.4 }, 14.6);
+
+      // ===== Scene 4: Three steps (15-24s) =====
+      tl.from(".s4-title",
+        { opacity: 0, y: -40, duration: 0.5, ease: "power2.out" }, 15.1);
+      // Each step slides in from the right, staggered
+      tl.from(".st1",
+        { opacity: 0, x: 600, duration: 0.6, ease: "back.out(1.4)" }, 15.6);
+      tl.from(".st1 .num",
+        { scale: 0, rotate: 180, duration: 0.5, ease: "back.out(2)" }, 15.9);
+      tl.from(".st2",
+        { opacity: 0, x: 600, duration: 0.6, ease: "back.out(1.4)" }, 17.0);
+      tl.from(".st2 .num",
+        { scale: 0, rotate: 180, duration: 0.5, ease: "back.out(2)" }, 17.3);
+      tl.from(".st3",
+        { opacity: 0, x: 600, duration: 0.6, ease: "back.out(1.4)" }, 18.4);
+      tl.from(".st3 .num",
+        { scale: 0, rotate: 180, duration: 0.5, ease: "back.out(2)" }, 18.7);
+      // Emphasis pulse on step 3 (the punchline)
+      tl.to(".st3",
+        { scale: 1.04, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.inOut" }, 19.8);
+      tl.to(".st3 .txt",
+        { color: "#ffb84d", duration: 0.25 }, 19.8);
+      tl.to("#s4",
+        { opacity: 0, duration: 0.4 }, 23.6);
+
+      // ===== Scene 5: CTA (24-30s) =====
+      tl.from(".s5-logo",
+        { scale: 0.4, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 24.1);
+      tl.from(".s5-logo .mate",
+        { color: "#f5f1e8", duration: 0.4 }, 24.5);
+
+      // URL types in character by character (deterministic — no setInterval)
+      const url = "claimmate.co.nz";
+      for (let i = 1; i <= url.length; i++) {
+        tl.set(".typed", { innerText: url.slice(0, i) }, 24.9 + i * 0.08);
+      }
+      // Cursor blink (deterministic keyframes)
+      tl.to(".cursor",
+        { opacity: 0, duration: 0.3, yoyo: true, repeat: 8, ease: "steps(1)" }, 25.0);
+
+      tl.from(".s5-tag",
+        { scale: 0, rotate: -10, opacity: 0, duration: 0.5, ease: "back.out(2.2)" }, 26.6);
+      tl.to(".s5-tag",
+        { scale: 1.06, duration: 0.25, yoyo: true, repeat: 3, ease: "sine.inOut" }, 27.3);
+
+      // ===== Watermark fade-in at 4s =====
+      tl.from(".watermark",
+        { opacity: 0, duration: 0.5 }, 4.2);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

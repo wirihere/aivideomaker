@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Orbit spinner — three colored dots orbit a central core. Loops.
+  Viewport: 160 × 160.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <g transform="translate(80 80)">
+    <circle r="6" fill="#0f172a"/>
+    <g>
+      <circle cx="48" cy="0" r="8" fill="#4f46e5"/>
+      <animateTransform attributeName="transform" type="rotate"
+        from="0" to="360" dur="1.6s" repeatCount="indefinite"/>
+    </g>
+    <g>
+      <circle cx="48" cy="0" r="6" fill="#06b6d4"/>
+      <animateTransform attributeName="transform" type="rotate"
+        from="120" to="480" dur="1.6s" repeatCount="indefinite"/>
+    </g>
+    <g>
+      <circle cx="48" cy="0" r="6" fill="#ec4899"/>
+      <animateTransform attributeName="transform" type="rotate"
+        from="240" to="600" dur="1.6s" repeatCount="indefinite"/>
+    </g>
+  </g>
+</svg>

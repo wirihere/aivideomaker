@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Network — central hub with 6 nodes connecting in a stagger,
+  data packets pulse out, then a gentle continuous packet flow.
+  Total: 4.0s, then loops the packet pulses.
+  Viewport: 480 × 480.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480">
+  <g transform="translate(240 240)">
+    <!-- Hub pulse -->
+    <circle r="36" fill="#4f46e5" opacity="0.2">
+      <animate attributeName="r" values="36;52;36" dur="2s" begin="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0;0.2" dur="2s" begin="1.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="28" fill="#4f46e5"/>
+    <circle r="28" fill="none" stroke="#ffffff" stroke-width="2"/>
+
+    <!-- Connection lines (drawn left-right outward) -->
+    <g fill="none" stroke="#cbd5e1" stroke-width="2">
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" from="0" to="-160" begin="0.2s" dur="0.4s" fill="freeze"/>
+        <animate attributeName="y2" from="0" to="-90"  begin="0.2s" dur="0.4s" fill="freeze"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" from="0" to="160"  begin="0.3s" dur="0.4s" fill="freeze"/>
+        <animate attributeName="y2" from="0" to="-90"  begin="0.3s" dur="0.4s" fill="freeze"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" from="0" to="-180" begin="0.4s" dur="0.4s" fill="freeze"/>
+        <animate attributeName="y2" from="0" to="20"   begin="0.4s" dur="0.4s" fill="freeze"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" from="0" to="180"  begin="0.5s" dur="0.4s" fill="freeze"/>
+        <animate attributeName="y2" from="0" to="20"   begin="0.5s" dur="0.4s" fill="freeze"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" from="0" to="-110" begin="0.6s" dur="0.4s" fill="freeze"/>
+        <animate attributeName="y2" from="0" to="160"  begin="0.6s" dur="0.4s" fill="freeze"/>
+      </line>
+      <line x1="0" y1="0" x2="0" y2="0">
+        <animate attributeName="x2" from="0" to="110"  begin="0.7s" dur="0.4s" fill="freeze"/>
+        <animate attributeName="y2" from="0" to="160"  begin="0.7s" dur="0.4s" fill="freeze"/>
+      </line>
+    </g>
+
+    <!-- Nodes pop in -->
+    <g fill="#06b6d4" stroke="#ffffff" stroke-width="3">
+      <circle cx="-160" cy="-90" r="0"><animate attributeName="r" from="0" to="14" begin="0.55s" dur="0.3s" fill="freeze"/></circle>
+      <circle cx="160"  cy="-90" r="0"><animate attributeName="r" from="0" to="14" begin="0.65s" dur="0.3s" fill="freeze"/></circle>
+      <circle cx="-180" cy="20"  r="0"><animate attributeName="r" from="0" to="14" begin="0.75s" dur="0.3s" fill="freeze"/></circle>
+      <circle cx="180"  cy="20"  r="0"><animate attributeName="r" from="0" to="14" begin="0.85s" dur="0.3s" fill="freeze"/></circle>
+      <circle cx="-110" cy="160" r="0"><animate attributeName="r" from="0" to="14" begin="0.95s" dur="0.3s" fill="freeze"/></circle>
+      <circle cx="110"  cy="160" r="0"><animate attributeName="r" from="0" to="14" begin="1.05s" dur="0.3s" fill="freeze"/></circle>
+    </g>
+
+    <!-- Packets pulse outward -->
+    <g fill="#fbbf24">
+      <circle r="5"><animateMotion path="M 0 0 L -160 -90" begin="1.4s;3.4s" dur="0.7s"/></circle>
+      <circle r="5"><animateMotion path="M 0 0 L 160 -90"  begin="1.55s;3.55s" dur="0.7s"/></circle>
+      <circle r="5"><animateMotion path="M 0 0 L -180 20"  begin="1.7s;3.7s"  dur="0.7s"/></circle>
+      <circle r="5"><animateMotion path="M 0 0 L 180 20"   begin="1.85s;3.85s" dur="0.7s"/></circle>
+      <circle r="5"><animateMotion path="M 0 0 L -110 160" begin="2.0s;4.0s"  dur="0.7s"/></circle>
+      <circle r="5"><animateMotion path="M 0 0 L 110 160"  begin="2.15s;4.15s" dur="0.7s"/></circle>
+    </g>
+  </g>
+</svg>

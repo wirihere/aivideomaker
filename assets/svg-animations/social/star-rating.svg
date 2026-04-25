@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  5-star rating — stars fill in from left, last one wiggles for emphasis.
+  Total: 1.8s. Holds.
+  Viewport: 480 × 120.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+  <defs>
+    <symbol id="star" viewBox="-30 -30 60 60">
+      <path d="M 0 -28 L 8 -8 L 28 -8 L 12 4 L 18 26 L 0 14 L -18 26 L -12 4 L -28 -8 L -8 -8 Z"
+            stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+
+  <!-- Base outline (always grey) -->
+  <g fill="none" stroke="#cbd5e1" stroke-width="3">
+    <use href="#star" x="60"  y="60" width="60" height="60"/>
+    <use href="#star" x="140" y="60" width="60" height="60"/>
+    <use href="#star" x="220" y="60" width="60" height="60"/>
+    <use href="#star" x="300" y="60" width="60" height="60"/>
+    <use href="#star" x="380" y="60" width="60" height="60"/>
+  </g>
+
+  <!-- Filled stars pop in sequentially -->
+  <g fill="#fbbf24">
+    <use href="#star" x="60"  y="60" width="60" height="60" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.0s" dur="0.15s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        values="0.4;1.2;1" keyTimes="0;0.6;1" begin="0.0s" dur="0.4s" fill="freeze"/>
+    </use>
+    <use href="#star" x="140" y="60" width="60" height="60" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.2s" dur="0.15s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        values="0.4;1.2;1" keyTimes="0;0.6;1" begin="0.2s" dur="0.4s" fill="freeze"/>
+    </use>
+    <use href="#star" x="220" y="60" width="60" height="60" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.4s" dur="0.15s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        values="0.4;1.2;1" keyTimes="0;0.6;1" begin="0.4s" dur="0.4s" fill="freeze"/>
+    </use>
+    <use href="#star" x="300" y="60" width="60" height="60" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.6s" dur="0.15s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        values="0.4;1.2;1" keyTimes="0;0.6;1" begin="0.6s" dur="0.4s" fill="freeze"/>
+    </use>
+    <use href="#star" x="380" y="60" width="60" height="60" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.8s" dur="0.15s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        values="0.4;1.4;1.1;1.2;1" keyTimes="0;0.4;0.6;0.8;1" begin="0.8s" dur="0.7s" fill="freeze"/>
+    </use>
+  </g>
+</svg>

@@ -1,0 +1,96 @@
+<template id="feature-row-card-tpl">
+  <div data-composition-id="feature-row-card" data-width="1080" data-height="1920">
+    <div class="frc-wrap">
+      <div class="frc-card card card--feature-row card--dark-glass card--radius-lg card--pad-std card--w-wide">
+        <div class="frc-icon card__icon">
+          <img class="frc-icon-img" src="" alt="" />
+        </div>
+        <div class="frc-text card__text-group">
+          <div class="frc-kicker card__kicker"></div>
+          <div class="frc-title card__title"></div>
+          <div class="frc-body card__body"></div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      [data-composition-id="feature-row-card"] {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+      [data-composition-id="feature-row-card"] .frc-wrap {
+        will-change: transform, opacity;
+      }
+
+      [data-composition-id="feature-row-card"] .card { position: relative; display: flex; box-sizing: border-box; will-change: transform, opacity; font-family: "Inter", system-ui, sans-serif; color: #eef1f5; }
+      [data-composition-id="feature-row-card"] .card--feature-row { flex-direction: row; align-items: center; gap: 40px; }
+      [data-composition-id="feature-row-card"] .card--dark-glass { background: rgba(13,24,38,0.92); backdrop-filter: blur(12px); border: 1.5px solid rgba(238,241,245,0.25); box-shadow: 0 28px 90px rgba(0,0,0,0.55); color: #eef1f5; }
+      [data-composition-id="feature-row-card"] .card--radius-lg { border-radius: 26px; }
+      [data-composition-id="feature-row-card"] .card--pad-std { padding: 48px 68px; }
+      [data-composition-id="feature-row-card"] .card--w-wide { max-width: 920px; }
+
+      [data-composition-id="feature-row-card"] .card__icon { flex: 0 0 auto; width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; }
+      [data-composition-id="feature-row-card"] .card__icon img { width: 100%; height: 100%; object-fit: contain; }
+      [data-composition-id="feature-row-card"] .card__text-group { display: flex; flex-direction: column; gap: 12px; }
+      [data-composition-id="feature-row-card"] .card__kicker { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.32em; color: #7a93b8; text-transform: uppercase; }
+      [data-composition-id="feature-row-card"] .card__title { font-family: "Inter", sans-serif; font-weight: 600; font-size: 54px; letter-spacing: -0.015em; line-height: 1.14; color: #eef1f5; }
+      [data-composition-id="feature-row-card"] .card__body { font-family: "Inter", sans-serif; font-weight: 400; font-size: 28px; line-height: 1.4; color: rgba(238,241,245,0.82); }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = document.querySelector('[data-composition-id="feature-row-card"]');
+        const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
+
+        const img = root.querySelector(".frc-icon-img");
+        img.src = vars.icon || "";
+
+        root.querySelector(".frc-kicker").textContent = vars.kicker || "";
+        root.querySelector(".frc-title").textContent  = vars.title  || "";
+        root.querySelector(".frc-body").textContent   = vars.body   || "";
+
+        const duration = Number(vars.duration || 3);
+        const exitAt = Math.max(0.4, duration - 0.35);
+        const exitDir = (vars.exitDirection || "right").toLowerCase();
+        const exitMap = {
+          right: { x: 140,  y: 0 },
+          left:  { x: -140, y: 0 },
+          up:    { x: 0,    y: -140 },
+          down:  { x: 0,    y: 140 },
+        };
+        const exit = exitMap[exitDir] || exitMap.right;
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Entrance
+        tl.fromTo(root.querySelector(".frc-card"),
+          { y: 50, scale: 0.88, opacity: 0 },
+          { y: 0,  scale: 1,    opacity: 1, duration: 0.38, ease: "back.out(1.6)" }, 0);
+        tl.fromTo(root.querySelector(".frc-icon"),
+          { scale: 0.6, rotation: -15, opacity: 0 },
+          { scale: 1,   rotation: 0,   opacity: 1, duration: 0.36, ease: "back.out(2.0)" }, 0.08);
+        tl.fromTo(root.querySelector(".frc-kicker"),
+          { x: -18, opacity: 0 },
+          { x: 0,   opacity: 1, duration: 0.25, ease: "power4.out" }, 0.18);
+        tl.fromTo(root.querySelector(".frc-title"),
+          { x: -18, opacity: 0 },
+          { x: 0,   opacity: 1, duration: 0.30, ease: "power4.out" }, 0.24);
+        tl.fromTo(root.querySelector(".frc-body"),
+          { x: -18, opacity: 0 },
+          { x: 0,   opacity: 1, duration: 0.30, ease: "power3.out" }, 0.32);
+
+        // Exit — direction via `exitDirection` variable
+        tl.to(root.querySelector(".frc-card"),
+          { x: exit.x, y: exit.y, opacity: 0, duration: 0.32, ease: "power3.in" }, exitAt);
+
+        window.__timelines["feature-row-card"] = tl;
+      })();
+    </script>
+  </div>
+</template>

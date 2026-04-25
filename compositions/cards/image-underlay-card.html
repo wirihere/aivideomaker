@@ -1,0 +1,84 @@
+<template id="image-underlay-card-tpl">
+  <div data-composition-id="image-underlay-card" data-width="1080" data-height="1920">
+    <div class="iuc-wrap">
+      <div class="iuc-card card card--image-underlay card--radius-lg card--pad-std card--w-wide">
+        <div class="iuc-bg card__bg"></div>
+        <div class="iuc-scrim card__bg-scrim"></div>
+        <div class="iuc-kicker card__kicker"></div>
+        <div class="iuc-title card__title"></div>
+        <div class="iuc-body card__body"></div>
+      </div>
+    </div>
+
+    <style>
+      [data-composition-id="image-underlay-card"] {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+      [data-composition-id="image-underlay-card"] .iuc-wrap {
+        will-change: transform, opacity;
+      }
+
+      [data-composition-id="image-underlay-card"] .card { position: relative; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box; will-change: transform, opacity; font-family: "Inter", system-ui, sans-serif; color: #eef1f5; }
+      [data-composition-id="image-underlay-card"] .card--image-underlay { overflow: hidden; color: #eef1f5; border: 1.5px solid rgba(238,241,245,0.22); box-shadow: 0 36px 110px rgba(0,0,0,0.55); }
+      [data-composition-id="image-underlay-card"] .card--radius-lg { border-radius: 28px; }
+      [data-composition-id="image-underlay-card"] .card--pad-std { padding: 48px 68px; }
+      [data-composition-id="image-underlay-card"] .card--w-wide { width: 920px; min-height: 540px; }
+
+      [data-composition-id="image-underlay-card"] .card__bg { position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 0; filter: grayscale(0.3) contrast(1.05) brightness(0.82); will-change: transform; }
+      [data-composition-id="image-underlay-card"] .card__bg-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(13,24,38,0.15) 0%, rgba(13,24,38,0.78) 100%); }
+
+      [data-composition-id="image-underlay-card"] .card__kicker { position: relative; z-index: 2; font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 26px; letter-spacing: 0.32em; color: #bcd0ea; text-transform: uppercase; margin-top: auto; }
+      [data-composition-id="image-underlay-card"] .card__title { position: relative; z-index: 2; font-family: "Inter", sans-serif; font-weight: 700; font-size: 68px; line-height: 1.12; letter-spacing: -0.015em; color: #eef1f5; text-shadow: 0 4px 20px rgba(0,0,0,0.6); }
+      [data-composition-id="image-underlay-card"] .card__body { position: relative; z-index: 2; font-family: "Inter", sans-serif; font-weight: 400; font-size: 30px; line-height: 1.4; color: rgba(238,241,245,0.88); text-shadow: 0 3px 14px rgba(0,0,0,0.5); }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = document.querySelector('[data-composition-id="image-underlay-card"]');
+        const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
+
+        const bg = root.querySelector(".iuc-bg");
+        if (vars.image) bg.style.backgroundImage = `url('${vars.image}')`;
+
+        root.querySelector(".iuc-kicker").textContent = vars.kicker || "";
+        root.querySelector(".iuc-title").textContent  = vars.title  || "";
+        root.querySelector(".iuc-body").textContent   = vars.body   || "";
+
+        const duration = Number(vars.duration || 4);
+        const exitAt = Math.max(0.4, duration - 0.38);
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Entrance — card slides up + scales, image does a slow ken-burns within the card
+        tl.fromTo(root.querySelector(".iuc-card"),
+          { y: 50, scale: 0.92, opacity: 0 },
+          { y: 0,  scale: 1,    opacity: 1, duration: 0.45, ease: "back.out(1.4)" }, 0);
+        tl.fromTo(bg,
+          { scale: 1.08, xPercent: 0 },
+          { scale: 1.0,  xPercent: 0, duration: duration, ease: "none" }, 0);
+        tl.fromTo(root.querySelector(".iuc-kicker"),
+          { x: -14, opacity: 0 },
+          { x: 0,   opacity: 1, duration: 0.28, ease: "power3.out" }, 0.25);
+        tl.fromTo(root.querySelector(".iuc-title"),
+          { y: 20, opacity: 0 },
+          { y: 0,  opacity: 1, duration: 0.42, ease: "power4.out" }, 0.32);
+        tl.fromTo(root.querySelector(".iuc-body"),
+          { y: 14, opacity: 0 },
+          { y: 0,  opacity: 1, duration: 0.36, ease: "power3.out" }, 0.45);
+
+        // Exit — slide down + fade (card settles back into the scene)
+        tl.to(root.querySelector(".iuc-card"),
+          { y: 40, opacity: 0, duration: 0.34, ease: "power3.in" }, exitAt);
+
+        window.__timelines["image-underlay-card"] = tl;
+      })();
+    </script>
+  </div>
+</template>

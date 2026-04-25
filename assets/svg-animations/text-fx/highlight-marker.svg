@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Highlight — yellow marker sweeps across a word, going a touch past.
+  Stroke uses stroke-linecap "round" for a soft edge. Total: 0.7s. Holds.
+  Viewport: 480 × 120.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120">
+  <!-- The marker stroke (goes behind text via paint order) -->
+  <path d="M 60 70 L 60 70"
+        fill="none" stroke="#fde047" stroke-width="40" stroke-linecap="round" opacity="0.85">
+    <animate attributeName="d"
+             values="M 60 70 L 60 70;
+                     M 60 70 L 200 62;
+                     M 60 70 L 420 64"
+             keyTimes="0;0.4;1"
+             begin="0.15s" dur="0.7s" fill="freeze"
+             calcMode="spline" keySplines="0.6 0 0.3 1; 0.4 0.2 0.2 1"/>
+  </path>
+  <text x="240" y="78" font-family="Inter, system-ui, sans-serif"
+        font-size="40" font-weight="800" fill="#0f172a" text-anchor="middle">
+    marked it up
+  </text>
+</svg>

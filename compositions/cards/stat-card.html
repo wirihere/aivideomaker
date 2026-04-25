@@ -1,0 +1,77 @@
+<template id="stat-card-tpl">
+  <div data-composition-id="stat-card" data-width="1080" data-height="1920">
+    <div class="sc-wrap">
+      <div class="sc-card card card--stat card--light-paper card--radius-lg card--pad-luxe card--w-narrow">
+        <div class="card__figure">
+          <span class="sc-unit card__figure-unit"></span><span class="sc-fig"></span>
+        </div>
+        <div class="sc-rule card__rule"></div>
+        <div class="sc-label card__label"></div>
+      </div>
+    </div>
+
+    <style>
+      [data-composition-id="stat-card"] {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+      [data-composition-id="stat-card"] .sc-wrap {
+        will-change: transform, opacity;
+      }
+
+      /* Inline-copy the design tokens + the card classes this component needs. */
+      [data-composition-id="stat-card"] .card { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 22px; box-sizing: border-box; will-change: transform, opacity; font-family: "Inter", system-ui, sans-serif; color: #eef1f5; }
+      [data-composition-id="stat-card"] .card--stat { align-items: center; text-align: center; gap: 26px; }
+      [data-composition-id="stat-card"] .card--light-paper { background: rgba(238,241,245,0.96); border: 1.5px solid rgba(13,24,38,0.12); box-shadow: 0 36px 110px rgba(0,0,0,0.55); color: #0d1826; }
+      [data-composition-id="stat-card"] .card--radius-lg { border-radius: 28px; }
+      [data-composition-id="stat-card"] .card--pad-luxe { padding: 72px 96px; }
+      [data-composition-id="stat-card"] .card--w-narrow { min-width: 620px; }
+      [data-composition-id="stat-card"] .card__figure { font-family: "Inter", sans-serif; font-weight: 800; font-size: 260px; line-height: 1; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; display: flex; align-items: flex-start; gap: 10px; color: #0d1826; }
+      [data-composition-id="stat-card"] .card__figure-unit { font-size: 130px; line-height: 1.1; padding-top: 26px; color: #1f3a68; font-weight: 700; }
+      [data-composition-id="stat-card"] .card__rule { width: 160px; height: 4px; background: #1f3a68; align-self: center; transform-origin: center; }
+      [data-composition-id="stat-card"] .card__label { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; font-size: 36px; letter-spacing: 0.22em; text-transform: uppercase; color: #4b5a6d; text-align: center; }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = document.querySelector('[data-composition-id="stat-card"]');
+        const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
+
+        root.querySelector(".sc-unit").textContent  = vars.unit  || "$";
+        root.querySelector(".sc-fig").textContent   = String(vars.figure ?? "0");
+        root.querySelector(".sc-label").textContent = vars.label || "";
+
+        const duration = Number(vars.duration || 2.6);
+        const exitAt = Math.max(0.4, duration - 0.35);
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Entrance
+        tl.fromTo(root.querySelector(".sc-card"),
+          { y: 40, scale: 0.85, opacity: 0 },
+          { y: 0,  scale: 1,    opacity: 1, duration: 0.40, ease: "back.out(1.8)" }, 0);
+        tl.fromTo(root.querySelector(".card__figure"),
+          { scale: 1.4, opacity: 0 },
+          { scale: 1,   opacity: 1, duration: 0.30, ease: "expo.out" }, 0.10);
+        tl.fromTo(root.querySelector(".sc-rule"),
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 1, duration: 0.38, ease: "power2.out" }, 0.35);
+        tl.fromTo(root.querySelector(".sc-label"),
+          { y: 10, opacity: 0 },
+          { y: 0,  opacity: 1, duration: 0.32, ease: "power2.out" }, 0.45);
+
+        // Exit — collapse center + lift
+        tl.to(root.querySelector(".sc-card"),
+          { scale: 0.72, y: -30, opacity: 0, duration: 0.32, ease: "power3.in" }, exitAt);
+
+        window.__timelines["stat-card"] = tl;
+      })();
+    </script>
+  </div>
+</template>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Paint splash transition — irregular paint blob expands from center filling the screen.
+  Use as a colorful scene change.
+  Total: 1.0s. Holds at full coverage.
+  Viewport: 1920 × 1080.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <g transform="translate(960 540)">
+    <g>
+      <animateTransform attributeName="transform" type="scale"
+        from="0" to="40" begin="0s" dur="1.0s" fill="freeze"
+        calcMode="spline" keySplines="0.5 0 0.2 1"/>
+      <!-- Splash shape: irregular blob -->
+      <path d="M 0 -50
+               C 30 -55, 50 -38, 56 -20
+               C 70 -15, 60 8, 70 18
+               C 80 30, 60 40, 50 52
+               C 45 70, 18 60, 6 70
+               C -10 80, -28 65, -40 60
+               C -56 56, -70 40, -64 24
+               C -76 16, -64 -8, -56 -18
+               C -52 -36, -36 -50, -18 -54
+               C -10 -56, -6 -54, 0 -50 Z"
+            fill="#ec4899"/>
+      <path d="M 0 -50
+               C 30 -55, 50 -38, 56 -20
+               C 70 -15, 60 8, 70 18
+               C 80 30, 60 40, 50 52
+               C 45 70, 18 60, 6 70
+               C -10 80, -28 65, -40 60
+               C -56 56, -70 40, -64 24
+               C -76 16, -64 -8, -56 -18
+               C -52 -36, -36 -50, -18 -54
+               C -10 -56, -6 -54, 0 -50 Z"
+            fill="none" stroke="#831843" stroke-width="0.4"/>
+    </g>
+  </g>
+</svg>

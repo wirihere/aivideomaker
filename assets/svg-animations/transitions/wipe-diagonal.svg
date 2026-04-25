@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Diagonal wipe — black bar slants across the screen, full coverage.
+  Use as a transition overlay (HOLDS at full coverage).
+  Total: 1.0s.
+  Viewport: 1920 × 1080 (16:9 video frame).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <g transform="translate(-2800 0)">
+    <animateTransform attributeName="transform" type="translate"
+      from="-2800 0" to="0 0" begin="0s" dur="1.0s" fill="freeze"
+      calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    <polygon points="0,0 2800,0 2400,1080 -400,1080" fill="#0f172a"/>
+    <polygon points="2800,0 3000,0 2600,1080 2400,1080" fill="#1e3a8a"/>
+    <polygon points="3000,0 3160,0 2760,1080 2600,1080" fill="#06b6d4"/>
+  </g>
+</svg>

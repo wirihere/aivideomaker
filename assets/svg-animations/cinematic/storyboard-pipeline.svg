@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Pipeline storyboard — input → process → output choreography:
+  Source data flows in, gets transformed via gear stage, then a sealed package
+  pops out the other side with a "delivered" stamp.
+  Total: 5.6s. Holds.
+  Viewport: 1280 × 480.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 480" width="1280" height="480">
+  <defs>
+    <linearGradient id="pipe-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#06b6d4"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="480" fill="#f8fafc"/>
+
+  <!-- Pipe -->
+  <rect x="240" y="220" width="780" height="40" rx="20" fill="#0f172a"/>
+  <rect x="240" y="225" width="780" height="14" rx="7" fill="url(#pipe-grad)" opacity="0.6"/>
+
+  <!-- Source: file -->
+  <g transform="translate(140 240)">
+    <rect x="-60" y="-70" width="120" height="140" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+    <path d="M 30 -70 L 60 -40 L 60 -70 Z" fill="#0f172a"/>
+    <text x="0" y="-30" font-family="'Courier New', monospace" font-size="12" fill="#0f172a" text-anchor="middle">data.csv</text>
+    <line x1="-40" y1="-10" x2="40" y2="-10" stroke="#cbd5e1"/>
+    <line x1="-40" y1="6"   x2="40" y2="6"   stroke="#cbd5e1"/>
+    <line x1="-40" y1="22"  x2="20" y2="22"  stroke="#cbd5e1"/>
+    <line x1="-40" y1="38"  x2="40" y2="38"  stroke="#cbd5e1"/>
+    <line x1="-40" y1="54"  x2="10" y2="54"  stroke="#cbd5e1"/>
+    <text x="0" y="92" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#475569"
+          text-anchor="middle" letter-spacing="2">SOURCE</text>
+  </g>
+
+  <!-- Process gears -->
+  <g transform="translate(630 240)">
+    <rect x="-90" y="-90" width="180" height="180" rx="14" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+    <text x="0" y="-50" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700"
+          fill="#475569" text-anchor="middle" letter-spacing="2">TRANSFORM</text>
+
+    <!-- Gear A -->
+    <g transform="translate(-30 -10)" color="#4f46e5">
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="0" to="360" dur="4s" repeatCount="indefinite"/>
+        <path d="M 0 -32 L 6 -28 L 22 -22 L 26 -16 L 22 -10 L 30 0 L 22 10 L 26 16 L 22 22 L 6 28 L 0 32
+                 L -6 28 L -22 22 L -26 16 L -22 10 L -30 0 L -22 -10 L -26 -16 L -22 -22 L -6 -28 Z"
+              fill="currentColor" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+        <circle r="8" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      </g>
+    </g>
+    <!-- Gear B -->
+    <g transform="translate(28 30)" color="#06b6d4">
+      <g>
+        <animateTransform attributeName="transform" type="rotate"
+          from="22.5" to="-337.5" dur="2.6s" repeatCount="indefinite"/>
+        <path d="M 0 -22 L 4 -18 L 16 -14 L 18 -10 L 16 -6 L 22 0 L 16 6 L 18 10 L 16 14 L 4 18 L 0 22
+                 L -4 18 L -16 14 L -18 10 L -16 6 L -22 0 L -16 -6 L -18 -10 L -16 -14 L -4 -18 Z"
+              fill="currentColor" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+        <circle r="6" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+      </g>
+    </g>
+
+    <text x="0" y="105" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#475569"
+          text-anchor="middle" letter-spacing="2">RUNNING…</text>
+  </g>
+
+  <!-- Output package -->
+  <g transform="translate(1140 240)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="3.6s" dur="0.4s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="scale" additive="sum"
+      from="0.4" to="1" begin="3.6s" dur="0.5s" fill="freeze"
+      calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    <rect x="-60" y="-60" width="120" height="120" rx="10" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+    <line x1="-60" y1="0" x2="60" y2="0" stroke="#0f172a" stroke-width="3"/>
+    <line x1="0" y1="-60" x2="0" y2="60" stroke="#0f172a" stroke-width="3"/>
+    <!-- Tied with bow -->
+    <ellipse cx="0" cy="-60" rx="14" ry="6" fill="#dc2626"/>
+    <ellipse cx="-12" cy="-60" rx="6" ry="6" fill="#dc2626"/>
+    <ellipse cx="12" cy="-60" rx="6" ry="6" fill="#dc2626"/>
+
+    <!-- Delivered stamp -->
+    <g transform="translate(0 110) rotate(-8)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="4.0s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        from="2" to="1" begin="4.0s" dur="0.4s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0 0.1 1"/>
+      <rect x="-58" y="-16" width="116" height="32" fill="none" stroke="#16a34a" stroke-width="3"/>
+      <text font-family="Inter, system-ui, sans-serif" font-size="14"
+            font-weight="800" fill="#16a34a" text-anchor="middle" dy="5" letter-spacing="3">DELIVERED</text>
+    </g>
+  </g>
+
+  <!-- Three packets travel through the pipe (staggered) -->
+  <g fill="#fbbf24">
+    <circle r="10">
+      <animateMotion path="M 200 240 L 1080 240" begin="0.4s" dur="3s" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1" begin="0.4s" dur="3s" fill="freeze"/>
+    </circle>
+    <circle r="8" fill="#06b6d4">
+      <animateMotion path="M 200 240 L 1080 240" begin="0.9s" dur="3s" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1" begin="0.9s" dur="3s" fill="freeze"/>
+    </circle>
+    <circle r="9" fill="#22c55e">
+      <animateMotion path="M 200 240 L 1080 240" begin="1.4s" dur="3s" fill="freeze"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1" begin="1.4s" dur="3s" fill="freeze"/>
+    </circle>
+  </g>
+
+  <!-- Title at top -->
+  <text x="640" y="60" font-family="Inter, system-ui, sans-serif" font-size="22"
+        font-weight="800" fill="#0f172a" text-anchor="middle" letter-spacing="6" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="0s" dur="0.5s" fill="freeze"/>
+    DATA  ·  PIPELINE
+  </text>
+</svg>

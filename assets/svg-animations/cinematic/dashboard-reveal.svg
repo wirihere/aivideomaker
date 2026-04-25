@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Dashboard reveal — full analytics dashboard assembles in choreographed sequence:
+  sidebar slides in, header drops, KPIs cascade up, chart draws, table rows
+  fade in, then a "+12.4%" trend indicator pops in.
+  Total: 5.6s. Holds.
+  Viewport: 1280 × 720.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <!-- Page background -->
+  <rect width="1280" height="720" fill="#f8fafc"/>
+
+  <!-- Sidebar (slides in from left) -->
+  <g transform="translate(-220 0)">
+    <animateTransform attributeName="transform" type="translate"
+      from="-220 0" to="0 0" begin="0s" dur="0.6s" fill="freeze"
+      calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    <rect width="220" height="720" fill="#0f172a"/>
+
+    <!-- Logo -->
+    <g transform="translate(28 28)">
+      <rect width="32" height="32" rx="8" fill="#4f46e5"/>
+      <text x="44" y="22" font-family="Inter, system-ui, sans-serif"
+            font-size="16" font-weight="800" fill="#ffffff">Atlas</text>
+    </g>
+
+    <!-- Nav items -->
+    <g transform="translate(28 100)" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="600">
+      <g transform="translate(0 0)">
+        <rect x="-4" y="-12" width="172" height="36" rx="8" fill="#1e293b"/>
+        <circle cx="8" cy="6" r="4" fill="#4f46e5"/>
+        <text x="24" y="11" fill="#ffffff">Overview</text>
+      </g>
+      <g transform="translate(0 50)">
+        <text x="24" y="11" fill="#94a3b8">Reports</text>
+      </g>
+      <g transform="translate(0 90)">
+        <text x="24" y="11" fill="#94a3b8">Customers</text>
+      </g>
+      <g transform="translate(0 130)">
+        <text x="24" y="11" fill="#94a3b8">Settings</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Header (drops in) -->
+  <g transform="translate(220 -60)">
+    <animateTransform attributeName="transform" type="translate"
+      from="220 -60" to="220 0" begin="0.4s" dur="0.5s" fill="freeze"
+      calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    <rect width="1060" height="64" fill="#ffffff"/>
+    <line x1="0" y1="64" x2="1060" y2="64" stroke="#e2e8f0" stroke-width="1"/>
+
+    <text x="32" y="40" font-family="Inter, system-ui, sans-serif"
+          font-size="20" font-weight="700" fill="#0f172a">Welcome back, Sam</text>
+
+    <!-- Search bar -->
+    <rect x="600" y="18" width="280" height="32" rx="16" fill="#f1f5f9"/>
+    <text x="620" y="38" font-family="Inter, system-ui, sans-serif"
+          font-size="12" fill="#94a3b8">Search anything…</text>
+
+    <!-- Avatar -->
+    <circle cx="940" cy="34" r="14" fill="#4f46e5"/>
+    <text x="940" y="38" font-family="Inter, system-ui, sans-serif"
+          font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">SM</text>
+  </g>
+
+  <!-- KPI cards (cascade) -->
+  <g transform="translate(252 96)">
+    <!-- Card 1 -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.0s" dur="0.4s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="0 30" to="0 0" begin="1.0s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      <rect width="240" height="124" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="20" y="32" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#64748b" letter-spacing="2">REVENUE</text>
+      <text x="20" y="76" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="800" fill="#0f172a">$48,200</text>
+      <g transform="translate(20 96)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.3s" fill="freeze"/>
+        <rect width="58" height="20" rx="10" fill="#dcfce7"/>
+        <text x="29" y="14" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle">+12.4%</text>
+      </g>
+    </g>
+
+    <!-- Card 2 -->
+    <g transform="translate(260 0)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.15s" dur="0.4s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="260 30" to="260 0" begin="1.15s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      <rect width="240" height="124" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="20" y="32" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#64748b" letter-spacing="2">CUSTOMERS</text>
+      <text x="20" y="76" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="800" fill="#0f172a">2,418</text>
+      <g transform="translate(20 96)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.75s" dur="0.3s" fill="freeze"/>
+        <rect width="58" height="20" rx="10" fill="#dcfce7"/>
+        <text x="29" y="14" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle">+8.1%</text>
+      </g>
+    </g>
+
+    <!-- Card 3 -->
+    <g transform="translate(520 0)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.3s" dur="0.4s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="520 30" to="520 0" begin="1.3s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      <rect width="240" height="124" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="20" y="32" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#64748b" letter-spacing="2">CONVERSION</text>
+      <text x="20" y="76" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="800" fill="#0f172a">3.7%</text>
+      <g transform="translate(20 96)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.9s" dur="0.3s" fill="freeze"/>
+        <rect width="58" height="20" rx="10" fill="#fee2e2"/>
+        <text x="29" y="14" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#b91c1c" text-anchor="middle">-1.2%</text>
+      </g>
+    </g>
+
+    <!-- Card 4 -->
+    <g transform="translate(780 0)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.45s" dur="0.4s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="780 30" to="780 0" begin="1.45s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      <rect width="240" height="124" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="20" y="32" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#64748b" letter-spacing="2">AVG ORDER</text>
+      <text x="20" y="76" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="800" fill="#0f172a">$112</text>
+      <g transform="translate(20 96)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="2.05s" dur="0.3s" fill="freeze"/>
+        <rect width="58" height="20" rx="10" fill="#dcfce7"/>
+        <text x="29" y="14" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle">+4.0%</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Chart -->
+  <g transform="translate(252 248)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.4s" dur="0.4s" fill="freeze"/>
+    <rect width="660" height="320" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="32" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Revenue · Last 7 days</text>
+
+    <!-- Axes -->
+    <line x1="40" y1="80" x2="40" y2="280" stroke="#e2e8f0"/>
+    <line x1="40" y1="280" x2="640" y2="280" stroke="#e2e8f0"/>
+
+    <!-- Area + line drawn via reveal mask -->
+    <defs>
+      <linearGradient id="dash-area" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#4f46e5" stop-opacity="0.45"/>
+        <stop offset="1" stop-color="#4f46e5" stop-opacity="0"/>
+      </linearGradient>
+      <clipPath id="dash-reveal">
+        <rect x="40" y="60" width="0" height="240">
+          <animate attributeName="width" from="0" to="600" begin="2.7s" dur="1.6s" fill="freeze"
+                   calcMode="spline" keySplines="0.4 0 0.2 1"/>
+        </rect>
+      </clipPath>
+    </defs>
+
+    <g clip-path="url(#dash-reveal)">
+      <path d="M 40 230 L 130 200 L 220 220 L 310 160 L 400 180 L 490 120 L 580 100 L 580 280 L 40 280 Z" fill="url(#dash-area)"/>
+      <path d="M 40 230 L 130 200 L 220 220 L 310 160 L 400 180 L 490 120 L 580 100"
+            fill="none" stroke="#4f46e5" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- Final value point + callout -->
+    <circle cx="580" cy="100" r="0" fill="#ffffff" stroke="#4f46e5" stroke-width="3">
+      <animate attributeName="r" from="0" to="6" begin="4.3s" dur="0.3s" fill="freeze"/>
+    </circle>
+    <g transform="translate(580 100)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="4.6s" dur="0.3s" fill="freeze"/>
+      <rect x="-90" y="-44" width="80" height="28" rx="6" fill="#0f172a"/>
+      <text x="-50" y="-25" font-family="Inter, system-ui, sans-serif"
+            font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">$48.2k</text>
+    </g>
+  </g>
+
+  <!-- Side panel: Recent activity -->
+  <g transform="translate(932 248)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.7s" dur="0.4s" fill="freeze"/>
+    <rect width="320" height="320" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="20" y="32" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="700" fill="#0f172a">Recent activity</text>
+
+    <!-- Rows -->
+    <g font-family="Inter, system-ui, sans-serif" font-size="12">
+      <g transform="translate(20 64)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="3.0s" dur="0.3s" fill="freeze"/>
+        <circle cx="14" cy="14" r="14" fill="#dcfce7"/>
+        <text x="14" y="18" fill="#15803d" font-size="11" font-weight="800" text-anchor="middle">↑</text>
+        <text x="40" y="14" fill="#0f172a" font-weight="600">Order #4821 paid</text>
+        <text x="40" y="30" fill="#64748b">2 mins ago · $128.40</text>
+      </g>
+      <g transform="translate(20 116)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="3.2s" dur="0.3s" fill="freeze"/>
+        <circle cx="14" cy="14" r="14" fill="#e0f2fe"/>
+        <text x="14" y="18" fill="#0e7490" font-size="11" font-weight="800" text-anchor="middle">+</text>
+        <text x="40" y="14" fill="#0f172a" font-weight="600">New customer signed up</text>
+        <text x="40" y="30" fill="#64748b">5 mins ago</text>
+      </g>
+      <g transform="translate(20 168)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="3.4s" dur="0.3s" fill="freeze"/>
+        <circle cx="14" cy="14" r="14" fill="#fef3c7"/>
+        <text x="14" y="18" fill="#92400e" font-size="11" font-weight="800" text-anchor="middle">!</text>
+        <text x="40" y="14" fill="#0f172a" font-weight="600">Inventory low: 3 items</text>
+        <text x="40" y="30" fill="#64748b">12 mins ago</text>
+      </g>
+      <g transform="translate(20 220)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="3.6s" dur="0.3s" fill="freeze"/>
+        <circle cx="14" cy="14" r="14" fill="#dcfce7"/>
+        <text x="14" y="18" fill="#15803d" font-size="11" font-weight="800" text-anchor="middle">↑</text>
+        <text x="40" y="14" fill="#0f172a" font-weight="600">Order #4820 paid</text>
+        <text x="40" y="30" fill="#64748b">18 mins ago · $54.00</text>
+      </g>
+      <g transform="translate(20 272)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="3.8s" dur="0.3s" fill="freeze"/>
+        <circle cx="14" cy="14" r="14" fill="#fee2e2"/>
+        <text x="14" y="18" fill="#b91c1c" font-size="11" font-weight="800" text-anchor="middle">×</text>
+        <text x="40" y="14" fill="#0f172a" font-weight="600">Refund processed</text>
+        <text x="40" y="30" fill="#64748b">23 mins ago · $32.00</text>
+      </g>
+    </g>
+  </g>
+</svg>

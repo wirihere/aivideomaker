@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Liquid wave — gradient wave shifts horizontally for an endless ocean feel.
+  Loops indefinitely.
+  Viewport: 720 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200">
+  <defs>
+    <linearGradient id="wave-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#0e7490"/>
+    </linearGradient>
+  </defs>
+
+  <!-- The path is a sine wave drawn twice end-to-end (length 720*2);
+       we translate it leftward by 720 to loop seamlessly. -->
+  <g>
+    <path d="M 0 100
+             C 90 60, 180 140, 270 100
+             S 450 60, 540 100
+             S 720 140, 810 100
+             S 990 60, 1080 100
+             S 1260 140, 1350 100
+             S 1440 60, 1440 100
+             L 1440 200 L 0 200 Z"
+          fill="url(#wave-grad)" opacity="0.85">
+      <animateTransform attributeName="transform" type="translate"
+        from="0 0" to="-720 0" dur="4s" repeatCount="indefinite"/>
+    </path>
+
+    <path d="M 0 110
+             C 90 80, 180 140, 270 110
+             S 450 80, 540 110
+             S 720 140, 810 110
+             S 990 80, 1080 110
+             S 1260 140, 1350 110
+             S 1440 80, 1440 110
+             L 1440 200 L 0 200 Z"
+          fill="url(#wave-grad)" opacity="0.55">
+      <animateTransform attributeName="transform" type="translate"
+        from="-720 0" to="0 0" dur="6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

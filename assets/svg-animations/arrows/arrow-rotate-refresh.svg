@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Refresh — circular arrow rotates 360°. Loops.
+  Viewport: 160 × 160.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+  <g transform="translate(80 80)" fill="none" stroke="#10b981" stroke-width="10"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 50 0 A 50 50 0 1 1 0 -50"/>
+    <path d="M 0 -50 L -16 -50 L 0 -68"/>
+    <animateTransform attributeName="transform" type="rotate"
+      from="0" to="360" dur="1.4s" repeatCount="indefinite"/>
+  </g>
+</svg>

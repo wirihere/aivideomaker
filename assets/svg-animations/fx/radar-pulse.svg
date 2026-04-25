@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Radar pulse — three concentric rings expand outward, fading. Loops.
+  Viewport: 240 × 240.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+  <g transform="translate(120 120)">
+    <circle r="14" fill="#ef4444"/>
+    <circle r="14" fill="none" stroke="#ef4444" stroke-width="3">
+      <animate attributeName="r" from="14" to="100" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="14" fill="none" stroke="#ef4444" stroke-width="3">
+      <animate attributeName="r" from="14" to="100" dur="2s" begin="0.66s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="2s" begin="0.66s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="14" fill="none" stroke="#ef4444" stroke-width="3">
+      <animate attributeName="r" from="14" to="100" dur="2s" begin="1.33s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="2s" begin="1.33s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

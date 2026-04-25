@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Graduation cap — cap lands on head silhouette, tassel swings, diploma
+  unrolls with a red seal, "CLASS OF 2026" banner.
+  Total: 3.8s. Holds.
+  Viewport: 480 × 480.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480">
+  <!-- Head silhouette -->
+  <g transform="translate(240 280)">
+    <circle r="60" fill="#fbbf24" stroke="#0f172a" stroke-width="4"/>
+    <circle cx="-18" cy="-6" r="4" fill="#0f172a"/>
+    <circle cx="18"  cy="-6" r="4" fill="#0f172a"/>
+    <path d="M -14 20 Q 0 30 14 20" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cap (falls from above) -->
+  <g transform="translate(240 -60)">
+    <animateTransform attributeName="transform" type="translate"
+      from="240 -60" to="240 210" begin="0s" dur="0.7s" fill="freeze"
+      calcMode="spline" keySplines="0.4 0 0.6 1.1"/>
+
+    <!-- Board (angled) -->
+    <g transform="rotate(-5)">
+      <polygon points="-80,-10 0,-30 80,-10 0,10" fill="#0f172a"/>
+      <rect x="-40" y="10" width="80" height="30" fill="#0f172a"/>
+      <!-- Button -->
+      <circle r="4" fill="#dc2626"/>
+      <!-- Tassel (swings after settle) -->
+      <g transform="translate(70 -14)">
+        <animateTransform attributeName="transform" type="rotate"
+          values="0;-18;12;-8;4;0" keyTimes="0;0.2;0.4;0.6;0.8;1"
+          begin="0.7s" dur="1.2s" fill="freeze"/>
+        <line x1="0" y1="0" x2="0" y2="30" stroke="#fbbf24" stroke-width="3"/>
+        <circle cx="0" cy="36" r="8" fill="#fbbf24" stroke="#92400e" stroke-width="2"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Diploma unrolls (from left) -->
+  <g transform="translate(60 380)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.0s" dur="0.3s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="scale"
+      from="0 1" to="1 1" begin="2.0s" dur="0.7s" fill="freeze"
+      calcMode="spline" keySplines="0.4 0 0.2 1"/>
+
+    <rect width="280" height="50" fill="#fef3c7" stroke="#7c2d12" stroke-width="3"/>
+    <!-- Roll ends -->
+    <rect x="-10" y="-4" width="14" height="58" rx="3" fill="#7c2d12"/>
+    <rect x="276" y="-4" width="14" height="58" rx="3" fill="#7c2d12"/>
+
+    <!-- Calligraphy lines -->
+    <g stroke="#7c2d12" stroke-width="1.5" opacity="0.6">
+      <line x1="12" y1="16" x2="180" y2="16"/>
+      <line x1="12" y1="28" x2="220" y2="28"/>
+      <line x1="12" y1="40" x2="160" y2="40"/>
+    </g>
+
+    <!-- Seal -->
+    <g transform="translate(230 25)">
+      <circle r="16" fill="#dc2626" stroke="#7f1d1d" stroke-width="2"/>
+      <text font-family="Inter, system-ui, sans-serif" font-size="10" font-weight="800"
+            fill="#fef3c7" text-anchor="middle" dy="4">★</text>
+      <!-- Ribbon tails -->
+      <path d="M -6 14 L -10 26 L -4 22" fill="#dc2626"/>
+      <path d="M 6 14 L 10 26 L 4 22" fill="#dc2626"/>
+    </g>
+  </g>
+
+  <!-- Class of 2026 banner -->
+  <g transform="translate(240 60)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.8s" dur="0.3s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="scale" additive="sum"
+      values="0.5;1.2;1" keyTimes="0;0.6;1" begin="2.8s" dur="0.5s" fill="freeze"/>
+    <rect x="-130" y="-22" width="260" height="44" rx="22" fill="#1e3a8a"/>
+    <text font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="800"
+          fill="#fbbf24" text-anchor="middle" dy="6" letter-spacing="3">CLASS OF 2026</text>
+  </g>
+</svg>

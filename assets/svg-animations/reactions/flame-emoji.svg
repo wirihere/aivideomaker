@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  🔥 — bouncy fire emoji that wobbles. Loops.
+  Viewport: 200 × 240.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+  <g transform="translate(100 130)">
+    <animateTransform attributeName="transform" type="rotate"
+      values="-3;3;-3" dur="0.6s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="scale" additive="sum"
+      values="1;1.04;1" dur="0.8s" repeatCount="indefinite"/>
+
+    <!-- Outer flame -->
+    <path d="M 0 -90
+             Q -60 -30 -50 30
+             Q -40 80 0 90
+             Q 40 80 50 30
+             Q 60 -30 0 -90 Z"
+          fill="#f97316" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+    <!-- Inner flame -->
+    <path d="M 0 -50
+             Q -30 -10 -25 30
+             Q -15 60 0 60
+             Q 15 60 25 30
+             Q 30 -10 0 -50 Z"
+          fill="#fbbf24" stroke="none"/>
+    <!-- Core -->
+    <ellipse cx="0" cy="30" rx="10" ry="20" fill="#fef3c7"/>
+  </g>
+</svg>

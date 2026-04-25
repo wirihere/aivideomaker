@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Two meshing gears — counter-rotate forever. Bigger gear at left.
+  Loops indefinitely.
+  Viewport: 320 × 240.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" width="320" height="240">
+  <defs>
+    <!-- Reusable gear: 8 teeth -->
+    <symbol id="gear" viewBox="-50 -50 100 100">
+      <path d="M -8 -48 L 8 -48 L 12 -36
+               L 30 -28 L 36 -36 L 48 -22 L 40 -16
+               L 44 0 L 56 4 L 56 -4 L 56 4
+               L 44 0 L 40 16 L 48 22 L 36 36 L 30 28 L 12 36
+               L 8 48 L -8 48 L -12 36 L -30 28 L -36 36
+               L -48 22 L -40 16 L -44 0
+               L -40 -16 L -48 -22 L -36 -36 L -30 -28 L -12 -36 Z"
+            fill="currentColor" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+      <circle r="14" fill="#ffffff" stroke="#0f172a" stroke-width="2"/>
+    </symbol>
+  </defs>
+
+  <!-- Big gear (left) — clockwise -->
+  <g transform="translate(110 130)" color="#4f46e5">
+    <use href="#gear" x="-70" y="-70" width="140" height="140"/>
+    <animateTransform attributeName="transform" type="rotate" additive="sum"
+      from="0" to="360" dur="6s" repeatCount="indefinite"/>
+  </g>
+
+  <!-- Small gear (right) — counter-clockwise, faster -->
+  <g transform="translate(220 90)" color="#06b6d4">
+    <use href="#gear" x="-44" y="-44" width="88" height="88"/>
+    <animateTransform attributeName="transform" type="rotate" additive="sum"
+      from="22.5" to="-337.5" dur="3.75s" repeatCount="indefinite"/>
+  </g>
+</svg>

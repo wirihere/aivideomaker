@@ -1,0 +1,156 @@
+/* =========================================================================
+   TOKENS — KINDRED (extracted from kindred-nz.org)
+   =========================================================================
+   Brand overlay for the agnostic card system. Loaded AFTER design/cards.css
+   in any composition that wants the Kindred look. Overrides only the
+   brand-specific tokens; structural tokens (radii, padding, type sizes,
+   shadows) inherit from cards.css :root defaults.
+
+   To re-skin to a different brand, write a new tokens-<brand>.css and load
+   it instead. No changes needed to cards.css or any card markup.
+   ========================================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  /* Palette — pulled directly from kindred-nz.org CSS custom properties. */
+  --card-navy:        #1B2A3D;   /* their --ink — primary text on cream */
+  --card-navy-deep:   #0F1621;   /* their darker ink */
+  --card-slate:       #14806F;   /* their --teal-deep */
+  --card-slate-ink:   #5A6677;   /* their --ink-60 */
+  --card-paper:       #FBF9F6;   /* their --cream — canvas */
+  --card-paper-soft:  #F5EFE6;   /* their --cream-warm */
+  --card-accent:      #1A9E8F;   /* their --teal — primary brand */
+  --card-warn:        #E98B6A;   /* their --coral */
+  --card-ok:          #14806F;   /* their --teal-deep */
+
+  /* Type — Kindred uses Fraunces (display), Nunito (body), JetBrains Mono. */
+  --card-font-ui:       "Nunito", system-ui, -apple-system, sans-serif;
+  --card-font-mono:     "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+  --card-font-display:  "Fraunces", Georgia, "Times New Roman", serif;
+
+  /* Type — slightly soften the heavy display weight to feel like the site. */
+  --card-title-size:   54px;
+  --card-kicker-size:  24px;
+  --card-kicker-track: 0.18em;   /* tighter than default — Nunito doesn't need 0.32em */
+  --card-body-size:    32px;
+  --card-body-line:    1.45;
+  --card-label-size:   30px;
+  --card-label-track:  0.16em;
+}
+
+/* Surface re-skins — Kindred is a light brand, so flip the dark/light
+   defaults at the surface level. Cards.css's variant rules still apply;
+   we just retint backgrounds and text colours per-surface. */
+
+.card--dark-glass {
+  /* Repurpose dark-glass as "teal block" — Kindred's brand-arrival surface. */
+  background: rgba(20, 128, 111, 0.96);  /* teal-deep, slightly transparent */
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  color: var(--card-paper);
+}
+.card--dark-glass .card__kicker { color: var(--card-paper-soft); }
+.card--dark-glass .card__label  { color: rgba(251, 249, 246, 0.78); }
+
+.card--light-paper {
+  /* Cream-warm card on cream canvas — soft elevation. */
+  background: var(--card-paper-soft);
+  border: 1px solid rgba(27, 42, 61, 0.08);
+  box-shadow: 0 6px 24px rgba(27, 42, 61, 0.06), 0 1px 0 rgba(27, 42, 61, 0.04);
+  color: var(--card-navy);
+}
+.card--light-paper .card__kicker      { color: var(--card-accent); }
+.card--light-paper .card__label       { color: var(--card-slate-ink); }
+.card--light-paper .card__figure-unit { color: var(--card-accent); }
+
+.card--brand-navy {
+  /* Repurpose as "teal solid" — for the wordmark/CTA scene. */
+  background: var(--card-accent);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 24px 60px rgba(20, 128, 111, 0.28);
+  color: var(--card-paper);
+}
+
+.card--ghost {
+  background: rgba(232, 244, 241, 0.65);
+  backdrop-filter: blur(6px);
+  border: 1.5px solid rgba(20, 128, 111, 0.20);
+  color: var(--card-navy);
+}
+
+.card--ghost .card__kicker { color: var(--card-accent); }
+
+/* Wordmark variant — Kindred wordmark in display serif (not the cards.css
+   default mono-monogram look — that fits Claim Mate, not Kindred). */
+.card--wordmark .card__mark {
+  font-family: var(--card-font-display);
+  font-weight: 600;
+  font-size: 180px;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--card-paper);
+  text-shadow: 0 4px 18px rgba(15, 22, 33, 0.35);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.card--wordmark .card__mark-slash { display: none; } /* Kindred wordmark has no slash */
+
+.card--wordmark .card__url {
+  font-family: var(--card-font-mono);
+  font-weight: 500;
+  font-size: 38px;
+  color: var(--card-paper);
+  letter-spacing: 0.04em;
+  opacity: 0.92;
+  text-shadow: 0 2px 10px rgba(15, 22, 33, 0.30);
+}
+
+.card--wordmark .card__fine {
+  font-family: var(--card-font-ui);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--card-paper-soft);
+  line-height: 1.4;
+  max-width: 720px;
+  text-align: center;
+  opacity: 0.92;
+}
+
+/* Headline variant — punch up the Fraunces serif at large sizes. */
+.card--headline .card__title {
+  font-family: var(--card-font-display);
+  font-weight: 500;
+  font-size: 96px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+/* Step card — the GIVE / ASK / SUPPORT row. Adopt feature-row layout but
+   centre-align and let the icon read as a coloured pill. */
+.card--feature-row .card__icon {
+  width: 110px;
+  height: 110px;
+  border-radius: 22px;
+  background: var(--card-paper);
+  border: 1px solid rgba(27, 42, 61, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;          /* emoji or unicode glyph as icon */
+  line-height: 1;
+}
+.card--feature-row .card__title {
+  font-family: var(--card-font-display);
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1.1;
+  color: var(--card-navy);
+}
+.card--feature-row .card__body {
+  font-size: 26px;
+  color: var(--card-slate-ink);
+  opacity: 1;
+}

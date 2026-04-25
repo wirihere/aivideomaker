@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Shutter bars — 8 horizontal bars close inward in alternating directions.
+  Total: 1.0s. Use as an overlay transition.
+  Viewport: 1920 × 1080.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <g>
+    <!-- Even bars slide from left -->
+    <rect x="-1920" y="0"   width="1920" height="135" fill="#0f172a">
+      <animate attributeName="x" from="-1920" to="0" begin="0s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+    <rect x="-1920" y="270" width="1920" height="135" fill="#0f172a">
+      <animate attributeName="x" from="-1920" to="0" begin="0.08s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+    <rect x="-1920" y="540" width="1920" height="135" fill="#0f172a">
+      <animate attributeName="x" from="-1920" to="0" begin="0.16s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+    <rect x="-1920" y="810" width="1920" height="135" fill="#0f172a">
+      <animate attributeName="x" from="-1920" to="0" begin="0.24s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+    <!-- Odd bars slide from right -->
+    <rect x="1920" y="135" width="1920" height="135" fill="#1e3a8a">
+      <animate attributeName="x" from="1920" to="0" begin="0s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+    <rect x="1920" y="405" width="1920" height="135" fill="#1e3a8a">
+      <animate attributeName="x" from="1920" to="0" begin="0.08s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+    <rect x="1920" y="675" width="1920" height="135" fill="#1e3a8a">
+      <animate attributeName="x" from="1920" to="0" begin="0.16s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+    <rect x="1920" y="945" width="1920" height="135" fill="#1e3a8a">
+      <animate attributeName="x" from="1920" to="0" begin="0.24s" dur="1.0s" fill="freeze" calcMode="spline" keySplines="0.7 0 0.2 1"/>
+    </rect>
+  </g>
+</svg>

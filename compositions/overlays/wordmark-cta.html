@@ -1,0 +1,121 @@
+<template id="wordmark-cta-tpl">
+  <div data-composition-id="wordmark-cta" data-width="1080" data-height="1920">
+    <div class="wm-stack">
+      <div class="wm-mark">
+        <span class="wm-a"></span><span class="wm-slash">/</span><span class="wm-b"></span>
+      </div>
+      <div class="wm-rule"></div>
+      <div class="wm-url"></div>
+      <div class="wm-fine"></div>
+    </div>
+
+    <style>
+      [data-composition-id="wordmark-cta"] {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+      }
+      [data-composition-id="wordmark-cta"] .wm-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+      }
+      [data-composition-id="wordmark-cta"] .wm-mark {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 170px;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        color: #eef1f5;
+        display: flex;
+        align-items: center;
+        text-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        will-change: transform, opacity;
+      }
+      [data-composition-id="wordmark-cta"] .wm-slash {
+        color: #7aa0d4;
+        margin: 0 4px;
+        will-change: transform, opacity;
+      }
+      [data-composition-id="wordmark-cta"] .wm-rule {
+        width: 120px;
+        height: 3px;
+        background: #7aa0d4;
+        transform-origin: center;
+        will-change: transform;
+      }
+      [data-composition-id="wordmark-cta"] .wm-url {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 500;
+        font-size: 44px;
+        color: #eef1f5;
+        letter-spacing: 0.06em;
+        text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        will-change: transform, opacity;
+      }
+      [data-composition-id="wordmark-cta"] .wm-fine {
+        font-family: "Inter", sans-serif;
+        font-weight: 400;
+        font-style: italic;
+        font-size: 26px;
+        color: #bcc7d6;
+        letter-spacing: 0.01em;
+        max-width: 760px;
+        text-align: center;
+        line-height: 1.4;
+        text-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+        will-change: transform, opacity;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = document.currentScript.closest('[data-composition-id="wordmark-cta"]');
+        const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
+        const partA = String(vars.partA || "CLAIM");
+        const partB = String(vars.partB || "MATE");
+        const url = String(vars.url || "");
+        const fine = String(vars.fine || "");
+        const markColor = vars.markColor || "#eef1f5";
+        const slashColor = vars.slashColor || "#7aa0d4";
+
+        root.querySelector(".wm-a").textContent = partA;
+        root.querySelector(".wm-b").textContent = partB;
+        root.querySelector(".wm-url").textContent = url;
+        root.querySelector(".wm-fine").textContent = fine;
+        root.querySelector(".wm-mark").style.color = markColor;
+        root.querySelector(".wm-slash").style.color = slashColor;
+        root.querySelector(".wm-rule").style.background = slashColor;
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo(".wm-a",
+          { x: -20, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0);
+        tl.fromTo(".wm-slash",
+          { rotation: 45, scale: 0, opacity: 0 },
+          { rotation: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.8)" }, 0.15);
+        tl.fromTo(".wm-b",
+          { x: 20, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 0.25);
+        tl.fromTo(".wm-rule",
+          { scaleX: 0, opacity: 0 },
+          { scaleX: 1, opacity: 1, duration: 0.45, ease: "power2.out" }, 0.55);
+        tl.fromTo(".wm-url",
+          { y: 10, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 0.7);
+        if (fine) {
+          tl.fromTo(".wm-fine",
+            { y: 6, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 0.9);
+        }
+        window.__timelines["wordmark-cta"] = tl;
+      })();
+    </script>
+  </div>
+</template>

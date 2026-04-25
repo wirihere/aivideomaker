@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>SVG animation library — preview</title>
+<style>
+  :root {
+    --bg:    #f8fafc;
+    --ink:   #0f172a;
+    --muted: #64748b;
+    --rule:  #e2e8f0;
+    --card:  #ffffff;
+    --accent:#4f46e5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    padding: 48px 32px 96px;
+    background-image:
+      linear-gradient(rgba(15,23,42,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,23,42,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .wrap { max-width: 1320px; margin: 0 auto; }
+
+  header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 2px solid var(--ink); }
+  h1 { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+  .meta { color: var(--muted); font-size: 13px; margin-top: 6px; letter-spacing: 1px; text-transform: uppercase; }
+
+  .toc {
+    margin: 32px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .toc a {
+    text-decoration: none;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .toc a:hover { background: var(--ink); color: var(--card); }
+
+  section { margin-top: 64px; }
+  section h2 {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  section h2 span { color: var(--ink); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+  }
+  .grid.wide  { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
+  .grid.cinematic { grid-template-columns: 1fr; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .frame {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-bottom: 1px solid var(--rule);
+    background:
+      conic-gradient(from 0deg, transparent 25%, rgba(15,23,42,0.04) 0 50%, transparent 0 75%, rgba(15,23,42,0.04) 0)
+      0 0 / 16px 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .frame.wide   { aspect-ratio: 16 / 9; }
+  .frame.cinematic { aspect-ratio: 16 / 9; }
+  .frame.video  { aspect-ratio: 16 / 9; background: #0f172a; }
+  .frame.dark   { background: #0f172a; }
+  .frame object, .frame img { width: 100%; height: 100%; display: block; }
+
+  .meta-row {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .name { font-size: 13px; font-weight: 700; }
+  .controls button {
+    font-family: inherit; font-size: 11px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 6px 10px;
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--rule); cursor: pointer;
+    border-radius: 6px;
+  }
+  .controls button:hover { background: var(--ink); color: var(--card); border-color: var(--ink); }
+
+  footer {
+    margin-top: 96px; padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    color: var(--muted); font-size: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:    #0b1220;
+      --ink:   #f1f5f9;
+      --muted: #94a3b8;
+      --rule:  #1e293b;
+      --card:  #0f172a;
+    }
+    body { background-image: none; }
+    .frame {
+      background: conic-gradient(from 0deg, transparent 25%, rgba(255,255,255,0.05) 0 50%, transparent 0 75%, rgba(255,255,255,0.05) 0) 0 0 / 16px 16px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>SVG animation library</h1>
+    <div class="meta">Self-contained SMIL animations · drop into any video clip · click Replay to restart</div>
+
+    <nav class="toc">
+      <a href="#loading">Loading</a>
+      <a href="#status">Status</a>
+      <a href="#arrows">Arrows</a>
+      <a href="#notifications">Notifications</a>
+      <a href="#data">Data</a>
+      <a href="#money">Money</a>
+      <a href="#social">Social</a>
+      <a href="#tech">Tech</a>
+      <a href="#flow">Flow</a>
+      <a href="#fx">FX</a>
+      <a href="#transitions">Transitions</a>
+      <a href="#text-fx">Text FX</a>
+      <a href="#weather">Weather</a>
+      <a href="#time">Time</a>
+      <a href="#devices">Devices</a>
+      <a href="#maps">Maps</a>
+      <a href="#reactions">Reactions</a>
+      <a href="#logos">Logos</a>
+      <a href="#ui">UI</a>
+      <a href="#nature">Nature</a>
+      <a href="#abstract">Abstract</a>
+      <a href="#communication">Communication</a>
+      <a href="#cinematic">Cinematic</a>
+      <a href="#gaming">Gaming</a>
+      <a href="#ecommerce">E-commerce</a>
+      <a href="#health">Health</a>
+      <a href="#education">Education</a>
+      <a href="#sports">Sports</a>
+      <a href="#food">Food</a>
+      <a href="#travel">Travel</a>
+      <a href="#brand">Brand</a>
+    </nav>
+  </header>
+
+  <!-- Each section template:
+       <section id="x"><h2>X · <span>title</span></h2><div class="grid">...</div></section> -->
+
+  <section id="loading"><h2>Category · <span>Loading & progress</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="loading/spinner-circle.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">spinner-circle</span><div class="controls"><button data-src="loading/spinner-circle.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="loading/spinner-dots.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">spinner-dots</span><div class="controls"><button data-src="loading/spinner-dots.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="loading/progress-bar.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">progress-bar</span><div class="controls"><button data-src="loading/progress-bar.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="loading/progress-circle.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">progress-circle</span><div class="controls"><button data-src="loading/progress-circle.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="loading/wave-loader.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">wave-loader</span><div class="controls"><button data-src="loading/wave-loader.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="loading/skeleton-shimmer.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">skeleton-shimmer</span><div class="controls"><button data-src="loading/skeleton-shimmer.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="loading/spinner-orbit.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">spinner-orbit</span><div class="controls"><button data-src="loading/spinner-orbit.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="loading/spinner-square.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">spinner-square</span><div class="controls"><button data-src="loading/spinner-square.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="status"><h2>Category · <span>Status indicators</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="status/check-success.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">check-success</span><div class="controls"><button data-src="status/check-success.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="status/cross-error.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">cross-error</span><div class="controls"><button data-src="status/cross-error.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="status/warning-triangle.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">warning-triangle</span><div class="controls"><button data-src="status/warning-triangle.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="status/info-circle.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">info-circle</span><div class="controls"><button data-src="status/info-circle.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="status/check-outline-draw.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">check-outline-draw</span><div class="controls"><button data-src="status/check-outline-draw.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="status/loading-to-success.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">loading-to-success</span><div class="controls"><button data-src="status/loading-to-success.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="status/loading-to-error.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">loading-to-error</span><div class="controls"><button data-src="status/loading-to-error.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="arrows"><h2>Category · <span>Arrows & direction</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="arrows/arrow-right-bounce.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrow-right-bounce</span><div class="controls"><button data-src="arrows/arrow-right-bounce.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="arrows/arrow-down-cta.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrow-down-cta</span><div class="controls"><button data-src="arrows/arrow-down-cta.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="arrows/arrow-curved-draw.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrow-curved-draw</span><div class="controls"><button data-src="arrows/arrow-curved-draw.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="arrows/arrows-swap.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrows-swap</span><div class="controls"><button data-src="arrows/arrows-swap.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="arrows/arrow-rotate-refresh.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrow-rotate-refresh</span><div class="controls"><button data-src="arrows/arrow-rotate-refresh.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="arrows/arrow-trend-up.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrow-trend-up</span><div class="controls"><button data-src="arrows/arrow-trend-up.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="arrows/arrow-trend-down.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrow-trend-down</span><div class="controls"><button data-src="arrows/arrow-trend-down.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="arrows/arrow-circle-loop.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">arrow-circle-loop</span><div class="controls"><button data-src="arrows/arrow-circle-loop.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="notifications"><h2>Category · <span>Notifications</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="notifications/bell-ring.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">bell-ring</span><div class="controls"><button data-src="notifications/bell-ring.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="notifications/notification-toast.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">notification-toast</span><div class="controls"><button data-src="notifications/notification-toast.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="notifications/badge-pop.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">badge-pop</span><div class="controls"><button data-src="notifications/badge-pop.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="data"><h2>Category · <span>Data & charts</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame wide"><object data="data/bar-chart-grow.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">bar-chart-grow</span><div class="controls"><button data-src="data/bar-chart-grow.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="data/line-chart-draw.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">line-chart-draw</span><div class="controls"><button data-src="data/line-chart-draw.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="data/donut-chart.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">donut-chart</span><div class="controls"><button data-src="data/donut-chart.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="data/counter-up.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">counter-up</span><div class="controls"><button data-src="data/counter-up.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="data/stat-card-reveal.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">stat-card-reveal</span><div class="controls"><button data-src="data/stat-card-reveal.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="money"><h2>Category · <span>Money & commerce</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="money/coin-spin.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">coin-spin</span><div class="controls"><button data-src="money/coin-spin.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="money/money-stack.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">money-stack</span><div class="controls"><button data-src="money/money-stack.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="money/card-tap.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">card-tap</span><div class="controls"><button data-src="money/card-tap.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="money/price-tag.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">price-tag</span><div class="controls"><button data-src="money/price-tag.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="social"><h2>Category · <span>Social</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="social/heart-like.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">heart-like</span><div class="controls"><button data-src="social/heart-like.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="social/star-rating.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">star-rating</span><div class="controls"><button data-src="social/star-rating.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="social/thumbs-up.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">thumbs-up</span><div class="controls"><button data-src="social/thumbs-up.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="social/share-out.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">share-out</span><div class="controls"><button data-src="social/share-out.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="tech"><h2>Category · <span>Tech</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame wide"><object data="tech/gears-mesh.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">gears-mesh</span><div class="controls"><button data-src="tech/gears-mesh.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="tech/wifi-signal.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">wifi-signal</span><div class="controls"><button data-src="tech/wifi-signal.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="tech/cloud-upload.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">cloud-upload</span><div class="controls"><button data-src="tech/cloud-upload.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="tech/lock-unlock.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">lock-unlock</span><div class="controls"><button data-src="tech/lock-unlock.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="tech/battery-charging.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">battery-charging</span><div class="controls"><button data-src="tech/battery-charging.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="flow"><h2>Category · <span>Flow & process</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame wide"><object data="flow/stepper-3.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">stepper-3</span><div class="controls"><button data-src="flow/stepper-3.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="flow/network-nodes.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">network-nodes</span><div class="controls"><button data-src="flow/network-nodes.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="flow/funnel-fill.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">funnel-fill</span><div class="controls"><button data-src="flow/funnel-fill.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="fx"><h2>Category · <span>FX & particles</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="fx/confetti-burst.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">confetti-burst</span><div class="controls"><button data-src="fx/confetti-burst.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="fx/sparkles.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">sparkles</span><div class="controls"><button data-src="fx/sparkles.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="fx/radar-pulse.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">radar-pulse</span><div class="controls"><button data-src="fx/radar-pulse.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="fx/fire-flame.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">fire-flame</span><div class="controls"><button data-src="fx/fire-flame.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="fx/liquid-wave.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">liquid-wave</span><div class="controls"><button data-src="fx/liquid-wave.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame dark"><object data="fx/glitch-block.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">glitch-block</span><div class="controls"><button data-src="fx/glitch-block.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="fx/smoke-rise.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">smoke-rise</span><div class="controls"><button data-src="fx/smoke-rise.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide dark"><object data="fx/stars-twinkle.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">stars-twinkle</span><div class="controls"><button data-src="fx/stars-twinkle.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="fx/bubbles.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">bubbles</span><div class="controls"><button data-src="fx/bubbles.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide dark"><object data="fx/lens-flare.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">lens-flare</span><div class="controls"><button data-src="fx/lens-flare.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide dark"><object data="fx/aurora-ribbons.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">aurora-ribbons</span><div class="controls"><button data-src="fx/aurora-ribbons.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="transitions"><h2>Category · <span>Transitions (16:9)</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame video"><object data="transitions/wipe-diagonal.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">wipe-diagonal</span><div class="controls"><button data-src="transitions/wipe-diagonal.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame video"><object data="transitions/iris-open.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">iris-open</span><div class="controls"><button data-src="transitions/iris-open.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame video"><object data="transitions/iris-close.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">iris-close</span><div class="controls"><button data-src="transitions/iris-close.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame video"><object data="transitions/shutter-bars.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">shutter-bars</span><div class="controls"><button data-src="transitions/shutter-bars.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame video"><object data="transitions/circle-reveal.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">circle-reveal</span><div class="controls"><button data-src="transitions/circle-reveal.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame video"><object data="transitions/split-doors.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">split-doors</span><div class="controls"><button data-src="transitions/split-doors.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame video"><object data="transitions/noise-static.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">noise-static</span><div class="controls"><button data-src="transitions/noise-static.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame video"><object data="transitions/paint-splash.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">paint-splash</span><div class="controls"><button data-src="transitions/paint-splash.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="text-fx"><h2>Category · <span>Text FX</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame wide"><object data="text-fx/underline-draw.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">underline-draw</span><div class="controls"><button data-src="text-fx/underline-draw.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="text-fx/highlight-marker.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">highlight-marker</span><div class="controls"><button data-src="text-fx/highlight-marker.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="text-fx/circle-around.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">circle-around</span><div class="controls"><button data-src="text-fx/circle-around.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="text-fx/frame-draw.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">frame-draw</span><div class="controls"><button data-src="text-fx/frame-draw.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="text-fx/typewriter.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">typewriter</span><div class="controls"><button data-src="text-fx/typewriter.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="text-fx/letters-cascade.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">letters-cascade</span><div class="controls"><button data-src="text-fx/letters-cascade.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="text-fx/countdown-numbers.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">countdown-numbers</span><div class="controls"><button data-src="text-fx/countdown-numbers.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="weather"><h2>Category · <span>Weather</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="weather/sun-rays.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">sun-rays</span><div class="controls"><button data-src="weather/sun-rays.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="weather/rain.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">rain</span><div class="controls"><button data-src="weather/rain.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame dark"><object data="weather/lightning-strike.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">lightning-strike</span><div class="controls"><button data-src="weather/lightning-strike.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame dark"><object data="weather/snowfall.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">snowfall</span><div class="controls"><button data-src="weather/snowfall.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="time"><h2>Category · <span>Time</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="time/clock-tick.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">clock-tick</span><div class="controls"><button data-src="time/clock-tick.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="time/hourglass.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">hourglass</span><div class="controls"><button data-src="time/hourglass.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="time/countdown-321.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">countdown-321</span><div class="controls"><button data-src="time/countdown-321.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="time/calendar-flip.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">calendar-flip</span><div class="controls"><button data-src="time/calendar-flip.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="devices"><h2>Category · <span>Devices</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="devices/phone-mockup.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">phone-mockup</span><div class="controls"><button data-src="devices/phone-mockup.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="devices/laptop-open.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">laptop-open</span><div class="controls"><button data-src="devices/laptop-open.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="devices/browser-window.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">browser-window</span><div class="controls"><button data-src="devices/browser-window.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="maps"><h2>Category · <span>Maps & location</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="maps/pin-drop.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">pin-drop</span><div class="controls"><button data-src="maps/pin-drop.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="maps/route-draw.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">route-draw</span><div class="controls"><button data-src="maps/route-draw.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="maps/globe-spin.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">globe-spin</span><div class="controls"><button data-src="maps/globe-spin.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="reactions"><h2>Category · <span>Reactions</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="reactions/emoji-100.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">emoji-100</span><div class="controls"><button data-src="reactions/emoji-100.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="reactions/mind-blown.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">mind-blown</span><div class="controls"><button data-src="reactions/mind-blown.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="reactions/flame-emoji.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">flame-emoji</span><div class="controls"><button data-src="reactions/flame-emoji.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="logos"><h2>Category · <span>Logo reveals</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame wide"><object data="logos/logo-build.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">logo-build</span><div class="controls"><button data-src="logos/logo-build.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="logos/logo-shine.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">logo-shine</span><div class="controls"><button data-src="logos/logo-shine.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="logos/logo-stamp.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">logo-stamp</span><div class="controls"><button data-src="logos/logo-stamp.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="ui"><h2>Category · <span>UI gestures</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame wide"><object data="ui/cursor-click.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">cursor-click</span><div class="controls"><button data-src="ui/cursor-click.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="ui/swipe-up.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">swipe-up</span><div class="controls"><button data-src="ui/swipe-up.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="ui/tap-pulse.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">tap-pulse</span><div class="controls"><button data-src="ui/tap-pulse.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="ui/toggle-switch.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">toggle-switch</span><div class="controls"><button data-src="ui/toggle-switch.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="nature"><h2>Category · <span>Nature</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="nature/tree-grow.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">tree-grow</span><div class="controls"><button data-src="nature/tree-grow.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="nature/flower-bloom.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">flower-bloom</span><div class="controls"><button data-src="nature/flower-bloom.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="nature/leaves-fall.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">leaves-fall</span><div class="controls"><button data-src="nature/leaves-fall.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="abstract"><h2>Category · <span>Abstract</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame wide"><object data="abstract/equalizer.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">equalizer</span><div class="controls"><button data-src="abstract/equalizer.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="abstract/shapes-morph.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">shapes-morph</span><div class="controls"><button data-src="abstract/shapes-morph.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="abstract/dna-helix.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">dna-helix</span><div class="controls"><button data-src="abstract/dna-helix.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="abstract/orbit-particles.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">orbit-particles</span><div class="controls"><button data-src="abstract/orbit-particles.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="communication"><h2>Category · <span>Communication</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame wide"><object data="communication/email-send.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">email-send</span><div class="controls"><button data-src="communication/email-send.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="communication/chat-conversation.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">chat-conversation</span><div class="controls"><button data-src="communication/chat-conversation.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="communication/microphone-record.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">microphone-record</span><div class="controls"><button data-src="communication/microphone-record.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="cinematic"><h2>Category · <span>Cinematic showpieces (16:9)</span></h2>
+    <div class="grid cinematic">
+      <div class="card"><div class="frame cinematic"><object data="cinematic/rocket-launch.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">rocket-launch · 5.4s · countdown → liftoff</span><div class="controls"><button data-src="cinematic/rocket-launch.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/city-skyline.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">city-skyline · 6.0s · sunset → night, windows light up</span><div class="controls"><button data-src="cinematic/city-skyline.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/dashboard-reveal.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">dashboard-reveal · 5.6s · full Atlas analytics build-out</span><div class="controls"><button data-src="cinematic/dashboard-reveal.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/quote-callout.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">quote-callout · 4.0s · Gibson quote with gold sparkle</span><div class="controls"><button data-src="cinematic/quote-callout.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/product-launch-grid.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">product-launch-grid · 5.4s · 12-cell modular reveal</span><div class="controls"><button data-src="cinematic/product-launch-grid.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame" style="aspect-ratio: 8 / 3;"><object data="cinematic/storyboard-pipeline.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">storyboard-pipeline · 5.6s · data flows through gears</span><div class="controls"><button data-src="cinematic/storyboard-pipeline.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/achievement-unlock.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">achievement-unlock · 4.6s · medal drop with ribbons</span><div class="controls"><button data-src="cinematic/achievement-unlock.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame" style="aspect-ratio: 2 / 1;"><object data="cinematic/subscribe-bell.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">subscribe-bell · 4.0s · CTA + cursor click + bell</span><div class="controls"><button data-src="cinematic/subscribe-bell.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/map-zoom-pin.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">map-zoom-pin · 5.0s · world zoom → destination card</span><div class="controls"><button data-src="cinematic/map-zoom-pin.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/testimonial-card.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">testimonial-card · 4.6s · quote + stars + author reveal</span><div class="controls"><button data-src="cinematic/testimonial-card.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/before-after-slider.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">before-after-slider · 4.0s · handle wipes between states</span><div class="controls"><button data-src="cinematic/before-after-slider.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/neon-sign.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">neon-sign · 4.0s · OPEN with cyan arrow, flicker</span><div class="controls"><button data-src="cinematic/neon-sign.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame cinematic"><object data="cinematic/countdown-intro.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">countdown-intro · 6.0s · film leader 5→ACTION!</span><div class="controls"><button data-src="cinematic/countdown-intro.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="gaming"><h2>Category · <span>Gaming</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame wide"><object data="gaming/xp-bar-fill.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">xp-bar-fill</span><div class="controls"><button data-src="gaming/xp-bar-fill.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="gaming/health-bar.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">health-bar</span><div class="controls"><button data-src="gaming/health-bar.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="gaming/power-up.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">power-up</span><div class="controls"><button data-src="gaming/power-up.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="ecommerce"><h2>Category · <span>E-commerce</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame wide"><object data="ecommerce/add-to-cart.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">add-to-cart</span><div class="controls"><button data-src="ecommerce/add-to-cart.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="ecommerce/package-delivery.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">package-delivery</span><div class="controls"><button data-src="ecommerce/package-delivery.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide dark"><object data="ecommerce/barcode-scan.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">barcode-scan</span><div class="controls"><button data-src="ecommerce/barcode-scan.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="health"><h2>Category · <span>Health</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame wide dark"><object data="health/heartbeat-ecg.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">heartbeat-ecg</span><div class="controls"><button data-src="health/heartbeat-ecg.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="health/pill-bottle.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">pill-bottle</span><div class="controls"><button data-src="health/pill-bottle.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame wide"><object data="health/dna-test.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">dna-test</span><div class="controls"><button data-src="health/dna-test.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="education"><h2>Category · <span>Education</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="education/book-flip.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">book-flip</span><div class="controls"><button data-src="education/book-flip.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="education/lightbulb-idea.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">lightbulb-idea</span><div class="controls"><button data-src="education/lightbulb-idea.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="education/graduation-cap.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">graduation-cap</span><div class="controls"><button data-src="education/graduation-cap.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="sports"><h2>Category · <span>Sports</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="sports/medal-podium.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">medal-podium</span><div class="controls"><button data-src="sports/medal-podium.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="sports/trophy-raise.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">trophy-raise</span><div class="controls"><button data-src="sports/trophy-raise.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="food"><h2>Category · <span>Food</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="food/pizza-bake.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">pizza-bake</span><div class="controls"><button data-src="food/pizza-bake.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="food/coffee-cup.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">coffee-cup</span><div class="controls"><button data-src="food/coffee-cup.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="travel"><h2>Category · <span>Travel</span></h2>
+    <div class="grid wide">
+      <div class="card"><div class="frame wide"><object data="travel/airplane-route.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">airplane-route</span><div class="controls"><button data-src="travel/airplane-route.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="travel/suitcase-pack.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">suitcase-pack</span><div class="controls"><button data-src="travel/suitcase-pack.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <section id="brand"><h2>Category · <span>Brand · sibling-system (Claim Mate · Consent Mate)</span></h2>
+    <div class="grid">
+      <div class="card"><div class="frame"><object data="brand/claim-mate-paper-tick.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">claim-mate-paper-tick · 4.2s · ACC paper, DECLINED, navy tick overrules</span><div class="controls"><button data-src="brand/claim-mate-paper-tick.svg">Replay</button></div></div></div>
+      <div class="card"><div class="frame"><object data="brand/consent-mate-paper-tick.svg" type="image/svg+xml"></object></div><div class="meta-row"><span class="name">consent-mate-paper-tick · 4.2s · RMA consent form, green tick approves</span><div class="controls"><button data-src="brand/consent-mate-paper-tick.svg">Replay</button></div></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>SVG animation library · drop-in assets for video</span>
+    <button id="replay-all" style="font-family: inherit; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 8px 14px; background: var(--ink); color: var(--card); border: 0; border-radius: 6px; cursor: pointer;">Replay all</button>
+  </footer>
+</div>
+
+<script>
+  // Replay buttons
+  document.body.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-src]');
+    if (!btn) return;
+    const src = btn.dataset.src;
+    const card = btn.closest('.card');
+    const obj = card.querySelector('object');
+    obj.data = '';
+    requestAnimationFrame(() => { obj.data = src + '?t=' + Date.now(); });
+  });
+
+  // Replay all
+  document.getElementById('replay-all').addEventListener('click', () => {
+    document.querySelectorAll('.card object').forEach(obj => {
+      const src = obj.getAttribute('data').split('?')[0];
+      obj.data = '';
+      requestAnimationFrame(() => { obj.data = src + '?t=' + Date.now(); });
+    });
+  });
+</script>
+</body>
+</html>

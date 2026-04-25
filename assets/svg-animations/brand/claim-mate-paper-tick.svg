@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Claim Mate brand animation — paper + tick
+  Total: 4.2s, plays once and holds (fill="freeze")
+  Viewport: 480 × 480 (scales anywhere)
+
+  Story in 4 beats:
+    1. Paper slides up (0.0 – 0.5s)
+    2. ACC letterhead + body lines fade in (0.4 – 1.3s)
+    3. Red DECLINED stamp slams in (1.3 – 1.8s)
+    4. Navy tick draws over the decline, overruling it (2.2 – 2.9s)
+    5. claim/mate wordmark fades in (2.9 – 3.4s)
+
+  Colours follow the site tokens exactly:
+    paper #eef1f5  ·  ink #0d1826  ·  accent #1f3a68  ·  warn #9a3a3a
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 480" width="480" height="480">
+
+  <defs>
+    <!-- Subtle grid pattern for the background -->
+    <pattern id="grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#c8d0da" stroke-width="0.5" opacity="0.6"/>
+    </pattern>
+  </defs>
+
+  <!-- Canvas wash -->
+  <rect width="480" height="480" fill="#eef1f5"/>
+  <rect width="480" height="480" fill="url(#grid)"/>
+
+  <!-- Paper — slides up from below, rests at final position -->
+  <g transform="translate(0 480)">
+    <animateTransform attributeName="transform" type="translate"
+      from="0 480" to="0 0" begin="0s" dur="0.55s" fill="freeze"
+      calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+
+    <!-- Paper body -->
+    <rect x="70" y="60" width="340" height="340" fill="#ffffff" stroke="#0d1826" stroke-width="1.4"/>
+
+    <!-- Corner crop ticks — signature cadastral detail -->
+    <g stroke="#0d1826" stroke-width="1.5" fill="none">
+      <!-- Top-left -->
+      <path d="M 70 75 L 70 60 L 85 60"/>
+      <!-- Top-right -->
+      <path d="M 395 60 L 410 60 L 410 75"/>
+      <!-- Bottom-left -->
+      <path d="M 70 385 L 70 400 L 85 400"/>
+      <!-- Bottom-right -->
+      <path d="M 395 400 L 410 400 L 410 385"/>
+    </g>
+
+    <!-- ACC letterhead — fades in -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.45s" dur="0.35s" fill="freeze"/>
+      <text x="90" y="100" font-family="Consolas, 'JetBrains Mono', monospace"
+            font-size="13" font-weight="700" fill="#0d1826" letter-spacing="1.5">
+        ACCIDENT COMPENSATION
+      </text>
+      <text x="90" y="118" font-family="Consolas, 'JetBrains Mono', monospace"
+            font-size="13" font-weight="700" fill="#0d1826" letter-spacing="1.5">
+        CORPORATION
+      </text>
+      <line x1="90" y1="130" x2="390" y2="130" stroke="#0d1826" stroke-width="1"/>
+      <text x="90" y="150" font-family="Consolas, 'JetBrains Mono', monospace"
+            font-size="10" fill="#4b5a6d" letter-spacing="1">
+        REF: 4387291 · 18 MARCH 2026
+      </text>
+    </g>
+
+    <!-- Mock body text lines — stagger fade in -->
+    <g stroke="#0d1826" stroke-width="1.4" opacity="0.18">
+      <line x1="90" y1="180" x2="390" y2="180" opacity="0">
+        <animate attributeName="opacity" from="0" to="0.18" begin="0.85s" dur="0.18s" fill="freeze"/>
+      </line>
+      <line x1="90" y1="198" x2="390" y2="198" opacity="0">
+        <animate attributeName="opacity" from="0" to="0.18" begin="0.95s" dur="0.18s" fill="freeze"/>
+      </line>
+      <line x1="90" y1="216" x2="330" y2="216" opacity="0">
+        <animate attributeName="opacity" from="0" to="0.18" begin="1.05s" dur="0.18s" fill="freeze"/>
+      </line>
+      <line x1="90" y1="234" x2="390" y2="234" opacity="0">
+        <animate attributeName="opacity" from="0" to="0.18" begin="1.15s" dur="0.18s" fill="freeze"/>
+      </line>
+      <line x1="90" y1="252" x2="280" y2="252" opacity="0">
+        <animate attributeName="opacity" from="0" to="0.18" begin="1.25s" dur="0.18s" fill="freeze"/>
+      </line>
+    </g>
+
+    <!-- DECLINED stamp — angled, warn-red, slams in -->
+    <g transform="translate(240 320) rotate(-8)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.35s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale"
+        additive="sum" from="2.2 2.2" to="1 1" begin="1.35s" dur="0.28s" fill="freeze"
+        calcMode="spline" keySplines="0.3 0 0.2 1"/>
+      <rect x="-95" y="-28" width="190" height="56" fill="#ffffff" fill-opacity="0.85"
+            stroke="#9a3a3a" stroke-width="4"/>
+      <text x="0" y="12" font-family="Consolas, 'JetBrains Mono', monospace"
+            font-size="34" font-weight="700" fill="#9a3a3a" letter-spacing="3"
+            text-anchor="middle">DECLINED</text>
+    </g>
+
+    <!-- Navy tick — draws in over the decline, "overrules" it -->
+    <!-- Path length ~270 units, so dasharray=270 hides it initially -->
+    <path d="M 150 310 Q 185 350 215 380 Q 280 280 340 240"
+          fill="none" stroke="#1f3a68" stroke-width="10"
+          stroke-linecap="round" stroke-linejoin="round"
+          stroke-dasharray="500" stroke-dashoffset="500">
+      <animate attributeName="stroke-dashoffset" from="500" to="0"
+               begin="2.2s" dur="0.7s" fill="freeze"
+               calcMode="spline" keySplines="0.4 0.1 0.3 1"/>
+    </path>
+
+    <!-- Small navy reinforcement arrow at the tick's peak -->
+    <g opacity="0" transform="translate(340 240)">
+      <animate attributeName="opacity" from="0" to="1" begin="2.85s" dur="0.2s" fill="freeze"/>
+      <circle cx="0" cy="0" r="14" fill="#1f3a68"/>
+      <path d="M -5 2 L -1 6 L 6 -3" fill="none" stroke="#ffffff"
+            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <!-- DECLINED stamp fades slightly as the tick lands — muted by the overrule -->
+    <g transform="translate(240 320) rotate(-8)">
+      <rect x="-95" y="-28" width="190" height="56" fill="#eef1f5" fill-opacity="0">
+        <animate attributeName="fill-opacity" from="0" to="0.5" begin="2.4s" dur="0.4s" fill="freeze"/>
+      </rect>
+    </g>
+  </g>
+
+  <!-- Wordmark — sits below the paper, fades + slides in last -->
+  <g transform="translate(240 440)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.95s" dur="0.35s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="translate"
+      from="240 455" to="240 440" begin="2.95s" dur="0.35s" fill="freeze"
+      calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    <text x="0" y="0" font-family="Consolas, 'JetBrains Mono', monospace"
+          font-size="18" font-weight="700" fill="#0d1826" letter-spacing="-0.3"
+          text-anchor="middle">
+      CLAIM<tspan fill="#1f3a68">/</tspan>MATE
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Countdown numbers — large numerals slot down from top, settle, then update.
+  "DAYS · HOURS · MINUTES · SECONDS" labels below.
+  Total: ~loops on seconds counter.
+  Viewport: 720 × 280.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 280" width="720" height="280">
+  <defs>
+    <linearGradient id="num-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e293b"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <g font-family="Inter, system-ui, sans-serif" font-variant-numeric="tabular-nums">
+    <!-- DAYS -->
+    <g transform="translate(60 30)">
+      <rect width="120" height="160" rx="14" fill="url(#num-bg)"/>
+      <text x="60" y="115" font-size="80" font-weight="900" fill="#ffffff" text-anchor="middle">12</text>
+      <text x="60" y="200" font-size="13" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="3">DAYS</text>
+    </g>
+    <text x="200" y="130" font-size="50" font-weight="700" fill="#cbd5e1" text-anchor="middle">:</text>
+    <!-- HOURS -->
+    <g transform="translate(220 30)">
+      <rect width="120" height="160" rx="14" fill="url(#num-bg)"/>
+      <text x="60" y="115" font-size="80" font-weight="900" fill="#ffffff" text-anchor="middle">04</text>
+      <text x="60" y="200" font-size="13" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="3">HOURS</text>
+    </g>
+    <text x="360" y="130" font-size="50" font-weight="700" fill="#cbd5e1" text-anchor="middle">:</text>
+    <!-- MINUTES -->
+    <g transform="translate(380 30)">
+      <rect width="120" height="160" rx="14" fill="url(#num-bg)"/>
+      <text x="60" y="115" font-size="80" font-weight="900" fill="#ffffff" text-anchor="middle">37</text>
+      <text x="60" y="200" font-size="13" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="3">MINUTES</text>
+    </g>
+    <text x="520" y="130" font-size="50" font-weight="700" fill="#cbd5e1" text-anchor="middle">:</text>
+    <!-- SECONDS (animated) -->
+    <g transform="translate(540 30)">
+      <rect width="120" height="160" rx="14" fill="url(#num-bg)"/>
+      <text x="60" y="115" font-size="80" font-weight="900" fill="#fbbf24" text-anchor="middle">
+        <animate attributeName="textContent"
+                 values="59;58;57;56;55;54;53;52;51;50"
+                 dur="10s" repeatCount="indefinite"/>
+        59
+      </text>
+      <text x="60" y="200" font-size="13" font-weight="700" fill="#94a3b8" text-anchor="middle" letter-spacing="3">SECONDS</text>
+    </g>
+  </g>
+</svg>

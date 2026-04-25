@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Phone mockup — phone tilts in, screen content reveals (header, cards, button),
+  then a small notification slides over the top.
+  Total: 3.6s. Holds.
+  Viewport: 360 × 640.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 640" width="360" height="640">
+  <g transform="translate(180 320)">
+    <animateTransform attributeName="transform" type="rotate"
+      from="-15" to="0" begin="0s" dur="0.7s" fill="freeze"
+      calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0s" dur="0.4s" fill="freeze"/>
+
+      <!-- Phone body -->
+      <rect x="-130" y="-280" width="260" height="560" rx="36"
+            fill="#0f172a" stroke="#000" stroke-width="2"/>
+      <rect x="-118" y="-264" width="236" height="528" rx="24" fill="#ffffff"/>
+
+      <!-- Notch -->
+      <rect x="-30" y="-264" width="60" height="14" rx="7" fill="#0f172a"/>
+
+      <!-- Screen content (animated reveal) -->
+      <g transform="translate(0 -180)">
+        <!-- Header -->
+        <text font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="800"
+              fill="#0f172a" text-anchor="middle" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="0.8s" dur="0.3s" fill="freeze"/>
+          Welcome back
+        </text>
+        <text y="22" font-family="Inter, system-ui, sans-serif" font-size="11"
+              fill="#64748b" text-anchor="middle" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="1.0s" dur="0.3s" fill="freeze"/>
+          Saturday · 8:42
+        </text>
+      </g>
+
+      <!-- Card 1 -->
+      <g transform="translate(-100 -130)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.2s" dur="0.3s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="translate"
+          from="-100 -110" to="-100 -130" begin="1.2s" dur="0.4s" fill="freeze"/>
+        <rect width="200" height="80" rx="10" fill="#eef2ff"/>
+        <rect x="14" y="16" width="40" height="40" rx="8" fill="#4f46e5"/>
+        <rect x="64" y="22" width="120" height="10" rx="5" fill="#cbd5e1"/>
+        <rect x="64" y="40" width="80"  height="8"  rx="4" fill="#cbd5e1"/>
+      </g>
+
+      <!-- Card 2 -->
+      <g transform="translate(-100 -40)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.45s" dur="0.3s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="translate"
+          from="-100 -20" to="-100 -40" begin="1.45s" dur="0.4s" fill="freeze"/>
+        <rect width="200" height="80" rx="10" fill="#ecfeff"/>
+        <rect x="14" y="16" width="40" height="40" rx="8" fill="#06b6d4"/>
+        <rect x="64" y="22" width="100" height="10" rx="5" fill="#cbd5e1"/>
+        <rect x="64" y="40" width="60"  height="8"  rx="4" fill="#cbd5e1"/>
+      </g>
+
+      <!-- CTA button -->
+      <g transform="translate(-90 60)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.7s" dur="0.3s" fill="freeze"/>
+        <rect width="180" height="44" rx="22" fill="#10b981"/>
+        <text x="90" y="29" font-family="Inter, system-ui, sans-serif"
+              font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">CONTINUE</text>
+      </g>
+
+      <!-- Notification overlay -->
+      <g transform="translate(0 -300)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="2.4s" dur="0.3s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="translate"
+          from="0 -300" to="0 -240" begin="2.4s" dur="0.5s" fill="freeze"
+          calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+        <rect x="-114" y="-22" width="228" height="44" rx="14" fill="#0f172a"/>
+        <circle cx="-94" cy="0" r="10" fill="#ec4899"/>
+        <text x="-78" y="-3" font-family="Inter, system-ui, sans-serif"
+              font-size="11" font-weight="700" fill="#ffffff">New message</text>
+        <text x="-78" y="11" font-family="Inter, system-ui, sans-serif"
+              font-size="10" fill="#94a3b8">Hey, are you free tonight?</text>
+      </g>
+    </g>
+  </g>
+</svg>

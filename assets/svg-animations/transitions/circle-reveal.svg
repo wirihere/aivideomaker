@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Circle reveal — a solid circle grows from top-left corner to fill the screen,
+  revealing content behind it as a colored overlay. Use for scene changes.
+  Total: 1.0s. Holds at full coverage.
+  Viewport: 1920 × 1080.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <circle cx="150" cy="150" r="0" fill="#4f46e5">
+    <animate attributeName="r" from="0" to="2400" begin="0s" dur="1.0s" fill="freeze"
+             calcMode="spline" keySplines="0.6 0 0.2 1"/>
+  </circle>
+</svg>

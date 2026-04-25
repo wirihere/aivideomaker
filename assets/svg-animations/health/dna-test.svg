@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DNA test report — DNA helix scans vertically with a laser bar, result card flips in.
+  Total: 4.0s. Holds.
+  Viewport: 720 × 480.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" width="720" height="480">
+  <defs>
+    <linearGradient id="strand-a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#06b6d4"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="strand-b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ec4899"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+
+  <!-- DNA helix on left -->
+  <g transform="translate(200 40)">
+    <path d="M 0 0 Q 60 50 0 100 Q -60 150 0 200 Q 60 250 0 300 Q -60 350 0 400"
+          fill="none" stroke="url(#strand-a)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 0 0 Q -60 50 0 100 Q 60 150 0 200 Q -60 250 0 300 Q 60 350 0 400"
+          fill="none" stroke="url(#strand-b)" stroke-width="5" stroke-linecap="round"/>
+
+    <g stroke="#94a3b8" stroke-width="2" stroke-linecap="round">
+      <line x1="-40" y1="25"  x2="40" y2="25"/>
+      <line x1="-55" y1="50"  x2="55" y2="50"/>
+      <line x1="-40" y1="75"  x2="40" y2="75"/>
+      <line x1="-40" y1="125" x2="40" y2="125"/>
+      <line x1="-55" y1="150" x2="55" y2="150"/>
+      <line x1="-40" y1="175" x2="40" y2="175"/>
+      <line x1="-40" y1="225" x2="40" y2="225"/>
+      <line x1="-55" y1="250" x2="55" y2="250"/>
+      <line x1="-40" y1="275" x2="40" y2="275"/>
+      <line x1="-40" y1="325" x2="40" y2="325"/>
+      <line x1="-55" y1="350" x2="55" y2="350"/>
+      <line x1="-40" y1="375" x2="40" y2="375"/>
+    </g>
+
+    <!-- Laser scan bar -->
+    <g>
+      <rect x="-70" y="0" width="140" height="3" fill="#22c55e">
+        <animate attributeName="y" values="0;400;0" dur="2.4s" begin="0s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="-70" y="-12" width="140" height="24" fill="#22c55e" opacity="0.2">
+        <animate attributeName="y" values="-12;388;-12" dur="2.4s" begin="0s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+  </g>
+
+  <!-- Report card (slides in from right, flips) -->
+  <g transform="translate(520 240)">
+    <animateTransform attributeName="transform" type="translate"
+      from="520 240" to="520 240" begin="0s" dur="1s" fill="freeze"/>
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="2.6s" dur="0.4s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="80 0" to="0 0" begin="2.6s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+
+      <rect x="-140" y="-160" width="280" height="320" rx="12" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+
+      <!-- Header -->
+      <rect x="-140" y="-160" width="280" height="44" fill="#0f172a"/>
+      <text x="0" y="-132" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="800"
+            fill="#fbbf24" text-anchor="middle" letter-spacing="3">DNA REPORT</text>
+
+      <!-- Subject -->
+      <text x="-120" y="-94" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700"
+            fill="#64748b" letter-spacing="2">SUBJECT</text>
+      <text x="-120" y="-72" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="800"
+            fill="#0f172a">SAMPLE · 4821</text>
+
+      <!-- Progress -->
+      <rect x="-120" y="-52" width="240" height="8" rx="4" fill="#e2e8f0"/>
+      <rect x="-120" y="-52" width="0" height="8" rx="4" fill="#22c55e">
+        <animate attributeName="width" from="0" to="240" begin="2.8s" dur="0.8s" fill="freeze"/>
+      </rect>
+
+      <!-- Markers list -->
+      <g font-family="Inter, system-ui, sans-serif" font-size="13" fill="#0f172a">
+        <g transform="translate(-120 -12)" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="3.0s" dur="0.2s" fill="freeze"/>
+          <text font-weight="700">BRCA1</text>
+          <text x="240" text-anchor="end" fill="#22c55e" font-weight="800">NEGATIVE</text>
+        </g>
+        <g transform="translate(-120 18)" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="3.15s" dur="0.2s" fill="freeze"/>
+          <text font-weight="700">APOE</text>
+          <text x="240" text-anchor="end" fill="#f59e0b" font-weight="800">CARRIER</text>
+        </g>
+        <g transform="translate(-120 48)" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="3.3s" dur="0.2s" fill="freeze"/>
+          <text font-weight="700">MTHFR</text>
+          <text x="240" text-anchor="end" fill="#22c55e" font-weight="800">NORMAL</text>
+        </g>
+        <g transform="translate(-120 78)" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="3.45s" dur="0.2s" fill="freeze"/>
+          <text font-weight="700">CYP2C19</text>
+          <text x="240" text-anchor="end" fill="#0891b2" font-weight="800">*1/*2</text>
+        </g>
+      </g>
+
+      <!-- Status chip -->
+      <g transform="translate(0 128)" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="3.7s" dur="0.3s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="scale" additive="sum"
+          from="0.5" to="1" begin="3.7s" dur="0.4s" fill="freeze"
+          calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+        <rect x="-100" y="-16" width="200" height="32" rx="16" fill="#22c55e"/>
+        <text font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="800"
+              fill="#ffffff" text-anchor="middle" dy="4" letter-spacing="2">ANALYSIS COMPLETE</text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Coffee cup — cup appears, fills with coffee, steam rises continuously.
+  Total: 2.4s. Holds with looping steam.
+  Viewport: 320 × 400.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 400" width="320" height="400">
+  <defs>
+    <clipPath id="cup-inside">
+      <path d="M 100 180 L 220 180 L 210 320 Q 200 350 160 350 Q 120 350 110 320 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Steam (rises continuously) -->
+  <g fill="none" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round">
+    <path d="M 130 150 Q 140 130 130 110 Q 120 90 130 70" opacity="0">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="1.5s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -30" dur="2.5s" begin="1.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 160 150 Q 170 130 160 110 Q 150 90 160 70" opacity="0">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="1.8s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -30" dur="2.5s" begin="1.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 190 150 Q 200 130 190 110 Q 180 90 190 70" opacity="0">
+      <animate attributeName="opacity" values="0;0.9;0" dur="2.5s" begin="2.1s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="translate"
+        values="0 0;0 -30" dur="2.5s" begin="2.1s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Cup -->
+  <g opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="0s" dur="0.4s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="translate"
+      from="0 30" to="0 0" begin="0s" dur="0.5s" fill="freeze"
+      calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+
+    <!-- Coffee inside (rises) -->
+    <g clip-path="url(#cup-inside)">
+      <rect x="80" y="350" width="160" height="0" fill="#7c2d12">
+        <animate attributeName="y"      from="350" to="200" begin="0.7s" dur="1.0s" fill="freeze"/>
+        <animate attributeName="height" from="0"   to="150" begin="0.7s" dur="1.0s" fill="freeze"/>
+      </rect>
+      <!-- Crema -->
+      <rect x="80" y="195" width="160" height="0" fill="#a16207" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="1.5s" dur="0.3s" fill="freeze"/>
+        <animate attributeName="height" from="0" to="10" begin="1.5s" dur="0.3s" fill="freeze"/>
+      </rect>
+    </g>
+
+    <!-- Cup outline -->
+    <path d="M 100 180 L 220 180 L 210 320 Q 200 350 160 350 Q 120 350 110 320 Z"
+          fill="none" stroke="#0f172a" stroke-width="5" stroke-linejoin="round"/>
+    <ellipse cx="160" cy="180" rx="60" ry="10" fill="none" stroke="#0f172a" stroke-width="5"/>
+
+    <!-- Handle -->
+    <path d="M 220 220 Q 270 220 270 260 Q 270 290 230 290"
+          fill="none" stroke="#0f172a" stroke-width="5" stroke-linecap="round"/>
+
+    <!-- Saucer -->
+    <ellipse cx="160" cy="368" rx="100" ry="14" fill="#cbd5e1" stroke="#0f172a" stroke-width="3"/>
+  </g>
+</svg>

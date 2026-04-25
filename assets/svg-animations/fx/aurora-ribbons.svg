@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Aurora ribbons — layered sine-curve ribbons shift hue/position gently. Loops.
+  Viewport: 1280 × 480.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 480" width="1280" height="480">
+  <defs>
+    <linearGradient id="aurora-a" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"   stop-color="#22c55e" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#22c55e" stop-opacity="0.7"/>
+      <stop offset="1"   stop-color="#22c55e" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="aurora-b" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"   stop-color="#a855f7" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#a855f7" stop-opacity="0.6"/>
+      <stop offset="1"   stop-color="#a855f7" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="aurora-c" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0"   stop-color="#06b6d4" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#06b6d4" stop-opacity="0.5"/>
+      <stop offset="1"   stop-color="#06b6d4" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="480" fill="#020617"/>
+
+  <!-- Stars -->
+  <g fill="#ffffff">
+    <circle cx="100" cy="60"  r="1"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="340" cy="30"  r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="3.0s" repeatCount="indefinite"/></circle>
+    <circle cx="580" cy="70"  r="1"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.6s" repeatCount="indefinite"/></circle>
+    <circle cx="820" cy="50"  r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="3.4s" repeatCount="indefinite"/></circle>
+    <circle cx="1060" cy="80" r="1"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="1200" cy="40" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.8s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- Aurora ribbon 1 (green) -->
+  <path fill="url(#aurora-a)">
+    <animate attributeName="d" dur="6s" repeatCount="indefinite"
+      values="M -100 280 Q 200 150 500 250 T 1100 260 T 1400 200 L 1400 480 L -100 480 Z;
+              M -100 240 Q 200 200 500 180 T 1100 230 T 1400 280 L 1400 480 L -100 480 Z;
+              M -100 280 Q 200 150 500 250 T 1100 260 T 1400 200 L 1400 480 L -100 480 Z"/>
+  </path>
+
+  <!-- Aurora ribbon 2 (purple) -->
+  <path fill="url(#aurora-b)">
+    <animate attributeName="d" dur="8s" repeatCount="indefinite"
+      values="M -100 320 Q 300 220 600 300 T 1200 320 T 1400 280 L 1400 480 L -100 480 Z;
+              M -100 300 Q 300 260 600 240 T 1200 300 T 1400 340 L 1400 480 L -100 480 Z;
+              M -100 320 Q 300 220 600 300 T 1200 320 T 1400 280 L 1400 480 L -100 480 Z"/>
+  </path>
+
+  <!-- Aurora ribbon 3 (cyan) -->
+  <path fill="url(#aurora-c)">
+    <animate attributeName="d" dur="7s" repeatCount="indefinite"
+      values="M -100 360 Q 250 280 520 360 T 1100 370 T 1400 340 L 1400 480 L -100 480 Z;
+              M -100 340 Q 250 320 520 310 T 1100 350 T 1400 380 L 1400 480 L -100 480 Z;
+              M -100 360 Q 250 280 520 360 T 1100 370 T 1400 340 L 1400 480 L -100 480 Z"/>
+  </path>
+</svg>

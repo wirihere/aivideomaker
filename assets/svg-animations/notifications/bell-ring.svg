@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Bell — appears, then rings (pendulum tilt) twice. Red badge pops in.
+  Total: 2.4s. Holds.
+  Viewport: 200 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <g transform="translate(100 100)">
+
+    <!-- Bell body (pivot at top center for the swing) -->
+    <g transform-origin="0 -50">
+      <g opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="0s" dur="0.3s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="scale"
+          from="0.5" to="1" begin="0s" dur="0.45s" fill="freeze"
+          calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+
+        <path d="M -42 30 Q -42 -30 0 -45 Q 42 -30 42 30 L 50 42 L -50 42 Z"
+              fill="#f59e0b" stroke="#0f172a" stroke-width="5" stroke-linejoin="round"/>
+        <circle cx="0" cy="-50" r="6" fill="#0f172a"/>
+        <ellipse cx="0" cy="50" rx="12" ry="6" fill="#0f172a"/>
+      </g>
+
+      <!-- Ring swing -->
+      <animateTransform attributeName="transform" type="rotate"
+        values="0;-15;15;-10;10;-5;5;0"
+        keyTimes="0;0.14;0.29;0.43;0.57;0.71;0.86;1"
+        begin="0.55s" dur="1.2s" fill="freeze"/>
+    </g>
+
+    <!-- Red badge -->
+    <g transform="translate(34 -40)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.85s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        from="0" to="1" begin="1.85s" dur="0.4s" fill="freeze"
+        calcMode="spline" keySplines="0.34 1.78 0.64 1"/>
+      <circle r="14" fill="#ef4444" stroke="#ffffff" stroke-width="3"/>
+      <text y="5" font-family="Inter, system-ui, sans-serif" font-size="16"
+            font-weight="800" fill="#ffffff" text-anchor="middle">3</text>
+    </g>
+  </g>
+</svg>

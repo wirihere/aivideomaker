@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Warning — amber triangle pops in, exclamation draws, then a single attention shake.
+  Total: 1.6s. Plays once and holds.
+  Viewport: 200 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <g transform="translate(100 110)">
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0s" dur="0.25s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale"
+        from="0.4" to="1" begin="0s" dur="0.45s" fill="freeze"
+        calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+
+      <path d="M 0 -75 L 75 60 L -75 60 Z"
+            fill="#f59e0b" stroke="#0f172a" stroke-width="6"
+            stroke-linejoin="round"/>
+      <rect x="-7" y="-30" width="14" height="55" rx="6" fill="#0f172a" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="0.55s" dur="0.2s" fill="freeze"/>
+      </rect>
+      <circle cx="0" cy="42" r="8" fill="#0f172a" opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="0.75s" dur="0.2s" fill="freeze"/>
+      </circle>
+    </g>
+
+    <!-- Single attention shake -->
+    <animateTransform attributeName="transform" type="rotate" additive="sum"
+      values="0;-6;6;-4;4;0" keyTimes="0;0.2;0.4;0.6;0.8;1"
+      begin="1.0s" dur="0.5s" fill="freeze"/>
+  </g>
+</svg>

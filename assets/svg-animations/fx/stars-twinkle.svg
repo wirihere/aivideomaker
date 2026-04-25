@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Star field — 30 twinkling stars on a deep night background. Loops.
+  Viewport: 600 × 400.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <radialGradient id="space-grad" cx="0.5" cy="0.5" r="0.7">
+      <stop offset="0" stop-color="#1e1b4b"/>
+      <stop offset="1" stop-color="#020617"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#space-grad)"/>
+
+  <g fill="#ffffff">
+    <circle cx="40"  cy="30"  r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="120" cy="60"  r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="3.2s" repeatCount="indefinite"/></circle>
+    <circle cx="200" cy="20"  r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.0s" repeatCount="indefinite"/></circle>
+    <circle cx="280" cy="80"  r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="380" cy="40"  r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="3.6s" repeatCount="indefinite"/></circle>
+    <circle cx="450" cy="100" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="520" cy="60"  r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="3.0s" repeatCount="indefinite"/></circle>
+    <circle cx="80"  cy="120" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="160" cy="160" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="240" cy="140" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="3.4s" repeatCount="indefinite"/></circle>
+    <circle cx="320" cy="180" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.0s" repeatCount="indefinite"/></circle>
+    <circle cx="400" cy="160" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.6s" repeatCount="indefinite"/></circle>
+    <circle cx="480" cy="200" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="3.2s" repeatCount="indefinite"/></circle>
+    <circle cx="560" cy="160" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="60"  cy="220" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="140" cy="260" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="3.6s" repeatCount="indefinite"/></circle>
+    <circle cx="220" cy="240" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.0s" repeatCount="indefinite"/></circle>
+    <circle cx="300" cy="280" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="380" cy="260" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="3.0s" repeatCount="indefinite"/></circle>
+    <circle cx="460" cy="300" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="540" cy="280" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.2s" repeatCount="indefinite"/></circle>
+    <circle cx="40"  cy="320" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="3.4s" repeatCount="indefinite"/></circle>
+    <circle cx="180" cy="360" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.6s" repeatCount="indefinite"/></circle>
+    <circle cx="260" cy="340" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="3.0s" repeatCount="indefinite"/></circle>
+    <circle cx="340" cy="380" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="420" cy="360" r="1"  ><animate attributeName="opacity" values="0.3;1;0.3" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="500" cy="340" r="1.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.0s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- Shooting star -->
+  <g stroke="#fef3c7" stroke-width="2" stroke-linecap="round" fill="none" opacity="0">
+    <animate attributeName="opacity" values="0;1;0" dur="1s" begin="2s;5s;8s"/>
+    <line x1="-50" y1="-20" x2="0" y2="0">
+      <animateTransform attributeName="transform" type="translate"
+        from="0 0" to="600 200" dur="1s" begin="2s;5s;8s"/>
+    </line>
+  </g>
+</svg>

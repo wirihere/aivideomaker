@@ -1,0 +1,21 @@
+{
+  "photos": [
+    { "query": "worn paper letter on dark table", "name": "denied-letter.jpg", "orientation": "vertical" },
+    { "query": "quiet home workspace coffee laptop morning light", "name": "workspace.jpg", "orientation": "vertical" },
+    { "query": "hand holding phone photographing document", "name": "phone-doc.jpg", "orientation": "vertical", "index": 1 }
+  ],
+  "videos": [
+    { "query": "person typing at laptop close up", "name": "working.mp4", "index": 0 }
+  ],
+  "music": [
+    { "query": "gentle piano documentary cinematic", "name": "bed.mp3" }
+  ],
+  "tts_files": [
+    {
+      "file": "plans/<slug>/narration.txt",
+      "name": "<slug>.mp3",
+      "voice": "en-NZ-MollyNeural",
+      "rate": "-10%"
+    }
+  ]
+}

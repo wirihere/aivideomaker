@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Swipe up — finger gesture rises with trailing motion arc; loops.
+  Viewport: 240 × 360.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 360" width="240" height="360">
+  <!-- Trail arc -->
+  <path d="M 120 280 L 120 100" fill="none" stroke="#4f46e5"
+        stroke-width="4" stroke-linecap="round" stroke-dasharray="6 8" opacity="0">
+    <animate attributeName="opacity" values="0;1;0" dur="1.6s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Hand silhouette (palm + index up) -->
+  <g transform="translate(120 280)">
+    <animateTransform attributeName="transform" type="translate"
+      values="120 280;120 100;120 280"
+      keyTimes="0;0.6;1"
+      dur="1.6s" repeatCount="indefinite"
+      calcMode="spline"
+      keySplines="0.4 0 0.2 1; 0.4 0 0.6 1"/>
+    <!-- Palm -->
+    <path d="M -28 60
+             L -28 0
+             L -10 -10
+             L -10 -60
+             L 6 -60
+             L 6 -10
+             Q 22 -10 28 0
+             Q 28 60 0 80
+             Q -28 80 -28 60 Z"
+          fill="#fbbf24" stroke="#0f172a" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Up label -->
+  <text x="120" y="340" font-family="Inter, system-ui, sans-serif"
+        font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle"
+        letter-spacing="3">SWIPE UP</text>
+</svg>

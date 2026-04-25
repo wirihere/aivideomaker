@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Product launch grid — large feature panels assemble in a 12-cell modular grid,
+  with eyebrow → headline → tagline → CTA → date stamp choreography.
+  Total: 5.4s. Holds.
+  Viewport: 1280 × 720.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="accent-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="#0b1020"/>
+
+  <!-- Module grid (12 cells, with stagger reveal via clipped rects) -->
+  <g>
+    <!-- Hero cell (large, top-left, 6x4) -->
+    <g>
+      <rect x="60" y="60" width="0" height="320" fill="url(#hero-grad)" rx="14">
+        <animate attributeName="width" from="0" to="600" begin="0.0s" dur="0.7s" fill="freeze"
+                 calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      </rect>
+      <!-- Geometric accent -->
+      <g opacity="0">
+        <animate attributeName="opacity" from="0" to="1" begin="0.6s" dur="0.4s" fill="freeze"/>
+        <circle cx="600" cy="60"  r="80" fill="#fbbf24" opacity="0.25"/>
+        <circle cx="600" cy="380" r="60" fill="#06b6d4" opacity="0.3"/>
+      </g>
+    </g>
+
+    <!-- Cell 2 (top-right, 6x2) -->
+    <rect x="680" y="60" width="0" height="150" fill="#0b1f3a" stroke="#1e293b" stroke-width="1" rx="14">
+      <animate attributeName="width" from="0" to="540" begin="0.4s" dur="0.6s" fill="freeze"
+               calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    </rect>
+    <!-- Cell 3 (mid-right) -->
+    <rect x="680" y="230" width="0" height="150" fill="#0b1f3a" stroke="#1e293b" stroke-width="1" rx="14">
+      <animate attributeName="width" from="0" to="262" begin="0.55s" dur="0.6s" fill="freeze"
+               calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    </rect>
+    <!-- Cell 4 (mid-right b) -->
+    <rect x="958" y="230" width="0" height="150" fill="#0b1f3a" stroke="#1e293b" stroke-width="1" rx="14">
+      <animate attributeName="width" from="0" to="262" begin="0.7s" dur="0.6s" fill="freeze"
+               calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    </rect>
+
+    <!-- Bottom row -->
+    <rect x="60"  y="400" width="0" height="260" fill="#0b1f3a" stroke="#1e293b" stroke-width="1" rx="14">
+      <animate attributeName="width" from="0" to="380" begin="0.85s" dur="0.6s" fill="freeze"
+               calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    </rect>
+    <rect x="460" y="400" width="0" height="260" fill="#0b1f3a" stroke="#1e293b" stroke-width="1" rx="14">
+      <animate attributeName="width" from="0" to="380" begin="1.0s" dur="0.6s" fill="freeze"
+               calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    </rect>
+    <rect x="860" y="400" width="0" height="260" fill="url(#accent-grad)" rx="14">
+      <animate attributeName="width" from="0" to="360" begin="1.15s" dur="0.6s" fill="freeze"
+               calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+    </rect>
+  </g>
+
+  <!-- Hero text -->
+  <g transform="translate(96 110)">
+    <!-- Eyebrow -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.4s" dur="0.4s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="0 12" to="0 0" begin="1.4s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      <rect width="14" height="14" rx="3" fill="#fbbf24"/>
+      <text x="24" y="13" font-family="Inter, system-ui, sans-serif" font-size="13"
+            font-weight="800" fill="#fbbf24" letter-spacing="3">SPRING · 2026</text>
+    </g>
+
+    <!-- Headline -->
+    <g transform="translate(0 60)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.7s" dur="0.5s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="0 80" to="0 60" begin="1.7s" dur="0.6s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      <text font-family="Inter, system-ui, sans-serif" font-size="80" font-weight="900"
+            fill="#ffffff" letter-spacing="-2">META · 4</text>
+    </g>
+
+    <!-- Sub headline -->
+    <g transform="translate(0 180)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="2.0s" dur="0.4s" fill="freeze"/>
+      <text font-family="Inter, system-ui, sans-serif" font-size="22" font-weight="500"
+            fill="#cbd5e1">A new shape for getting things done.</text>
+    </g>
+
+    <!-- CTA -->
+    <g transform="translate(0 220)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="2.4s" dur="0.4s" fill="freeze"/>
+      <rect width="200" height="48" rx="24" fill="#ffffff"/>
+      <text x="100" y="32" font-family="Inter, system-ui, sans-serif" font-size="14"
+            font-weight="800" fill="#0f172a" text-anchor="middle" letter-spacing="2">PRE-ORDER NOW</text>
+      <!-- Arrow circle -->
+      <circle cx="180" cy="24" r="10" fill="#fbbf24"/>
+      <path d="M 175 19 L 184 24 L 175 29 Z" fill="#0f172a"/>
+    </g>
+  </g>
+
+  <!-- Right column small content -->
+  <g transform="translate(708 88)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="1.8s" dur="0.4s" fill="freeze"/>
+    <text font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700"
+          fill="#94a3b8" letter-spacing="2">SPECS</text>
+    <text x="0" y="32" font-family="Inter, system-ui, sans-serif" font-size="32" font-weight="800"
+          fill="#ffffff" letter-spacing="-1">120Hz · OLED</text>
+    <text x="0" y="62" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#94a3b8">
+      Adaptive sync. True black HDR.
+    </text>
+    <line x1="0" y1="110" x2="500" y2="110" stroke="#1e293b"/>
+  </g>
+
+  <!-- Two small stats -->
+  <g transform="translate(708 252)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.0s" dur="0.4s" fill="freeze"/>
+    <text font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="900" fill="#06b6d4">22h</text>
+    <text x="0" y="62" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="700"
+          fill="#cbd5e1" letter-spacing="2">BATTERY LIFE</text>
+  </g>
+  <g transform="translate(986 252)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.15s" dur="0.4s" fill="freeze"/>
+    <text font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="900" fill="#a855f7">3.4×</text>
+    <text x="0" y="62" font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="700"
+          fill="#cbd5e1" letter-spacing="2">FASTER NEURAL</text>
+  </g>
+
+  <!-- Bottom-left feature -->
+  <g transform="translate(96 460)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.3s" dur="0.4s" fill="freeze"/>
+    <rect width="32" height="32" rx="8" fill="#10b981"/>
+    <text x="44" y="20" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700"
+          fill="#94a3b8" letter-spacing="3">PRIVACY</text>
+    <text x="44" y="40" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#ffffff">
+      End-to-end on-device.
+    </text>
+    <text x="0" y="100" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#94a3b8">
+      Your data never leaves the silicon. Audited annually.
+    </text>
+  </g>
+
+  <!-- Bottom-mid feature -->
+  <g transform="translate(496 460)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.5s" dur="0.4s" fill="freeze"/>
+    <rect width="32" height="32" rx="8" fill="#06b6d4"/>
+    <text x="44" y="20" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="700"
+          fill="#94a3b8" letter-spacing="3">DESIGN</text>
+    <text x="44" y="40" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="700" fill="#ffffff">
+      Aluminum + recycled glass.
+    </text>
+    <text x="0" y="100" font-family="Inter, system-ui, sans-serif" font-size="13" fill="#94a3b8">
+      Nine new finishes. Zero compromise.
+    </text>
+  </g>
+
+  <!-- Bottom-right CTA -->
+  <g transform="translate(896 460)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.7s" dur="0.4s" fill="freeze"/>
+    <text font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="800"
+          fill="#0f172a" letter-spacing="3">SHIPS</text>
+    <text x="0" y="44" font-family="Inter, system-ui, sans-serif" font-size="42" font-weight="900"
+          fill="#0f172a" letter-spacing="-1">06.18</text>
+    <text x="0" y="76" font-family="Inter, system-ui, sans-serif" font-size="13" font-weight="700"
+          fill="#0f172a" letter-spacing="3">2026</text>
+    <line x1="0" y1="120" x2="280" y2="120" stroke="#0f172a" stroke-width="2"/>
+    <text x="0" y="160" font-family="Inter, system-ui, sans-serif" font-size="14"
+          font-weight="700" fill="#0f172a">$1,299 starting</text>
+    <text x="280" y="160" font-family="Inter, system-ui, sans-serif" font-size="14"
+          font-weight="800" fill="#0f172a" text-anchor="end">→</text>
+  </g>
+
+  <!-- Footer rule + brand -->
+  <g transform="translate(60 690)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="3.4s" dur="0.4s" fill="freeze"/>
+    <text font-family="Inter, system-ui, sans-serif" font-size="11" fill="#475569" letter-spacing="3">
+      META · CO  ·  ANNOUNCEMENT  ·  PRESS PACK AVAILABLE
+    </text>
+  </g>
+</svg>

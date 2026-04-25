@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Shapes morph — single path morphs square → circle → triangle → star → square. Loops.
+  Viewport: 320 × 320.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <g transform="translate(160 160)">
+    <path fill="#4f46e5" stroke="#0f172a" stroke-width="4" stroke-linejoin="round">
+      <animate attributeName="d" dur="6s" repeatCount="indefinite"
+        values="
+          M -100 -100 L 100 -100 L 100 100 L -100 100 Z;
+          M -100 0 C -100 -55 -55 -100 0 -100 C 55 -100 100 -55 100 0 C 100 55 55 100 0 100 C -55 100 -100 55 -100 0 Z;
+          M 0 -110 L 100 80 L -100 80 L 0 -110 Z;
+          M 0 -100 L 28 -32 L 100 -32 L 44 14 L 64 80 L 0 40 L -64 80 L -44 14 L -100 -32 L -28 -32 Z;
+          M -100 -100 L 100 -100 L 100 100 L -100 100 Z"
+      />
+      <animate attributeName="fill" dur="6s" repeatCount="indefinite"
+        values="#4f46e5;#06b6d4;#fbbf24;#ec4899;#4f46e5"/>
+      <animateTransform attributeName="transform" type="rotate"
+        from="0" to="360" dur="6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+</svg>

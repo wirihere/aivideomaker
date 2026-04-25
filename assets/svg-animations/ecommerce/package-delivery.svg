@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Package delivery — truck drives in from left, package hops onto porch,
+  tracking bar fills, DELIVERED tag appears.
+  Total: 4.0s. Holds.
+  Viewport: 720 × 320.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320">
+  <!-- Road -->
+  <line x1="0" y1="240" x2="720" y2="240" stroke="#94a3b8" stroke-width="3"/>
+  <g stroke="#94a3b8" stroke-width="3" stroke-dasharray="20 16">
+    <line x1="0" y1="280" x2="720" y2="280"/>
+  </g>
+
+  <!-- House on right -->
+  <g transform="translate(580 240)">
+    <rect x="-60" y="-80" width="120" height="80" fill="#475569"/>
+    <polygon points="-70,-80 0,-130 70,-80" fill="#334155"/>
+    <rect x="-16" y="-50" width="32" height="50" fill="#fbbf24"/>
+  </g>
+
+  <!-- Truck -->
+  <g transform="translate(-200 200)">
+    <animateTransform attributeName="transform" type="translate"
+      values="-200 200;340 200;340 200"
+      keyTimes="0;0.5;1"
+      begin="0s" dur="4s" fill="freeze"
+      calcMode="spline" keySplines="0.4 0 0.2 1; 0 0 1 1"/>
+
+    <!-- Cab -->
+    <rect x="0" y="-40" width="60" height="40" rx="6" fill="#4f46e5" stroke="#0f172a" stroke-width="3"/>
+    <rect x="6" y="-32" width="40" height="20" fill="#67e8f9" stroke="#0f172a" stroke-width="2"/>
+    <!-- Container -->
+    <rect x="-60" y="-50" width="60" height="50" fill="#ffffff" stroke="#0f172a" stroke-width="3"/>
+    <!-- Wheels -->
+    <circle cx="-40" cy="0" r="10" fill="#0f172a"/>
+    <circle cx="40"  cy="0" r="10" fill="#0f172a"/>
+    <circle cx="-40" cy="0" r="4"  fill="#cbd5e1"/>
+    <circle cx="40"  cy="0" r="4"  fill="#cbd5e1"/>
+  </g>
+
+  <!-- Package leaves truck & hops to porch -->
+  <g opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.0s" dur="0.15s" fill="freeze"/>
+    <g transform="translate(320 170)">
+      <animateMotion path="M 0 0 Q 120 -80 240 30" begin="2.0s" dur="0.8s" fill="freeze"
+                     calcMode="spline" keySplines="0.4 0 0.4 1"/>
+      <animateTransform attributeName="transform" type="rotate" additive="sum"
+        from="0" to="180" begin="2.0s" dur="0.8s" fill="freeze"/>
+      <rect x="-18" y="-18" width="36" height="36" fill="#d97706" stroke="#7c2d12" stroke-width="2"/>
+      <line x1="-18" y1="0" x2="18" y2="0" stroke="#7c2d12" stroke-width="1.5"/>
+      <line x1="0" y1="-18" x2="0" y2="18" stroke="#7c2d12" stroke-width="1.5"/>
+    </g>
+  </g>
+
+  <!-- Tracking bar at top -->
+  <g transform="translate(40 40)">
+    <rect width="640" height="20" rx="10" fill="#e2e8f0"/>
+    <rect width="0" height="20" rx="10" fill="#22c55e">
+      <animate attributeName="width" from="0" to="640" begin="0s" dur="3.5s" fill="freeze"
+               calcMode="spline" keySplines="0.4 0 0.4 1"/>
+    </rect>
+    <text x="0" y="-8" font-family="Inter, system-ui, sans-serif" font-size="11"
+          font-weight="700" fill="#475569" letter-spacing="3">TRACKING</text>
+    <text x="640" y="-8" font-family="Inter, system-ui, sans-serif" font-size="11"
+          font-weight="700" fill="#475569" text-anchor="end">
+      <animate attributeName="textContent"
+               values="SHIPPED;IN TRANSIT;OUT FOR DELIVERY;ARRIVED;DELIVERED"
+               keyTimes="0;0.3;0.6;0.85;1"
+               begin="0s" dur="3.5s" fill="freeze"/>
+      SHIPPED
+    </text>
+  </g>
+
+  <!-- DELIVERED tag -->
+  <g transform="translate(560 240)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="3.6s" dur="0.3s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="scale" additive="sum"
+      from="0.5" to="1" begin="3.6s" dur="0.4s" fill="freeze"
+      calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    <rect x="-60" y="-16" width="120" height="32" rx="16" fill="#22c55e"/>
+    <text font-family="Inter, system-ui, sans-serif" font-size="12" font-weight="800"
+          fill="#ffffff" text-anchor="middle" dy="4" letter-spacing="2">DELIVERED</text>
+  </g>
+</svg>

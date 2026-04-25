@@ -1,0 +1,48 @@
+# Generated MP4 renders — large, regenerable via `npx hyperframes render`
+renders/
+
+# Large fetched media binaries — regenerable via scripts/fetch-pixabay-music.mjs
+# and fetch-pixabay-video.mjs. Don't bloat the repo.
+assets/music/
+assets/videos/
+
+# HyperFrames runtime / cache
+.hyperframes/
+
+# Pixabay/etc fetcher rate-limit tracking
+.usage.json
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+credentials.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Claude Code per-user / runtime state — not portable across machines
+.claude/scheduled_tasks.lock
+.claude/settings.local.json

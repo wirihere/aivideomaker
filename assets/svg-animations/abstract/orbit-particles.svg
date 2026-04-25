@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Orbit — central nucleus, three particles orbit at different rates and radii.
+  Loops indefinitely.
+  Viewport: 360 × 360.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" width="360" height="360">
+  <g transform="translate(180 180)">
+    <!-- Orbit rings (static guides) -->
+    <g fill="none" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3 6">
+      <ellipse rx="60"  ry="36"/>
+      <ellipse rx="100" ry="60" transform="rotate(45)"/>
+      <ellipse rx="140" ry="80" transform="rotate(-45)"/>
+    </g>
+
+    <!-- Nucleus -->
+    <circle r="20" fill="#0f172a"/>
+    <circle r="20" fill="none" stroke="#fbbf24" stroke-width="2"/>
+
+    <!-- Particle 1 (electron blue) -->
+    <g>
+      <ellipse rx="60" ry="36" fill="none"/>
+      <circle r="8" fill="#06b6d4">
+        <animateMotion dur="3s" repeatCount="indefinite"
+          path="M 60 0 A 60 36 0 1 1 -60 0 A 60 36 0 1 1 60 0"/>
+      </circle>
+    </g>
+
+    <!-- Particle 2 (electron pink, tilted ring) -->
+    <g transform="rotate(45)">
+      <circle r="8" fill="#ec4899">
+        <animateMotion dur="4s" repeatCount="indefinite"
+          path="M 100 0 A 100 60 0 1 1 -100 0 A 100 60 0 1 1 100 0"/>
+      </circle>
+    </g>
+
+    <!-- Particle 3 (electron green, opposite tilt) -->
+    <g transform="rotate(-45)">
+      <circle r="6" fill="#22c55e">
+        <animateMotion dur="5s" repeatCount="indefinite"
+          path="M 140 0 A 140 80 0 1 1 -140 0 A 140 80 0 1 1 140 0"/>
+      </circle>
+    </g>
+  </g>
+</svg>

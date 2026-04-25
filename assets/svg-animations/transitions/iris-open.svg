@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Iris open — black frame with circular hole expanding from center.
+  Use at the START of a video to "open the eye".
+  Total: 1.2s. Final state: frame invisible.
+  Viewport: 1920 × 1080.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <mask id="hole">
+      <rect width="1920" height="1080" fill="#ffffff"/>
+      <circle cx="960" cy="540" r="0" fill="#000000">
+        <animate attributeName="r" from="0" to="1200"
+                 begin="0s" dur="1.2s" fill="freeze"
+                 calcMode="spline" keySplines="0.45 0 0.15 1"/>
+      </circle>
+    </mask>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#0f172a" mask="url(#hole)"/>
+</svg>

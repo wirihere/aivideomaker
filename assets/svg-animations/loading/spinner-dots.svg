@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Three-dot bounce loader. Loops indefinitely.
+  Viewport: 240 × 80.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80">
+  <g fill="#4f46e5">
+    <circle cx="60" cy="40" r="14">
+      <animate attributeName="cy" values="40;20;40" dur="0.9s"
+               repeatCount="indefinite" calcMode="spline"
+               keySplines="0.4 0 0.6 1; 0.4 0 0.6 1" keyTimes="0;0.5;1"/>
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="0.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="120" cy="40" r="14">
+      <animate attributeName="cy" values="40;20;40" dur="0.9s" begin="0.15s"
+               repeatCount="indefinite" calcMode="spline"
+               keySplines="0.4 0 0.6 1; 0.4 0 0.6 1" keyTimes="0;0.5;1"/>
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="0.9s" begin="0.15s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="180" cy="40" r="14">
+      <animate attributeName="cy" values="40;20;40" dur="0.9s" begin="0.3s"
+               repeatCount="indefinite" calcMode="spline"
+               keySplines="0.4 0 0.6 1; 0.4 0 0.6 1" keyTimes="0;0.5;1"/>
+      <animate attributeName="opacity" values="0.4;1;0.4" dur="0.9s" begin="0.3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

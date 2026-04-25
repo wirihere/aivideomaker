@@ -1,0 +1,53 @@
+<template id="ken-burns-tpl">
+  <div data-composition-id="ken-burns" data-width="1080" data-height="1920">
+    <img class="kb-img grade" alt="" />
+
+    <style>
+      [data-composition-id="ken-burns"] {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: #0d1826;
+      }
+      [data-composition-id="ken-burns"] .kb-img {
+        position: absolute;
+        inset: -6%;
+        width: 112%;
+        height: 112%;
+        object-fit: cover;
+        transform-origin: center;
+        will-change: transform, opacity;
+      }
+      [data-composition-id="ken-burns"] .grade {
+        filter: grayscale(0.45) sepia(0.22) contrast(1.08) brightness(0.88);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = document.currentScript.closest('[data-composition-id="ken-burns"]');
+        const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
+        const src = vars.src || "";
+        const direction = vars.direction || "in"; // in | out
+        const startScale = direction === "out" ? 1.08 : 1.0;
+        const endScale = direction === "out" ? 1.0 : 1.08;
+        const duration = Number(vars.duration || 4);
+        const xDrift = Number(vars.xDrift || 0);  // percent
+        const yDrift = Number(vars.yDrift || 0);  // percent
+
+        const img = root.querySelector(".kb-img");
+        img.src = src;
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo(img,
+          { scale: startScale, xPercent: 0, yPercent: 0, opacity: 1 },
+          { scale: endScale, xPercent: xDrift, yPercent: yDrift, duration: duration, ease: "none" },
+          0
+        );
+        window.__timelines["ken-burns"] = tl;
+      })();
+    </script>
+  </div>
+</template>

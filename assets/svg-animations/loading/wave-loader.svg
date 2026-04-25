@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Wave loader — five vertical bars pulsing like a sound equalizer.
+  Loops indefinitely.
+  Viewport: 200 × 100.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100" width="200" height="100">
+  <g fill="#06b6d4">
+    <rect x="20"  y="35" width="14" height="30" rx="4">
+      <animate attributeName="height" values="30;70;30" dur="1.0s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="35;15;35" dur="1.0s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="55"  y="35" width="14" height="30" rx="4">
+      <animate attributeName="height" values="30;70;30" dur="1.0s" begin="0.1s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="35;15;35" dur="1.0s" begin="0.1s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="90"  y="35" width="14" height="30" rx="4">
+      <animate attributeName="height" values="30;70;30" dur="1.0s" begin="0.2s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="35;15;35" dur="1.0s" begin="0.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="125" y="35" width="14" height="30" rx="4">
+      <animate attributeName="height" values="30;70;30" dur="1.0s" begin="0.3s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="35;15;35" dur="1.0s" begin="0.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="160" y="35" width="14" height="30" rx="4">
+      <animate attributeName="height" values="30;70;30" dur="1.0s" begin="0.4s" repeatCount="indefinite"/>
+      <animate attributeName="y"      values="35;15;35" dur="1.0s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+</svg>

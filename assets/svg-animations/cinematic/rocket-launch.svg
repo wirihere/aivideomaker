@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Rocket launch — countdown holds, ignition flame builds, rocket rises with
+  exhaust particles, ground smoke billows, then a shimmer of stars at the top.
+  Total: 5.4s. Holds.
+  Viewport: 480 × 720.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 720" width="480" height="720">
+  <defs>
+    <radialGradient id="sky" cx="0.5" cy="1" r="1.1">
+      <stop offset="0"   stop-color="#1e3a8a"/>
+      <stop offset="0.5" stop-color="#0f172a"/>
+      <stop offset="1"   stop-color="#020617"/>
+    </radialGradient>
+    <linearGradient id="exhaust-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0"   stop-color="#fef9c3"/>
+      <stop offset="0.5" stop-color="#fbbf24"/>
+      <stop offset="1"   stop-color="#dc2626" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="480" height="720" fill="url(#sky)"/>
+
+  <!-- Stars (twinkle) -->
+  <g fill="#ffffff">
+    <circle cx="60"  cy="60"  r="1.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.6s" repeatCount="indefinite"/></circle>
+    <circle cx="140" cy="120" r="1"  ><animate attributeName="opacity" values="0.5;1;0.5" dur="3.2s" repeatCount="indefinite"/></circle>
+    <circle cx="240" cy="40"  r="1.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="2.0s" repeatCount="indefinite"/></circle>
+    <circle cx="360" cy="100" r="1"  ><animate attributeName="opacity" values="0.5;1;0.5" dur="2.8s" repeatCount="indefinite"/></circle>
+    <circle cx="430" cy="160" r="1.5"><animate attributeName="opacity" values="0.5;1;0.5" dur="3.6s" repeatCount="indefinite"/></circle>
+    <circle cx="80"  cy="200" r="1"  ><animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="200" cy="160" r="1"  ><animate attributeName="opacity" values="0.5;1;0.5" dur="3.0s" repeatCount="indefinite"/></circle>
+    <circle cx="400" cy="200" r="1"  ><animate attributeName="opacity" values="0.5;1;0.5" dur="2.2s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- Ground -->
+  <rect x="0" y="640" width="480" height="80" fill="#475569"/>
+  <line x1="0" y1="640" x2="480" y2="640" stroke="#cbd5e1" stroke-width="2"/>
+
+  <!-- Launch tower -->
+  <g transform="translate(360 540)">
+    <line x1="0" y1="0" x2="0" y2="100" stroke="#94a3b8" stroke-width="6"/>
+    <line x1="0" y1="20"  x2="-30" y2="100" stroke="#94a3b8" stroke-width="3"/>
+    <line x1="0" y1="60"  x2="-30" y2="100" stroke="#94a3b8" stroke-width="3"/>
+    <line x1="-30" y1="20" x2="-30" y2="100" stroke="#94a3b8" stroke-width="4"/>
+  </g>
+
+  <!-- Smoke billows from base -->
+  <g transform="translate(180 640)" fill="#cbd5e1" opacity="0">
+    <animate attributeName="opacity" values="0;0.9;0.7" keyTimes="0;0.4;1" begin="2.4s" dur="3s" fill="freeze"/>
+    <circle cx="-30" cy="0" r="0">
+      <animate attributeName="r" from="0" to="50" begin="2.4s" dur="2s" fill="freeze"/>
+      <animate attributeName="cx" from="-30" to="-90" begin="2.4s" dur="3s" fill="freeze"/>
+    </circle>
+    <circle cx="0" cy="0" r="0">
+      <animate attributeName="r" from="0" to="60" begin="2.5s" dur="2s" fill="freeze"/>
+      <animate attributeName="cy" from="0" to="-20" begin="2.5s" dur="3s" fill="freeze"/>
+    </circle>
+    <circle cx="30" cy="0" r="0">
+      <animate attributeName="r" from="0" to="50" begin="2.6s" dur="2s" fill="freeze"/>
+      <animate attributeName="cx" from="30" to="90" begin="2.6s" dur="3s" fill="freeze"/>
+    </circle>
+  </g>
+
+  <!-- Rocket assembly: countdown, then ignition, then rise -->
+  <g transform="translate(180 540)">
+    <!-- Rise after ignition -->
+    <animateTransform attributeName="transform" type="translate"
+      values="180 540;180 540;180 -200"
+      keyTimes="0;0.45;1"
+      begin="0s" dur="5.0s" fill="freeze"
+      calcMode="spline" keySplines="0.4 0 0.6 1; 0.6 0 0.6 1"/>
+
+    <!-- Exhaust flame builds at 1.6s, full at 2.4s -->
+    <g transform="translate(0 80)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.6s" dur="0.5s" fill="freeze"/>
+      <path fill="url(#exhaust-grad)">
+        <animate attributeName="d"
+          values="M -16 0 L 16 0 L 8 30 L 0 50 L -8 30 Z;
+                  M -22 0 L 22 0 L 12 60 L 0 100 L -12 60 Z;
+                  M -22 0 L 22 0 L 14 56 L 0 96 L -14 56 Z;
+                  M -22 0 L 22 0 L 12 60 L 0 100 L -12 60 Z"
+          keyTimes="0;0.3;0.65;1"
+          begin="1.6s" dur="0.8s" fill="freeze"/>
+        <animate attributeName="d" dur="0.3s" repeatCount="indefinite" begin="2.4s"
+          values="M -22 0 L 22 0 L 14 56 L 0 96 L -14 56 Z;
+                  M -22 0 L 22 0 L 12 64 L 0 110 L -12 64 Z;
+                  M -22 0 L 22 0 L 14 56 L 0 96 L -14 56 Z"/>
+      </path>
+    </g>
+
+    <!-- Body -->
+    <g>
+      <!-- Fins -->
+      <path d="M -16 60 L -34 90 L -16 80 Z" fill="#dc2626" stroke="#0f172a" stroke-width="2"/>
+      <path d="M 16 60 L 34 90 L 16 80 Z"   fill="#dc2626" stroke="#0f172a" stroke-width="2"/>
+      <!-- Body tube -->
+      <rect x="-20" y="-60" width="40" height="140" rx="6" fill="#f1f5f9" stroke="#0f172a" stroke-width="2"/>
+      <!-- Window -->
+      <circle cx="0" cy="-20" r="10" fill="#06b6d4" stroke="#0f172a" stroke-width="2"/>
+      <!-- Nose cone -->
+      <path d="M -20 -60 Q 0 -110 20 -60 Z" fill="#dc2626" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/>
+      <!-- Detail stripes -->
+      <line x1="-20" y1="0" x2="20" y2="0" stroke="#0f172a" stroke-width="2"/>
+      <line x1="-20" y1="40" x2="20" y2="40" stroke="#0f172a" stroke-width="2"/>
+    </g>
+  </g>
+
+  <!-- Countdown display: 3 → 2 → 1 → LIFTOFF -->
+  <g transform="translate(60 100)">
+    <text font-family="'JetBrains Mono', monospace" font-size="44" font-weight="800"
+          fill="#fbbf24">
+      <animate attributeName="textContent" values="T-3;T-2;T-1;LIFT" keyTimes="0;0.25;0.5;0.75"
+               begin="0s" dur="2s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;1;1;0" keyTimes="0;0.4;0.7;1" begin="0s" dur="3.4s" fill="freeze"/>
+      T-3
+    </text>
+  </g>
+
+  <!-- Spark particles trailing the rocket -->
+  <g fill="#fbbf24">
+    <circle cx="170" cy="640" r="2" opacity="0">
+      <animate attributeName="opacity" values="0;1;0" begin="2.6s" dur="0.6s" repeatCount="4"/>
+      <animate attributeName="cy" values="640;700" begin="2.6s" dur="0.6s" repeatCount="4"/>
+    </circle>
+    <circle cx="190" cy="640" r="2" opacity="0">
+      <animate attributeName="opacity" values="0;1;0" begin="2.7s" dur="0.6s" repeatCount="4"/>
+      <animate attributeName="cy" values="640;700" begin="2.7s" dur="0.6s" repeatCount="4"/>
+    </circle>
+  </g>
+</svg>

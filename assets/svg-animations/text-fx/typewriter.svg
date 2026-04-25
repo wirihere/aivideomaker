@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Typewriter — text reveals letter by letter via animated textContent, cursor blinks.
+  Total: 2.8s. Holds.
+  Viewport: 600 × 160.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 160" width="600" height="160">
+  <text x="40" y="100" font-family="'Courier New', 'JetBrains Mono', monospace"
+        font-size="42" font-weight="700" fill="#10b981">
+    <animate attributeName="textContent"
+             values=" ;&gt;;&gt; ;&gt; i;&gt; in;&gt; ini;&gt; init;&gt; initi;&gt; initia;&gt; initial;&gt; initiali;&gt; initializ;&gt; initializi;&gt; initializin;&gt; initializing;&gt; initializing.;&gt; initializing..;&gt; initializing..."
+             dur="2.4s" begin="0.2s" fill="freeze"/>
+    &gt;
+  </text>
+
+  <!-- Blinking cursor after text completes -->
+  <rect x="488" y="64" width="14" height="48" fill="#10b981">
+    <animate attributeName="opacity" values="1;0;1;0;1;0;1" dur="1.4s"
+             begin="2.6s" repeatCount="3"/>
+  </rect>
+</svg>

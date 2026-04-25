@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Achievement unlock — backdrop dims, light beam sweeps, medal lowers in,
+  ribbon unfurls, sparkles burst, "ACHIEVEMENT UNLOCKED" letters cascade.
+  Total: 4.6s. Holds.
+  Viewport: 1280 × 720.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <radialGradient id="bg-glow" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0"   stop-color="#1e1b4b"/>
+      <stop offset="1"   stop-color="#020617"/>
+    </radialGradient>
+    <radialGradient id="medal-grad" cx="0.4" cy="0.35" r="0.7">
+      <stop offset="0"   stop-color="#fde68a"/>
+      <stop offset="0.6" stop-color="#fbbf24"/>
+      <stop offset="1"   stop-color="#92400e"/>
+    </radialGradient>
+    <linearGradient id="ribbon-l" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dc2626"/>
+      <stop offset="1" stop-color="#7f1d1d"/>
+    </linearGradient>
+    <linearGradient id="ribbon-r" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e3a8a"/>
+      <stop offset="1" stop-color="#0c1e6e"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" fill="url(#bg-glow)"/>
+
+  <!-- Light rays from center -->
+  <g transform="translate(640 360)" opacity="0">
+    <animate attributeName="opacity" values="0;0.6;0.3;0.6" keyTimes="0;0.4;0.7;1" begin="0s" dur="2s" fill="freeze"/>
+    <g stroke="#fbbf24" stroke-width="40" opacity="0.18">
+      <line x1="0" y1="0" x2="0" y2="-700"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(30)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(60)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(90)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(120)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(150)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(180)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(210)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(240)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(270)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(300)"/>
+      <line x1="0" y1="0" x2="0" y2="-700" transform="rotate(330)"/>
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" begin="0s" dur="14s" repeatCount="indefinite"/>
+    </g>
+  </g>
+
+  <!-- Ribbons unfurl behind medal -->
+  <g transform="translate(640 360)">
+    <g transform="scale(1 0)" transform-origin="0 0">
+      <animateTransform attributeName="transform" type="scale"
+        from="1 0" to="1 1" begin="0.6s" dur="0.6s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      <!-- Left ribbon -->
+      <path d="M -100 0 L -160 220 L -110 220 L -60 60 Z" fill="url(#ribbon-l)" stroke="#7f1d1d" stroke-width="2"/>
+      <!-- Right ribbon -->
+      <path d="M 100 0 L 160 220 L 110 220 L 60 60 Z" fill="url(#ribbon-r)" stroke="#0c1e6e" stroke-width="2"/>
+    </g>
+  </g>
+
+  <!-- Medal drops in -->
+  <g transform="translate(640 -200)">
+    <animateTransform attributeName="transform" type="translate"
+      from="640 -200" to="640 360" begin="0s" dur="0.7s" fill="freeze"
+      calcMode="spline" keySplines="0.4 0 0.6 1.1"/>
+
+    <!-- Outer ring -->
+    <circle r="120" fill="url(#medal-grad)" stroke="#7c2d12" stroke-width="6"/>
+    <!-- Inner star -->
+    <path d="M 0 -78 L 23 -22 L 80 -22 L 36 12 L 52 66 L 0 32 L -52 66 L -36 12 L -80 -22 L -23 -22 Z"
+          fill="#fef3c7" stroke="#92400e" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Number -->
+    <text font-family="Inter, system-ui, sans-serif" font-size="40" font-weight="900"
+          fill="#92400e" text-anchor="middle" dy="14">★</text>
+
+    <!-- Settle bounce -->
+    <animateTransform attributeName="transform" type="scale" additive="sum"
+      values="1;1;1.08;1" keyTimes="0;0.6;0.75;1" begin="0s" dur="1s" fill="freeze"/>
+  </g>
+
+  <!-- Sparkle burst around medal -->
+  <g transform="translate(640 360)">
+    <g fill="#fbbf24">
+      <circle cx="-160" cy="-100" r="0">
+        <animate attributeName="r" values="0;6;0" begin="1.0s" dur="0.6s" fill="freeze"/>
+        <animate attributeName="cy" from="-80" to="-120" begin="1.0s" dur="0.6s" fill="freeze"/>
+      </circle>
+      <circle cx="170" cy="-90" r="0">
+        <animate attributeName="r" values="0;6;0" begin="1.1s" dur="0.6s" fill="freeze"/>
+        <animate attributeName="cy" from="-70" to="-110" begin="1.1s" dur="0.6s" fill="freeze"/>
+      </circle>
+      <circle cx="-200" cy="40" r="0">
+        <animate attributeName="r" values="0;5;0" begin="1.2s" dur="0.6s" fill="freeze"/>
+      </circle>
+      <circle cx="200" cy="40" r="0">
+        <animate attributeName="r" values="0;5;0" begin="1.25s" dur="0.6s" fill="freeze"/>
+      </circle>
+      <circle cx="0" cy="-160" r="0">
+        <animate attributeName="r" values="0;5;0" begin="1.3s" dur="0.6s" fill="freeze"/>
+      </circle>
+      <circle cx="-110" cy="160" r="0">
+        <animate attributeName="r" values="0;5;0" begin="1.35s" dur="0.6s" fill="freeze"/>
+      </circle>
+      <circle cx="120" cy="170" r="0">
+        <animate attributeName="r" values="0;5;0" begin="1.4s" dur="0.6s" fill="freeze"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- "ACHIEVEMENT UNLOCKED" — letter cascade -->
+  <g font-family="Inter, system-ui, sans-serif" font-weight="900" fill="#fbbf24" text-anchor="middle">
+    <text x="640" y="100" font-size="20" letter-spacing="6" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.7s" dur="0.4s" fill="freeze"/>
+      ACHIEVEMENT UNLOCKED
+    </text>
+  </g>
+
+  <!-- Achievement title and meta -->
+  <g transform="translate(640 600)" font-family="Inter, system-ui, sans-serif" text-anchor="middle">
+    <text font-size="40" font-weight="800" fill="#ffffff" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="2.2s" dur="0.4s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="0 16" to="0 0" begin="2.2s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.2 0.8 0.3 1"/>
+      Master of the Craft
+    </text>
+    <text x="0" y="34" font-size="14" font-weight="600" fill="#fde68a" letter-spacing="3" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="2.6s" dur="0.4s" fill="freeze"/>
+      +500 XP   ·   RARE
+    </text>
+  </g>
+</svg>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Price tag — swings in on its string, settles, then "SALE" stamp slams on.
+  Total: 2.4s. Holds.
+  Viewport: 360 × 320.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 320" width="360" height="320">
+  <!-- Pin at top -->
+  <circle cx="180" cy="20" r="8" fill="#0f172a"/>
+
+  <!-- String -->
+  <line x1="180" y1="20" x2="180" y2="80" stroke="#0f172a" stroke-width="2"/>
+
+  <!-- Tag — swings into position -->
+  <g transform-origin="180 20">
+    <animateTransform attributeName="transform" type="rotate"
+      values="-25;15;-8;5;-2;0"
+      keyTimes="0;0.25;0.5;0.7;0.85;1"
+      begin="0s" dur="1.6s" fill="freeze"/>
+
+    <!-- Tag body (looks like a luggage tag) -->
+    <g transform="translate(180 80)">
+      <path d="M -90 0 L -30 -30 L 90 -30 L 90 110 L -90 110 Z"
+            fill="#ef4444" stroke="#7f1d1d" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="-30" cy="-15" r="8" fill="#ffffff" stroke="#7f1d1d" stroke-width="2"/>
+
+      <text x="0" y="50" font-family="Inter, system-ui, sans-serif"
+            font-size="42" font-weight="800" fill="#ffffff" text-anchor="middle">$29</text>
+      <text x="0" y="80" font-family="Inter, system-ui, sans-serif"
+            font-size="14" font-weight="700" fill="#fecaca" text-anchor="middle"
+            letter-spacing="2">EVERY MONTH</text>
+    </g>
+  </g>
+
+  <!-- SALE stamp slam -->
+  <g transform="translate(265 200) rotate(15)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="1.7s" dur="0.15s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="scale" additive="sum"
+      from="3" to="1" begin="1.7s" dur="0.35s" fill="freeze"
+      calcMode="spline" keySplines="0.2 0 0.1 1"/>
+
+    <rect x="-44" y="-18" width="88" height="36" fill="#fbbf24" stroke="#92400e" stroke-width="3"/>
+    <text y="6" font-family="Inter, system-ui, sans-serif" font-size="20"
+          font-weight="800" fill="#7c2d12" text-anchor="middle"
+          letter-spacing="3">SALE</text>
+  </g>
+</svg>

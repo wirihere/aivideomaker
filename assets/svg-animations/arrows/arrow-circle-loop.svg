@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Arrow circle loop — small dot orbits a circle, an arrow tail trails behind. Loops.
+  Viewport: 200 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <g transform="translate(100 100)">
+    <circle r="64" fill="none" stroke="#e2e8f0" stroke-width="6"/>
+
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="2s" repeatCount="indefinite"/>
+
+      <!-- Trailing arc fades from full opacity to zero along its length -->
+      <path d="M 0 -64 A 64 64 0 0 0 -45.25 -45.25" fill="none" stroke="#4f46e5"
+            stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+      <!-- Lead arrowhead -->
+      <polygon points="0,-72 8,-58 -8,-58" fill="#4f46e5"/>
+    </g>
+  </g>
+</svg>

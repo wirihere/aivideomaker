@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  💯 100 — slams in with double-underline draw, then bounces.
+  Total: 1.6s. Holds.
+  Viewport: 320 × 220.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 220" width="320" height="220">
+  <g transform="translate(160 130)">
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0s" dur="0.15s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale"
+        values="2.4;0.85;1.05;1" keyTimes="0;0.5;0.75;1"
+        begin="0s" dur="0.7s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="rotate" additive="sum"
+        values="-15;5;0" keyTimes="0;0.5;1"
+        begin="0s" dur="0.7s" fill="freeze"/>
+
+      <text font-family="Impact, 'Arial Black', sans-serif" font-size="120"
+            font-weight="900" fill="#dc2626" text-anchor="middle" dy="40"
+            stroke="#0f172a" stroke-width="3">100</text>
+
+      <!-- Double underline -->
+      <line x1="-90" y1="64" x2="90"  y2="64" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>
+      <line x1="-80" y1="76" x2="80"  y2="76" stroke="#dc2626" stroke-width="6" stroke-linecap="round"/>
+    </g>
+
+    <!-- Bounce after settle -->
+    <animateTransform attributeName="transform" type="translate"
+      values="160 130;160 124;160 130"
+      keyTimes="0;0.5;1"
+      begin="0.7s" dur="0.6s" fill="freeze"/>
+  </g>
+</svg>

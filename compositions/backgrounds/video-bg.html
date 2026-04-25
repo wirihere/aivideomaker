@@ -1,0 +1,54 @@
+<template id="video-bg-tpl">
+  <div data-composition-id="video-bg" data-width="1080" data-height="1920">
+    <video class="vb-video grade" muted playsinline></video>
+
+    <style>
+      [data-composition-id="video-bg"] {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: #0d1826;
+      }
+      [data-composition-id="video-bg"] .vb-video {
+        position: absolute;
+        inset: -4%;
+        width: 108%;
+        height: 108%;
+        object-fit: cover;
+        transform-origin: center;
+        will-change: transform, opacity;
+      }
+      [data-composition-id="video-bg"] .grade {
+        filter: grayscale(0.45) sepia(0.22) contrast(1.08) brightness(0.88);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const root = document.currentScript.closest('[data-composition-id="video-bg"]');
+        const vars = JSON.parse(root.getAttribute("data-variable-values") || "{}");
+        const src = vars.src || "";
+        const mediaStart = Number(vars.mediaStart || 0);
+        const duration = Number(vars.duration || 4);
+        const driftX = Number(vars.driftX || 0);
+        const driftY = Number(vars.driftY || 0);
+        const startScale = Number(vars.startScale || 1.0);
+        const endScale = Number(vars.endScale || 1.04);
+
+        const video = root.querySelector(".vb-video");
+        video.src = src;
+        video.setAttribute("data-media-start", String(mediaStart));
+
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo(video,
+          { scale: startScale, xPercent: 0, yPercent: 0 },
+          { scale: endScale, xPercent: driftX, yPercent: driftY, duration: duration, ease: "none" },
+          0
+        );
+        window.__timelines["video-bg"] = tl;
+      })();
+    </script>
+  </div>
+</template>

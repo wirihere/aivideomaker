@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  TV static noise — many random rectangles flicker on/off, screen-fill.
+  Use as a chaotic transition or "broken signal" overlay.
+  Total: 1.6s. Holds.
+  Viewport: 1920 × 1080.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <rect width="1920" height="1080" fill="#0f172a"/>
+
+  <!-- Six "scanline frames" of noise — only one visible at a time -->
+  <g>
+    <g opacity="1">
+      <animate attributeName="opacity" values="1;0;0;0;0;0;1" dur="0.36s" repeatCount="indefinite"/>
+      <g fill="#ffffff" opacity="0.85">
+        <rect x="40"  y="60"  width="80"  height="6"/>
+        <rect x="240" y="120" width="40"  height="6"/>
+        <rect x="480" y="200" width="120" height="6"/>
+        <rect x="900" y="80"  width="60"  height="6"/>
+        <rect x="1300" y="160" width="100" height="6"/>
+        <rect x="1700" y="240" width="50"  height="6"/>
+        <rect x="160"  y="320" width="200" height="6"/>
+        <rect x="600"  y="400" width="80"  height="6"/>
+        <rect x="1000" y="480" width="160" height="6"/>
+        <rect x="1500" y="560" width="60"  height="6"/>
+        <rect x="80"   y="640" width="120" height="6"/>
+        <rect x="500"  y="720" width="40"  height="6"/>
+        <rect x="900"  y="800" width="200" height="6"/>
+        <rect x="1400" y="880" width="100" height="6"/>
+        <rect x="200"  y="960" width="80"  height="6"/>
+        <rect x="700"  y="1020" width="200" height="6"/>
+      </g>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1;0;0;0;0;0" dur="0.36s" repeatCount="indefinite"/>
+      <g fill="#ffffff" opacity="0.85">
+        <rect x="100" y="40"  width="40"  height="6"/>
+        <rect x="380" y="160" width="100" height="6"/>
+        <rect x="780" y="240" width="60"  height="6"/>
+        <rect x="1100" y="100" width="160" height="6"/>
+        <rect x="1500" y="200" width="80"  height="6"/>
+        <rect x="60"   y="320" width="120" height="6"/>
+        <rect x="500"  y="440" width="200" height="6"/>
+        <rect x="900"  y="520" width="100" height="6"/>
+        <rect x="1300" y="640" width="60"  height="6"/>
+        <rect x="100"  y="760" width="100" height="6"/>
+        <rect x="600"  y="840" width="200" height="6"/>
+        <rect x="1000" y="900" width="60"  height="6"/>
+        <rect x="1500" y="1020" width="120" height="6"/>
+      </g>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;0;0;0;0" dur="0.36s" repeatCount="indefinite"/>
+      <g fill="#ffffff" opacity="0.85">
+        <rect x="240" y="80"  width="120" height="6"/>
+        <rect x="540" y="180" width="60"  height="6"/>
+        <rect x="900" y="280" width="160" height="6"/>
+        <rect x="1300" y="80"  width="40"  height="6"/>
+        <rect x="1600" y="160" width="100" height="6"/>
+        <rect x="160"  y="380" width="80"  height="6"/>
+        <rect x="700"  y="500" width="200" height="6"/>
+        <rect x="1100" y="580" width="60"  height="6"/>
+        <rect x="1500" y="700" width="100" height="6"/>
+        <rect x="60"   y="820" width="100" height="6"/>
+        <rect x="500"  y="900" width="60"  height="6"/>
+        <rect x="900"  y="980" width="200" height="6"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Faint scanline overlay -->
+  <g opacity="0.18">
+    <rect width="1920" height="1080" fill="url(#scan-pattern)"/>
+  </g>
+  <defs>
+    <pattern id="scan-pattern" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="2" fill="#000"/>
+    </pattern>
+  </defs>
+
+  <!-- Big "NO SIGNAL" briefly -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;0;1;1;0;0" dur="1.6s" begin="0s" fill="freeze"/>
+    <text x="960" y="540" font-family="Impact, 'Arial Black', sans-serif" font-size="120"
+          font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="8">NO SIGNAL</text>
+  </g>
+</svg>

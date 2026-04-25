@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Horizontal progress bar — fills 0 → 100% over 2.4s, holds.
+  Viewport: 480 × 60.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 60" width="480" height="60">
+  <rect x="20" y="22" width="440" height="16" rx="8" fill="#e2e8f0"/>
+  <rect x="20" y="22" width="0" height="16" rx="8" fill="#4f46e5">
+    <animate attributeName="width" from="0" to="440" dur="2.4s" fill="freeze"
+             calcMode="spline" keySplines="0.45 0 0.25 1"/>
+  </rect>
+  <text x="240" y="56" font-family="Inter, system-ui, sans-serif" font-size="11"
+        font-weight="600" fill="#475569" text-anchor="middle" letter-spacing="1">
+    LOADING
+  </text>
+</svg>

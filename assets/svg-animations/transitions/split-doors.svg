@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Split doors — two panels close inward like elevator doors meeting at center.
+  Total: 0.9s. Holds.
+  Viewport: 1920 × 1080.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <rect x="-960" y="0" width="960" height="1080" fill="#0f172a">
+    <animate attributeName="x" from="-960" to="0" begin="0s" dur="0.9s" fill="freeze"
+             calcMode="spline" keySplines="0.65 0 0.15 1"/>
+  </rect>
+  <rect x="1920" y="0" width="960" height="1080" fill="#0f172a">
+    <animate attributeName="x" from="1920" to="960" begin="0s" dur="0.9s" fill="freeze"
+             calcMode="spline" keySplines="0.65 0 0.15 1"/>
+  </rect>
+  <!-- Seam flash -->
+  <rect x="960" y="0" width="2" height="1080" fill="#fbbf24" opacity="0">
+    <animate attributeName="opacity" values="0;0;0.7;0" keyTimes="0;0.8;0.88;1" begin="0s" dur="0.9s" fill="freeze"/>
+  </rect>
+</svg>

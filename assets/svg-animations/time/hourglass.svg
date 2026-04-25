@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hourglass — sand drains from top bulb to bottom via clipped rectangles.
+  Then flips 180° and restarts. Loops.
+  Viewport: 200 × 280.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <clipPath id="top-bulb">
+      <path d="M 40 20 L 160 20 L 100 140 Z"/>
+    </clipPath>
+    <clipPath id="bottom-bulb">
+      <path d="M 100 140 L 160 260 L 40 260 Z"/>
+    </clipPath>
+  </defs>
+
+  <g>
+    <animateTransform attributeName="transform" type="rotate"
+      values="0 100 140;0 100 140;180 100 140;180 100 140;360 100 140"
+      keyTimes="0;0.45;0.5;0.95;1"
+      dur="4.2s" repeatCount="indefinite"/>
+
+    <!-- Frame caps -->
+    <rect x="32" y="10" width="136" height="10" rx="3" fill="#b45309"/>
+    <rect x="32" y="260" width="136" height="10" rx="3" fill="#b45309"/>
+
+    <!-- Side supports -->
+    <line x1="40"  y1="20" x2="40"  y2="260" stroke="#0f172a" stroke-width="4"/>
+    <line x1="160" y1="20" x2="160" y2="260" stroke="#0f172a" stroke-width="4"/>
+
+    <!-- Top bulb sand (drains from y=20 → y=140) -->
+    <g clip-path="url(#top-bulb)">
+      <rect x="0" y="20" width="200" height="120" fill="#fbbf24">
+        <animate attributeName="y" values="20;140" dur="1.8s" begin="0s" fill="freeze"/>
+        <animate attributeName="height" values="120;0" dur="1.8s" begin="0s" fill="freeze"/>
+      </rect>
+    </g>
+
+    <!-- Bottom bulb sand (fills from y=260 upward) -->
+    <g clip-path="url(#bottom-bulb)">
+      <rect x="0" y="260" width="200" height="0" fill="#fbbf24">
+        <animate attributeName="y" values="260;140" dur="1.8s" begin="0s" fill="freeze"/>
+        <animate attributeName="height" values="0;120" dur="1.8s" begin="0s" fill="freeze"/>
+      </rect>
+    </g>
+
+    <!-- Sand stream -->
+    <line x1="100" y1="140" x2="100" y2="140" stroke="#fbbf24" stroke-width="2">
+      <animate attributeName="y1" values="140;140;140" dur="1.8s"/>
+      <animate attributeName="y2" values="140;180;180" dur="1.8s"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="1.8s" fill="freeze"/>
+    </line>
+
+    <!-- Outline glass -->
+    <path d="M 40 20 L 160 20 L 100 140 L 160 260 L 40 260 L 100 140 Z"
+          fill="none" stroke="#0f172a" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+</svg>

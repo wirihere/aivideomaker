@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Donut chart — three segments draw in sequence around the ring,
+  center percentage counts up, legend fades in below.
+  Total: 3.0s. Holds.
+  Viewport: 360 × 360.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" width="360" height="360">
+  <!-- C = 2πr = 2π * 90 ≈ 565.49 -->
+  <g transform="translate(180 160) rotate(-90)" fill="none" stroke-width="36">
+    <!-- Track -->
+    <circle r="90" stroke="#e2e8f0"/>
+
+    <!-- Segment A: 50% (offset 0) -->
+    <circle r="90" stroke="#4f46e5" stroke-dasharray="565.49"
+            stroke-dashoffset="565.49">
+      <animate attributeName="stroke-dashoffset"
+               from="565.49" to="282.74" begin="0.1s" dur="0.7s" fill="freeze"
+               calcMode="spline" keySplines="0.4 0 0.2 1"/>
+    </circle>
+
+    <!-- Segment B: 30% — rotated to start where A ended (180°) -->
+    <g transform="rotate(180)">
+      <circle r="90" stroke="#06b6d4" stroke-dasharray="565.49"
+              stroke-dashoffset="565.49">
+        <animate attributeName="stroke-dashoffset"
+                 from="565.49" to="395.84" begin="0.85s" dur="0.5s" fill="freeze"
+                 calcMode="spline" keySplines="0.4 0 0.2 1"/>
+      </circle>
+    </g>
+
+    <!-- Segment C: 20% — starts at 288° -->
+    <g transform="rotate(288)">
+      <circle r="90" stroke="#f59e0b" stroke-dasharray="565.49"
+              stroke-dashoffset="565.49">
+        <animate attributeName="stroke-dashoffset"
+                 from="565.49" to="452.39" begin="1.4s" dur="0.4s" fill="freeze"
+                 calcMode="spline" keySplines="0.4 0 0.2 1"/>
+      </circle>
+    </g>
+  </g>
+
+  <!-- Centre label -->
+  <g opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="1.85s" dur="0.4s" fill="freeze"/>
+    <text x="180" y="172" font-family="Inter, system-ui, sans-serif"
+          font-size="48" font-weight="800" fill="#0f172a" text-anchor="middle">100%</text>
+  </g>
+
+  <!-- Legend -->
+  <g font-family="Inter, system-ui, sans-serif" font-size="13" fill="#475569" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.2s" dur="0.4s" fill="freeze"/>
+    <g transform="translate(40 290)">
+      <rect width="14" height="14" rx="2" fill="#4f46e5"/>
+      <text x="22" y="12" font-weight="600">Active · 50%</text>
+    </g>
+    <g transform="translate(140 290)">
+      <rect width="14" height="14" rx="2" fill="#06b6d4"/>
+      <text x="22" y="12" font-weight="600">Pending · 30%</text>
+    </g>
+    <g transform="translate(252 290)">
+      <rect width="14" height="14" rx="2" fill="#f59e0b"/>
+      <text x="22" y="12" font-weight="600">Idle · 20%</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Globe — meridian lines and a continent silhouette spin around a sphere.
+  Loops indefinitely.
+  Viewport: 320 × 320.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <defs>
+    <clipPath id="sphere">
+      <circle cx="160" cy="160" r="120"/>
+    </clipPath>
+    <radialGradient id="globe-light" cx="0.3" cy="0.3" r="0.8">
+      <stop offset="0"   stop-color="#67e8f9"/>
+      <stop offset="0.7" stop-color="#06b6d4"/>
+      <stop offset="1"   stop-color="#0e7490"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sphere -->
+  <circle cx="160" cy="160" r="120" fill="url(#globe-light)"/>
+
+  <!-- Latitude lines (static, just curves) -->
+  <g fill="none" stroke="#0e7490" stroke-width="1" opacity="0.6">
+    <ellipse cx="160" cy="160" rx="120" ry="40"/>
+    <ellipse cx="160" cy="160" rx="120" ry="80"/>
+    <ellipse cx="160" cy="160" rx="120" ry="110"/>
+  </g>
+
+  <!-- Spinning meridians (clipped) -->
+  <g clip-path="url(#sphere)">
+    <g>
+      <animateTransform attributeName="transform" type="translate"
+        from="0 0" to="-260 0" dur="8s" repeatCount="indefinite"/>
+
+      <!-- Two passes back to back for seamless loop -->
+      <g fill="none" stroke="#0e7490" stroke-width="1.4" opacity="0.6">
+        <ellipse cx="160" cy="160" rx="40"  ry="120"/>
+        <ellipse cx="160" cy="160" rx="80"  ry="120"/>
+        <ellipse cx="290" cy="160" rx="40"  ry="120"/>
+        <ellipse cx="420" cy="160" rx="40"  ry="120"/>
+        <ellipse cx="420" cy="160" rx="80"  ry="120"/>
+      </g>
+
+      <!-- Stylized continent shapes scrolling -->
+      <g fill="#0f766e" opacity="0.85">
+        <path d="M 80 110 Q 110 90 140 100 Q 170 105 180 130 Q 175 160 140 165 Q 100 168 80 140 Z"/>
+        <path d="M 200 200 Q 240 195 250 220 Q 245 245 215 250 Q 195 240 200 200 Z"/>
+        <path d="M 340 110 Q 380 100 410 120 Q 430 150 400 175 Q 360 175 340 150 Z"/>
+        <path d="M 460 220 Q 490 215 510 235 Q 505 260 475 265 Q 455 245 460 220 Z"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Sphere edge -->
+  <circle cx="160" cy="160" r="120" fill="none" stroke="#0f172a" stroke-width="3"/>
+  <!-- Highlight -->
+  <ellipse cx="118" cy="120" rx="40" ry="22" fill="#ffffff" opacity="0.18"/>
+</svg>

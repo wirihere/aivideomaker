@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Circular progress — sweeps 0 → 100% over 2.4s, holds full.
+  Viewport: 200 × 200. Counter included (uses values keyframes).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <g transform="translate(100 100) rotate(-90)">
+    <circle r="80" fill="none" stroke="#e2e8f0" stroke-width="14"/>
+    <circle r="80" fill="none" stroke="#10b981" stroke-width="14"
+            stroke-linecap="round" stroke-dasharray="502.65"
+            stroke-dashoffset="502.65">
+      <animate attributeName="stroke-dashoffset" from="502.65" to="0"
+               dur="2.4s" fill="freeze"
+               calcMode="spline" keySplines="0.45 0 0.25 1"/>
+    </circle>
+  </g>
+  <text x="100" y="108" font-family="Inter, system-ui, sans-serif" font-size="36"
+        font-weight="700" fill="#0f172a" text-anchor="middle">
+    <animate attributeName="opacity" from="0" to="1" begin="0.2s" dur="0.4s" fill="freeze"/>
+    <tspan>0</tspan>
+    <animate attributeName="textContent" values="0;12;28;47;65;82;94;100"
+             dur="2.4s" fill="freeze"/>
+    <tspan dx="2" font-size="20" fill="#64748b">%</tspan>
+  </text>
+</svg>

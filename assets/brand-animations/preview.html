@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Claim Mate & Consent Mate — brand animations preview</title>
+<style>
+  :root {
+    --paper:   #eef1f5;
+    --ink:     #0d1826;
+    --ink-3:   #4b5a6d;
+    --rule:    rgba(13,24,38,.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "JetBrains Mono", Consolas, monospace;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 48px 24px;
+    background-image:
+      linear-gradient(rgba(13,24,38,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(13,24,38,0.06) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 {
+    font-size: 14px; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 32px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 24px;
+  }
+  .card h2 {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--ink); margin-bottom: 16px;
+  }
+  .card .meta {
+    font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-3);
+    margin-bottom: 16px;
+  }
+  .frame {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 1px solid rgba(13,24,38,0.2);
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .frame object, .frame img { width: 100%; height: 100%; display: block; }
+  .controls { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  button {
+    font-family: inherit;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  button.ghost { background: transparent; color: var(--ink); }
+  .footnote {
+    margin-top: 48px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Brand animations · Sibling system preview</h1>
+
+    <div class="grid">
+
+      <div class="card">
+        <h2>Claim Mate — paper + tick</h2>
+        <div class="meta">4.2s · fights ACC · accent #1f3a68</div>
+        <div class="frame">
+          <object id="claim-mate-svg" type="image/svg+xml" data="../svg-animations/brand/claim-mate-paper-tick.svg"></object>
+        </div>
+        <div class="controls">
+          <button onclick="reload('claim-mate-svg', 'claim-mate-paper-tick.svg')">Replay</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Consent Mate — paper + tick</h2>
+        <div class="meta">4.2s · RMA consents · accent #2f5d3a</div>
+        <div class="frame">
+          <object id="consent-mate-svg" type="image/svg+xml" data="../svg-animations/brand/consent-mate-paper-tick.svg"></object>
+        </div>
+        <div class="controls">
+          <button onclick="reload('consent-mate-svg', 'consent-mate-paper-tick.svg')">Replay</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footnote">
+      Same timing envelope, same paper, same grid background. Different content and
+      accent colour per brand. Replay each to watch it from the start.
+    </div>
+  </div>
+
+<script>
+  // Simple replay by forcing a re-fetch on the <object> data attribute
+  function reload(id, src) {
+    const el = document.getElementById(id);
+    el.data = "";
+    // Add a cache-buster so the SVG reloads and re-runs SMIL animations from the start
+    requestAnimationFrame(() => { el.data = src + "?t=" + Date.now(); });
+  }
+</script>
+</body>
+</html>

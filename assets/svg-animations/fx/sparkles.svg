@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sparkles — 6 four-point stars twinkle at varying scales/positions.
+  Loops indefinitely.
+  Viewport: 320 × 320.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <defs>
+    <symbol id="sparkle" viewBox="-20 -20 40 40">
+      <path d="M 0 -18 C 2 -4 4 -2 18 0 C 4 2 2 4 0 18 C -2 4 -4 2 -18 0 C -4 -2 -2 -4 0 -18 Z"
+            fill="#fbbf24"/>
+    </symbol>
+  </defs>
+
+  <use href="#sparkle" x="100" y="60" width="60" height="60">
+    <animateTransform attributeName="transform" type="scale"
+      values="0;1;0" keyTimes="0;0.5;1" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </use>
+  <use href="#sparkle" x="200" y="100" width="40" height="40">
+    <animateTransform attributeName="transform" type="scale"
+      values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="0.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="0.4s" repeatCount="indefinite"/>
+  </use>
+  <use href="#sparkle" x="60" y="160" width="36" height="36">
+    <animateTransform attributeName="transform" type="scale"
+      values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="0.7s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="0.7s" repeatCount="indefinite"/>
+  </use>
+  <use href="#sparkle" x="220" y="200" width="50" height="50">
+    <animateTransform attributeName="transform" type="scale"
+      values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="1.0s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="1.0s" repeatCount="indefinite"/>
+  </use>
+  <use href="#sparkle" x="120" y="220" width="32" height="32">
+    <animateTransform attributeName="transform" type="scale"
+      values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="1.3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="1.3s" repeatCount="indefinite"/>
+  </use>
+  <use href="#sparkle" x="160" y="140" width="60" height="60">
+    <animateTransform attributeName="transform" type="scale"
+      values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="0.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.5;1" dur="2s" begin="0.2s" repeatCount="indefinite"/>
+  </use>
+</svg>

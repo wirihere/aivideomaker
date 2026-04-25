@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Film reel countdown intro — 5-4-3-2-1-Action classic cinema countdown with
+  sweep, film-grain vignette, leader-like reticle.
+  Total: 6.0s. Holds on "ACTION!".
+  Viewport: 1920 × 1080.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <radialGradient id="film-vignette" cx="0.5" cy="0.5" r="0.8">
+      <stop offset="0"   stop-color="#1c1917" stop-opacity="0"/>
+      <stop offset="0.7" stop-color="#1c1917" stop-opacity="0"/>
+      <stop offset="1"   stop-color="#000000" stop-opacity="0.7"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Film background -->
+  <rect width="1920" height="1080" fill="#fafaf9"/>
+  <rect width="1920" height="1080" fill="url(#film-vignette)"/>
+
+  <!-- Film sprocket holes (top) -->
+  <g fill="#1c1917">
+    <rect x="60"   y="30" width="60" height="30" rx="4"/>
+    <rect x="260"  y="30" width="60" height="30" rx="4"/>
+    <rect x="460"  y="30" width="60" height="30" rx="4"/>
+    <rect x="660"  y="30" width="60" height="30" rx="4"/>
+    <rect x="860"  y="30" width="60" height="30" rx="4"/>
+    <rect x="1060" y="30" width="60" height="30" rx="4"/>
+    <rect x="1260" y="30" width="60" height="30" rx="4"/>
+    <rect x="1460" y="30" width="60" height="30" rx="4"/>
+    <rect x="1660" y="30" width="60" height="30" rx="4"/>
+    <rect x="1860" y="30" width="60" height="30" rx="4"/>
+    <!-- Bottom -->
+    <rect x="60"   y="1020" width="60" height="30" rx="4"/>
+    <rect x="260"  y="1020" width="60" height="30" rx="4"/>
+    <rect x="460"  y="1020" width="60" height="30" rx="4"/>
+    <rect x="660"  y="1020" width="60" height="30" rx="4"/>
+    <rect x="860"  y="1020" width="60" height="30" rx="4"/>
+    <rect x="1060" y="1020" width="60" height="30" rx="4"/>
+    <rect x="1260" y="1020" width="60" height="30" rx="4"/>
+    <rect x="1460" y="1020" width="60" height="30" rx="4"/>
+    <rect x="1660" y="1020" width="60" height="30" rx="4"/>
+    <rect x="1860" y="1020" width="60" height="30" rx="4"/>
+  </g>
+
+  <!-- Crosshair reticle (center) -->
+  <g transform="translate(960 540)" stroke="#1c1917" stroke-width="4" fill="none">
+    <circle r="300"/>
+    <circle r="200" stroke-dasharray="8 8"/>
+    <line x1="-340" y1="0" x2="-180" y2="0"/>
+    <line x1="340"  y1="0" x2="180"  y2="0"/>
+    <line x1="0" y1="-340" x2="0" y2="-180"/>
+    <line x1="0" y1="340"  x2="0" y2="180"/>
+    <line x1="-30" y1="0" x2="30" y2="0"/>
+    <line x1="0" y1="-30" x2="0" y2="30"/>
+  </g>
+
+  <!-- Sweep hand (rotates each second) -->
+  <g transform="translate(960 540)">
+    <g stroke="#dc2626" stroke-width="8" stroke-linecap="round">
+      <line x1="0" y1="0" x2="0" y2="-280"/>
+      <animateTransform attributeName="transform" type="rotate"
+        values="0;360;360;720;720;1080;1080;1440;1440;1800"
+        keyTimes="0;0.167;0.2;0.367;0.4;0.567;0.6;0.767;0.8;1"
+        begin="0s" dur="5s" fill="freeze"/>
+    </g>
+  </g>
+
+  <!-- The big number -->
+  <g transform="translate(960 540)">
+    <text font-family="Impact, 'Arial Black', sans-serif" font-size="380" font-weight="900"
+          fill="#1c1917" text-anchor="middle" dy="130">
+      <animate attributeName="textContent"
+               values="5;4;3;2;1"
+               keyTimes="0;0.2;0.4;0.6;0.8"
+               begin="0s" dur="5s" fill="freeze"/>
+      <animate attributeName="opacity"
+               values="1;0.4;1;0.4;1;0.4;1;0.4;1;0.4;0"
+               keyTimes="0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;1"
+               begin="0s" dur="5s" fill="freeze"/>
+      5
+    </text>
+  </g>
+
+  <!-- ACTION! -->
+  <g transform="translate(960 540)" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="5.0s" dur="0.2s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="scale"
+      values="0.2;1.2;1" keyTimes="0;0.6;1" begin="5.0s" dur="0.7s" fill="freeze"/>
+    <rect x="-400" y="-90" width="800" height="180" fill="#dc2626"/>
+    <text font-family="Impact, 'Arial Black', sans-serif" font-size="140" font-weight="900"
+          fill="#ffffff" text-anchor="middle" dy="50" letter-spacing="12">ACTION!</text>
+  </g>
+
+  <!-- Corner timecode -->
+  <g transform="translate(80 140)" font-family="'Courier New', monospace" fill="#1c1917">
+    <text font-size="28" font-weight="700">ROLL 01</text>
+    <text y="30" font-size="20" font-weight="700" opacity="0.7">SCENE 1 · TAKE 1</text>
+  </g>
+</svg>

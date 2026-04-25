@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Outline check — circle draws around, then the tick draws inside.
+  Lighter, more elegant than the filled version. 1.6s.
+  Viewport: 200 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <g transform="translate(100 100)" fill="none" stroke="#10b981" stroke-width="8"
+     stroke-linecap="round" stroke-linejoin="round">
+    <circle r="80" stroke-dasharray="502.65" stroke-dashoffset="502.65"
+            transform="rotate(-90)">
+      <animate attributeName="stroke-dashoffset" from="502.65" to="0"
+               begin="0s" dur="0.9s" fill="freeze"
+               calcMode="spline" keySplines="0.4 0 0.2 1"/>
+    </circle>
+    <path d="M -32 4 L -8 30 L 36 -22"
+          stroke-dasharray="120" stroke-dashoffset="120">
+      <animate attributeName="stroke-dashoffset" from="120" to="0"
+               begin="0.85s" dur="0.55s" fill="freeze"
+               calcMode="spline" keySplines="0.4 0 0.2 1"/>
+    </path>
+  </g>
+</svg>

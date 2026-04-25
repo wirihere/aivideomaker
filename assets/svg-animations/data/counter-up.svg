@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Number counter — ticks 0 → 8,420 over 1.6s using values keyframes.
+  Subtitle and underline reveal after.
+  Total: 2.4s. Holds.
+  Viewport: 480 × 220.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 220" width="480" height="220">
+  <text x="240" y="120" font-family="Inter, system-ui, sans-serif"
+        font-size="84" font-weight="800" fill="#0f172a" text-anchor="middle"
+        letter-spacing="-2" font-variant-numeric="tabular-nums">
+    <animate attributeName="textContent"
+             values="0;230;1,205;3,400;5,820;7,210;8,200;8,420"
+             begin="0.2s" dur="1.6s" fill="freeze"/>
+    0
+  </text>
+  <line x1="240" y1="142" x2="240" y2="142" stroke="#4f46e5" stroke-width="4" stroke-linecap="round">
+    <animate attributeName="x1" from="240" to="180" begin="1.85s" dur="0.5s" fill="freeze"
+             calcMode="spline" keySplines="0.4 0 0.2 1"/>
+    <animate attributeName="x2" from="240" to="300" begin="1.85s" dur="0.5s" fill="freeze"
+             calcMode="spline" keySplines="0.4 0 0.2 1"/>
+  </line>
+  <text x="240" y="180" font-family="Inter, system-ui, sans-serif"
+        font-size="16" font-weight="600" fill="#64748b" text-anchor="middle"
+        letter-spacing="2" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="2.0s" dur="0.4s" fill="freeze"/>
+    NEW USERS THIS WEEK
+  </text>
+</svg>

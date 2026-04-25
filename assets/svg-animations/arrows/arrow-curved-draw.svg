@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Hand-drawn curved arrow — line draws, then arrowhead pops in.
+  Useful for pointing at things in screenshots.
+  Total: 1.2s. Holds.
+  Viewport: 320 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <g fill="none" stroke="#0f172a" stroke-width="6"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 40 40 Q 130 20 200 80 T 270 160"
+          stroke-dasharray="320" stroke-dashoffset="320">
+      <animate attributeName="stroke-dashoffset" from="320" to="0"
+               begin="0s" dur="0.9s" fill="freeze"
+               calcMode="spline" keySplines="0.4 0 0.2 1"/>
+    </path>
+    <g transform="translate(270 160)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.85s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        from="0.4" to="1" begin="0.85s" dur="0.3s" fill="freeze"
+        calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+      <path d="M -22 -8 L 0 0 L -10 -22"
+            transform="rotate(60)"/>
+    </g>
+  </g>
+</svg>

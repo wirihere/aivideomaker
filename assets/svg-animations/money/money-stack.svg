@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Money stack — bills land one by one onto a growing pile.
+  Total: 2.6s. Holds.
+  Viewport: 320 × 280.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 280" width="320" height="280">
+  <!-- Drop shadow under stack -->
+  <ellipse cx="160" cy="248" rx="100" ry="8" fill="#0f172a" opacity="0">
+    <animate attributeName="opacity" from="0" to="0.18" begin="0.4s" dur="0.4s" fill="freeze"/>
+  </ellipse>
+
+  <!-- Bill template: green rectangle with $ symbol -->
+  <g>
+    <!-- Bill 1 -->
+    <g transform="translate(160 -80) rotate(-6)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.0s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="160 -80" to="160 220" begin="0.0s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.4 0 0.6 1.1"/>
+      <rect x="-90" y="-30" width="180" height="60" rx="4" fill="#15803d" stroke="#052e16" stroke-width="2"/>
+      <circle r="18" fill="#bbf7d0" stroke="#052e16" stroke-width="2"/>
+      <text y="6" font-family="serif" font-size="20" font-weight="800" fill="#052e16" text-anchor="middle">$</text>
+    </g>
+    <!-- Bill 2 -->
+    <g transform="translate(160 -80) rotate(4)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.45s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="160 -80" to="160 200" begin="0.45s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.4 0 0.6 1.1"/>
+      <rect x="-90" y="-30" width="180" height="60" rx="4" fill="#16a34a" stroke="#052e16" stroke-width="2"/>
+      <circle r="18" fill="#bbf7d0" stroke="#052e16" stroke-width="2"/>
+      <text y="6" font-family="serif" font-size="20" font-weight="800" fill="#052e16" text-anchor="middle">$</text>
+    </g>
+    <!-- Bill 3 -->
+    <g transform="translate(160 -80) rotate(-2)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="0.9s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="160 -80" to="160 180" begin="0.9s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.4 0 0.6 1.1"/>
+      <rect x="-90" y="-30" width="180" height="60" rx="4" fill="#22c55e" stroke="#052e16" stroke-width="2"/>
+      <circle r="18" fill="#bbf7d0" stroke="#052e16" stroke-width="2"/>
+      <text y="6" font-family="serif" font-size="20" font-weight="800" fill="#052e16" text-anchor="middle">$</text>
+    </g>
+    <!-- Bill 4 -->
+    <g transform="translate(160 -80) rotate(7)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.35s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="160 -80" to="160 160" begin="1.35s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.4 0 0.6 1.1"/>
+      <rect x="-90" y="-30" width="180" height="60" rx="4" fill="#34d399" stroke="#052e16" stroke-width="2"/>
+      <circle r="18" fill="#bbf7d0" stroke="#052e16" stroke-width="2"/>
+      <text y="6" font-family="serif" font-size="20" font-weight="800" fill="#052e16" text-anchor="middle">$</text>
+    </g>
+    <!-- Bill 5 (top, level) -->
+    <g transform="translate(160 -80) rotate(-3)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.8s" dur="0.2s" fill="freeze"/>
+      <animateTransform attributeName="transform" type="translate"
+        from="160 -80" to="160 140" begin="1.8s" dur="0.5s" fill="freeze"
+        calcMode="spline" keySplines="0.4 0 0.6 1.1"/>
+      <rect x="-90" y="-30" width="180" height="60" rx="4" fill="#4ade80" stroke="#052e16" stroke-width="2"/>
+      <circle r="18" fill="#bbf7d0" stroke="#052e16" stroke-width="2"/>
+      <text y="6" font-family="serif" font-size="20" font-weight="800" fill="#052e16" text-anchor="middle">$</text>
+    </g>
+  </g>
+</svg>

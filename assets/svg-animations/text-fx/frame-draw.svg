@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Frame — rectangle draws around content clockwise starting top-left,
+  then corner ticks pop in at the four corners (cadastral accent).
+  Total: 1.4s. Holds.
+  Viewport: 480 × 240.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 240" width="480" height="240">
+  <!-- The content inside -->
+  <text x="240" y="130" font-family="Inter, system-ui, sans-serif"
+        font-size="40" font-weight="800" fill="#0f172a" text-anchor="middle" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="0.9s" dur="0.3s" fill="freeze"/>
+    CERTIFIED
+  </text>
+
+  <!-- Outline path (perimeter ~1240) -->
+  <path d="M 20 20 L 460 20 L 460 220 L 20 220 Z"
+        fill="none" stroke="#0f172a" stroke-width="4"
+        stroke-linejoin="miter"
+        stroke-dasharray="1280" stroke-dashoffset="1280">
+    <animate attributeName="stroke-dashoffset" from="1280" to="0"
+             begin="0s" dur="1.0s" fill="freeze"
+             calcMode="spline" keySplines="0.4 0 0.2 1"/>
+  </path>
+
+  <!-- Corner ticks -->
+  <g stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="square">
+    <path d="M 20 44 L 20 20 L 44 20" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.05s" dur="0.2s" fill="freeze"/>
+    </path>
+    <path d="M 436 20 L 460 20 L 460 44" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.15s" dur="0.2s" fill="freeze"/>
+    </path>
+    <path d="M 460 196 L 460 220 L 436 220" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.25s" dur="0.2s" fill="freeze"/>
+    </path>
+    <path d="M 44 220 L 20 220 L 20 196" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" begin="1.35s" dur="0.2s" fill="freeze"/>
+    </path>
+  </g>
+</svg>

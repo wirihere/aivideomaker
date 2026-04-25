@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Claim Mate — favicon mark
+  32×32 square. Just the amber stamp with an M and a tick.
+  Used where the full lockup is too small to read (browser tab, app icon).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- amber rounded-rect body -->
+  <rect x="2" y="6" width="28" height="22" rx="4" ry="4" fill="#FFB84D" />
+  <!-- M in cream -->
+  <text x="16" y="23"
+        font-family="Inter, -apple-system, Segoe UI, sans-serif"
+        font-weight="900"
+        font-size="16"
+        fill="#F5F1E8"
+        text-anchor="middle"
+        letter-spacing="-0.5">M</text>
+  <!-- tick dot (simplified at this size) -->
+  <circle cx="25" cy="22" r="3" fill="#0B1F3F" />
+</svg>

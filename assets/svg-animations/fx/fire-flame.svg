@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Fire flame — three layered tongues flicker via path morphing & scale.
+  Loops indefinitely.
+  Viewport: 200 × 280.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280" width="200" height="280">
+  <defs>
+    <radialGradient id="g-outer" cx="0.5" cy="0.8" r="0.6">
+      <stop offset="0"   stop-color="#fbbf24"/>
+      <stop offset="0.6" stop-color="#f97316"/>
+      <stop offset="1"   stop-color="#ef4444"/>
+    </radialGradient>
+    <radialGradient id="g-inner" cx="0.5" cy="0.85" r="0.5">
+      <stop offset="0"   stop-color="#fef3c7"/>
+      <stop offset="0.7" stop-color="#fbbf24"/>
+      <stop offset="1"   stop-color="#f59e0b"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Glow halo -->
+  <ellipse cx="100" cy="240" rx="68" ry="14" fill="#f97316" opacity="0.35">
+    <animate attributeName="rx" values="68;82;68" dur="0.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.35;0.6;0.35" dur="0.8s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Outer flame -->
+  <path fill="url(#g-outer)">
+    <animate attributeName="d" dur="1.2s" repeatCount="indefinite"
+      values="M 100 30
+              C 50 90, 40 160, 80 220
+              Q 100 250 120 220
+              C 160 160, 150 90, 100 30 Z;
+
+              M 100 20
+              C 40 100, 50 170, 90 230
+              Q 100 250 110 230
+              C 150 170, 160 100, 100 20 Z;
+
+              M 100 30
+              C 50 90, 40 160, 80 220
+              Q 100 250 120 220
+              C 160 160, 150 90, 100 30 Z"/>
+  </path>
+
+  <!-- Inner flame -->
+  <path fill="url(#g-inner)">
+    <animate attributeName="d" dur="0.9s" repeatCount="indefinite"
+      values="M 100 100
+              C 70 140, 80 200, 100 230
+              C 120 200, 130 140, 100 100 Z;
+
+              M 100 90
+              C 60 150, 80 210, 100 232
+              C 120 210, 140 150, 100 90 Z;
+
+              M 100 100
+              C 70 140, 80 200, 100 230
+              C 120 200, 130 140, 100 100 Z"/>
+  </path>
+
+  <!-- Sparks -->
+  <g fill="#fbbf24">
+    <circle r="3">
+      <animateMotion path="M 80 100 Q 60 40 50 -10" dur="1.4s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="1.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2">
+      <animateMotion path="M 120 110 Q 140 50 150 -10" dur="1.6s" begin="0.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="1.6s" begin="0.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2.5">
+      <animateMotion path="M 100 80 Q 95 30 100 -20" dur="1.8s" begin="0.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="1.8s" begin="0.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

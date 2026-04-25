@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Confetti burst — 24 colored ribbons explode from center, rotating and falling.
+  Total: 3.0s. Holds (off-screen).
+  Viewport: 600 × 600.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <g transform="translate(300 300)">
+    <!-- Helper: 24 ribbons in a fan, each gets translate + rotate + opacity fade
+         The path uses animateMotion to give an arcing trajectory. -->
+
+    <!-- Each ribbon: rect 14x6, color cycles -->
+    <g>
+      <!-- ring 1 (8 pieces, 45° apart) -->
+      <rect x="-7" y="-3" width="14" height="6" fill="#ec4899">
+        <animateMotion path="M 0 0 Q -60 -180 -160 -100" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="540" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+      <rect x="-7" y="-3" width="14" height="6" fill="#06b6d4">
+        <animateMotion path="M 0 0 Q 60 -180 160 -100" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-540" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+      <rect x="-7" y="-3" width="14" height="6" fill="#fbbf24">
+        <animateMotion path="M 0 0 L -180 -40" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="720" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+      <rect x="-7" y="-3" width="14" height="6" fill="#10b981">
+        <animateMotion path="M 0 0 L 180 -40" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-720" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+      <rect x="-7" y="-3" width="14" height="6" fill="#a855f7">
+        <animateMotion path="M 0 0 Q -100 -100 -120 60" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="540" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+      <rect x="-7" y="-3" width="14" height="6" fill="#ef4444">
+        <animateMotion path="M 0 0 Q 100 -100 120 60" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-540" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+      <rect x="-7" y="-3" width="14" height="6" fill="#3b82f6">
+        <animateMotion path="M 0 0 Q 0 -200 -40 80" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="900" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+      <rect x="-7" y="-3" width="14" height="6" fill="#f97316">
+        <animateMotion path="M 0 0 Q 0 -200 40 80" begin="0s" dur="2.4s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-900" begin="0s" dur="2.4s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.7;1" begin="0s" dur="2.4s" fill="freeze"/>
+      </rect>
+
+      <!-- ring 2 (later, smaller) -->
+      <rect x="-5" y="-2" width="10" height="4" fill="#fbbf24">
+        <animateMotion path="M 0 0 Q -80 -120 -200 200" begin="0.2s" dur="2.6s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="720" begin="0.2s" dur="2.6s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.75;1" begin="0.2s" dur="2.6s" fill="freeze"/>
+      </rect>
+      <rect x="-5" y="-2" width="10" height="4" fill="#06b6d4">
+        <animateMotion path="M 0 0 Q 80 -120 200 200" begin="0.2s" dur="2.6s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-720" begin="0.2s" dur="2.6s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.75;1" begin="0.2s" dur="2.6s" fill="freeze"/>
+      </rect>
+      <rect x="-5" y="-2" width="10" height="4" fill="#ec4899">
+        <animateMotion path="M 0 0 L -240 80" begin="0.2s" dur="2.6s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="540" begin="0.2s" dur="2.6s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.75;1" begin="0.2s" dur="2.6s" fill="freeze"/>
+      </rect>
+      <rect x="-5" y="-2" width="10" height="4" fill="#10b981">
+        <animateMotion path="M 0 0 L 240 80" begin="0.2s" dur="2.6s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-540" begin="0.2s" dur="2.6s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.75;1" begin="0.2s" dur="2.6s" fill="freeze"/>
+      </rect>
+      <rect x="-5" y="-2" width="10" height="4" fill="#a855f7">
+        <animateMotion path="M 0 0 Q -120 -160 -100 240" begin="0.3s" dur="2.7s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="900" begin="0.3s" dur="2.7s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.78;1" begin="0.3s" dur="2.7s" fill="freeze"/>
+      </rect>
+      <rect x="-5" y="-2" width="10" height="4" fill="#ef4444">
+        <animateMotion path="M 0 0 Q 120 -160 100 240" begin="0.3s" dur="2.7s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-900" begin="0.3s" dur="2.7s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.78;1" begin="0.3s" dur="2.7s" fill="freeze"/>
+      </rect>
+      <rect x="-5" y="-2" width="10" height="4" fill="#3b82f6">
+        <animateMotion path="M 0 0 Q 0 -180 -180 240" begin="0.4s" dur="2.6s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="720" begin="0.4s" dur="2.6s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.8;1" begin="0.4s" dur="2.6s" fill="freeze"/>
+      </rect>
+      <rect x="-5" y="-2" width="10" height="4" fill="#f97316">
+        <animateMotion path="M 0 0 Q 0 -180 180 240" begin="0.4s" dur="2.6s" fill="freeze"/>
+        <animateTransform attributeName="transform" type="rotate" from="0" to="-720" begin="0.4s" dur="2.6s" fill="freeze" additive="sum"/>
+        <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.8;1" begin="0.4s" dur="2.6s" fill="freeze"/>
+      </rect>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Laptop — base appears, lid opens (vertical scaleY), screen content shows.
+  Total: 2.6s. Holds.
+  Viewport: 480 × 320.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" width="480" height="320">
+  <!-- Base -->
+  <g opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="0s" dur="0.4s" fill="freeze"/>
+    <path d="M 80 250 L 400 250 L 440 280 L 40 280 Z" fill="#cbd5e1" stroke="#0f172a" stroke-width="3" stroke-linejoin="round"/>
+    <rect x="200" y="248" width="80" height="6" rx="3" fill="#94a3b8"/>
+  </g>
+
+  <!-- Lid (rotates open from bottom edge) -->
+  <g transform="translate(240 250)">
+    <g transform="scale(1 0)">
+      <animateTransform attributeName="transform" type="scale"
+        from="1 0" to="1 -1" begin="0.4s" dur="0.9s" fill="freeze"
+        calcMode="spline" keySplines="0.4 0 0.2 1"/>
+
+      <!-- Lid body -->
+      <rect x="-160" y="0" width="320" height="200" rx="6" fill="#0f172a"/>
+      <rect x="-150" y="10" width="300" height="180" rx="3" fill="#1e293b"/>
+
+      <!-- Screen content - flipped upright (the parent scaleY is -1, so
+           we don't need to flip again; just paint normally) -->
+      <g transform="translate(0 100)">
+        <!-- Window chrome -->
+        <rect x="-140" y="-80" width="280" height="160" rx="6" fill="#0b1220"/>
+        <rect x="-140" y="-80" width="280" height="20" rx="6" fill="#1e293b"/>
+        <circle cx="-126" cy="-70" r="3" fill="#ef4444" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="1.4s" dur="0.2s" fill="freeze"/>
+        </circle>
+        <circle cx="-114" cy="-70" r="3" fill="#facc15" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="1.45s" dur="0.2s" fill="freeze"/>
+        </circle>
+        <circle cx="-102" cy="-70" r="3" fill="#22c55e" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="1.5s" dur="0.2s" fill="freeze"/>
+        </circle>
+
+        <!-- Code lines -->
+        <g stroke-linecap="round" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" begin="1.7s" dur="0.4s" fill="freeze"/>
+          <line x1="-120" y1="-40" x2="-40"  y2="-40" stroke="#06b6d4" stroke-width="3"/>
+          <line x1="-30"  y1="-40" x2="80"   y2="-40" stroke="#a855f7" stroke-width="3"/>
+          <line x1="-120" y1="-22" x2="0"    y2="-22" stroke="#94a3b8" stroke-width="3"/>
+          <line x1="-110" y1="-4"  x2="60"   y2="-4"  stroke="#94a3b8" stroke-width="3"/>
+          <line x1="-110" y1="14"  x2="20"   y2="14"  stroke="#10b981" stroke-width="3"/>
+          <line x1="-110" y1="32"  x2="100"  y2="32"  stroke="#94a3b8" stroke-width="3"/>
+          <line x1="-110" y1="50"  x2="40"   y2="50"  stroke="#fbbf24" stroke-width="3"/>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- Power LED on base -->
+  <circle cx="240" cy="270" r="2" fill="#22c55e" opacity="0">
+    <animate attributeName="opacity" values="0;1;1" keyTimes="0;0.5;1" begin="2.0s" dur="0.4s" fill="freeze"/>
+  </circle>
+</svg>

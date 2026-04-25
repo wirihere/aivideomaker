@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Right-pointing arrow with a horizontal CTA bounce. Loops.
+  Viewport: 240 × 100.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 100" width="240" height="100">
+  <g transform="translate(60 50)" fill="none" stroke="#4f46e5" stroke-width="10"
+     stroke-linecap="round" stroke-linejoin="round">
+    <line x1="0" y1="0" x2="100" y2="0"/>
+    <path d="M 60 -34 L 100 0 L 60 34"/>
+    <animateTransform attributeName="transform" type="translate"
+      values="60 50;90 50;60 50" dur="1.2s" repeatCount="indefinite"
+      calcMode="spline" keySplines="0.4 0 0.6 1; 0.4 0 0.6 1" keyTimes="0;0.5;1"/>
+  </g>
+</svg>

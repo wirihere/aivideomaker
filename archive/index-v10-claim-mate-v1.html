@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  /* ============================================================
+     CLAIM MATE — vertical 1080×1920 promo · 25.5s
+     Brand: cadastral / ordnance-survey
+     Paper #eef1f5 · ink #0d1826 · navy #1f3a68 · warn #9a3a3a
+     Type: Inter (body) · JetBrains Mono (machinery) · Instrument Serif italic (emphasis)
+     Tone: quiet, precise. Not a brand that shouts.
+
+     Combines all asset types: brand SVG (scene 1), stock photo (scene 2),
+     stock video (scene 5), Lucide SVG icons (scene 4), HTML/CSS (every scene),
+     Edge TTS audio narration (full track).
+
+     NO INVENTED STATS. Copy is value statements only.
+     ============================================================ */
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px; height: 1920px; overflow: hidden;
+    background: #eef1f5;
+    font-family: "Inter", "Segoe UI", -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #0d1826;
+  }
+
+  [data-composition-id="claim-mate"] {
+    position: relative; width: 1080px; height: 1920px; overflow: hidden;
+    background: #eef1f5;
+  }
+
+  /* Persistent paper grid */
+  .grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(#c8d0da 0.5px, transparent 0.5px),
+      linear-gradient(90deg, #c8d0da 0.5px, transparent 0.5px);
+    background-size: 36px 36px;
+    opacity: 0.55;
+    z-index: 1;
+  }
+
+  /* Cadastral corner ticks */
+  .corner-ticks { position: absolute; inset: 0; pointer-events: none; z-index: 12; }
+  .corner-ticks svg { position: absolute; width: 56px; height: 56px; }
+  .corner-ticks svg.tl { top: 60px; left: 60px; }
+  .corner-ticks svg.tr { top: 60px; right: 60px; transform: scaleX(-1); }
+  .corner-ticks svg.bl { bottom: 60px; left: 60px; transform: scaleY(-1); }
+  .corner-ticks svg.br { bottom: 60px; right: 60px; transform: scale(-1, -1); }
+
+  /* Top ledger */
+  .ledger {
+    position: absolute; top: 60px; left: 0; right: 0;
+    text-align: center; z-index: 11;
+    font-family: "JetBrains Mono", "Consolas", monospace;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #4b5a6d;
+    mix-blend-mode: multiply;
+  }
+  .ledger .pipe { color: #1f3a68; padding: 0 14px; }
+
+  /* Bottom case strip */
+  .case-strip {
+    position: absolute; bottom: 60px; left: 80px; right: 80px;
+    border-top: 1px solid rgba(13,24,38,0.25);
+    padding-top: 18px; z-index: 11;
+    display: flex; justify-content: space-between;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #4b5a6d;
+    mix-blend-mode: multiply;
+  }
+
+  /* Scene wrapper */
+  .scene {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 200px 80px 160px;
+    box-sizing: border-box;
+    z-index: 10;
+  }
+
+  /* ============== Scene 1: brand SVG hero ============== */
+  .s1-brand {
+    width: 880px; height: 880px;
+    box-shadow: 0 30px 80px rgba(13,24,38,0.18);
+  }
+  .s1-eyebrow {
+    margin-top: 36px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 0.22em;
+    color: #9a3a3a; text-align: center;
+  }
+
+  /* ============== Scene 2: STOCK PHOTO + overlay ============== */
+  .s2-photo-frame {
+    position: relative;
+    width: 880px; height: 1180px;
+    border: 1.4px solid #0d1826;
+    box-shadow: 0 30px 80px rgba(13,24,38,0.22);
+    overflow: hidden;
+  }
+  .s2-photo-frame img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    /* Tone the photo to match the paper aesthetic */
+    filter: grayscale(0.6) sepia(0.18) contrast(1.05) brightness(0.92);
+  }
+  .s2-photo-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(238,241,245,0.0) 0%,
+      rgba(238,241,245,0.25) 40%,
+      rgba(238,241,245,0.92) 100%);
+  }
+  .s2-headline {
+    position: absolute; bottom: 70px; left: 50px; right: 50px;
+    font-family: "Inter", sans-serif;
+    font-size: 88px; font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.95; text-align: center;
+    color: #0d1826;
+  }
+  .s2-headline .crossed {
+    position: relative; display: inline-block;
+  }
+  .s2-strike {
+    position: absolute; top: 50%; left: -10px; right: -10px;
+    height: 6px; background: #9a3a3a;
+    transform: translateY(-50%) scaleX(0);
+    transform-origin: left center;
+    z-index: 1;
+  }
+
+  .s2-credit {
+    position: absolute; top: 14px; right: 14px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.75);
+    background: rgba(13,24,38,0.55);
+    padding: 4px 8px;
+    z-index: 2;
+  }
+
+  /* ============== Scene 3: Pure typography ============== */
+  .s3-eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 0.24em; color: #1f3a68;
+    margin-bottom: 60px;
+  }
+  .s3-headline {
+    font-family: "Inter", sans-serif;
+    font-size: 150px; font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.95; text-align: center;
+    color: #0d1826;
+  }
+  .s3-headline .italic {
+    font-family: "Instrument Serif", "Cormorant Garamond", "Times New Roman", serif;
+    font-style: italic;
+    color: #1f3a68;
+    font-weight: 400;
+  }
+
+  /* ============== Scene 4: 3-step process ============== */
+  .s4-title {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 0.24em; color: #1f3a68;
+    margin-bottom: 60px;
+  }
+  .s4-steps {
+    display: flex; flex-direction: column;
+    gap: 34px; width: 820px;
+  }
+  .s4-step {
+    display: flex; align-items: center; gap: 36px;
+    padding: 32px 40px;
+    background: #ffffff;
+    border: 1.4px solid #0d1826;
+  }
+  .s4-step .num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 60px; font-weight: 800;
+    color: #1f3a68; letter-spacing: -0.02em;
+    line-height: 1; width: 70px;
+  }
+  .s4-step .icon { width: 80px; height: 80px; flex-shrink: 0; }
+  .s4-step .icon img { width: 100%; height: 100%; }
+  .s4-step .body { flex: 1; }
+  .s4-step .verb {
+    font-family: "Inter", sans-serif;
+    font-size: 48px; font-weight: 700;
+    letter-spacing: -0.02em; color: #0d1826; line-height: 1;
+  }
+  .s4-step .obj {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 18px; font-weight: 700;
+    letter-spacing: 0.16em; color: #4b5a6d;
+    margin-top: 8px;
+  }
+
+  /* ============== Scene 5: STOCK VIDEO + trust signals ============== */
+  .s5-video-bg {
+    position: absolute; inset: 0;
+    overflow: hidden; z-index: 0;
+  }
+  .s5-video-bg video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.5) sepia(0.12) contrast(1.05) brightness(0.7);
+  }
+  .s5-video-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(238,241,245,0.35) 0%,
+      rgba(31,58,104,0.55) 100%);
+    z-index: 1;
+  }
+  .s5-content {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 200px 80px 160px;
+    z-index: 2;
+    color: #ffffff;
+  }
+  .s5-eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 0.24em; color: #fbf3d8;
+    margin-bottom: 80px;
+  }
+  .s5-row {
+    display: flex; align-items: center; gap: 32px;
+    margin-bottom: 60px;
+  }
+  .s5-row .icon {
+    width: 80px; height: 80px;
+    background: #ffffff;
+    padding: 16px;
+    border-radius: 4px;
+  }
+  .s5-row .icon img { width: 100%; height: 100%; }
+  .s5-row .label {
+    font-family: "Inter", sans-serif;
+    font-size: 72px; font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+  .s5-credit {
+    position: absolute; top: 130px; right: 90px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.75);
+    background: rgba(13,24,38,0.55);
+    padding: 4px 8px;
+    z-index: 3;
+  }
+
+  /* ============== Scene 6: Built in NZ + wordmark CTA ============== */
+  .s6-eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 0.24em;
+    color: #1f3a68;
+    margin-bottom: 50px;
+  }
+  .s6-built {
+    font-family: "Inter", sans-serif;
+    font-size: 96px; font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.95; text-align: center;
+    color: #0d1826;
+    margin-bottom: 110px;
+  }
+  .s6-built .accent {
+    color: #1f3a68;
+  }
+
+  .s6-wordmark {
+    font-family: "JetBrains Mono", "Consolas", monospace;
+    font-weight: 700;
+    font-size: 130px;
+    letter-spacing: -0.02em;
+    color: #0d1826;
+  }
+  .s6-wordmark .slash { color: #1f3a68; }
+  .s6-url {
+    margin-top: 30px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 30px; font-weight: 600;
+    letter-spacing: 0.14em;
+    color: #1f3a68;
+    padding: 14px 30px;
+    border-top: 1.4px solid #0d1826;
+    border-bottom: 1.4px solid #0d1826;
+  }
+</style>
+</head>
+<body>
+  <div data-composition-id="claim-mate" data-start="0" data-duration="25.5" data-width="1080" data-height="1920">
+
+    <!-- Persistent paper grid -->
+    <div class="grid-bg"></div>
+
+    <!-- Corner crop ticks -->
+    <div class="corner-ticks">
+      <svg class="tl" viewBox="0 0 56 56"><path d="M 4 30 L 4 4 L 30 4" fill="none" stroke="#0d1826" stroke-width="1.5"/></svg>
+      <svg class="tr" viewBox="0 0 56 56"><path d="M 4 30 L 4 4 L 30 4" fill="none" stroke="#0d1826" stroke-width="1.5"/></svg>
+      <svg class="bl" viewBox="0 0 56 56"><path d="M 4 30 L 4 4 L 30 4" fill="none" stroke="#0d1826" stroke-width="1.5"/></svg>
+      <svg class="br" viewBox="0 0 56 56"><path d="M 4 30 L 4 4 L 30 4" fill="none" stroke="#0d1826" stroke-width="1.5"/></svg>
+    </div>
+
+    <!-- Top ledger -->
+    <div class="ledger" id="ledger">
+      CLAIM<span class="pipe">/</span>MATE<span class="pipe">·</span>CASE FILE 2026/04
+    </div>
+
+    <!-- Bottom case strip -->
+    <div class="case-strip" id="case-strip">
+      <span>SCENE</span>
+      <span id="case-scene">01 OF 06</span>
+      <span>25.5s</span>
+    </div>
+
+    <!-- Audio narration -->
+    <audio id="el-audio"
+           data-start="0" data-duration="25.5" data-track-index="9"
+           src="assets/voiceover/claim-mate.mp3"></audio>
+
+    <!-- ============================================================
+         SCENE 1: 0–3.5s · brand SVG hero
+         narration: "Your A C C claim was declined" 0.10–2.46s
+         ============================================================ -->
+    <div id="scene-1" class="scene clip"
+         data-start="0" data-duration="3.5" data-track-index="1">
+      <img id="s1-brand" class="s1-brand"
+           src="assets/svg-animations/brand/claim-mate-paper-tick.svg" alt=""/>
+      <div class="s1-eyebrow" id="s1-eyebrow">— A C C  ·  D E C L I N E  N O T I C E —</div>
+    </div>
+
+    <!-- ============================================================
+         SCENE 2: 3.5–6.0s · STOCK PHOTO + overlay headline
+         narration: "A decline isn't the end" 3.68–5.32s
+         (Demonstrates: stock IMAGE asset combined with HTML overlay)
+         ============================================================ -->
+    <div id="scene-2" class="scene clip"
+         data-start="3.5" data-duration="2.5" data-track-index="1">
+      <div class="s2-photo-frame" id="s2-photo-frame">
+        <img src="assets/photos/denied-letter.jpg" alt=""/>
+        <div class="s2-photo-overlay"></div>
+        <div class="s2-credit" id="s2-credit">PHOTO · PIXABAY</div>
+        <div class="s2-headline" id="s2-headline">
+          A decline <span class="crossed" id="s2-crossed">isn't the end<span class="s2-strike" id="s2-strike"></span></span>.
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCENE 3: 6.0–8.5s · Pure typography pivot
+         narration: "It's just the start" 6.51–7.72s
+         ============================================================ -->
+    <div id="scene-3" class="scene clip"
+         data-start="6.0" data-duration="2.5" data-track-index="1">
+      <div class="s3-eyebrow" id="s3-eyebrow">— REFRAME —</div>
+      <div class="s3-headline" id="s3-headline">
+        It's just <span class="italic">the start</span>.
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCENE 4: 8.5–13.5s · 3-step process (Lucide icons)
+         narration: "Claim Mate reads your decline letter, finds the legal angle, and drafts your reply" 8.95–12.97s
+         (Demonstrates: SVG ICONS combined with HTML composition)
+         ============================================================ -->
+    <div id="scene-4" class="scene clip"
+         data-start="8.5" data-duration="5.0" data-track-index="1">
+      <div class="s4-title" id="s4-title">— HOW IT WORKS —</div>
+
+      <div class="s4-steps">
+        <div class="s4-step" id="s4-step-1">
+          <div class="num">01</div>
+          <div class="icon"><img src="assets/icons/lucide/file-text.svg" alt=""/></div>
+          <div class="body">
+            <div class="verb">READ</div>
+            <div class="obj">YOUR DECLINE LETTER</div>
+          </div>
+        </div>
+        <div class="s4-step" id="s4-step-2">
+          <div class="num">02</div>
+          <div class="icon"><img src="assets/icons/lucide/search.svg" alt=""/></div>
+          <div class="body">
+            <div class="verb">FIND</div>
+            <div class="obj">THE LEGAL ANGLE</div>
+          </div>
+        </div>
+        <div class="s4-step" id="s4-step-3">
+          <div class="num">03</div>
+          <div class="icon"><img src="assets/icons/lucide/pen-tool.svg" alt=""/></div>
+          <div class="body">
+            <div class="verb">DRAFT</div>
+            <div class="obj">YOUR REPLY</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCENE 5: 13.5–17.5s · STOCK VIDEO + trust signals
+         narration: "Free to start. Backed by data." 13.26–16.90s
+         (Demonstrates: stock VIDEO asset combined with HTML overlay + Lucide SVG icons)
+         ============================================================ -->
+    <div id="scene-5" class="scene clip"
+         data-start="13.5" data-duration="4.0" data-track-index="1">
+      <div class="s5-video-bg">
+        <video id="s5-video"
+               src="assets/videos/working.mp4"
+               muted playsinline></video>
+      </div>
+      <div class="s5-video-overlay"></div>
+
+      <div class="s5-credit">VIDEO · PIXABAY</div>
+
+      <div class="s5-content">
+        <div class="s5-eyebrow" id="s5-eyebrow">— TRUST —</div>
+        <div class="s5-row" id="s5-row-1">
+          <div class="icon"><img src="assets/icons/lucide/check-circle-2.svg" alt=""/></div>
+          <div class="label">FREE TO START</div>
+        </div>
+        <div class="s5-row" id="s5-row-2">
+          <div class="icon"><img src="assets/icons/lucide/bar-chart-3.svg" alt=""/></div>
+          <div class="label">BACKED BY DATA</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SCENE 6: 17.5–25.5s · Built in NZ + wordmark CTA
+         narration: "Built in New Zealand. claim mate dot co dot N Z" 18.11–25.13s
+         ============================================================ -->
+    <div id="scene-6" class="scene clip"
+         data-start="17.5" data-duration="8.0" data-track-index="1">
+      <div class="s6-eyebrow" id="s6-eyebrow">— ORIGIN —</div>
+      <div class="s6-built" id="s6-built">
+        BUILT IN<br/><span class="accent">NEW ZEALAND</span>
+      </div>
+
+      <!-- Canonical brand: wordmark only -->
+      <div class="s6-wordmark" id="s6-wordmark">CLAIM<span class="slash">/</span>MATE</div>
+      <div class="s6-url" id="s6-url">claim-mate.co.nz</div>
+    </div>
+
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+
+    /* ============== Persistent strips ============== */
+    tl.from("#ledger", { y: -10, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.05);
+    tl.from("#case-strip", { y: 10, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.05);
+
+    // Scene counter
+    tl.set("#case-scene", { textContent: "01 OF 06" }, 0);
+    tl.set("#case-scene", { textContent: "02 OF 06" }, 3.5);
+    tl.set("#case-scene", { textContent: "03 OF 06" }, 6.0);
+    tl.set("#case-scene", { textContent: "04 OF 06" }, 8.5);
+    tl.set("#case-scene", { textContent: "05 OF 06" }, 13.5);
+    tl.set("#case-scene", { textContent: "06 OF 06" }, 17.5);
+
+    /* ============================================================
+       SCENE 1 — brand SVG plays its own SMIL
+       ============================================================ */
+    tl.from("#s1-brand", { opacity: 0, scale: 0.95, duration: 0.4, ease: "power2.out", transformOrigin: "center" }, 0.0);
+    tl.from("#s1-eyebrow", { opacity: 0, y: 10, duration: 0.4, ease: "power2.out" }, 2.55);
+
+    /* ============================================================
+       SCENE 2 — STOCK PHOTO + overlay headline
+       ============================================================ */
+    tl.from("#s2-photo-frame", { opacity: 0, scale: 1.04, duration: 0.5, ease: "power2.out", transformOrigin: "center" }, 3.5);
+    tl.from("#s2-credit", { opacity: 0, duration: 0.4, ease: "power2.out" }, 4.0);
+    tl.from("#s2-headline", { opacity: 0, y: 30, duration: 0.5, ease: "power3.out" }, 3.85);
+    // Strikethrough draws as "isn't the end" is spoken
+    tl.to("#s2-strike", { scaleX: 1, duration: 0.45, ease: "power2.out" }, 4.55);
+
+    /* ============================================================
+       SCENE 3 — Pure typography
+       ============================================================ */
+    tl.from("#s3-eyebrow", { opacity: 0, y: 14, duration: 0.4, ease: "power2.out" }, 6.05);
+    tl.from("#s3-headline", { opacity: 0, y: 40, duration: 0.6, ease: "power3.out" }, 6.45);
+
+    /* ============================================================
+       SCENE 4 — 3 step process
+       narration: "reads your letter" ~9.6 / "finds the angle" ~10.7 / "drafts the reply" ~12.0
+       ============================================================ */
+    tl.from("#s4-title", { opacity: 0, y: 14, duration: 0.4, ease: "power2.out" }, 8.55);
+    tl.from("#s4-step-1", { opacity: 0, x: -60, duration: 0.45, ease: "power3.out" }, 8.95);
+    tl.from("#s4-step-2", { opacity: 0, x: -60, duration: 0.45, ease: "power3.out" }, 10.65);
+    tl.from("#s4-step-3", { opacity: 0, x: -60, duration: 0.45, ease: "power3.out" }, 11.95);
+
+    /* ============================================================
+       SCENE 5 — STOCK VIDEO + trust signals
+       narration: "Free to start" 13.26 / "Backed by data" 15.92
+       ============================================================ */
+    tl.from("#s5-eyebrow", { opacity: 0, y: 14, duration: 0.4, ease: "power2.out" }, 13.55);
+    tl.from("#s5-row-1", { opacity: 0, x: -50, duration: 0.45, ease: "power3.out" }, 13.7);
+    tl.from("#s5-row-2", { opacity: 0, x: -50, duration: 0.45, ease: "power3.out" }, 16.0);
+
+    /* ============================================================
+       SCENE 6 — Built in NZ + wordmark CTA
+       narration: "Built in New Zealand" 18.11 / "claim mate dot co dot N Z" 20.35–25.13
+       ============================================================ */
+    tl.from("#s6-eyebrow", { opacity: 0, y: 14, duration: 0.4, ease: "power2.out" }, 17.55);
+    tl.from("#s6-built", { opacity: 0, y: 30, duration: 0.6, ease: "power3.out" }, 17.95);
+    tl.from("#s6-wordmark", { y: 16, opacity: 0, duration: 0.55, ease: "power3.out" }, 21.0);
+    tl.from("#s6-url", { scaleX: 0, opacity: 0, duration: 0.55, ease: "power2.out", transformOrigin: "center" }, 21.4);
+
+    window.__timelines["claim-mate"] = tl;
+  </script>
+</body>
+</html>

@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Kindred — Promo (template-library test)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="design/cards.css">
+  <link rel="stylesheet" href="design/tokens-kindred.css">
+  <style>
+    /* ---------- Page reset + composition canvas ---------- */
+    html, body { margin: 0; padding: 0; background: #FBF9F6; overflow: hidden; }
+
+    [data-composition-id="kindred-promo"] {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--card-paper);
+      font-family: var(--card-font-ui);
+      color: var(--card-navy);
+    }
+
+    /* ---------- Scene shell ---------- */
+    .scene {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      will-change: opacity, transform;
+    }
+    .scene-bg-cream { background: var(--card-paper); }
+    .scene-bg-teal {
+      background: linear-gradient(160deg, #1A9E8F 0%, #14806F 70%, #0F6A5B 100%);
+    }
+
+    .scene-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 140px 90px;
+      gap: 36px;
+    }
+
+    /* ---------- Subtle dot grid overlay (cream scenes) — calm, paper-like depth ---------- */
+    .paper-grain {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 50% 50%, rgba(27, 42, 61, 0.018) 1px, transparent 1.6px);
+      background-size: 26px 26px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .scene > * { position: relative; z-index: 2; }
+    .scene > .paper-grain { z-index: 1; }
+
+    /* ---------- Scene 1 — Hook ---------- */
+    .s1-kicker {
+      font-family: var(--card-font-mono);
+      font-weight: 600;
+      font-size: 28px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--card-slate);
+    }
+    .s1-title {
+      font-family: var(--card-font-display);
+      font-weight: 500;
+      font-size: 168px;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--card-navy);
+      text-align: center;
+      max-width: 960px;
+    }
+    .s1-title .em {
+      font-style: italic;
+      color: var(--card-slate);
+    }
+
+    /* ---------- Scene 2 — Brand introduce ---------- */
+    .s2-logo {
+      width: 240px;
+      height: 240px;
+      border-radius: 56px;
+      box-shadow: 0 24px 60px rgba(15, 22, 33, 0.28);
+      object-fit: cover;
+      will-change: transform, opacity;
+    }
+    .s2-wordmark {
+      font-family: var(--card-font-display);
+      font-weight: 600;
+      font-size: 248px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--card-paper);
+      text-shadow: 0 6px 20px rgba(15, 22, 33, 0.30);
+      display: flex;
+      justify-content: center;
+      will-change: transform;
+    }
+    .s2-wordmark > span {
+      display: inline-block;
+      will-change: transform, opacity;
+    }
+    .s2-wordmark__sp { width: 0.32em; }
+    /* Soft breathing radial accent behind the wordmark — adds depth on the teal canvas. */
+    .s2-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 52%, rgba(255, 255, 255, 0.10) 0%, transparent 55%);
+      will-change: opacity, transform;
+      z-index: 0;
+    }
+    .s2-glow ~ * { position: relative; z-index: 1; }
+    .s2-tagline {
+      font-family: var(--card-font-ui);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 64px;
+      line-height: 1.2;
+      color: var(--card-paper-soft);
+      text-align: center;
+      max-width: 920px;
+      opacity: 0.96;
+    }
+
+    /* ---------- Scene 3 — Highlighted list ---------- */
+    /* Three big phrases, default state dim. Each lights up exactly when narrated. */
+    .s3-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 36px;
+      max-width: 1000px;
+    }
+    .s3-list-item {
+      font-family: var(--card-font-display);
+      font-weight: 500;
+      font-size: 102px;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: rgba(27, 42, 61, 0.18);  /* dim default */
+      text-align: center;
+      transition: color 0.4s ease, transform 0.4s ease;
+      will-change: color, transform;
+    }
+    .s3-list-item .em {
+      color: inherit;
+      font-style: italic;
+    }
+    .s3-list-item.is-active {
+      color: var(--card-navy);
+      transform: scale(1.04);
+    }
+    .s3-list-item.is-active .em {
+      color: var(--card-slate);
+    }
+
+    /* ---------- Scene 4 — Proof + app screenshot in phone frame ---------- */
+    .s4-headline {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      max-width: 880px;
+      text-align: center;
+    }
+    .s4-h-line {
+      position: relative;
+      display: inline-block;
+      font-family: var(--card-font-display);
+      font-weight: 500;
+      font-size: 112px;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--card-navy);
+      padding: 4px 18px;
+      will-change: transform, opacity;
+    }
+    .s4-h-line--em {
+      color: var(--card-slate);
+      font-style: italic;
+      font-weight: 600;
+      font-size: 124px;
+    }
+    /* Strike-through line — animated by GSAP scaleX from 0 → 1 after the text lands. */
+    .strike-line {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      top: 50%;
+      height: 8px;
+      background: var(--card-slate);
+      transform: scaleX(0) translateY(-50%);
+      transform-origin: left center;
+      border-radius: 4px;
+      opacity: 0.85;
+      will-change: transform;
+      pointer-events: none;
+    }
+    .s4-phone-wrap {
+      position: relative;
+      width: 440px;
+      height: 952px;
+      border-radius: 60px;
+      background: #0F1621;
+      padding: 16px;
+      box-shadow:
+        0 40px 100px rgba(15, 22, 33, 0.30),
+        inset 0 0 0 2px #222a36;
+      will-change: transform, opacity, box-shadow;
+    }
+    .s4-ping {
+      position: absolute;
+      top: 70px;
+      right: -28px;
+      min-width: 78px;
+      height: 78px;
+      padding: 0 18px;
+      border-radius: 50%;
+      background: var(--card-warn);
+      color: var(--card-paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: var(--card-font-ui);
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: 0.02em;
+      box-shadow: 0 12px 28px rgba(233, 139, 106, 0.45);
+      z-index: 5;
+      will-change: transform, opacity;
+    }
+    .s4-phone-screen {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 48px;
+      display: block;
+    }
+    .s4-tone {
+      font-family: var(--card-font-ui);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 32px;
+      line-height: 1.3;
+      color: var(--card-slate-ink);
+      text-align: center;
+      max-width: 620px;
+    }
+
+    /* ---------- Scene 5 — CTA ---------- */
+    .s5-kicker {
+      font-family: var(--card-font-mono);
+      font-weight: 500;
+      font-size: 26px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--card-paper-soft);
+      opacity: 0.84;
+    }
+    .s5-mark {
+      font-family: var(--card-font-display);
+      font-weight: 600;
+      font-size: 268px;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      color: var(--card-paper);
+      text-shadow: 0 6px 24px rgba(15, 22, 33, 0.32);
+    }
+    .s5-url {
+      position: relative;
+      display: inline-block;
+      font-family: var(--card-font-mono);
+      font-weight: 500;
+      font-size: 52px;
+      letter-spacing: 0.06em;
+      color: var(--card-paper);
+      opacity: 0.94;
+      text-shadow: 0 2px 8px rgba(15, 22, 33, 0.28);
+      padding-bottom: 12px;
+    }
+    .s5-url__underline {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 3px;
+      background: var(--card-paper);
+      opacity: 0.7;
+      transform: scaleX(0);
+      transform-origin: left center;
+      will-change: transform;
+    }
+    .s5-fine {
+      font-family: var(--card-font-ui);
+      font-style: italic;
+      font-weight: 400;
+      font-size: 30px;
+      line-height: 1.4;
+      color: var(--card-paper-soft);
+      text-align: center;
+      max-width: 720px;
+      opacity: 0.92;
+    }
+    .s5-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 16px 34px;
+      border-radius: 40px;
+      background: rgba(251, 249, 246, 0.18);
+      border: 1.5px solid rgba(251, 249, 246, 0.42);
+      font-family: var(--card-font-mono);
+      font-weight: 600;
+      font-size: 26px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--card-paper);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 0 0 rgba(251, 249, 246, 0.0);
+      will-change: transform, box-shadow;
+    }
+
+    /* ---------- Persistent brand header — logo + wordmark, top of frame, full duration ---------- */
+    .brand-header {
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      z-index: 50;
+      pointer-events: none;
+      will-change: opacity, transform;
+    }
+    .brand-header__logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(15, 22, 33, 0.18);
+    }
+    .brand-header__wordmark {
+      font-family: var(--card-font-display);
+      font-weight: 600;
+      font-size: 56px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--card-navy);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      transition: color 0.4s ease;
+    }
+    /* Auto-flips to light text when an active scene declares data-scene-mode="dark".
+       The GSAP block below sets [data-mode] on the header at each scene's start. */
+    .brand-header[data-mode="dark"] .brand-header__wordmark {
+      color: var(--card-paper);
+    }
+
+    /* ---------- Transitions: color wash + whip streak ---------- */
+    .color-wash {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, var(--card-accent) 0%, var(--card-slate) 100%);
+      z-index: 80;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .whip-streak {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 80;
+      will-change: transform, opacity;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.0) 38%,
+        rgba(255, 255, 255, 0.55) 50%,
+        rgba(255, 255, 255, 0.0) 62%,
+        transparent 100%
+      );
+      filter: blur(18px);
+    }
+    /* Scene-content wrapper used by GSAP for whip slide motion — inherits scene fill. */
+    .scene-content { will-change: transform, filter; }
+
+    /* ---------- Atmospheric layers — make it feel like video, not slides ---------- */
+
+    /* Per-scene vignette: subtle edge darkening adds cinematic depth */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at 50% 45%,
+        transparent 50%,
+        rgba(15, 22, 33, 0.18) 100%
+      );
+      mix-blend-mode: multiply;
+    }
+
+    /* Global film-grain overlay: SVG turbulence noise, subtle warmth across whole comp */
+    .film-grain {
+      position: absolute;
+      inset: 0;
+      z-index: 95;
+      pointer-events: none;
+      opacity: 0.08;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size: 200px 200px;
+      will-change: background-position;
+    }
+
+    /* Floating particles — soft glowing dots drifting up. JS generates them with
+       seeded positions; GSAP drifts them. Used on teal/dark scenes for ambient depth. */
+    .particles {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.55);
+      filter: blur(2.5px);
+      will-change: transform, opacity;
+    }
+
+    /* Light beam sweep — soft diagonal beam crosses the canvas once.
+       Used on long calm scenes (e.g. scene 3) to add motion without distracting. */
+    .light-beam {
+      position: absolute;
+      inset: -50px;
+      z-index: 4;
+      pointer-events: none;
+      background: linear-gradient(
+        100deg,
+        transparent 0%, transparent 38%,
+        rgba(255, 255, 255, 0.22) 50%,
+        transparent 62%, transparent 100%
+      );
+      filter: blur(40px);
+      transform: translateX(-110%);
+      will-change: transform;
+      mix-blend-mode: soft-light;
+    }
+
+    /* Paper grain drift — re-target the existing .paper-grain to allow position animation */
+    .paper-grain { will-change: background-position; }
+
+    /* Persistent atmospheric layer — covers full comp, sits above scenes but below header */
+    .atmosphere {
+      position: absolute;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div data-composition-id="kindred-promo" data-start="0" data-duration="29.5" data-width="1080" data-height="1920">
+
+    <!-- =============== AUDIO NARRATION (track 9) =============== -->
+    <audio
+      id="audio-narration"
+      src="assets/voiceover/kindred-promo.mp3"
+      data-start="0"
+      data-duration="29"
+      data-track-index="9"
+      data-volume="1"
+    ></audio>
+
+    <!-- =============== MUSIC BED (track 8, ducked under narration) =============== -->
+    <audio
+      id="audio-music"
+      src="assets/music/kindred-bed.mp3"
+      data-start="0"
+      data-duration="29.5"
+      data-track-index="8"
+      data-volume="0.18"
+    ></audio>
+
+    <!-- =============== PERSISTENT BRAND HEADER (track 10, full duration) =============== -->
+    <div id="brand-header" class="clip brand-header"
+         data-start="0" data-duration="29.5" data-track-index="10">
+      <img class="brand-header__logo" src="assets/logo/kindred-icon.png" alt="" />
+      <div id="brand-header-wordmark" class="brand-header__wordmark">Kindred</div>
+    </div>
+
+    <!-- Warm Community stack: zoom-in / zoom-out transitions only.
+         No color washes (felt like a scroll-down move), no whips (kinetic-pop language). -->
+
+
+    <!-- =============== GLOBAL FILM GRAIN (track 13, full duration) =============== -->
+    <!-- SVG-noise overlay above all scenes for warm film texture. Persistent. -->
+    <div id="film-grain" class="clip film-grain"
+         data-start="0" data-duration="29.5" data-track-index="13"></div>
+
+    <!-- =============== SCENE 1 — Hook (0 → 3.5s) =============== -->
+    <div id="scene-1" class="clip scene scene-bg-cream"
+         data-start="0" data-duration="3.5" data-track-index="0"
+         data-scene-mode="light">
+      <div class="paper-grain"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div id="s1-title" class="s1-title">
+          Your street's full of <span class="em">useful things</span>.
+        </div>
+      </div>
+    </div>
+
+    <!-- =============== SCENE 2 — Brand introduce (3 → 8s) =============== -->
+    <div id="scene-2" class="clip scene scene-bg-teal"
+         data-start="3" data-duration="5" data-track-index="1"
+         data-scene-mode="dark">
+      <div class="s2-glow"></div>
+      <div class="particles" data-particles="14"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div id="s2-wordmark" class="s2-wordmark" data-text="Kindred">Kindred</div>
+        <div id="s2-tagline" class="s2-tagline">
+          the community app<br />powered by kindness
+        </div>
+      </div>
+    </div>
+
+    <!-- =============== SCENE 3 — Three actions (7.5 → 16.5s) =============== -->
+    <div id="scene-3" class="clip scene scene-bg-cream"
+         data-start="7.5" data-duration="9" data-track-index="2"
+         data-scene-mode="light">
+      <div class="paper-grain"></div>
+      <div id="s3-beam" class="light-beam"></div>
+      <div class="vignette"></div>
+      <div class="scene-content">
+        <div class="s3-list">
+          <div id="s3-item-1" class="s3-list-item">Give what you've got.</div>
+          <div id="s3-item-2" class="s3-list-item">Ask for what you need.</div>
+          <div id="s3-item-3" class="s3-list-item">Find <span class="em">local help</span>.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============== SCENE 4 — Proof + app shot (16 → 24.5s) =============== -->
+    <div id="scene-4" class="clip scene scene-bg-cream"
+         data-start="16" data-duration="8.5" data-track-index="3"
+         data-scene-mode="light">
+      <div class="paper-grain"></div>
+      <div class="vignette"></div>
+      <div class="scene-content" style="justify-content: flex-start; padding-top: 200px; gap: 40px;">
+        <div id="s4-headline" class="s4-headline">
+          <span class="s4-h-line" id="s4-l1">No money.<span class="strike-line" id="s4-strike-1"></span></span>
+          <span class="s4-h-line" id="s4-l2">No ads.<span class="strike-line" id="s4-strike-2"></span></span>
+          <span class="s4-h-line" id="s4-l3">No algorithm.<span class="strike-line" id="s4-strike-3"></span></span>
+          <span class="s4-h-line s4-h-line--em" id="s4-l4">Just local.</span>
+        </div>
+        <div id="s4-phone" class="s4-phone-wrap">
+          <img class="s4-phone-screen" src="assets/photos/kindred-app.png" alt="" />
+          <div id="s4-ping" class="s4-ping">+1</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =============== SCENE 5 — CTA (24 → 29.5s) =============== -->
+    <div id="scene-5" class="clip scene scene-bg-teal"
+         data-start="24" data-duration="5.5" data-track-index="4"
+         data-scene-mode="dark">
+      <div class="particles" data-particles="14"></div>
+      <div class="vignette"></div>
+      <div class="scene-content" style="gap: 36px;">
+        <div id="s5-mark" class="s5-mark">Kindred</div>
+        <div id="s5-fine" class="s5-fine">
+          Free for every street<br />in New Zealand.
+        </div>
+        <div id="s5-url" class="s5-url">kindred-nz.org<span id="s5-url-underline" class="s5-url__underline"></span></div>
+      </div>
+    </div>
+
+    <!-- =============== TIMELINE =============== -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      // GENERIC seeded PRNG (mulberry32) — deterministic "random" for particles
+      // so renders are bit-identical across machines. No Math.random allowed.
+      function _mulberry32(a) {
+        return function () {
+          var t = (a += 0x6d2b79f5);
+          t = Math.imul(t ^ (t >>> 15), t | 1);
+          t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      // GENERIC per-letter splitter — splits any element with [data-text] into
+      // <span> per character so individual letters can be animated/staggered.
+      document.querySelectorAll('[data-composition-id="kindred-promo"] [data-text]')
+        .forEach((el) => {
+          if (el.children.length > 0) return;
+          el.innerHTML = (el.dataset.text || el.textContent)
+            .split("")
+            .map((c) => c === " "
+              ? '<span class="s2-wordmark__sp">&nbsp;</span>'
+              : `<span>${c}</span>`)
+            .join("");
+        });
+
+      // GENERIC particle generator — fills any [data-particles="N"] container with
+      // N .particle children at seeded-random positions. Reusable for any scene.
+      const _seedRng = _mulberry32(7);
+      document.querySelectorAll('[data-composition-id="kindred-promo"] [data-particles]')
+        .forEach((container) => {
+          if (container.children.length > 0) return;
+          const count = parseInt(container.dataset.particles || "14", 10);
+          for (let i = 0; i < count; i++) {
+            const p = document.createElement("div");
+            p.className = "particle";
+            p.style.left = (_seedRng() * 92 + 4).toFixed(2) + "%";
+            p.style.top = (_seedRng() * 70 + 30).toFixed(2) + "%";
+            const scale = (_seedRng() * 0.8 + 0.5).toFixed(2);
+            const op = (_seedRng() * 0.4 + 0.35).toFixed(2);
+            p.style.opacity = op;
+            p.style.transform = `scale(${scale})`;
+            container.appendChild(p);
+          }
+        });
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+
+      // ---------------- ATMOSPHERIC LAYERS — generic, scene-discovering ----------------
+
+      // Camera push-in: every scene-content slowly scales 1.0 → 1.03 over its duration.
+      // Stops 0.4s before scene end so it doesn't fight scene transitions.
+      document.querySelectorAll('[data-composition-id="kindred-promo"] .scene .scene-content')
+        .forEach((content) => {
+          const scene = content.closest(".scene");
+          const start = parseFloat(scene.dataset.start || "0");
+          const dur = parseFloat(scene.dataset.duration || "5");
+          const pushDur = Math.max(0.6, dur - 0.4);
+          tl.fromTo(content,
+            { transformOrigin: "50% 50%", scale: 1.0 },
+            { scale: 1.03, duration: pushDur, ease: "none" },
+            start);
+        });
+
+      // Paper-grain drift on cream scenes — slow diagonal translation of the grain
+      // background. Organic texture motion at the scale of "paper held in hand".
+      document.querySelectorAll('[data-composition-id="kindred-promo"] .paper-grain')
+        .forEach((grain) => {
+          const scene = grain.closest(".scene");
+          const start = parseFloat(scene.dataset.start || "0");
+          const dur = parseFloat(scene.dataset.duration || "5");
+          tl.fromTo(grain,
+            { backgroundPosition: "0px 0px" },
+            { backgroundPosition: "26px 26px", duration: dur, ease: "none" },
+            start);
+        });
+
+      // Particle drift: each particle rises slowly with slight horizontal sway.
+      // Per-particle deterministic randomness via seeded PRNG. Fade out near scene end.
+      let _pidx = 0;
+      document.querySelectorAll('[data-composition-id="kindred-promo"] .particle')
+        .forEach((p) => {
+          const scene = p.closest(".scene");
+          if (!scene) return;
+          const start = parseFloat(scene.dataset.start || "0");
+          const dur = parseFloat(scene.dataset.duration || "5");
+          const r = _mulberry32(200 + _pidx++);
+          const rise = -(r() * 280 + 180);
+          const sway = (r() - 0.5) * 90;
+          const delay = r() * (dur * 0.25);
+          tl.to(p,
+            { y: rise, x: sway, duration: dur - delay, ease: "sine.out" },
+            start + delay);
+          tl.to(p,
+            { opacity: 0, duration: Math.min(0.9, dur * 0.25), ease: "power1.out" },
+            start + dur - Math.min(0.9, dur * 0.25));
+        });
+
+      // Global film-grain drift — subtle background-position random walk for
+      // organic texture across the whole comp. One slow tween across full duration.
+      tl.fromTo("#film-grain",
+        { backgroundPosition: "0px 0px" },
+        { backgroundPosition: "-200px 140px", duration: 29.5, ease: "none" },
+        0);
+
+      // Light beam sweep on scene 3 — diagonal bright wash crosses the canvas once,
+      // adding ambient motion to the longest calm scene.
+      tl.fromTo("#s3-beam",
+        { x: "-110%" },
+        { x: "110%", duration: 5.5, ease: "power1.inOut" },
+        7.6);
+
+      // ---------------- Persistent brand header (0 → full duration) ----------------
+      // Soft entrance from above. Color is token-driven via tokens-<brand>.css.
+      tl.from("#brand-header", { y: -28, opacity: 0, duration: 0.7, ease: "power3.out" }, 0.1);
+
+      // GENERIC mode-flip — reads data-scene-mode from each scene and flips the
+      // header's [data-mode] attr at scene start. CSS handles the actual color
+      // swap via .brand-header[data-mode="dark"] selector. Works for any number
+      // of scenes, any brand, any composition — just declare data-scene-mode on
+      // each .scene and the header adapts.
+      const _scenes = document.querySelectorAll(
+        '[data-composition-id="kindred-promo"] .scene[data-scene-mode]'
+      );
+      _scenes.forEach((scene) => {
+        const start = parseFloat(scene.dataset.start || "0");
+        const mode = scene.dataset.sceneMode || "light";
+        tl.set("#brand-header", { attr: { "data-mode": mode } }, start);
+      });
+
+      // ---------------- Scene 1 — Hook (0 → 3.5s) ----------------
+      tl.from("#scene-1", { opacity: 0, duration: 0.45, ease: "power2.out" }, 0.0);
+      tl.from("#s1-title", { y: 60, opacity: 0, duration: 0.9, ease: "expo.out" }, 0.35);
+      // gentle drift on the title for warmth (starts after entrance lands)
+      tl.to("#s1-title", { y: -6, duration: 2.0, ease: "sine.inOut" }, 1.35);
+
+      // ---------------- Transition: sc1→sc2 — ZOOM IN (deeper into the brand) ----------------
+      // Outgoing scene 1: scales up + fades. Incoming scene 2: starts small + grows + fades.
+      tl.to("#scene-1",
+        { scale: 1.18, opacity: 0, duration: 0.55, ease: "power2.in", transformOrigin: "50% 50%" }, 2.95);
+
+      // ---------------- Scene 2 — Brand introduce (3 → 8s) — Card 03 ----------------
+      tl.from("#scene-2",
+        { scale: 0.82, opacity: 0, duration: 0.6, ease: "power2.out", transformOrigin: "50% 50%" }, 3.0);
+      // Soft accent glow fades in behind the wordmark
+      tl.from(".s2-glow", { opacity: 0, scale: 0.92, duration: 1.0, ease: "power2.out" }, 3.1);
+      // Per-letter wordmark stagger — each letter rides up + back-out
+      tl.from("#s2-wordmark > span", {
+        y: 90, opacity: 0, rotate: -4,
+        duration: 0.7, ease: "back.out(1.7)",
+        stagger: 0.055
+      }, 3.45);
+      // Tagline lands after the wordmark settles
+      tl.from("#s2-tagline", { y: 30, opacity: 0, duration: 0.6 }, 4.5);
+      // Soft breathing on the glow — adds ambient life
+      tl.to(".s2-glow", { opacity: 0.55, scale: 1.06, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 4.7);
+
+      // ---------------- Transition: sc2→sc3 — ZOOM OUT (broader view of what brand offers) ----------------
+      tl.to("#scene-2",
+        { scale: 0.82, opacity: 0, duration: 0.55, ease: "power2.in", transformOrigin: "50% 50%" }, 7.45);
+
+      // ---------------- Scene 3 — Highlighted list (7.5 → 16.5s) ----------------
+      tl.from("#scene-3",
+        { scale: 1.18, opacity: 0, duration: 0.6, ease: "power2.out", transformOrigin: "50% 50%" }, 7.5);
+
+      // All three list items enter dimmed at scene start, stacked vertically.
+      tl.from(".s3-list-item", {
+        y: 40, opacity: 0, duration: 0.55, ease: "expo.out",
+        stagger: 0.12,
+      }, 7.65);
+
+      // Highlight each item exactly when narrated. CSS transition smooths the colour change.
+      // ("Give..." 7.98, "Ask..." 10.32, "Find..." 12.89 from VTT)
+      tl.set("#s3-item-1", { className: "s3-list-item is-active" }, 7.95);
+      tl.set("#s3-item-1", { className: "s3-list-item" }, 10.30);
+
+      tl.set("#s3-item-2", { className: "s3-list-item is-active" }, 10.32);
+      tl.set("#s3-item-2", { className: "s3-list-item" }, 12.85);
+
+      tl.set("#s3-item-3", { className: "s3-list-item is-active" }, 12.89);
+      // Item 3 stays active until scene end
+
+      // ---------------- Transition: sc3→sc4 — ZOOM IN (deeper into proof) ----------------
+      tl.to("#scene-3",
+        { scale: 1.18, opacity: 0, duration: 0.55, ease: "power2.in", transformOrigin: "50% 50%" }, 15.95);
+
+      // ---------------- Scene 4 — Proof + app shot (16 → 24.5s) — Card 04 ----------------
+      tl.from("#scene-4",
+        { scale: 0.82, opacity: 0, duration: 0.6, ease: "power2.out", transformOrigin: "50% 50%" }, 16.0);
+      // Phone enters first — anchors the visual centre
+      tl.from("#s4-phone", { y: 80, scale: 0.92, opacity: 0, duration: 0.85, ease: "back.out(1.3)" }, 16.4);
+      // Kinetic headline — each line cued to its own narration sentence in the VTT
+      tl.from("#s4-l1", { y: 36, opacity: 0, duration: 0.55, ease: "expo.out" }, 16.25);
+      // Strike-through line 1 — draws across "No money" right after it lands
+      tl.to("#s4-strike-1", { scaleX: 1, duration: 0.42, ease: "power2.inOut" }, 16.78);
+
+      tl.from("#s4-l2", { y: 36, opacity: 0, duration: 0.55, ease: "expo.out" }, 18.18);
+      tl.to("#s4-strike-2", { scaleX: 1, duration: 0.42, ease: "power2.inOut" }, 18.65);
+
+      tl.from("#s4-l3", { y: 36, opacity: 0, duration: 0.55, ease: "expo.out" }, 20.24);
+      tl.to("#s4-strike-3", { scaleX: 1, duration: 0.42, ease: "power2.inOut" }, 20.95);
+
+      // "Just local" — the answer that stays unstruck. Bigger entrance to anchor the moment.
+      tl.from("#s4-l4", { y: 50, opacity: 0, scale: 0.92, duration: 0.8, ease: "back.out(1.5)" }, 22.58);
+      // Subtle phone shadow breathing — slow, ambient
+      tl.to("#s4-phone", { y: -8, duration: 3.0, ease: "sine.inOut", yoyo: true, repeat: 1 }, 17.5);
+      // Notification ping arrives during the "Just local" beat — the human alternative to algorithm
+      tl.from("#s4-ping", { scale: 0, opacity: 0, duration: 0.5, ease: "back.out(2.2)" }, 22.0);
+      tl.to("#s4-ping",   { scale: 1.14, duration: 0.34, ease: "sine.inOut", yoyo: true, repeat: 1 }, 22.65);
+
+      // ---------------- Transition: sc4→sc5 — ZOOM OUT (back to brand scale, ready to act) ----------------
+      tl.to("#scene-4",
+        { scale: 0.82, opacity: 0, duration: 0.55, ease: "power2.in", transformOrigin: "50% 50%" }, 23.95);
+
+      // ---------------- Scene 5 — CTA (24 → 29.5s) ----------------
+      tl.from("#scene-5",
+        { scale: 1.18, opacity: 0, duration: 0.6, ease: "power2.out", transformOrigin: "50% 50%" }, 24.0);
+      tl.from("#s5-mark", { y: 50, opacity: 0, duration: 0.85, ease: "expo.out" }, 24.45);
+      tl.from("#s5-fine", { y: 28, opacity: 0, duration: 0.6 }, 25.1);
+      tl.from("#s5-url",  { y: 26, opacity: 0, duration: 0.55 }, 25.7);
+      // URL underline draws in left-to-right
+      tl.to("#s5-url-underline", { scaleX: 1, duration: 0.7, ease: "expo.out" }, 26.0);
+
+      window.__timelines["kindred-promo"] = tl;
+    </script>
+  </div>
+</body>
+</html>

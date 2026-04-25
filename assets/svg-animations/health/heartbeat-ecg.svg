@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ECG heartbeat — sweeping line with repeating QRS complex, heart pulse on the left.
+  Loops indefinitely.
+  Viewport: 720 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200">
+  <rect width="720" height="200" fill="#0f172a"/>
+
+  <!-- Heart icon -->
+  <g transform="translate(60 100)">
+    <path d="M 0 22
+             C -22 8, -34 -10, -22 -24
+             C -12 -30, 0 -24, 0 -18
+             C 0 -24, 12 -30, 22 -24
+             C 34 -10, 22 8, 0 22 Z"
+          fill="#dc2626">
+      <animate attributeName="transform" attributeType="XML" type="scale" additive="sum"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum"
+        values="1;1.18;1;1.18;1" keyTimes="0;0.1;0.2;0.3;1"
+        dur="1.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- BPM label -->
+  <g transform="translate(60 160)">
+    <text font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700"
+          fill="#94a3b8" text-anchor="middle" letter-spacing="2">72 BPM</text>
+  </g>
+
+  <!-- Baseline -->
+  <line x1="120" y1="100" x2="700" y2="100" stroke="#1e3a8a" stroke-width="1" opacity="0.5"/>
+
+  <!-- ECG trace -->
+  <path d="M 120 100
+           L 180 100 L 190 100 L 196 92 L 200 104 L 206 60 L 212 140 L 220 100
+           L 280 100 L 290 100 L 296 92 L 300 104 L 306 60 L 312 140 L 320 100
+           L 380 100 L 390 100 L 396 92 L 400 104 L 406 60 L 412 140 L 420 100
+           L 480 100 L 490 100 L 496 92 L 500 104 L 506 60 L 512 140 L 520 100
+           L 580 100 L 590 100 L 596 92 L 600 104 L 606 60 L 612 140 L 620 100
+           L 700 100"
+        fill="none" stroke="#22c55e" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <animate attributeName="stroke-dasharray" values="0 1500;1500 0" dur="2.4s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Sweeping dot -->
+  <circle r="5" fill="#22c55e">
+    <animateMotion path="M 120 100 L 700 100" dur="2.4s" repeatCount="indefinite"/>
+  </circle>
+</svg>

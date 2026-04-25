@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Battery charging — segments fill 1 by 1, lightning bolt pulses on top.
+  Loops 4 cycles.
+  Viewport: 320 × 200.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 200" width="320" height="200">
+  <!-- Outline -->
+  <g fill="none" stroke="#0f172a" stroke-width="6" stroke-linejoin="round">
+    <rect x="40" y="60" width="220" height="80" rx="12"/>
+    <path d="M 264 84 L 282 84 L 282 116 L 264 116" stroke-linecap="round"/>
+  </g>
+
+  <!-- Fill segments -->
+  <g fill="#22c55e">
+    <rect x="52" y="72" width="0" height="56" rx="2">
+      <animate attributeName="width" values="0;60" dur="0.4s" begin="0s;3.2s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.95;1" dur="3.2s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="116" y="72" width="0" height="56" rx="2">
+      <animate attributeName="width" values="0;60" dur="0.4s" begin="0.6s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.95;1" dur="3.2s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="180" y="72" width="0" height="56" rx="2">
+      <animate attributeName="width" values="0;60" dur="0.4s" begin="1.2s" fill="freeze"/>
+      <animate attributeName="opacity" values="1;1;0" keyTimes="0;0.95;1" dur="3.2s" begin="0s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Lightning bolt -->
+  <path d="M 162 70 L 138 110 L 156 110 L 142 150 L 178 100 L 158 100 Z"
+        fill="#fbbf24" stroke="#0f172a" stroke-width="3" stroke-linejoin="round">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="0.8s" repeatCount="indefinite"/>
+  </path>
+</svg>

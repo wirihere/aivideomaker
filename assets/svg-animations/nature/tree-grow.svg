@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Tree growing — trunk grows up from soil, then branches and a foliage canopy
+  pop out one by one.
+  Total: 3.0s. Holds.
+  Viewport: 320 × 400.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 400" width="320" height="400">
+  <!-- Soil -->
+  <rect x="0" y="370" width="320" height="30" fill="#78350f"/>
+  <ellipse cx="160" cy="370" rx="80" ry="6" fill="#92400e"/>
+
+  <!-- Trunk: a path drawn over time -->
+  <path d="M 160 370 L 160 250"
+        fill="none" stroke="#78350f" stroke-width="14" stroke-linecap="round"
+        stroke-dasharray="120" stroke-dashoffset="120">
+    <animate attributeName="stroke-dashoffset" from="120" to="0"
+             begin="0.2s" dur="0.7s" fill="freeze"
+             calcMode="spline" keySplines="0.4 0 0.2 1"/>
+  </path>
+
+  <!-- Branches -->
+  <g fill="none" stroke="#78350f" stroke-width="6" stroke-linecap="round">
+    <path d="M 160 280 L 130 240" stroke-dasharray="60" stroke-dashoffset="60">
+      <animate attributeName="stroke-dashoffset" from="60" to="0" begin="0.85s" dur="0.3s" fill="freeze"/>
+    </path>
+    <path d="M 160 290 L 195 240" stroke-dasharray="60" stroke-dashoffset="60">
+      <animate attributeName="stroke-dashoffset" from="60" to="0" begin="1.0s" dur="0.3s" fill="freeze"/>
+    </path>
+    <path d="M 160 250 L 130 200" stroke-dasharray="60" stroke-dashoffset="60">
+      <animate attributeName="stroke-dashoffset" from="60" to="0" begin="1.15s" dur="0.3s" fill="freeze"/>
+    </path>
+    <path d="M 160 260 L 195 210" stroke-dasharray="60" stroke-dashoffset="60">
+      <animate attributeName="stroke-dashoffset" from="60" to="0" begin="1.3s" dur="0.3s" fill="freeze"/>
+    </path>
+  </g>
+
+  <!-- Foliage clusters pop in -->
+  <g fill="#16a34a">
+    <circle cx="160" cy="180" r="0">
+      <animate attributeName="r" from="0" to="44" begin="1.5s" dur="0.5s" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    </circle>
+    <circle cx="115" cy="220" r="0">
+      <animate attributeName="r" from="0" to="36" begin="1.7s" dur="0.5s" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    </circle>
+    <circle cx="205" cy="220" r="0">
+      <animate attributeName="r" from="0" to="36" begin="1.85s" dur="0.5s" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    </circle>
+    <circle cx="120" cy="180" r="0" fill="#22c55e">
+      <animate attributeName="r" from="0" to="28" begin="2.0s" dur="0.5s" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    </circle>
+    <circle cx="200" cy="180" r="0" fill="#22c55e">
+      <animate attributeName="r" from="0" to="28" begin="2.15s" dur="0.5s" fill="freeze" calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    </circle>
+  </g>
+
+  <!-- A bird flies past for whimsy -->
+  <g transform="translate(-40 100)" stroke="#0f172a" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.95;1" begin="2.5s" dur="1.0s" fill="freeze"/>
+    <animateTransform attributeName="transform" type="translate"
+      from="-40 100" to="360 60" begin="2.5s" dur="1.0s" fill="freeze"/>
+    <path d="M -8 0 Q -4 -6 0 0 Q 4 -6 8 0"/>
+  </g>
+</svg>

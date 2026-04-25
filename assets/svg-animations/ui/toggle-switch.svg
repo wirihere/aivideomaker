@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Toggle switch — slides from off (grey) to on (green), thumb glides.
+  Total: 1.4s. Holds.
+  Viewport: 220 × 120.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 120" width="220" height="120">
+  <!-- Track -->
+  <rect x="20" y="30" width="180" height="60" rx="30" fill="#cbd5e1">
+    <animate attributeName="fill" from="#cbd5e1" to="#22c55e" begin="0.3s" dur="0.5s" fill="freeze"/>
+  </rect>
+  <!-- Thumb -->
+  <circle cx="50" cy="60" r="22" fill="#ffffff" stroke="#94a3b8" stroke-width="2">
+    <animate attributeName="cx" from="50" to="170" begin="0.3s" dur="0.5s" fill="freeze"
+             calcMode="spline" keySplines="0.34 1.56 0.64 1"/>
+    <animate attributeName="stroke" from="#94a3b8" to="#16a34a" begin="0.3s" dur="0.5s" fill="freeze"/>
+  </circle>
+  <!-- Label -->
+  <text x="110" y="116" font-family="Inter, system-ui, sans-serif" font-size="13"
+        font-weight="700" fill="#0f172a" text-anchor="middle" letter-spacing="3" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" begin="0.85s" dur="0.3s" fill="freeze"/>
+    <animate attributeName="textContent" values="OFF;ON" begin="0.85s" dur="0.1s" fill="freeze"/>
+    OFF
+  </text>
+</svg>

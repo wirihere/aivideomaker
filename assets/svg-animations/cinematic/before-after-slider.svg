@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Before/After slider — split screen reveal: BEFORE on left, AFTER on right,
+  vertical handle slides across to reveal the right side.
+  Total: 4.0s. Holds.
+  Viewport: 1280 × 720.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="before-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#475569"/>
+      <stop offset="1" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="after-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#06b6d4"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <clipPath id="reveal-after">
+      <rect x="0" y="0" width="0" height="720">
+        <animate attributeName="width" values="0;0;1280;1280;1280" keyTimes="0;0.1;0.55;0.85;1"
+                 begin="0s" dur="4s" fill="freeze"/>
+      </rect>
+    </clipPath>
+  </defs>
+
+  <!-- BEFORE side (full canvas) -->
+  <g>
+    <rect width="1280" height="720" fill="url(#before-bg)"/>
+    <!-- Some "old UI" -->
+    <g transform="translate(640 360)" font-family="'Courier New', monospace" fill="#cbd5e1" text-anchor="middle">
+      <text font-size="22" font-weight="700" letter-spacing="3" dy="-180">BEFORE</text>
+      <rect x="-280" y="-120" width="560" height="80" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+      <text font-size="44" font-weight="700" dy="-66" fill="#94a3b8">Status: PENDING</text>
+      <line x1="-280" y1="-20" x2="280" y2="-20" stroke="#334155"/>
+      <text font-size="14" letter-spacing="2" dy="20" fill="#64748b">REQUEST · 14 DAY WAIT</text>
+      <text font-size="14" letter-spacing="2" dy="46" fill="#64748b">SUBMIT FORM · NO TRACKING</text>
+      <text font-size="14" letter-spacing="2" dy="72" fill="#64748b">CALL CENTRE · BUSY</text>
+      <text font-size="14" letter-spacing="2" dy="98" fill="#64748b">RESULT · UNCERTAIN</text>
+    </g>
+  </g>
+
+  <!-- AFTER side (revealed by clip) -->
+  <g clip-path="url(#reveal-after)">
+    <rect width="1280" height="720" fill="url(#after-bg)"/>
+    <g transform="translate(640 360)" font-family="Inter, system-ui, sans-serif" fill="#ffffff" text-anchor="middle">
+      <text font-size="22" font-weight="800" letter-spacing="3" dy="-180">AFTER</text>
+      <rect x="-280" y="-120" width="560" height="80" rx="14" fill="#ffffff" stroke="none"/>
+      <text font-size="44" font-weight="800" dy="-66" fill="#0f172a">Status: APPROVED</text>
+      <circle cx="220" cy="-80" r="18" fill="#10b981"/>
+      <path d="M 210 -80 L 218 -72 L 230 -86" fill="none" stroke="#ffffff"
+            stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="-280" y1="-20" x2="280" y2="-20" stroke="rgba(255,255,255,0.4)"/>
+      <text font-size="14" letter-spacing="2" dy="20"  fill="#e0e7ff">REQUEST · INSTANT</text>
+      <text font-size="14" letter-spacing="2" dy="46"  fill="#e0e7ff">PROGRESS · LIVE TIMELINE</text>
+      <text font-size="14" letter-spacing="2" dy="72"  fill="#e0e7ff">SUPPORT · IN-APP CHAT</text>
+      <text font-size="14" letter-spacing="2" dy="98"  fill="#e0e7ff">RESULT · GUARANTEED</text>
+    </g>
+  </g>
+
+  <!-- Handle bar that slides across -->
+  <g>
+    <line x1="0" y1="0" x2="0" y2="720" stroke="#fbbf24" stroke-width="4"/>
+    <circle cx="0" cy="360" r="28" fill="#fbbf24" stroke="#0f172a" stroke-width="3"/>
+    <path d="M -8 -8 L -16 0 L -8 8" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 360)"/>
+    <path d="M 8 -8 L 16 0 L 8 8" fill="none" stroke="#0f172a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 360)"/>
+    <animateTransform attributeName="transform" type="translate"
+      values="0 0;0 0;1280 0;1280 0;1280 0" keyTimes="0;0.1;0.55;0.85;1"
+      begin="0s" dur="4s" fill="freeze"/>
+  </g>
+</svg>

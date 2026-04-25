@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Lightning strike — dark cloud, bolt flashes, screen brightens, then dims.
+  Repeats twice. Total ~3.4s.
+  Viewport: 400 × 500.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <!-- Sky -->
+  <rect width="400" height="500" fill="#1e293b"/>
+
+  <!-- Flash overlay (full screen, briefly visible) -->
+  <rect width="400" height="500" fill="#fef9c3" opacity="0">
+    <animate attributeName="opacity" values="0;0.7;0;0;0.55;0"
+             keyTimes="0;0.22;0.32;0.6;0.72;0.82"
+             dur="3.4s" fill="freeze"/>
+  </rect>
+
+  <!-- Cloud -->
+  <g fill="#0f172a">
+    <circle cx="140" cy="120" r="40"/>
+    <circle cx="190" cy="90"  r="50"/>
+    <circle cx="250" cy="110" r="42"/>
+    <rect   x="140" y="120" width="110" height="40" rx="20"/>
+  </g>
+
+  <!-- Bolt -->
+  <path d="M 200 160 L 170 260 L 210 260 L 180 360 L 240 230 L 200 230 L 220 160 Z"
+        fill="#facc15" stroke="#0f172a" stroke-width="3" stroke-linejoin="round" opacity="0">
+    <animate attributeName="opacity" values="0;1;1;0;0;1;1;0"
+             keyTimes="0;0.2;0.28;0.32;0.7;0.72;0.78;0.82"
+             dur="3.4s" fill="freeze"/>
+  </path>
+</svg>

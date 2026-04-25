@@ -1,0 +1,1411 @@
+<html lang="en-NZ" style="--font-display: 'Fraunces', serif;"><head>
+<!-- Claude Design editor shim stripped for production -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kindred — Share with neighbours. Find local help within 100km.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Nunito:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  /*EDITMODE-BEGIN*/
+  /* tweak defaults live here */
+  /*EDITMODE-END*/
+
+  :root {
+    --teal: #1A9E8F;
+    --teal-deep: #14806f;
+    --teal-dark: #0f6a5b;
+    --teal-soft: #bfe3dc;
+    --teal-tint: #e8f4f1;
+    --cream: #FBF9F6;
+    --cream-warm: #F5EFE6;
+    --ink: #1B2A3D;
+    --ink-60: #5a6677;
+    --ink-40: #8a93a0;
+    --sun: #F4C96B;
+    --coral: #E98B6A;
+    --orange: #E67E3C;
+    --orange-tint: #fbe6d6;
+    --border: rgba(27,42,61,0.10);
+
+    --font-display: 'Fraunces', ui-serif, Georgia, serif;
+    --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  /* ---------- LOGO ---------- */
+  .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 22px; letter-spacing: -0.01em;
+    color: var(--ink); text-decoration: none;
+  }
+  .logo-mark {
+    width: 34px; height: 34px; border-radius: 10px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: var(--teal);
+    box-shadow: 0 2px 0 rgba(15,106,91,0.9), 0 4px 14px -4px rgba(15,106,91,0.45);
+  }
+  .logo-mark img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  .logo-mark svg { display: none; }
+  .logo-mark.lg { width: 56px; height: 56px; border-radius: 16px; }
+
+  /* ---------- NAV ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px);
+    background: rgba(251,249,246,0.82);
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  .nav.scrolled { border-bottom-color: var(--border); }
+  .nav-inner {
+    max-width: 1180px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 28px;
+  }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    color: var(--ink-60); text-decoration: none; font-weight: 600; font-size: 15px;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--ink); color: var(--cream) !important;
+    padding: 10px 18px; border-radius: 999px;
+    text-decoration: none; font-weight: 700; font-size: 14px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .nav-cta:hover { background: var(--teal-deep); }
+
+  @media (max-width: 780px) {
+    .nav-links a:not(.nav-cta) { display: none; }
+  }
+
+  /* ---------- SECTION SHARED ---------- */
+  section { position: relative; }
+  .section-inner {
+    max-width: 1180px; margin: 0 auto;
+    padding: 100px 28px;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 500;
+    color: var(--teal-deep);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .section-h {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.05; letter-spacing: -0.03em;
+    color: var(--ink);
+    text-wrap: balance;
+    font-variation-settings: "opsz" 144;
+  }
+  .section-h em { font-style: italic; color: var(--teal); font-weight: 500; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px; border-radius: 14px;
+    font-weight: 700; font-size: 15px;
+    text-decoration: none; border: none; cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary { background: var(--ink); color: var(--cream); box-shadow: 0 2px 0 #0b1523; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #0b1523; }
+  .btn-secondary { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { background: rgba(27,42,61,0.04); }
+
+  /* ---------- HERO ---------- */
+  .hero { position: relative; padding: 80px 28px 80px; overflow: hidden; }
+  .hero-inner {
+    max-width: 1180px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.1fr 1fr;
+    gap: 70px; align-items: center;
+  }
+  @media (max-width: 960px) { .hero { padding: 50px 24px 60px; } .hero-inner { grid-template-columns: 1fr; gap: 60px; } }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--teal-tint);
+    color: var(--teal-deep);
+    padding: 7px 14px; border-radius: 999px;
+    font-weight: 700; font-size: 13px;
+    margin-bottom: 22px;
+  }
+  .hero-eyebrow .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--teal); box-shadow: 0 0 0 4px rgba(26,158,143,0.2);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(26,158,143,0.2); }
+    50% { box-shadow: 0 0 0 8px rgba(26,158,143,0); }
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(48px, 7.5vw, 92px);
+    line-height: 1.01;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 26px;
+    font-variation-settings: "opsz" 144;
+    text-wrap: balance;
+  }
+  .hero h1 em { font-style: italic; color: var(--teal); font-weight: 500; }
+
+  .hero-sub {
+    font-size: 19px; line-height: 1.55;
+    color: var(--ink-60);
+    max-width: 520px;
+    margin-bottom: 34px;
+    text-wrap: pretty;
+  }
+  .hero-sub strong { color: var(--ink); font-weight: 700; }
+
+  .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .hero-web-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--teal-deep); text-decoration: none;
+    font-weight: 700; font-size: 14px;
+    border-bottom: 1.5px solid transparent;
+    padding-bottom: 1px;
+    transition: gap .15s, border-color .15s;
+  }
+  .hero-web-link:hover { gap: 10px; border-bottom-color: var(--teal-deep); }
+
+  .hero-facts {
+    margin-top: 38px;
+    display: flex; gap: 28px; flex-wrap: wrap;
+    padding-top: 28px; border-top: 1px solid var(--border);
+  }
+  .hero-fact {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; color: var(--ink);
+  }
+  .hero-fact .tick {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--teal); color: var(--cream);
+    display: grid; place-items: center;
+    font-size: 10px; flex-shrink: 0;
+  }
+
+  /* ---------- PHONE MOCKUP ---------- */
+  .phone-wrap {
+    position: relative;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 620px;
+  }
+  .phone {
+    position: relative;
+    width: 310px; height: 630px;
+    background: #0f1621;
+    border-radius: 48px;
+    padding: 10px;
+    box-shadow:
+      0 40px 80px -20px rgba(27,42,61,0.35),
+      0 20px 40px -20px rgba(27,42,61,0.25),
+      inset 0 0 0 2px #222a36;
+    z-index: 2;
+  }
+  .phone-screen {
+    width: 100%; height: 100%;
+    background: var(--cream);
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  /* Real-screenshot variant: the image replaces all the fake-card markup */
+  .phone-screen-img { background: #fff; }
+  .app-shot {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top;
+    display: block;
+  }
+  .phone-notch {
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+    width: 90px; height: 24px; background: #0f1621;
+    border-radius: 14px; z-index: 10;
+  }
+  .phone-status {
+    padding: 14px 22px 6px; font-size: 13px; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--ink);
+    background: var(--teal);
+    color: var(--cream);
+  }
+  .phone-status .icons { display: flex; gap: 5px; font-size: 11px; opacity: 0.85; }
+
+  .app-header {
+    background: var(--teal);
+    color: var(--cream);
+    padding: 8px 18px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .app-wordmark {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 22px; letter-spacing: -0.02em;
+  }
+  .app-header-right { display: flex; align-items: center; gap: 8px; }
+  .kp-pill {
+    background: rgba(251,249,246,0.18);
+    padding: 6px 10px; border-radius: 999px;
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 800;
+  }
+  .kp-pill .tier {
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--sun); display: grid; place-items: center;
+    font-size: 9px;
+  }
+  .bell-btn {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(251,249,246,0.18);
+    display: grid; place-items: center;
+    font-size: 13px; position: relative;
+  }
+  .bell-btn::after {
+    content: ''; position: absolute; top: 5px; right: 5px;
+    width: 7px; height: 7px; background: var(--orange);
+    border-radius: 50%; border: 2px solid var(--teal);
+  }
+
+  .app-tabs {
+    display: flex; background: var(--teal);
+    padding: 0 18px 12px;
+    gap: 8px;
+  }
+  .app-tab {
+    flex: 1;
+    background: rgba(251,249,246,0.15);
+    color: rgba(251,249,246,0.75);
+    font-size: 12px; font-weight: 700;
+    padding: 8px 0; border-radius: 10px;
+    text-align: center;
+  }
+  .app-tab.active { background: var(--cream); color: var(--teal-deep); }
+
+  .app-feed {
+    flex: 1; overflow: hidden;
+    padding: 14px 14px 70px;
+    display: flex; flex-direction: column; gap: 10px;
+    background: var(--cream);
+  }
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 10px;
+    display: flex; gap: 12px;
+    position: relative;
+  }
+  .card-thumb {
+    width: 68px; height: 68px; border-radius: 10px;
+    background: var(--cream-warm);
+    display: grid; place-items: center;
+    font-size: 28px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .card-thumb.t1 { background: linear-gradient(135deg, #cfe9c9, #e9f4e2); }
+  .card-thumb.t2 { background: linear-gradient(135deg, #f6d8aa, #fbf0dc); }
+  .card-thumb.t3 { background: linear-gradient(135deg, var(--teal-soft), var(--teal-tint)); }
+  .card-thumb.t4 { background: linear-gradient(135deg, #e8d4c4, #f5ead9); }
+  .card-body { flex: 1; min-width: 0; }
+  .card-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 6px; margin-bottom: 2px;
+  }
+  .card-title { font-weight: 700; font-size: 13px; line-height: 1.25; }
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: 9px; font-weight: 700;
+    padding: 3px 7px; border-radius: 5px;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+  }
+  .card-tag.give { background: var(--teal); color: var(--cream); }
+  .card-tag.need { background: var(--orange); color: var(--cream); }
+  .card-note { font-size: 11px; color: var(--ink-60); line-height: 1.35; margin-bottom: 6px; }
+  .card-meta {
+    display: flex; gap: 8px; align-items: center;
+    font-size: 10px; color: var(--ink-40); font-weight: 600;
+  }
+  .card-meta .dist { color: var(--teal-deep); }
+  .card-meta .dot { width: 2px; height: 2px; background: var(--ink-40); border-radius: 50%; }
+
+  .fab {
+    position: absolute; bottom: 82px; right: 14px;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--teal); color: var(--cream);
+    display: grid; place-items: center;
+    font-size: 26px; font-weight: 300;
+    box-shadow: 0 8px 20px -4px rgba(26,158,143,0.5), 0 2px 0 var(--teal-deep);
+    z-index: 5;
+  }
+
+  .app-tabbar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    padding: 10px 6px 18px;
+    display: flex; justify-content: space-around;
+  }
+  .tab-item {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 9px; font-weight: 700;
+    color: var(--ink-40);
+  }
+  .tab-item .icon { font-size: 18px; line-height: 1; }
+  .tab-item.active { color: var(--teal); }
+
+  /* honest backdrop behind phone — no floaty emoji bubbles */
+  .phone-backdrop {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    z-index: 0;
+  }
+  .phone-backdrop .ring {
+    width: 520px; height: 520px; border-radius: 50%;
+    border: 1.5px dashed var(--teal-soft);
+    opacity: 0.55;
+  }
+  .phone-backdrop .ring::before {
+    content: ''; position: absolute; inset: 50px; border-radius: 50%;
+    border: 1.5px dashed var(--teal-soft);
+    opacity: 0.55;
+  }
+  @media (max-width: 960px) {
+    .phone-backdrop { display: none; }
+    .phone-wrap { min-height: 660px; }
+  }
+
+  /* ---------- WHAT IS KINDRED ---------- */
+  .what { background: var(--cream); }
+  .what-inner {
+    display: grid; grid-template-columns: 1fr 1.1fr;
+    gap: 70px; align-items: center;
+  }
+  @media (max-width: 860px) { .what-inner { grid-template-columns: 1fr; gap: 40px; } }
+  .what-copy p {
+    font-size: 21px; line-height: 1.55;
+    color: var(--ink);
+    margin-top: 24px;
+    text-wrap: pretty;
+  }
+  .what-copy p.muted { color: var(--ink-60); font-size: 17px; }
+  .what-copy .highlight {
+    background: linear-gradient(180deg, transparent 60%, rgba(244,201,107,0.5) 60%);
+    padding: 0 2px;
+  }
+
+  .actions-visual {
+    display: flex; flex-direction: column;
+    gap: 40px;
+  }
+  .thing { display: flex; flex-direction: column; gap: 18px; }
+  .thing-head {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .thing-num {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 44px; line-height: 1;
+    color: var(--teal);
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    min-width: 56px;
+  }
+  .thing-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 700;
+    color: var(--ink-60);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .thing-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px; line-height: 1.2; letter-spacing: -0.015em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .thing-cards {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 860px) {
+    .thing-cards { grid-template-columns: 1fr; gap: 12px; }
+  }
+  .thing-footnote {
+    font-size: 13px; color: var(--ink-60);
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  .action-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    padding: 22px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 220px;
+  }
+  @media (max-width: 860px) {
+    .action-card { min-height: 0; }
+  }
+  .action-card .tag {
+    font-family: var(--font-mono);
+    font-size: 10px; font-weight: 700;
+    padding: 4px 9px; border-radius: 5px;
+    letter-spacing: 0.08em;
+    align-self: flex-start;
+    margin-bottom: 14px;
+  }
+  .action-card.give .tag { background: var(--teal); color: var(--cream); }
+  .action-card.need .tag { background: var(--orange); color: var(--cream); }
+  .action-card h4 {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 22px; line-height: 1.15; letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .action-card p { font-size: 14px; color: var(--ink-60); line-height: 1.5; }
+  .action-card .big { font-size: 48px; line-height: 1; margin-bottom: 10px; }
+
+  /* Directory-preview card (Thing 02) */
+  .dir-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(23, 31, 42, 0.04);
+  }
+  .dir-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-deep) 100%);
+    color: var(--cream);
+  }
+  .dir-emoji { font-size: 28px; line-height: 1; }
+  .dir-t { font-family: var(--font-display); font-weight: 600; font-size: 16px; letter-spacing: -0.01em; }
+  .dir-s { font-size: 12px; color: rgba(251,249,246,0.75); margin-top: 2px; }
+  .dir-rows { display: flex; flex-direction: column; }
+  .dir-row {
+    display: grid; grid-template-columns: 32px 1fr auto;
+    align-items: center; gap: 10px;
+    padding: 14px 22px;
+    font-size: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .dir-row:first-child { border-top: none; }
+  .dir-ico { font-size: 20px; line-height: 1; }
+  .dir-name { color: var(--ink); font-weight: 500; }
+  .dir-dist {
+    font-family: var(--font-mono);
+    font-size: 12px; font-weight: 700;
+    color: var(--teal-deep);
+    font-variant-numeric: tabular-nums;
+    background: rgba(33,150,140,0.08);
+    padding: 3px 8px; border-radius: 6px;
+  }
+  .dir-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 4px;
+  }
+  .dir-tag {
+    font-size: 12px; font-weight: 600;
+    color: var(--ink-60);
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 5px 10px; border-radius: 999px;
+  }
+  .dir-contribute {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px;
+    background: rgba(33,150,140,0.07);
+    border: 1px dashed rgba(33,150,140,0.35);
+    border-radius: 14px;
+    color: var(--ink);
+    font-size: 14px; line-height: 1.45;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .dir-contribute:hover {
+    background: rgba(33,150,140,0.12);
+    border-color: rgba(33,150,140,0.6);
+  }
+  .dir-contribute-ic {
+    font-size: 20px; line-height: 1;
+    flex-shrink: 0;
+  }
+  .dir-contribute strong { color: var(--teal-deep); }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how { background: var(--ink); color: var(--cream); overflow: hidden; }
+  .how .section-h { color: var(--cream); }
+  .how .eyebrow { color: var(--teal-soft); }
+  .how-head { max-width: 720px; margin-bottom: 70px; }
+  .how-head p { color: rgba(251,249,246,0.7); font-size: 19px; margin-top: 20px; max-width: 540px; }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 860px) { .steps { grid-template-columns: 1fr; } }
+
+  .step {
+    background: rgba(251,249,246,0.04);
+    border: 1px solid rgba(251,249,246,0.08);
+    border-radius: 24px;
+    padding: 32px;
+  }
+  .step-num {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    color: var(--teal-soft); letter-spacing: 0.08em;
+    margin-bottom: 20px;
+  }
+  .step-emoji { font-size: 52px; line-height: 1; margin-bottom: 24px; display: inline-block; }
+  .step h3 {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 26px; line-height: 1.1; letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .step p { color: rgba(251,249,246,0.65); font-size: 15px; line-height: 1.55; }
+
+  /* ---------- FEATURES ---------- */
+  .features { background: var(--cream); }
+  .features-head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 50px; gap: 40px; flex-wrap: wrap;
+  }
+  .features-head p { color: var(--ink-60); font-size: 17px; max-width: 400px; }
+  .features-grid {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 18px;
+  }
+  @media (max-width: 1000px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .features-grid { grid-template-columns: 1fr; } }
+
+  .feat {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 26px;
+    display: flex; flex-direction: column;
+  }
+  .feat.span-3 { grid-column: span 3; }
+  .feat.span-2 { grid-column: span 2; }
+  .feat.span-4 { grid-column: span 4; }
+  .feat.span-6 { grid-column: 1 / -1; }
+  @media (max-width: 1000px) {
+    .feat.span-3, .feat.span-2, .feat.span-4 { grid-column: span 2; }
+  }
+  @media (max-width: 560px) {
+    .feat.span-3, .feat.span-2, .feat.span-4 { grid-column: span 1; }
+  }
+
+  .feat .mark {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--teal-tint); color: var(--teal-deep);
+    display: grid; place-items: center;
+    font-size: 22px; margin-bottom: 18px;
+    flex-shrink: 0;
+  }
+  .feat h4 {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 22px; line-height: 1.15; letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .feat p { color: var(--ink-60); font-size: 14px; line-height: 1.5; }
+
+  .feat.dark {
+    background: var(--ink); color: var(--cream);
+    border-color: transparent;
+  }
+  .feat.dark .mark { background: rgba(251,249,246,0.1); color: var(--teal-soft); }
+  .feat.dark p { color: rgba(251,249,246,0.65); }
+
+  .feat.highlight { background: var(--cream-warm); border-color: transparent; }
+
+  /* tier ladder inside a feat */
+  .ladder {
+    margin-top: 18px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .tier-pill {
+    font-size: 11px; font-weight: 700;
+    padding: 5px 10px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--cream-warm); color: var(--ink-60);
+    border: 1px solid var(--border);
+  }
+  .tier-pill.on {
+    background: var(--teal); color: var(--cream);
+    border-color: transparent;
+  }
+
+  /* leaderboard mini */
+  .board { margin-top: 18px; }
+  .board-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0;
+    font-size: 13px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .board-row:last-child { border-bottom: none; }
+  .board-row .rank { font-family: var(--font-mono); font-size: 11px; color: var(--ink-40); width: 22px; }
+  .board-row .name { flex: 1; font-weight: 700; }
+  .board-row .pts { font-family: var(--font-mono); font-size: 12px; color: var(--teal-deep); font-weight: 700; }
+  .board-row.you { background: var(--teal-tint); margin: 0 -10px; padding: 8px 10px; border-radius: 8px; border-bottom: none; }
+
+  /* ---------- PLUS ---------- */
+  .plus { background: var(--ink); color: var(--cream); overflow: hidden; position: relative; }
+  .plus .section-h { color: var(--cream); }
+  .plus .eyebrow { color: var(--sun); }
+  .plus-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 70px; align-items: center;
+  }
+  @media (max-width: 900px) { .plus-inner { grid-template-columns: 1fr; gap: 50px; } }
+  .plus-copy p {
+    color: rgba(251,249,246,0.7);
+    font-size: 18px; margin-top: 20px; max-width: 480px;
+  }
+  .plus-list {
+    list-style: none;
+    margin-top: 30px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .plus-list li {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .plus-list li .ic {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: rgba(244,201,107,0.15);
+    color: var(--sun);
+    display: grid; place-items: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .plus-list li .t { font-weight: 800; color: var(--cream); font-size: 15px; margin-bottom: 2px; }
+  .plus-list li .d { color: rgba(251,249,246,0.6); font-size: 13px; line-height: 1.45; }
+  .plus-price {
+    margin-top: 34px;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 18px;
+    background: rgba(244,201,107,0.12);
+    border: 1px solid rgba(244,201,107,0.3);
+    border-radius: 12px;
+    font-size: 14px; font-weight: 700; color: var(--sun);
+  }
+
+  .plus-card-wrap {
+    display: grid; place-items: center;
+    position: relative;
+  }
+  .plus-card {
+    width: 100%; max-width: 380px;
+    background: linear-gradient(160deg, #2a3a50 0%, #1b2a3d 60%);
+    border: 1px solid rgba(244,201,107,0.25);
+    border-radius: 24px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+  }
+  .plus-card::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(244,201,107,0.2), transparent 65%);
+    pointer-events: none;
+  }
+  .plus-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--sun); color: var(--ink);
+    padding: 6px 12px; border-radius: 999px;
+    font-weight: 800; font-size: 12px;
+    margin-bottom: 20px;
+  }
+  .plus-card h5 {
+    font-family: var(--font-display); font-weight: 500;
+    font-size: 32px; letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .plus-card .rows {
+    margin-top: 22px;
+    display: flex; flex-direction: column;
+    border-top: 1px solid rgba(251,249,246,0.1);
+  }
+  .plus-card .prow {
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(251,249,246,0.1);
+    font-size: 13px;
+    align-items: center;
+  }
+  .plus-card .prow.header {
+    font-family: var(--font-mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: rgba(251,249,246,0.5);
+  }
+  .plus-card .prow .val { text-align: right; font-weight: 700; }
+  .plus-card .prow .val.plus { color: var(--sun); font-weight: 800; }
+  .plus-card .prow .val.free { color: rgba(251,249,246,0.7); }
+
+  /* ---------- DOWNLOAD ---------- */
+  .download { background: var(--cream-warm); position: relative; overflow: hidden; }
+  .download-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 60px; align-items: center;
+  }
+  @media (max-width: 860px) { .download-inner { grid-template-columns: 1fr; } }
+  .download-copy p { color: var(--ink-60); font-size: 18px; margin-bottom: 36px; max-width: 440px; }
+  .stores { display: flex; flex-direction: column; gap: 12px; max-width: 420px; }
+  .store {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 22px;
+    background: var(--ink); color: var(--cream);
+    border-radius: 16px; text-decoration: none;
+    transition: transform .15s;
+    position: relative;
+  }
+  .store:hover { transform: translateY(-2px); }
+  .store-icon { font-size: 28px; line-height: 1; }
+  .store-text { display: flex; flex-direction: column; }
+  .store-text .small { font-size: 11px; color: rgba(251,249,246,0.7); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+  .store-text .big { font-family: var(--font-display); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  .store .badge {
+    position: absolute; right: 22px; top: 50%; transform: translateY(-50%);
+    background: var(--teal); color: var(--cream);
+    padding: 4px 10px; border-radius: 6px;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .store.soon { background: transparent; color: var(--ink); border: 1.5px dashed rgba(27,42,61,0.25); }
+  .store.soon .small { color: var(--ink-40); }
+  .store.soon .badge { background: var(--ink-40); }
+  .store.soon:hover { transform: none; cursor: default; }
+  .store.store-primary {
+    background: var(--teal);
+    padding: 22px;
+    box-shadow: 0 3px 0 var(--teal-deep);
+  }
+  .store.store-primary:hover { box-shadow: 0 5px 0 var(--teal-deep); }
+  .store.store-primary .store-text .big { font-size: 22px; }
+  .store.store-primary .badge { background: var(--sun); color: var(--ink); }
+
+  .download-visual {
+    position: relative;
+    aspect-ratio: 1/1;
+    max-width: 460px; margin: 0 auto;
+    display: grid; place-items: center;
+  }
+  .qr-card {
+    background: #fff; border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 30px 60px -20px rgba(27,42,61,0.25);
+    text-align: center;
+    transform: rotate(-3deg);
+    border: 1px solid var(--border);
+  }
+  .qr {
+    width: 180px; height: 180px;
+    margin: 0 auto 18px;
+    background-image:
+      linear-gradient(var(--ink) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ink) 1px, transparent 1px);
+    background-size: 10px 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    position: relative;
+    mask-image: radial-gradient(ellipse at center, #000 50%, transparent 70%);
+  }
+  .qr::before, .qr::after {
+    content: ''; position: absolute; width: 36px; height: 36px;
+    border: 6px solid var(--ink); border-radius: 8px;
+  }
+  .qr::before { top: 8px; left: 8px; }
+  .qr::after { top: 8px; right: 8px; }
+  .qr-card .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ink-60); text-transform: uppercase; }
+  .download-sticker {
+    position: absolute; top: 30px; right: 20px;
+    background: var(--sun); color: var(--ink);
+    padding: 10px 18px; border-radius: 999px;
+    font-weight: 800; font-size: 13px;
+    transform: rotate(8deg);
+    box-shadow: 0 8px 20px -8px rgba(27,42,61,0.3);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer { background: var(--ink); color: var(--cream); padding: 70px 28px 30px; }
+  .footer-inner { max-width: 1180px; margin: 0 auto; }
+  .footer-top {
+    display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 50px;
+    border-bottom: 1px solid rgba(251,249,246,0.1);
+  }
+  @media (max-width: 760px) { .footer-top { grid-template-columns: 1fr 1fr; gap: 30px; } }
+  .footer-brand .logo { color: var(--cream); margin-bottom: 14px; }
+  .footer-brand p { color: rgba(251,249,246,0.6); font-size: 14px; max-width: 260px; line-height: 1.55; }
+  .footer-col h4 {
+    font-family: var(--font-mono); font-weight: 500;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal-soft);
+    margin-bottom: 16px;
+  }
+  .footer-col a {
+    display: block; color: rgba(251,249,246,0.75);
+    text-decoration: none; font-size: 14px; font-weight: 500;
+    padding: 6px 0;
+  }
+  .footer-col a:hover { color: var(--cream); }
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 26px;
+    color: rgba(251,249,246,0.5); font-size: 13px;
+    flex-wrap: wrap; gap: 12px;
+  }
+
+  /* ---------- TWEAKS ---------- */
+  #tweaks {
+    position: fixed; right: 20px; bottom: 20px;
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 20px 50px -15px rgba(27,42,61,0.3);
+    width: 240px;
+    z-index: 100;
+    display: none;
+  }
+  #tweaks.visible { display: block; }
+  #tweaks h5 { font-family: var(--font-display); font-weight: 600; font-size: 16px; margin-bottom: 12px; }
+  #tweaks .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px; font-weight: 600; }
+  #tweaks button { background: var(--cream-warm); border: none; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--ink); }
+  #tweaks button.active { background: var(--ink); color: var(--cream); }
+  #tweaks .swatches { display: flex; gap: 6px; }
+  #tweaks .swatches button { width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 2px solid transparent; }
+  #tweaks .swatches button.active { border-color: var(--ink); }
+</style>
+</head>
+<body>
+
+<!-- LOGO TEMPLATE -->
+<template id="logo-svg-tpl">
+  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M22 82 L50 22 L78 82" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+  </svg>
+</template>
+
+<!-- NAV -->
+<nav class="nav scrolled" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark" data-logo="">
+  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M22 82 L50 22 L78 82" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+  </svg>
+</span>
+      Kindred
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#plus">Supporter</a>
+      <a href="#download" class="nav-cta">Try Kindred ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="hero-eyebrow">
+        <span class="dot"></span>
+        Open beta · Made in Aotearoa 🇳🇿
+      </span>
+      <h1>Share with neighbours. <em>Find local help.</em></h1>
+      <p class="hero-sub">
+        One <strong>free app for your street</strong> — a place to give, ask, and find local help close to home.
+      </p>
+      <div class="hero-ctas">
+        <a href="https://app.kindred-nz.org" target="_blank" rel="noopener" class="btn btn-primary">
+          Try Kindred free
+        </a>
+        <a href="#how" class="btn btn-secondary">
+          See how it works →
+        </a>
+      </div>
+      <a href="https://app.kindred-nz.org" target="_blank" rel="noopener" class="hero-web-link">
+        Or open it in your browser <span aria-hidden="true">→</span>
+      </a>
+
+      <div class="hero-facts">
+        <span class="hero-fact"><span class="tick">✓</span>Free to use</span>
+        <span class="hero-fact"><span class="tick">✓</span>Resources within 100km</span>
+        <span class="hero-fact"><span class="tick">✓</span>No ads, no algorithm</span>
+      </div>
+    </div>
+
+    <!-- PHONE MOCKUP — real screenshot of the live Kindred app -->
+    <div class="phone-wrap">
+      <div class="phone-backdrop"><div class="ring"></div></div>
+      <div class="phone">
+        <div class="phone-screen phone-screen-img">
+          <img src="app-activity.png" alt="The Kindred app showing the Activity feed" class="app-shot">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT IS KINDRED -->
+<section class="what" id="what">
+  <div class="section-inner what-inner">
+    <div class="what-copy">
+      <span class="eyebrow">// What is Kindred</span>
+      <h2 class="section-h">Two things, <em>really.</em></h2>
+      <p>One <span class="highlight">free app</span>, two sides to it. Both running off the same map of where you are — sorted by how close help is, right now.</p>
+      <p class="muted">No money, no ads, no algorithm. Just local.</p>
+    </div>
+
+    <div class="actions-visual">
+
+      <!-- THING 01 — Neighbour sharing -->
+      <div class="thing">
+        <div class="thing-head">
+          <span class="thing-num">01</span>
+          <div>
+            <div class="thing-kicker">NEIGHBOUR-TO-NEIGHBOUR</div>
+            <div class="thing-title">Give what you've got. Ask for what you need.</div>
+          </div>
+        </div>
+        <div class="thing-cards">
+          <div class="action-card give">
+            <span class="tag">GIVE</span>
+            <div>
+              <div class="big">🍎</div>
+              <h4>Got too much, too many, too old for you?</h4>
+              <p>Post it. Nearby neighbours will see it first.</p>
+            </div>
+          </div>
+          <div class="action-card need">
+            <span class="tag">NEED</span>
+            <div>
+              <div class="big">🔨</div>
+              <h4>Looking for something?</h4>
+              <p>Ask — someone a few doors down probably has it.</p>
+            </div>
+          </div>
+        </div>
+        <p class="thing-footnote">Informal lending and the odd swap happen too — that's between neighbours.</p>
+      </div>
+
+      <!-- THING 02 — Local support directory -->
+      <div class="thing">
+        <div class="thing-head">
+          <span class="thing-num">02</span>
+          <div>
+            <div class="thing-kicker">LOCAL SUPPORT, CLOSE BY</div>
+            <div class="thing-title">Every kind of local help — on one map.</div>
+          </div>
+        </div>
+        <div class="dir-card">
+          <div class="dir-head">
+            <span class="dir-emoji">🧭</span>
+            <div>
+              <div class="dir-t">Browse Nearby · within 100km</div>
+              <div class="dir-s">Sorted by closest to where you are</div>
+            </div>
+          </div>
+          <div class="dir-rows">
+            <div class="dir-row"><span class="dir-ico">🍎</span><span class="dir-name">Taranaki Foodbank</span><span class="dir-dist">1.2 km</span></div>
+            <div class="dir-row"><span class="dir-ico">🍽️</span><span class="dir-name">Community Meals New Plymouth</span><span class="dir-dist">2.1 km</span></div>
+            <div class="dir-row"><span class="dir-ico">👕</span><span class="dir-name">Salvation Army Op Shop</span><span class="dir-dist">2.8 km</span></div>
+            <div class="dir-row"><span class="dir-ico">💰</span><span class="dir-name">Budgeting Services NZ</span><span class="dir-dist">4.6 km</span></div>
+            <div class="dir-row"><span class="dir-ico">🏠</span><span class="dir-name">Whānau Ora Housing Hub</span><span class="dir-dist">5.5 km</span></div>
+            <div class="dir-row"><span class="dir-ico">🏥</span><span class="dir-name">Community Health Clinic</span><span class="dir-dist">7.2 km</span></div>
+          </div>
+        </div>
+        <div class="dir-tags">
+          <span class="dir-tag">🍎 Food banks</span>
+          <span class="dir-tag">🍽️ Meal services</span>
+          <span class="dir-tag">👕 Clothing</span>
+          <span class="dir-tag">🏠 Housing</span>
+          <span class="dir-tag">💰 Financial</span>
+          <span class="dir-tag">🏥 Health</span>
+          <span class="dir-tag">👶 Family</span>
+          <span class="dir-tag">📚 Learning</span>
+          <span class="dir-tag">💬 Support groups</span>
+          <span class="dir-tag">🪷 Marae-based</span>
+        </div>
+        <p class="thing-footnote">Hundreds of trusted local services already on the map — and growing. No Googling, no phone calls.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-inner">
+    <div class="how-head">
+      <span class="eyebrow">// How it works</span>
+      <h2 class="section-h">Three steps. That's <em>the whole thing.</em></h2>
+      <p>No listing fees, no feed algorithm, no pressure. Just post, chat, drop off or pick up.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-emoji">📸</div>
+        <h3>Post a give or an ask.</h3>
+        <p>Snap a photo, tag it GIVE or NEED, and Kindred drops it on the map for neighbours within walking distance. You can even note "open to swap for…" if you're keen.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-emoji">💬</div>
+        <h3>A neighbour messages.</h3>
+        <p>Someone nearby pings you in-app. Sort out a time, a pickup spot, or a community meetup point. All the chat happens inside Kindred.</p>
+      </div>
+
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-emoji">🤝</div>
+        <h3>Drop it off or pick it up.</h3>
+        <p>Leave it on the porch for pickup, meet at a shared spot, or have a yarn while you hand it across — whatever suits you both. Mark it complete and you both earn Kindness Points.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-inner">
+    <div class="features-head">
+      <div>
+        <span class="eyebrow">// What's in the app</span>
+        <h2 class="section-h">Built for <em>real streets.</em></h2>
+      </div>
+      <p>Everything Kindred does, rooted in keeping your neighbourhood feed honest and your handovers safe.</p>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feat span-12" style="background: #1B2A3D; color: var(--cream); border-color: transparent;">
+        <div class="mark" style="background: rgba(251,249,246,0.15); color: var(--cream);">📞</div>
+        <h4 style="color: var(--cream);">Free support lines — one tap to call</h4>
+        <p style="color: rgba(251,249,246,0.9); font-size: 15px; max-width: 640px;">
+          Built-in directory of <strong style="color:var(--cream);">every free NZ helpline</strong>. Tap to call free from anywhere in Aotearoa, or tap "More info" to visit the organisation's website.
+        </p>
+        <div class="ladder" style="margin-top: 18px;">
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">🚨 111</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">💬 1737</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">☎️ Lifeline</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">🧑 Youthline</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">🌈 OUTLine</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">💙 Depression</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">🧠 Anxiety</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">🫗 Alcohol &amp; Drug</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">🎲 Gambling</span>
+          <span class="tier-pill" style="background: rgba(251,249,246,0.18); color: var(--cream); border-color: transparent;">🏥 Healthline</span>
+        </div>
+        <p style="color: rgba(251,249,246,0.7); font-size: 13px; margin-top: 16px; max-width: 640px;">
+          You're not alone. Open Profile, tap Free Support Lines — they're all right there.
+        </p>
+      </div>
+
+      <div class="feat span-3 highlight">
+        <div class="mark" style="background:var(--sun); color:var(--ink);">✨</div>
+        <h4>Kindness Points &amp; tiers</h4>
+        <p>Earn KP for listing, rating, verifying, and completing exchanges. Climb from Newcomer all the way to Kindred Spirit.</p>
+        <div class="ladder">
+          <span class="tier-pill on">🌱 Newcomer</span>
+          <span class="tier-pill on">❤️ Open</span>
+          <span class="tier-pill">🔥 Connected</span>
+          <span class="tier-pill">💎 Elevated</span>
+          <span class="tier-pill">👑 Kindred Spirit</span>
+        </div>
+        <div style="margin-top:14px; font-size:12px; font-weight:700; color:var(--ink-60); display:inline-flex; align-items:center; gap:6px;">
+          <span style="background:var(--ink); color:var(--sun); padding:3px 8px; border-radius:6px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.06em;">COMING LATER</span>
+          Monthly giveaways for top contributors in each suburb.
+        </div>
+      </div>
+
+      <div class="feat span-3">
+        <div class="mark">🏆</div>
+        <h4>Suburb leaderboard</h4>
+        <p>See who's most generous in your patch — weekly, monthly, or all-time.</p>
+        <div class="board">
+          <div class="board-row"><span class="rank">01</span><span class="name">Moana W.</span><span class="pts">2,840 KP</span></div>
+          <div class="board-row"><span class="rank">02</span><span class="name">Dave T.</span><span class="pts">2,315 KP</span></div>
+          <div class="board-row you"><span class="rank">14</span><span class="name">You</span><span class="pts">245 KP</span></div>
+        </div>
+      </div>
+
+      <div class="feat span-2">
+        <div class="mark">🛡️</div>
+        <h4>ID &amp; phone verification</h4>
+        <p>Optional, earns extra KP, and helps build trust in your suburb.</p>
+      </div>
+
+      <div class="feat span-2">
+        <div class="mark">💬</div>
+        <h4>Built-in messaging</h4>
+        <p>Arrange handover without handing over your phone number.</p>
+      </div>
+
+      <div class="feat span-2 dark">
+        <div class="mark">📍</div>
+        <h4>Home &amp; current-location modes</h4>
+        <p>Browse around your address or wherever you actually are. Address autocomplete makes setup quick.</p>
+      </div>
+
+      <div class="feat span-3">
+        <div class="mark">🗺️</div>
+        <h4>Community meetup points &amp; safety tracker</h4>
+        <p>Meet at shared local spots — parks, libraries, marae — surfaced in-app as safer handover locations. Share a live-location tracker link with a friend or whānau while you go; it auto-expires after 2 hours.</p>
+      </div>
+
+      <div class="feat span-3">
+        <div class="mark">🧹</div>
+        <h4>Stale-listing cleanup</h4>
+        <p>Old posts auto-expire so the feed stays fresh and honest. Nothing lingering from six months ago pretending to still be available.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PLUS -->
+<section class="plus" id="plus">
+  <div class="section-inner plus-inner">
+    <div class="plus-copy">
+      <span class="eyebrow">// Kindred Supporter</span>
+      <h2 class="section-h">Back the mission, get <em>a little extra.</em></h2>
+      <p>Kindred Supporter is an optional paid tier for folks who want to go a bit further — extra perks for you, and a quiet thank-you for backing the app.</p>
+
+      <ul class="plus-list">
+        <li>
+          <div class="ic">✨</div>
+          <div>
+            <div class="t">Double Kindness Points</div>
+            <div class="d">2× KP on every action — listings, verifications, ratings, completed exchanges.</div>
+          </div>
+        </li>
+        <li>
+          <div class="ic">🪄</div>
+          <div>
+            <div class="t">Unlimited auto-matching</div>
+            <div class="d">Kindred suggests neighbours whose "needs" line up with your "gives". Free users see 1 match a day — Supporters see them all.</div>
+          </div>
+        </li>
+        <li>
+          <div class="ic">∞</div>
+          <div>
+            <div class="t">No daily listing cap</div>
+            <div class="d">Post as much as you can give. Handy for big cleanouts and moves.</div>
+          </div>
+        </li>
+        <li>
+          <div class="ic">⭐</div>
+          <div>
+            <div class="t">Supporter badge</div>
+            <div class="d">Shown on your profile, in messages, and beside your name on the suburb leaderboard.</div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="plus-price">
+        <strong>$3.99 / month</strong> <span style="opacity:0.7;">(first 100 supporters)</span> &middot; <strong>$4.99 / month</strong> &middot; <strong>$49 / year</strong> (save 18%) &middot; launches after open beta
+      </div>
+      <p style="font-size: 12px; color: rgba(251,249,246,0.55); margin-top: 12px; max-width: 520px;">
+        Prices GST-inclusive. <strong style="color:rgba(251,249,246,0.8);">Cancel anytime</strong> from Google Play, the App Store, or Stripe (web) — it keeps working until the end of the billing period. Kindred stays fully free without Supporter.
+      </p>
+
+      <div style="margin-top: 22px; padding: 18px 20px; background: rgba(212, 168, 67, 0.12); border: 1px solid rgba(212, 168, 67, 0.3); border-radius: 14px; max-width: 560px;">
+        <div style="font-size: 13px; font-weight: 800; color: #D4A843; margin-bottom: 10px; letter-spacing: 0.04em;">💛 WHY THIS MATTERS</div>
+        <p style="color: rgba(251,249,246,0.85); font-size: 14px; line-height: 1.55; margin: 0 0 10px;">
+          A few dollars a month doesn't feel like much on its own — but stacked across a few hundred neighbours, it keeps Kindred running and growing, and helps fund the other community-focused projects we're building to help more Kiwis.
+        </p>
+        <p style="color: rgba(251,249,246,0.85); font-size: 14px; line-height: 1.55; margin: 0;">
+          You're not buying features. You're helping us build more kindness into the world — and that adds up to something real.
+        </p>
+      </div>
+    </div>
+
+    <div class="plus-card-wrap">
+      <div class="plus-card">
+        <div class="plus-badge">⭐ Supporter</div>
+        <h5>Twice the points.<br>Half the missed matches.</h5>
+
+        <div class="rows">
+          <div class="prow header">
+            <span>Action</span>
+            <span class="val">Free</span>
+            <span class="val">Supporter</span>
+          </div>
+          <div class="prow">
+            <span>Listing posted</span>
+            <span class="val free">5 KP</span>
+            <span class="val plus">10 KP</span>
+          </div>
+          <div class="prow">
+            <span>Phone verified</span>
+            <span class="val free">50 KP</span>
+            <span class="val plus">100 KP</span>
+          </div>
+          <div class="prow">
+            <span>ID verified</span>
+            <span class="val free">100 KP</span>
+            <span class="val plus">200 KP</span>
+          </div>
+          <div class="prow">
+            <span>Rating left</span>
+            <span class="val free">5 KP</span>
+            <span class="val plus">10 KP</span>
+          </div>
+          <div class="prow">
+            <span>Exchange completed</span>
+            <span class="val free">1×</span>
+            <span class="val plus">2×</span>
+          </div>
+          <div class="prow">
+            <span>Daily listing cap</span>
+            <span class="val free">Limited</span>
+            <span class="val plus">Unlimited</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="download" id="download">
+  <div class="section-inner download-inner">
+    <div class="download-copy">
+      <span class="eyebrow">// Get the app</span>
+      <h2 class="section-h">Come and have <em>a go.</em></h2>
+      <p>Open it in your browser right now — no install needed. Or grab the Android beta. iOS is next.</p>
+      <div class="stores">
+        <a class="store store-primary" href="https://app.kindred-nz.org" target="_blank" rel="noopener">
+          <span class="store-icon">🌐</span>
+          <div class="store-text">
+            <span class="small">Web · Instant, no install</span>
+            <span class="big">Try it in your browser</span>
+          </div>
+          <span class="badge">Live now</span>
+        </a>
+        <a class="store" href="https://groups.google.com/g/kindred-beta-testers" target="_blank" rel="noopener" id="android-cta">
+          <span class="store-icon">🤖</span>
+          <div class="store-text">
+            <span class="small">Step 1: Join the testers group</span>
+            <span class="big">Android beta — Join to install</span>
+          </div>
+          <span class="badge">Beta</span>
+        </a>
+        <div style="font-size:13px; color:var(--ink-60); line-height:1.5; padding:0 6px;">
+          <strong style="color:var(--ink);">Two quick steps on your Android:</strong><br>
+          1. Tap <em>Android beta</em> above and <em>Join group</em>.<br>
+          2. Check email — tap the opt-in link in our welcome note, then <em>Install</em> from Play Store.<br>
+          <a href="https://play.google.com/apps/testing/nz.kindred.app" target="_blank" rel="noopener" style="color:var(--teal-deep); font-weight:700; text-decoration:underline;">Already in the group? Tap here to opt in →</a>
+        </div>
+        <a class="store soon">
+          <span class="store-icon">🍎</span>
+          <div class="store-text">
+            <span class="small">App Store</span>
+            <span class="big">iOS — Coming soon</span>
+          </div>
+          <span class="badge">Soon</span>
+        </a>
+      </div>
+    </div>
+    <div class="download-visual">
+      <div class="download-sticker">Free to use ✨</div>
+      <div class="qr-card">
+        <div class="qr"></div>
+        <div class="label">Scan to open the web app</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-mark" data-logo="">
+  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M22 82 L50 22 L78 82" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+  </svg>
+</span>
+          Kindred
+        </a>
+        <p>Built in Aotearoa. Community-funded. No ads. No algorithm.</p>
+      </div>
+      <div class="footer-col">
+        <h4>App</h4>
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#plus">Supporter</a>
+        <a href="#download">Download</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/privacy.html">Terms of use</a>
+        <a href="/privacy.html">Community rules</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:nakiwreckremoval@gmail.com">nakiwreckremoval@gmail.com</a>
+        <a href="https://www.facebook.com/groups/790413880545665" target="_blank" rel="noopener">Facebook group</a>
+        <a href="mailto:nakiwreckremoval@gmail.com?subject=Kindred%20issue">Report an issue</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Kindred · Made in Aotearoa 🇳🇿</span>
+      <span>Pre-launch · open beta</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Inject real Kindred icon into every .logo-mark[data-logo]
+  document.querySelectorAll('.logo-mark[data-logo]').forEach(el => {
+    el.innerHTML = '<img src="icon.png" alt="Kindred logo">';
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  });
+</script>
+
+
+
+</body></html>
