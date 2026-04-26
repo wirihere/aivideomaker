@@ -7,12 +7,17 @@
 //   - One ledger row       docs/render-learnings/LEDGER.md (append)
 //
 // Categories surfaced:
-//   - composition         visible text per scene (length, alignment with narration)
-//   - brand fidelity      brand name + URL presence; on-screen text vs copy.json
-//   - placeholder leakage literal seed text from the template that didn't get swapped
-//   - pacing              scene durations vs narration beat boundaries
-//   - audio coverage      narration end vs comp end (gaps, overruns)
-//   - accessibility       text-vs-bg contrast + font size at 1080p
+//   - composition           visible text per scene (length, alignment with narration)
+//   - brand fidelity        brand name + URL presence; on-screen text vs copy.json
+//   - placeholder leakage   literal seed text from the template that didn't get swapped
+//   - pacing                scene durations vs narration beat boundaries
+//   - audio coverage        narration end vs comp end (gaps, overruns)
+//   - accessibility         text-vs-bg contrast + font size at 1080p
+//   - brand palette use     scene bg colors vs design/tokens-<slug>.css palette;
+//                           presence of var(--card-) references in assembled <style>
+//   - brand asset use       manifest.json assets actually appearing as src= in HTML
+//   - scene visual density  text-only scenes on default backgrounds (image / decorative
+//                           element census per scene midpoint, consecutive-run detection)
 //
 // Usage:
 //   node scripts/verify-render.mjs                          # default: index.html
@@ -276,6 +281,241 @@ function looksLikePlaceholder(text) {
   return null;
 }
 
+// --- color helpers for brand-palette check --------------------------------
+// rgb()/rgba() string → "#rrggbb" (lowercase). Returns null for keywords
+// (transparent, inherit) or unparseable input.
+function rgbToHex(rgbStr) {
+  if (!rgbStr) return null;
+  const s = String(rgbStr).trim().toLowerCase();
+  if (!s || s === "transparent" || s === "inherit" || s === "initial" || s === "unset") return null;
+  const m = s.match(/rgba?\(([^)]+)\)/);
+  if (!m) return null;
+  const parts = m[1].split(",").map(x => parseFloat(x.trim()));
+  if (parts.length < 3) return null;
+  // Treat near-zero alpha as transparent — element has no real surface color.
+  const alpha = parts.length >= 4 ? parts[3] : 1;
+  if (alpha <= 0.01) return null;
+  const r = Math.max(0, Math.min(255, Math.round(parts[0])));
+  const g = Math.max(0, Math.min(255, Math.round(parts[1])));
+  const b = Math.max(0, Math.min(255, Math.round(parts[2])));
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
+
+// Parse a tokens-<slug>.css file for the brand palette hex set. We pull every
+// hex value declared on the brand-relevant custom properties (paper / slate /
+// accent / navy* / warn / ok). Returns a Set of lowercased "#rrggbb"; empty if
+// the file is missing or unparseable. Per the brief: paper, slate, accent,
+// navy*, warn — plus "ok" since tokens-kindred.css uses it as a brand surface.
+function parseBrandTokenHexes(cssText) {
+  const out = new Set();
+  if (!cssText) return out;
+  // Match: --card-<name>: <value>;  where <name> matches the brand token list.
+  const re = /--card-(?:paper(?:-soft)?|slate(?:-ink)?|accent|navy(?:-deep)?|warn|ok)\s*:\s*([^;]+);/gi;
+  let m;
+  while ((m = re.exec(cssText))) {
+    const value = m[1].trim();
+    // Direct hex (#xxx, #xxxxxx, #xxxxxxxx)
+    const hexMatch = value.match(/#([0-9a-fA-F]{3,8})/);
+    if (hexMatch) {
+      let hex = hexMatch[0].toLowerCase();
+      // Expand short hex to long form for consistent comparison
+      if (hex.length === 4) {
+        // #abc → #aabbcc
+        hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+      } else if (hex.length === 9) {
+        // strip alpha channel for comparison purposes
+        hex = hex.slice(0, 7);
+      }
+      out.add(hex);
+      continue;
+    }
+    // rgb()/rgba() literal — convert
+    if (/^rgba?\(/i.test(value)) {
+      const hex = rgbToHex(value);
+      if (hex) out.add(hex);
+    }
+  }
+  return out;
+}
+
+// Resolve the brand-tokens path. The verifier slug is sometimes a recut suffix
+// (e.g. "kindred-recut") that has no tokens file of its own. Fallbacks (in
+// order): tokens-<slug>.css, tokens-<copy.slug>.css, tokens-<brand>.css where
+// brand is the first lowercased word of the title before any separator.
+function resolveTokensPath(slug, copyJson) {
+  const candidates = [];
+  if (slug) candidates.push(slug);
+  if (copyJson?.slug && copyJson.slug !== slug) candidates.push(copyJson.slug);
+  // brand-name fallback — strip suffixes like "-recut", "-tone", "-override"
+  if (slug) {
+    const base = slug.replace(/-(?:recut|tone|override|test|stripe|nz)$/i, "");
+    if (base && base !== slug) candidates.push(base);
+  }
+  if (copyJson?.title) {
+    const probe = String(copyJson.title).split(/[—\-|·:]/)[0].trim().toLowerCase();
+    if (probe && /^[a-z][a-z0-9-]+$/.test(probe)) candidates.push(probe);
+  }
+  for (const c of candidates) {
+    const p = abs(`design/tokens-${c}.css`);
+    if (fileExists(p)) return p;
+  }
+  return null;
+}
+
+// --- scene visual census (runs in page context) ---------------------------
+// At a paused timeline state, return per-scene: { id, bgHex, imageCount,
+// decorativeCount, textOnly }. "Image" = <img>, content <svg>, or any element
+// with a non-empty background-image. "Decorative" = visible element that isn't
+// text and isn't pure paper-white/inherit-bg (rules, dots, blocks, accent
+// shapes). "textOnly" = zero images AND zero decoratives.
+//
+// We pass the brand-token set as a stringified JSON array so the page-side
+// function can match scene bg against it for the textOnly heuristic — a
+// brand-tinted bg counts as "decorative enough" not text-only.
+const SCENE_CENSUS_FN = `(brandHexes) => {
+  const brandSet = new Set(brandHexes || []);
+  // rgb() → "#rrggbb"
+  const toHex = (s) => {
+    if (!s) return null;
+    const m = s.match(/rgba?\\(([^)]+)\\)/);
+    if (!m) return null;
+    const p = m[1].split(",").map(x => parseFloat(x.trim()));
+    if (p.length < 3) return null;
+    const a = p.length >= 4 ? p[3] : 1;
+    if (a <= 0.01) return null;
+    const r = Math.max(0, Math.min(255, Math.round(p[0])));
+    const g = Math.max(0, Math.min(255, Math.round(p[1])));
+    const b = Math.max(0, Math.min(255, Math.round(p[2])));
+    return "#" + r.toString(16).padStart(2,"0") + g.toString(16).padStart(2,"0") + b.toString(16).padStart(2,"0");
+  };
+  const isWhiteish = (hex) => {
+    if (!hex) return true; // inherit/transparent counts as default
+    if (hex === "#ffffff") return true;
+    return false;
+  };
+  const visible = (el) => {
+    const cs = getComputedStyle(el);
+    if (cs.display === "none" || cs.visibility === "hidden" || parseFloat(cs.opacity) === 0) return false;
+    const r = el.getBoundingClientRect();
+    return r.width >= 1 && r.height >= 1;
+  };
+  const scenes = [];
+  for (const el of document.querySelectorAll(".scene.clip, .scene")) {
+    if (el.hasAttribute("data-composition-id")) continue;
+    if (!visible(el)) continue;
+    const sceneId = el.id || null;
+    const cs = getComputedStyle(el);
+    let bgHex = toHex(cs.backgroundColor);
+    // If the scene itself has a transparent bg, walk up to find the painted
+    // surface (e.g. body or comp root). This matches "what does the viewer see".
+    if (!bgHex) {
+      let cur = el.parentElement;
+      while (cur && cur !== document.documentElement) {
+        const h = toHex(getComputedStyle(cur).backgroundColor);
+        if (h) { bgHex = h; break; }
+        cur = cur.parentElement;
+      }
+    }
+    let imageCount = 0;
+    let decorativeCount = 0;
+    // Walk descendants of the scene only.
+    const all = el.querySelectorAll("*");
+    const TEXT_TAGS = new Set(["P","H1","H2","H3","H4","H5","H6","SPAN","EM","STRONG","B","I","U","SMALL","MARK","SUB","SUP","CODE","BR","LI","DT","DD","BLOCKQUOTE","Q","CITE","ABBR","TIME","LABEL","A"]);
+    for (const child of all) {
+      if (!visible(child)) continue;
+      const tag = child.tagName;
+      // Image: <img>, content-bearing <svg> (has children), or
+      // non-empty background-image.
+      if (tag === "IMG") { imageCount++; continue; }
+      if (tag === "SVG") {
+        // Treat only SVGs that draw something (have child elements) as imagery.
+        if (child.children && child.children.length > 0) {
+          imageCount++;
+          continue;
+        }
+      }
+      const ccs = getComputedStyle(child);
+      if (ccs.backgroundImage && ccs.backgroundImage !== "none") {
+        imageCount++;
+        continue;
+      }
+      // Decorative: non-text, has a visible non-default background, or a
+      // border, or has a fixed size with a colored fill (e.g. rule, dot,
+      // accent block). Skip text-bearing leaves — they're covered elsewhere.
+      const t = (child.textContent || "").trim();
+      const hasOwnText = t.length > 0;
+      // If element has direct text but no non-inline non-text children, it is
+      // a text leaf — not decorative.
+      let onlyInlineChildren = true;
+      for (const sub of child.children) {
+        if (!TEXT_TAGS.has(sub.tagName)) { onlyInlineChildren = false; break; }
+      }
+      if (hasOwnText && onlyInlineChildren) continue;
+      // Non-text container — does it have a paint surface?
+      const childBg = toHex(ccs.backgroundColor);
+      const hasBorder = (
+        parseFloat(ccs.borderTopWidth) +
+        parseFloat(ccs.borderRightWidth) +
+        parseFloat(ccs.borderBottomWidth) +
+        parseFloat(ccs.borderLeftWidth)
+      ) > 0;
+      const isBrandTinted = childBg && brandSet.has(childBg) && !isWhiteish(childBg);
+      const isDifferentFromScene = childBg && childBg !== bgHex && !isWhiteish(childBg);
+      if (isBrandTinted || isDifferentFromScene || hasBorder) {
+        // Skip elements that only border-render text (focus rings, etc.) by
+        // requiring a min footprint; rules/blocks easily clear this.
+        const rect = child.getBoundingClientRect();
+        if (rect.width >= 8 && rect.height >= 8) {
+          decorativeCount++;
+        }
+      }
+    }
+    const sceneBgIsBrand = bgHex && brandSet.has(bgHex) && !isWhiteish(bgHex);
+    scenes.push({
+      sceneId,
+      bgHex,
+      sceneBgIsBrand,
+      imageCount,
+      decorativeCount,
+      textOnly: imageCount === 0 && decorativeCount === 0 && !sceneBgIsBrand,
+    });
+  }
+  return scenes;
+}`;
+
+// Run a midpoint census per scene. Reuses the active-page after scrubTimeline.
+async function censusScenes(page, sceneWindows, brandHexes) {
+  await page.evaluate(`window.__sceneCensus = ${SCENE_CENSUS_FN}`);
+  await page.evaluate(`window.__applyClipVis = window.__applyClipVis || ${APPLY_CLIP_VIS_FN}`);
+  // De-dupe: scrub once per scene at its midpoint, then read the census filtered
+  // to the active scene id.
+  const result = new Map();
+  for (const [sceneId, w] of sceneWindows) {
+    const midT = (w.start + w.end) / 2 + 0.5;
+    const list = await page.evaluate((args) => {
+      const { midT, brandHexes } = args;
+      const tl = window.__timelines[Object.keys(window.__timelines)[0]];
+      tl.pause();
+      tl.seek(midT);
+      window.__applyClipVis(midT);
+      return window.__sceneCensus(brandHexes);
+    }, { midT, brandHexes });
+    for (const entry of list) {
+      // Only retain the row for the active scene id at this midpoint.
+      if (entry.sceneId === sceneId) {
+        result.set(sceneId, entry);
+        break;
+      }
+    }
+    if (!result.has(sceneId) && list.length) {
+      // Fallback: take the first visible scene if id-match fails (rare —
+      // happens when scene ids are missing).
+      result.set(sceneId, list[0]);
+    }
+  }
+  return result;
+}
+
 // --- per-second scrub -----------------------------------------------------
 // Sampling strategy: seek to (t + 0.5) so we land in the middle of each
 // 1-second window, AFTER any entrance tweens (typical 0.4-0.8s into a scene).
@@ -315,7 +555,10 @@ async function scrubTimeline(page, durationS) {
 }
 
 // --- categorize findings --------------------------------------------------
-function categorize({ samples, vttCues, copyJson, durationS, brandName, brandUrl }) {
+function categorize({
+  samples, vttCues, copyJson, durationS, brandName, brandUrl,
+  compHtml, tokenHexes, tokensPath, manifestAssets, manifestPath, sceneCensus,
+}) {
   const findings = {
     composition: [],
     brandFidelity: [],
@@ -323,6 +566,9 @@ function categorize({ samples, vttCues, copyJson, durationS, brandName, brandUrl
     pacing: [],
     audioCoverage: [],
     accessibility: [],
+    brandPaletteUse: [],
+    brandAssetUse: [],
+    sceneVisualDensity: [],
   };
 
   // ---- composition: visible text per scene (length, alignment) -----------
@@ -532,6 +778,175 @@ function categorize({ samples, vttCues, copyJson, durationS, brandName, brandUrl
     }
   }
 
+  // ---- brand palette use ------------------------------------------------
+  // Two checks:
+  //   (a) per-scene background hex must appear in the brand-token set (or be
+  //       transparent / inherit), else warn.
+  //   (b) the assembled HTML's inline <style> blocks must reference
+  //       var(--card-) at least once — zero references means the template
+  //       hardcoded its own palette and silently bypassed brand tokens.
+  if (!tokenHexes || tokenHexes.size === 0) {
+    findings.brandPaletteUse.push({
+      kind: "no-tokens",
+      message: tokensPath
+        ? `tokens file ${path.relative(projectRoot, tokensPath).replace(/\\/g, "/")} parsed but yielded no brand hex codes — palette check skipped`
+        : `no design/tokens-<slug>.css resolved for this comp — palette check skipped`,
+    });
+  } else {
+    // (a) scene bg vs brand-set
+    if (sceneCensus && sceneCensus.size) {
+      for (const [sceneId, c] of sceneCensus) {
+        if (!c.bgHex) continue; // transparent / inherit — skip
+        if (!tokenHexes.has(c.bgHex)) {
+          findings.brandPaletteUse.push({
+            kind: "scene-bg-off-palette",
+            scene: sceneId,
+            bgHex: c.bgHex,
+            message: `scene ${sceneId}: surface color ${c.bgHex} not in brand tokens`,
+          });
+        }
+      }
+    }
+    // (b) var(--card-) reference count in inline <style> blocks
+    let varRefs = 0;
+    if (compHtml) {
+      const styleBlocks = [...compHtml.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map(m => m[1]);
+      for (const block of styleBlocks) {
+        const matches = block.match(/var\(--card-/g);
+        if (matches) varRefs += matches.length;
+      }
+    }
+    if (varRefs === 0) {
+      findings.brandPaletteUse.push({
+        kind: "zero-var-refs",
+        severity: "error",
+        message: `zero var(--card-) references in assembled comp — brand tokens completely bypassed`,
+      });
+    } else {
+      findings.brandPaletteUse.push({
+        kind: "var-refs-present",
+        count: varRefs,
+        message: `${varRefs} var(--card-) reference${varRefs === 1 ? "" : "s"} in assembled <style> — brand tokens consumed`,
+      });
+    }
+  }
+
+  // ---- brand asset use --------------------------------------------------
+  // For each asset listed in assets/<slug>/manifest.json, look for an exact
+  // src="<path>" match in the assembled HTML. Pulled-but-unused = wasted
+  // extraction. If BOTH hero AND logo are unused, escalate to a single error
+  // (visual identity completely absent).
+  if (!manifestAssets) {
+    findings.brandAssetUse.push({
+      kind: "no-manifest",
+      message: manifestPath
+        ? `manifest.json found at ${path.relative(projectRoot, manifestPath).replace(/\\/g, "/")} but no assets[] array — asset check skipped`
+        : `no assets/<slug>/manifest.json — asset check skipped`,
+    });
+  } else if (manifestAssets.length === 0) {
+    findings.brandAssetUse.push({
+      kind: "manifest-empty",
+      message: `manifest.json has zero assets — nothing to check`,
+    });
+  } else {
+    let heroUnused = false;
+    let heroPresent = false;
+    let logoUnused = false;
+    let logoPresent = false;
+    let unusedCount = 0;
+    for (const asset of manifestAssets) {
+      const assetPath = (asset?.path || "").replace(/\\/g, "/");
+      if (!assetPath) continue;
+      const kind = (asset?.kind || "asset").toLowerCase();
+      // Exact src= match — quoted with either " or ' so we don't false-positive
+      // on a substring of a longer path. Also tolerate ./ prefix.
+      const pattern = new RegExp(
+        `src=["'](?:\\.\\/)?${assetPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`
+      );
+      const used = pattern.test(compHtml || "");
+      if (kind === "hero") { heroPresent = true; if (!used) heroUnused = true; }
+      if (kind === "logo") { logoPresent = true; if (!used) logoUnused = true; }
+      if (!used) {
+        unusedCount++;
+        findings.brandAssetUse.push({
+          kind: "asset-unused",
+          assetKind: kind,
+          assetPath,
+          message: `asset ${kind} (${assetPath}) was pulled but never shown in the comp`,
+        });
+      }
+    }
+    if (heroPresent && logoPresent && heroUnused && logoUnused) {
+      // Escalate: drop the per-asset warns for hero+logo and replace with a
+      // single error finding (the brief calls for "single error finding").
+      findings.brandAssetUse = findings.brandAssetUse.filter(f =>
+        !(f.kind === "asset-unused" && (f.assetKind === "hero" || f.assetKind === "logo"))
+      );
+      findings.brandAssetUse.push({
+        kind: "visual-identity-absent",
+        severity: "error",
+        message: `brand visual identity completely absent: neither hero nor logo appears in any scene`,
+      });
+    }
+    if (unusedCount === 0) {
+      findings.brandAssetUse.push({
+        kind: "all-shown",
+        message: `all ${manifestAssets.length} pulled asset${manifestAssets.length === 1 ? "" : "s"} appear in the comp`,
+      });
+    }
+  }
+
+  // ---- scene visual density --------------------------------------------
+  // Text-only scene = zero images AND zero decorative non-text elements AND
+  // (effectively) default surface bg. 3+ consecutive text-only scenes = "comp
+  // reads as editorial slideshow rather than brand video" — single error.
+  if (sceneCensus && sceneCensus.size) {
+    // Order by start time so "consecutive" is meaningful.
+    const sceneOrder = [];
+    for (const s of samples) {
+      if (!s.activeSceneId) continue;
+      if (!sceneOrder.includes(s.activeSceneId) && sceneCensus.has(s.activeSceneId)) {
+        sceneOrder.push(s.activeSceneId);
+      }
+    }
+    const textOnlyFlags = sceneOrder.map(id => ({
+      id, textOnly: !!sceneCensus.get(id)?.textOnly,
+    }));
+    let maxRun = 0;
+    let curRun = 0;
+    for (const f of textOnlyFlags) {
+      if (f.textOnly) {
+        curRun++;
+        if (curRun > maxRun) maxRun = curRun;
+      } else {
+        curRun = 0;
+      }
+    }
+    for (const f of textOnlyFlags) {
+      if (!f.textOnly) continue;
+      const c = sceneCensus.get(f.id);
+      findings.sceneVisualDensity.push({
+        kind: "text-only-scene",
+        scene: f.id,
+        bgHex: c?.bgHex || null,
+        message: `scene ${f.id} is text-only on default background`,
+      });
+    }
+    if (maxRun >= 3) {
+      findings.sceneVisualDensity.push({
+        kind: "consecutive-text-only",
+        severity: "error",
+        runLength: maxRun,
+        message: `${maxRun}+ consecutive text-only scenes — comp reads as editorial slideshow rather than brand video`,
+      });
+    }
+  } else {
+    findings.sceneVisualDensity.push({
+      kind: "no-census",
+      message: `scene census not available — visual density check skipped`,
+    });
+  }
+
   return findings;
 }
 
@@ -540,18 +955,29 @@ function deriveVerdict(findings) {
   //   - any placeholder leakage (template seed text leaked through)
   //   - brand name absent from visible text
   //   - URL host absent from visible text
+  //   - zero var(--card-) refs in assembled <style> (palette bypassed)
+  //   - both hero AND logo unused (visual identity absent)
+  //   - 3+ consecutive text-only scenes (editorial slideshow)
   // We deliberately don't escalate `beat-headline-missing` to major: the comp
   // may have been hand-written or recut without exact-headline-substring
   // match, which is fine. It's a "watch" signal.
+  const newErrors =
+    findings.brandPaletteUse.some(f => f.kind === "zero-var-refs") ||
+    findings.brandAssetUse.some(f => f.kind === "visual-identity-absent") ||
+    findings.sceneVisualDensity.some(f => f.kind === "consecutive-text-only");
   const hasMajor =
     findings.placeholderLeakage.length > 0 ||
-    findings.brandFidelity.some(f => f.kind === "brand-name-missing" || f.kind === "url-missing");
+    findings.brandFidelity.some(f => f.kind === "brand-name-missing" || f.kind === "url-missing") ||
+    newErrors;
   const watchSignals =
     findings.pacing.length +
     findings.accessibility.length +
     findings.composition.filter(f => f.kind !== "ok").length +
     findings.brandFidelity.filter(f => f.kind === "beat-headline-missing").length +
-    findings.audioCoverage.filter(f => f.kind !== "ok").length;
+    findings.audioCoverage.filter(f => f.kind !== "ok").length +
+    findings.brandPaletteUse.filter(f => f.kind === "scene-bg-off-palette").length +
+    findings.brandAssetUse.filter(f => f.kind === "asset-unused").length +
+    findings.sceneVisualDensity.filter(f => f.kind === "text-only-scene").length;
   if (hasMajor) return "needs-fix";
   if (watchSignals > 2) return "watch";
   return "ship";
@@ -604,6 +1030,9 @@ function writeMarkdownReport({ outPath, slug, template, tone, durationS, samples
   renderSection("Pacing", findings.pacing, "scene lengths look balanced");
   renderSection("Audio coverage", findings.audioCoverage, "no audio coverage findings");
   renderSection("Accessibility", findings.accessibility, "no contrast/size findings");
+  renderSection("Brand palette use", findings.brandPaletteUse, "no palette findings");
+  renderSection("Brand asset use", findings.brandAssetUse, "no asset findings");
+  renderSection("Scene visual density", findings.sceneVisualDensity, "no scene-density findings");
 
   lines.push("## Verdict");
   lines.push("");
@@ -636,6 +1065,15 @@ function appendLedgerRow({ slug, template, tone, durationS, findings, verdict })
   if (a11yCount) majorBits.push(`${a11yCount} a11y`);
   const audioIssue = findings.audioCoverage.some(f => f.kind !== "ok" && f.kind !== "no-vtt");
   if (audioIssue) majorBits.push("audio gap");
+  // New brand-fidelity categories — surface in a sized, plain-language form.
+  const paletteOff = findings.brandPaletteUse.filter(f => f.kind === "scene-bg-off-palette").length;
+  if (paletteOff) majorBits.push(`${paletteOff} palette mismatch`);
+  if (findings.brandPaletteUse.some(f => f.kind === "zero-var-refs")) majorBits.push("zero brand tokens");
+  const unusedAssets = findings.brandAssetUse.filter(f => f.kind === "asset-unused").length;
+  if (unusedAssets) majorBits.push(`${unusedAssets} unused asset${unusedAssets === 1 ? "" : "s"}`);
+  if (findings.brandAssetUse.some(f => f.kind === "visual-identity-absent")) majorBits.push("hero+logo absent");
+  const textOnly = findings.sceneVisualDensity.filter(f => f.kind === "text-only-scene").length;
+  if (textOnly) majorBits.push(`${textOnly} text-only`);
   const major = majorBits.length ? majorBits.join(", ") : "clean";
 
   const cells = [dateStr, slug, template || "—", tone || "—", `${durationS}s`, major, verdict];
@@ -727,7 +1165,65 @@ const durationS = Math.round(probe.duration);
 console.log(`  timeline ${probe.tlKey} · ${durationS}s · ${probe.sceneCount} scenes`);
 
 const samples = await scrubTimeline(page, durationS);
+
+// --- brand-token + manifest preload (for new check categories) -----------
+// Read raw HTML once for the var(--card-) census + asset src= match.
+let compHtml = "";
+try { compHtml = fs.readFileSync(compPath, "utf8"); } catch {}
+
+// Resolve tokens path (slug, then copyJson.slug, then short-form fallback).
+let copyJsonForTokens = null;
+if (fileExists(copyPath)) {
+  try { copyJsonForTokens = readJson(copyPath); } catch {}
+}
+const tokensPath = resolveTokensPath(slug, copyJsonForTokens);
+let tokenHexes = new Set();
+if (tokensPath) {
+  try { tokenHexes = parseBrandTokenHexes(fs.readFileSync(tokensPath, "utf8")); }
+  catch (err) { console.warn(`  ! couldn't parse tokens ${tokensPath}: ${err.message}`); }
+}
+
+// Build scene windows for the census pass — derived from samples we already
+// have (avoids a second full scrub).
+const sceneWindowsForCensus = new Map();
+for (const s of samples) {
+  if (!s.activeSceneId) continue;
+  const w = sceneWindowsForCensus.get(s.activeSceneId) || { start: Infinity, end: -Infinity };
+  w.start = Math.min(w.start, s.t);
+  w.end = Math.max(w.end, s.t);
+  sceneWindowsForCensus.set(s.activeSceneId, w);
+}
+
+// Run scene census while the page is still open.
+let sceneCensus = new Map();
+try {
+  sceneCensus = await censusScenes(page, sceneWindowsForCensus, [...tokenHexes]);
+} catch (err) {
+  console.warn(`  ! scene census failed: ${err.message}`);
+}
+
 await browser.close();
+
+// Read manifest.json (canonical asset list from pull-assets.mjs).
+const manifestCandidates = [
+  abs(`assets/${slug}/manifest.json`),
+];
+if (copyJsonForTokens?.slug && copyJsonForTokens.slug !== slug) {
+  manifestCandidates.push(abs(`assets/${copyJsonForTokens.slug}/manifest.json`));
+}
+let manifestPath = null;
+let manifestAssets = null;
+for (const cand of manifestCandidates) {
+  if (fileExists(cand)) {
+    manifestPath = cand;
+    try {
+      const m = readJson(cand);
+      if (Array.isArray(m?.assets)) { manifestAssets = m.assets; break; }
+    } catch (err) {
+      console.warn(`  ! couldn't parse manifest ${cand}: ${err.message}`);
+    }
+  }
+}
 
 // Brand identity for fidelity checks. Order:
 //   1) copy.json title prefix (most reliable when copy exists)
@@ -759,7 +1255,10 @@ try {
   }
 } catch {}
 
-const findings = categorize({ samples, vttCues, copyJson, durationS, brandName, brandUrl });
+const findings = categorize({
+  samples, vttCues, copyJson, durationS, brandName, brandUrl,
+  compHtml, tokenHexes, tokensPath, manifestAssets, manifestPath, sceneCensus,
+});
 const verdict = deriveVerdict(findings);
 
 // --- write outputs --------------------------------------------------------
@@ -782,6 +1281,11 @@ const jsonPayload = {
   vttCueCount: vttCues.length,
   brandName,
   brandUrl,
+  tokensPath: tokensPath ? path.relative(projectRoot, tokensPath).replace(/\\/g, "/") : null,
+  tokenHexes: [...tokenHexes],
+  manifestPath: manifestPath ? path.relative(projectRoot, manifestPath).replace(/\\/g, "/") : null,
+  manifestAssetCount: Array.isArray(manifestAssets) ? manifestAssets.length : 0,
+  sceneCensus: Array.from(sceneCensus.entries()).map(([id, c]) => ({ id, ...c })),
   samples,
   findings,
   verdict,
@@ -798,6 +1302,12 @@ console.log(`  placeholder leakage ${findings.placeholderLeakage.length} entries
 console.log(`  pacing              ${findings.pacing.length} entries`);
 console.log(`  audio coverage      ${findings.audioCoverage.length} entries`);
 console.log(`  accessibility       ${findings.accessibility.length} entries`);
+const paletteMajor = findings.brandPaletteUse.some(f => f.kind === "zero-var-refs");
+const assetMajor = findings.brandAssetUse.some(f => f.kind === "visual-identity-absent");
+const densityMajor = findings.sceneVisualDensity.some(f => f.kind === "consecutive-text-only");
+console.log(`  brand palette use   ${findings.brandPaletteUse.length} entries${paletteMajor ? "  ← MAJOR" : ""}`);
+console.log(`  brand asset use     ${findings.brandAssetUse.length} entries${assetMajor ? "  ← MAJOR" : ""}`);
+console.log(`  scene visual density ${findings.sceneVisualDensity.length} entries${densityMajor ? " ← MAJOR" : ""}`);
 console.log("");
 console.log(`◇ verdict: ${verdict} (${dt}s)`);
 console.log(`  json: ${path.relative(projectRoot, jsonOutPath).replace(/\\/g, "/")}`);
