@@ -1,0 +1,532 @@
+{
+  "allbirds.com": {
+    "host": "allbirds.com",
+    "url": "https://www.allbirds.com",
+    "archetype_hint": "lifestyle",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#000000",
+      "accent": "#007aff",
+      "bg": "#ece9e2",
+      "warm": "#9c0f0f"
+    },
+    "fonts": {
+      "display": "Geograph",
+      "body": "Geograph"
+    },
+    "photo_style": "product",
+    "tone": "lifestyle",
+    "tone_confidence": 0.95,
+    "signals": [
+      {
+        "tone": "lifestyle",
+        "weight": 0.6,
+        "reason": "curator_hint:lifestyle"
+      },
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.3,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "lifestyle",
+        "weight": 0.5,
+        "reason": "vocab_lifestyle"
+      },
+      {
+        "tone": "lifestyle",
+        "weight": 0.5,
+        "reason": "product_photos"
+      },
+      {
+        "tone": "luxury",
+        "weight": 0.2,
+        "reason": "product_photos"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/allbirds.com.jpg",
+    "title": "Allbirds: Comfortable, Sustainable Shoes & Apparel"
+  },
+  "atlasobscura.com": {
+    "host": "atlasobscura.com",
+    "url": "https://www.atlasobscura.com",
+    "archetype_hint": "documentary",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#000000",
+      "accent": "#0369a1",
+      "bg": "#ffffff",
+      "warm": "#fef08a"
+    },
+    "fonts": {
+      "display": "Platform Web",
+      "body": "Helvetica"
+    },
+    "photo_style": "editorial",
+    "tone": "documentary",
+    "tone_confidence": 0.95,
+    "signals": [
+      {
+        "tone": "documentary",
+        "weight": 0.6,
+        "reason": "curator_hint:documentary"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.5,
+        "reason": "vocab_documentary"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "editorial_layout"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/atlasobscura.com.jpg",
+    "title": "Curious and Wondrous Travel Destinations - Atlas Obscura"
+  },
+  "figma.com": {
+    "host": "figma.com",
+    "url": "https://www.figma.com",
+    "archetype_hint": "energetic",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#000000",
+      "accent": null,
+      "bg": "#ffffff",
+      "warm": null
+    },
+    "fonts": {
+      "display": "figmaSans",
+      "body": "figmaSans"
+    },
+    "photo_style": "minimal",
+    "tone": "energetic",
+    "tone_confidence": 0.82,
+    "signals": [
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "curator_hint:energetic"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "energetic",
+        "weight": 0.5,
+        "reason": "vocab_energetic"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.5,
+        "reason": "vocab_playful"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/figma.com.jpg",
+    "title": "Figma: The Collaborative Interface Design Tool"
+  },
+  "glossier.com": {
+    "host": "glossier.com",
+    "url": "https://www.glossier.com",
+    "archetype_hint": "lifestyle",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#000000",
+      "accent": null,
+      "bg": "#ffffff",
+      "warm": null
+    },
+    "fonts": {
+      "display": "Apercu",
+      "body": "Apercu"
+    },
+    "photo_style": "editorial",
+    "tone": "documentary",
+    "tone_confidence": 0.2,
+    "signals": [
+      {
+        "tone": "lifestyle",
+        "weight": 0.6,
+        "reason": "curator_hint:lifestyle"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "energetic",
+        "weight": 0.5,
+        "reason": "vocab_energetic"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.5,
+        "reason": "vocab_playful"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "editorial_layout"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/glossier.com.jpg",
+    "title": "Glossier"
+  },
+  "kindred-nz.org": {
+    "host": "kindred-nz.org",
+    "url": "https://kindred-nz.org",
+    "archetype_hint": "warm",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#1b2a3d",
+      "accent": "#1b2a3d",
+      "bg": "#fbf9f6",
+      "warm": null
+    },
+    "fonts": {
+      "display": "Fraunces",
+      "body": "Nunito"
+    },
+    "photo_style": "human-centric",
+    "tone": "warm",
+    "tone_confidence": 0.95,
+    "signals": [
+      {
+        "tone": "warm",
+        "weight": 0.6,
+        "reason": "curator_hint:warm"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "warm",
+        "weight": 0.5,
+        "reason": "vocab_warm"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.5,
+        "reason": "vocab_playful"
+      },
+      {
+        "tone": "warm",
+        "weight": 0.4,
+        "reason": "human_photos"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/kindred-nz.org.jpg",
+    "title": "Kindred — Share with neighbours. Find local help within 100km."
+  },
+  "kiva.org": {
+    "host": "kiva.org",
+    "url": "https://www.kiva.org",
+    "archetype_hint": "warm",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#223829",
+      "accent": "#3b82f6",
+      "bg": "#ffffff",
+      "warm": null
+    },
+    "fonts": {
+      "display": "dovetail-mvb",
+      "body": "PostGrotesk"
+    },
+    "photo_style": "product",
+    "tone": "playful",
+    "tone_confidence": 0.45,
+    "signals": [
+      {
+        "tone": "warm",
+        "weight": 0.6,
+        "reason": "curator_hint:warm"
+      },
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.3,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.5,
+        "reason": "vocab_playful"
+      },
+      {
+        "tone": "lifestyle",
+        "weight": 0.5,
+        "reason": "product_photos"
+      },
+      {
+        "tone": "luxury",
+        "weight": 0.2,
+        "reason": "product_photos"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/kiva.org.jpg",
+    "title": "Make a loan, change a life | Kiva"
+  },
+  "linear.app": {
+    "host": "linear.app",
+    "url": "https://linear.app",
+    "archetype_hint": "energetic",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#000000",
+      "accent": "#828fff",
+      "bg": "#ffffff",
+      "warm": "#f0bf00"
+    },
+    "fonts": {
+      "display": "Inter Variable",
+      "body": "Inter Variable"
+    },
+    "photo_style": "editorial",
+    "tone": "energetic",
+    "tone_confidence": 0.73,
+    "signals": [
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "curator_hint:energetic"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "energetic",
+        "weight": 0.5,
+        "reason": "vocab_energetic"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "editorial_layout"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/linear.app.jpg",
+    "title": "Linear – The system for product development"
+  },
+  "neighbourhoodgoods.com": {
+    "host": "neighbourhoodgoods.com",
+    "url": "https://neighbourhoodgoods.com",
+    "archetype_hint": "warm",
+    "fingerprinted_at": "2026-04-26",
+    "error": "load_failed: page.goto: net::ERR_CONNECTION_TIMED_OUT at https://neighbourhoodgoods.com/"
+  },
+  "notion.so": {
+    "host": "notion.so",
+    "url": "https://www.notion.so",
+    "archetype_hint": "energetic",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#000000",
+      "accent": "#005bab",
+      "bg": "#ffffff",
+      "warm": "#793400"
+    },
+    "fonts": {
+      "display": "NotionInter",
+      "body": "NotionInter"
+    },
+    "photo_style": "product",
+    "tone": "energetic",
+    "tone_confidence": 0.32,
+    "signals": [
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "curator_hint:energetic"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.5,
+        "reason": "vocab_playful"
+      },
+      {
+        "tone": "lifestyle",
+        "weight": 0.5,
+        "reason": "product_photos"
+      },
+      {
+        "tone": "luxury",
+        "weight": 0.2,
+        "reason": "product_photos"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/notion.so.jpg",
+    "title": "The AI workspace that works for you. | Notion"
+  },
+  "stripe.com": {
+    "host": "stripe.com",
+    "url": "https://stripe.com",
+    "archetype_hint": "energetic",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#2e2b8c",
+      "accent": "#533afd",
+      "bg": "#ffffff",
+      "warm": "#f9b900"
+    },
+    "fonts": {
+      "display": "sohne-var",
+      "body": "sohne-var"
+    },
+    "photo_style": "editorial",
+    "tone": "energetic",
+    "tone_confidence": 0.95,
+    "signals": [
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "curator_hint:energetic"
+      },
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.3,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "editorial_layout"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/stripe.com.jpg",
+    "title": "Stripe | Financial Infrastructure to Grow Your Revenue"
+  },
+  "theverge.com": {
+    "host": "theverge.com",
+    "url": "https://www.theverge.com",
+    "archetype_hint": "documentary",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#000000",
+      "accent": "#3cffd0",
+      "bg": "#ffffff",
+      "warm": null
+    },
+    "fonts": {
+      "display": "ui-sans-serif",
+      "body": "__fkRomanStandard_cfceed"
+    },
+    "photo_style": "product",
+    "tone": "documentary",
+    "tone_confidence": 0.56,
+    "signals": [
+      {
+        "tone": "documentary",
+        "weight": 0.6,
+        "reason": "curator_hint:documentary"
+      },
+      {
+        "tone": "energetic",
+        "weight": 0.6,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "playful",
+        "weight": 0.3,
+        "reason": "vivid_accent"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "lifestyle",
+        "weight": 0.5,
+        "reason": "product_photos"
+      },
+      {
+        "tone": "luxury",
+        "weight": 0.2,
+        "reason": "product_photos"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/theverge.com.jpg",
+    "title": "The Verge"
+  },
+  "warbyparker.com": {
+    "host": "warbyparker.com",
+    "url": "https://www.warbyparker.com",
+    "archetype_hint": "lifestyle",
+    "fingerprinted_at": "2026-04-26",
+    "palette": {
+      "primary": "#121212",
+      "accent": "#072369",
+      "bg": "#ffffff",
+      "warm": "#bf0025"
+    },
+    "fonts": {
+      "display": "sans-serif",
+      "body": "sans-serif"
+    },
+    "photo_style": "editorial",
+    "tone": "lifestyle",
+    "tone_confidence": 0.73,
+    "signals": [
+      {
+        "tone": "lifestyle",
+        "weight": 0.6,
+        "reason": "curator_hint:lifestyle"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "high_contrast_editorial"
+      },
+      {
+        "tone": "lifestyle",
+        "weight": 0.5,
+        "reason": "vocab_lifestyle"
+      },
+      {
+        "tone": "documentary",
+        "weight": 0.3,
+        "reason": "editorial_layout"
+      }
+    ],
+    "thumb": "docs/brand-fingerprints/warbyparker.com.jpg",
+    "title": "Warby Parker: Eyewear Online | We've Got Your Eyes Covered | Warby Parker"
+  }
+}
