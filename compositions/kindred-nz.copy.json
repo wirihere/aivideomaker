@@ -1,0 +1,46 @@
+{
+  "slug": "kindred-nz",
+  "url": "https://kindred-nz.org",
+  "title": "Kindred — Share with neighbours. Find local help within 100km.",
+  "template": "warm-community",
+  "seconds": 30,
+  "narration": "Introducing Kindred. The community app for your street. Just local. No money. No ads. No algorithm. Three simple steps. Post a give or an ask. A neighbour messages. Drop it off or pick it up. Made for locals. Be kind. Use Kindred.",
+  "beats": [
+    {
+      "kicker": "STEP 01",
+      "headline": "Post a give or an ask.",
+      "body": "Snap a photo. Tag it GIVE or NEED."
+    },
+    {
+      "kicker": "STEP 02",
+      "headline": "A neighbour messages.",
+      "body": "Sort a time and a pickup spot."
+    },
+    {
+      "kicker": "STEP 03",
+      "headline": "Drop it off or pick it up.",
+      "body": "Or have a yarn while you hand it across."
+    },
+    {
+      "kicker": "WHY IT MATTERS",
+      "headline": "Made for locals.",
+      "body": "Built in New Zealand. Community-funded."
+    }
+  ],
+  "cta": {
+    "verb": "Visit",
+    "url": "https://kindred-nz.org",
+    "tagline": "Be kind. Use Kindred."
+  },
+  "meta": {
+    "generatedAt": "2026-04-26",
+    "wordCount": 45,
+    "beatCount": 4,
+    "structuralTemplate": "faq-quick",
+    "sourcedFrom": {
+      "metaDescription": false,
+      "h1Count": 1,
+      "paragraphCount": 14
+    }
+  }
+}

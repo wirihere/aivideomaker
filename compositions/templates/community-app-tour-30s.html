@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Community App Tour — 30s vertical (phone hero + big icons)</title>
+
+<!--
+  STRUCTURAL TEMPLATE — COMMUNITY APP TOUR (30s, 1080×1920)
+  =========================================================
+  Format:        Vertical 30-second app introduction with phone hero +
+                 animated step icons. Built for community / consumer-app
+                 brands following docs/social-video-patterns.md.
+  Base template: warm-community (cream/honey palette).
+
+  Scenes (5):
+    1.  0-3.5s   INTRODUCING — bold "INTRODUCING" + brand wordmark + logo
+    2.  3.5-12s  STEP 01 — phone hero + camera/photo icon swooshes in
+    3.  12-19s   STEP 02 — phone hero + speech-bubble icon swooshes in
+    4.  19-26s   STEP 03 — phone hero + handshake icon swooshes in
+    5.  26-30s   CTA — bold "BE KIND. USE KINDRED." + URL + logo lockup
+
+  Each step scene shows a centered phone mockup with the brand's hero.png
+  inside (the actual app screenshot). A big icon — sized 320-360px, positioned
+  to overlap the phone's relevant region — flies in from offscreen, holds
+  for the readable middle of the scene, then flies out before the next cut.
+
+  Cut cadence target (per docs/social-video-patterns.md R2): ≥10 cuts in 30s.
+  Achieved here via per-scene sub-beats (icon-in, icon-hold, icon-out, text-in)
+  rather than 5-long-static scenes.
+-->
+
+<!-- Load order matters: cards.css :root defines fallback brand tokens
+     (--card-accent default #7aa0d4). Brand tokens MUST load AFTER cards.css
+     to win the cascade — same selector, last wins. -->
+<!-- HEAD-INCLUDE -->
+<!-- 1. Structural base -->
+<link rel="stylesheet" href="../../design/cards.css">
+<!-- 4. Effects + module bundle -->
+<link rel="stylesheet" href="../../design/effects-batch-08.css">
+<link rel="stylesheet" href="../../design/modules/all.css">
+
+<script src="../../design/vendor/gsap.min.js"></script>
+<script src="../../design/modules/all.js"></script>
+<!-- /HEAD-INCLUDE -->
+
+<!-- 2. Vibe template — warm-community sets calm pace, soft motion. -->
+<link rel="stylesheet" href="../../design/templates/warm-community.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css. MUST be the
+     LAST stylesheet so :root overrides win over cards.css defaults. -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
+
+<style>
+  /* ========================================================================
+     CANVAS — 1080×1920 vertical, warm cream gradient base.
+     ======================================================================== */
+  body { margin: 0; background: var(--card-slate, #FBF9F6); font-family: var(--card-font-ui); }
+
+  .comp {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    color: var(--card-navy-deep, var(--card-navy, #1B2A3D));
+    background:
+      radial-gradient(ellipse at 30% 10%, rgba(255,255,255,0.55) 0%, transparent 55%),
+      linear-gradient(135deg,
+        var(--card-slate,  #FBF9F6) 0%,
+        var(--card-paper-soft, #F4EFE7) 55%,
+        var(--card-paper, #F4C96B) 100%);
+    background-size: 200% 200%;
+    background-position: 0% 0%;
+    will-change: background-position;
+  }
+
+  /* Persistent ambient glitter layer (warm honey particles). */
+  .ambient-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ============================================================
+     SCENE COMMON
+     ============================================================ */
+  .scene {
+    position: absolute; inset: 0;
+    z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 80px 70px;
+  }
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--card-warn, var(--card-accent, #E98B6A));
+    margin: 0;
+  }
+
+  /* ============================================================
+     SCENE 1 — INTRODUCING
+     ============================================================ */
+  .s1-stage {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 32px;
+    width: 100%;
+    text-align: center;
+  }
+  .s1-intro {
+    font-family: var(--card-font-ui);
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: 0.46em;
+    text-transform: uppercase;
+    color: var(--card-warn, #E98B6A);
+    margin: 0 0 12px 0;
+    will-change: transform, opacity;
+  }
+  .s1-mark {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    letter-spacing: -0.040em;
+    line-height: 0.92;
+    color: var(--card-navy-deep, var(--card-navy, #1B2A3D));
+    margin: 0;
+    text-shadow:
+      8px 8px 0 var(--card-warn, #F4C96B),
+      0 18px 40px rgba(27, 42, 61, 0.22);
+    will-change: transform;
+  }
+  .s1-logo {
+    width: 180px; height: 180px;
+    border-radius: 36px;
+    overflow: hidden;
+    box-shadow: 0 12px 36px rgba(27, 42, 61, 0.28);
+    margin-top: 24px;
+    will-change: transform;
+  }
+  .s1-logo img { width: 100%; height: 100%; object-fit: cover; }
+  .s1-tag {
+    font-family: var(--card-font-ui);
+    font-size: 36px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--card-navy, #1B2A3D);
+    margin-top: 16px;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  /* ============================================================
+     STEP SCENES 2/3/4 — phone hero + big animated icon
+     ============================================================ */
+  .step-stage {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    gap: 24px;
+    width: 100%;
+    text-align: center;
+  }
+  .step-kicker {
+    font-family: var(--card-font-ui);
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--card-warn, #E98B6A);
+    margin: 0;
+  }
+  .step-num {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 200px;
+    color: var(--card-navy-deep, #1B2A3D);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin: -10px 0 0 0;
+    text-shadow:
+      8px 8px 0 var(--card-warn, #F4C96B),
+      0 14px 30px rgba(27, 42, 61, 0.22);
+    will-change: transform;
+  }
+  .step-headline {
+    font-family: var(--card-font-display);
+    font-weight: 700;
+    font-size: 92px;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
+    color: var(--card-navy-deep, #1B2A3D);
+    margin: 0;
+    max-width: 940px;
+    will-change: transform, opacity;
+  }
+  .step-phone-wrap {
+    position: relative;
+    width: 600px; height: 1066px;
+    margin: 24px auto 0;
+    will-change: transform;
+  }
+  .step-phone-frame {
+    width: 100%; height: 100%;
+    border-radius: 56px;
+    overflow: hidden;
+    border: 14px solid var(--card-navy-deep, #1B2A3D);
+    box-shadow:
+      0 28px 80px rgba(27, 42, 61, 0.34),
+      inset 0 0 0 4px rgba(255, 255, 255, 0.08);
+    background: #FFFFFF;
+  }
+  .step-phone-frame img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+  }
+  /* Big floating icon — overlays the phone, animates in from a corner.
+     Emoji at hero size (340px) reads as native to kindred's 3D-emoji
+     icon set (the app uses 📦 / 💬 / 🤝 / 🙏 etc. throughout). Browser/
+     render-engine renders the system emoji font (Segoe UI Emoji on Win
+     Chromium) which matches the kindred app's existing visual style
+     better than custom flat-SVG icons. */
+  .step-icon {
+    position: absolute;
+    width: 360px; height: 360px;
+    font-size: 320px;
+    line-height: 1;
+    text-align: center;
+    filter: drop-shadow(0 16px 32px rgba(27, 42, 61, 0.35));
+    pointer-events: none;
+    will-change: transform, opacity;
+    z-index: 3;
+    /* Center the emoji glyph inside the 360x360 box */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Per-step icon position so it lands near the relevant phone region. */
+  #s2-icon { top: 80px;  right: -120px; }   /* near GIVE card top-right */
+  #s3-icon { top: 220px; left: -130px; }    /* near messages region */
+  #s4-icon { top: 540px; right: -120px; }   /* near bottom (handover) */
+
+  .step-body {
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 1.3;
+    color: var(--card-navy, #1B2A3D);
+    margin: 24px 0 0 0;
+    max-width: 920px;
+    opacity: 0.94;
+    will-change: transform, opacity;
+  }
+
+  /* ============================================================
+     SCENE 5 — CTA  "BE KIND. USE KINDRED."
+     ============================================================ */
+  .s5 {
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(244, 201, 107, 0.35) 0%, transparent 60%),
+      var(--card-navy-deep, var(--card-navy, #1B2A3D));
+    color: var(--card-paper, #F4C96B);
+  }
+  .s5-content {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 18px;
+    width: 100%;
+    text-align: center;
+  }
+  .s5-watermark {
+    width: 140px; height: 140px;
+    border-radius: 32px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  }
+  .s5-watermark img { width: 100%; height: 100%; object-fit: cover; }
+  .s5-cta {
+    font-family: var(--card-font-display);
+    font-weight: 800;
+    font-size: 156px;
+    color: var(--card-paper, #F4C96B);
+    letter-spacing: -0.030em;
+    line-height: 0.98;
+    margin: 0;
+    max-width: 920px;
+    text-shadow: 0 8px 28px rgba(0, 0, 0, 0.42);
+    text-wrap: balance;
+    will-change: transform, opacity;
+  }
+  .s5-kicker {
+    font-family: var(--card-font-ui);
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: 0.46em;
+    text-transform: uppercase;
+    color: var(--card-paper-soft, var(--card-paper, #F4C96B));
+    margin: 0 0 18px 0;
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+  .s5-url {
+    font-family: var(--card-font-ui);
+    font-weight: 500;
+    font-size: 44px;
+    color: var(--card-paper-soft, var(--card-paper, #F4C96B));
+    letter-spacing: 0.12em;
+    margin-top: 20px;
+    opacity: 0.92;
+  }
+
+  /* SVG icon strokes use brand tokens, fall back to honey/navy. */
+  .icon-fill-honey { fill: var(--card-warn, var(--card-paper, #F4C96B)); }
+  .icon-fill-navy { fill: var(--card-navy-deep, #1B2A3D); }
+  .icon-stroke-navy { stroke: var(--card-navy-deep, #1B2A3D); fill: none; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<div id="community-app-tour-30s" class="comp clip"
+     data-composition-id="community-app-tour-30s"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="30" data-track-index="0">
+
+  <!-- Persistent ambient particles -->
+  <div id="ambient-host" class="ambient-host clip"
+       data-start="0" data-duration="30" data-track-index="11"></div>
+
+  <!-- ============================================================
+       Scene 1 — INTRODUCING (0-3.5s)
+       ============================================================ -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="3.5" data-track-index="1">
+    <div class="s1-stage">
+      <div id="s1-intro" class="s1-intro">INTRODUCING</div>
+      <h1 id="s1-mark" class="s1-mark">KINDRED</h1>
+      <div id="s1-logo" class="s1-logo">
+        <img src="assets/PLACEHOLDER/logo.png" alt="">
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Scene 2 — STEP 01: Post a give or an ask (3.5-12s)
+       ============================================================ -->
+  <div id="s2" class="scene s2 clip"
+       data-start="3.5" data-duration="8.5" data-track-index="1">
+    <div class="step-stage">
+      <div id="s2-kicker" class="step-kicker">STEP 01</div>
+      <div id="s2-num" class="step-num">01</div>
+      <h2 id="s2-q" class="step-headline">Post a give or an ask.</h2>
+      <div class="step-phone-wrap">
+        <div class="step-phone-frame">
+          <img id="s2-phone" src="assets/PLACEHOLDER/hero.png" alt="">
+        </div>
+        <!-- 📦 Give-box emoji — matches kindred's 3D-emoji "Give something"
+             card icon. Flies in from upper-right, lands above GIVE card. -->
+        <div id="s2-icon" class="step-icon" aria-hidden="true">📦</div>
+      </div>
+      <p id="s2-a" class="step-body">Snap a photo. Tag GIVE or NEED.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Scene 3 — STEP 02: A neighbour messages (12-19s)
+       ============================================================ -->
+  <div id="s3" class="scene s3 clip"
+       data-start="12" data-duration="7" data-track-index="1">
+    <div class="step-stage">
+      <div id="s3-kicker" class="step-kicker">STEP 02</div>
+      <div id="s3-num" class="step-num">02</div>
+      <h2 id="s3-q" class="step-headline">A neighbour messages.</h2>
+      <div class="step-phone-wrap">
+        <div class="step-phone-frame">
+          <img id="s3-phone" src="assets/PLACEHOLDER/hero.png" alt="">
+        </div>
+        <!-- 💬 Speech-balloon emoji — matches kindred's bottom-nav chat
+             icon. Flies in from upper-left, lands near messages region. -->
+        <div id="s3-icon" class="step-icon" aria-hidden="true">💬</div>
+      </div>
+      <p id="s3-a" class="step-body">Sort a time. Sort a pickup spot.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Scene 4 — STEP 03: Drop it off or pick it up (19-26s)
+       ============================================================ -->
+  <div id="s4" class="scene s4 clip"
+       data-start="19" data-duration="7" data-track-index="1">
+    <div class="step-stage">
+      <div id="s4-kicker" class="step-kicker">STEP 03</div>
+      <div id="s4-num" class="step-num">03</div>
+      <h2 id="s4-q" class="step-headline">Drop it off or pick it up.</h2>
+      <div class="step-phone-wrap">
+        <div class="step-phone-frame">
+          <img id="s4-phone" src="assets/PLACEHOLDER/hero.png" alt="">
+        </div>
+        <!-- 🤝 Handshake emoji — matches kindred's empty-state "you're not
+             alone" handshake. Flies in from lower-right. -->
+        <div id="s4-icon" class="step-icon" aria-hidden="true">🤝</div>
+      </div>
+      <p id="s4-a" class="step-body">Or have a yarn while you hand it across.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       Scene 5 — CTA (26-30s)  "BE KIND. USE KINDRED."
+       ============================================================ -->
+  <div id="s5" class="scene s5 clip"
+       data-start="26" data-duration="4" data-track-index="1">
+    <div class="s5-content">
+      <div id="s5-kicker" class="s5-kicker">MADE FOR LOCALS</div>
+      <div id="s5-watermark" class="s5-watermark">
+        <img id="s5-logo" src="assets/PLACEHOLDER/logo.png" alt="">
+      </div>
+      <h2 id="s5-cta" class="s5-cta">Be kind. Use Kindred.</h2>
+      <div id="s5-url" class="s5-url">kindred-nz.org</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG defs (filters etc.) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+      <feGaussianBlur stdDeviation="0.4" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  // ===========================================================================
+  // TIMELINE — community-app-tour-30s
+  //
+  // Designed against docs/social-video-patterns.md:
+  //   - R2: ≥10 cuts in 30s — achieved via per-scene sub-beats (icon-in,
+  //     hold, icon-out, text reveals, number stamp).
+  //   - R6: hard percussive cuts at scene boundaries.
+  //   - R9: no static holds >2.5s — every scene has a moving icon.
+  //   - R11: faces / motion fills ≥60% of frame — phone hero is centered
+  //     and ~600×1066, ~33% of the 1080×1920 canvas; icons add motion.
+  // ===========================================================================
+
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["community-app-tour-30s"] = tl;
+
+  // ---- Background gradient drift across 30s ---------------------------
+  tl.to("#community-app-tour-30s",
+    { backgroundPosition: "100% 100%", duration: 30, ease: "none" },
+    0);
+
+  // ---- Ambient honey sparkle behind everything ------------------------
+  if (window.glitterFx?.ambient) {
+    glitterFx.ambient(tl, "#ambient-host", {
+      at: 0.0, duration: 30.0,
+      count: 28, seed: 3,
+      sizeRange: [3, 7],
+    });
+  }
+
+  // ---- Opening GLITTER EXPLOSION on s1 (kicks the wordmark into frame)
+  if (window.glitterFx?.burst) {
+    glitterFx.burst(tl, "#s1", {
+      at: 0.10, duration: 1.4,
+      count: 80, distance: 720,
+      seed: 17,
+    });
+  }
+
+  // =========================================================================
+  // SCENE 1 — INTRODUCING (0-3.5s)
+  // =========================================================================
+  tl.set("#s1", { opacity: 0 }, 0);
+  tl.fromTo("#s1",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.3, ease: "power2.out" },
+    0);
+  // "INTRODUCING" cascades in letter-by-letter
+  tl.fromTo("#s1-intro",
+    { y: -40, opacity: 0, letterSpacing: "1em" },
+    { y: 0,  opacity: 1, letterSpacing: "0.46em",
+      duration: 0.6, ease: "power3.out" },
+    0.15);
+  // KINDRED wordmark scales up with overshoot — the hero moment
+  tl.fromTo("#s1-mark",
+    { scale: 0.4, opacity: 0, y: 60 },
+    { scale: 1.0, opacity: 1, y: 0,
+      duration: 0.85, ease: "back.out(1.6)" },
+    0.5);
+  // logo fades in below
+  tl.fromTo("#s1-logo",
+    { scale: 0.6, opacity: 0, rotation: -8 },
+    { scale: 1.0, opacity: 1, rotation: 0,
+      duration: 0.55, ease: "back.out(1.5)" },
+    1.2);
+  // tag fades in last
+  tl.fromTo("#s1-tag",
+    { y: 20, opacity: 0 },
+    { y: 0, opacity: 0.85, duration: 0.45, ease: "power2.out" },
+    1.6);
+  // KINDRED breathes for the rest of scene 1
+  tl.fromTo("#s1-mark",
+    { scale: 1.0 },
+    { scale: 1.04, duration: 0.65, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    2.0);
+  // logo gentle rotation drift
+  tl.fromTo("#s1-logo",
+    { rotation: 0 },
+    { rotation: 4, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 0 },
+    2.0);
+  // exit
+  tl.to("#s1", { opacity: 0, duration: 0.3, ease: "power2.in" }, 3.20);
+
+  // =========================================================================
+  // SCENE 2 — STEP 01 (3.5-12s) — Post a give or an ask
+  // =========================================================================
+  tl.set("#s2", { opacity: 0 }, 0);
+  tl.fromTo("#s2",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.35, ease: "power2.out" },
+    3.55);
+  // STEP 01 kicker fades in
+  tl.fromTo("#s2-kicker",
+    { y: -20, opacity: 0, letterSpacing: "0.7em" },
+    { y: 0, opacity: 1, letterSpacing: "0.42em",
+      duration: 0.45, ease: "power3.out" },
+    3.7);
+  // 01 numeral stamps in
+  tl.fromTo("#s2-num",
+    { scale: 1.6, opacity: 0, y: 40 },
+    { scale: 1, opacity: 1, y: 0,
+      duration: 0.55, ease: "back.out(1.5)" },
+    3.9);
+  // headline cascades in
+  tl.fromTo("#s2-q",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    4.3);
+  // phone slides up from below
+  tl.fromTo("#s2 .step-phone-wrap",
+    { y: 200, opacity: 0, scale: 0.92 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" },
+    4.6);
+  // body text slides in
+  tl.fromTo("#s2-a",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 0.94, duration: 0.45, ease: "power2.out" },
+    5.3);
+  // BIG CAMERA ICON — flies in from upper-right, lands on GIVE card
+  tl.set("#s2-icon", { opacity: 0, scale: 0 }, 0);
+  tl.fromTo("#s2-icon",
+    { x: 280, y: -180, scale: 0.4, rotation: -25, opacity: 0 },
+    { x: 0, y: 0, scale: 1, rotation: -8, opacity: 1,
+      duration: 0.6, ease: "back.out(1.7)" },
+    5.7);
+  // icon pulses (snap-snap)
+  tl.fromTo("#s2-icon",
+    { scale: 1.0 },
+    { scale: 1.12, duration: 0.18, ease: "power2.inOut", yoyo: true, repeat: 3 },
+    6.5);
+  // phone breathes for the rest of the scene
+  tl.fromTo("#s2 .step-phone-wrap",
+    { y: 0 },
+    { y: -16, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    6.0);
+  // icon drifts gently
+  tl.fromTo("#s2-icon",
+    { rotation: -8 },
+    { rotation: 4, duration: 2.2, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    7.5);
+  // headline breathes
+  tl.fromTo("#s2-q",
+    { y: 0 },
+    { y: -6, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    6.2);
+
+  // ICON OUT — flies out before scene exit
+  tl.to("#s2-icon",
+    { x: 380, y: -120, scale: 0.7, rotation: 25, opacity: 0,
+      duration: 0.45, ease: "power3.in" },
+    11.2);
+  // scene exit
+  tl.to("#s2", { opacity: 0, duration: 0.3, ease: "power2.in" }, 11.7);
+
+  // =========================================================================
+  // SCENE 3 — STEP 02 (12-19s) — A neighbour messages
+  // =========================================================================
+  tl.set("#s3", { opacity: 0 }, 0);
+  tl.fromTo("#s3",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.35, ease: "power2.out" },
+    12.0);
+  tl.fromTo("#s3-kicker",
+    { y: -20, opacity: 0, letterSpacing: "0.7em" },
+    { y: 0, opacity: 1, letterSpacing: "0.42em",
+      duration: 0.45, ease: "power3.out" },
+    12.15);
+  tl.fromTo("#s3-num",
+    { scale: 1.6, opacity: 0, y: 40 },
+    { scale: 1, opacity: 1, y: 0,
+      duration: 0.55, ease: "back.out(1.5)" },
+    12.35);
+  tl.fromTo("#s3-q",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    12.75);
+  tl.fromTo("#s3 .step-phone-wrap",
+    { y: 200, opacity: 0, scale: 0.92 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" },
+    13.05);
+  tl.fromTo("#s3-a",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 0.94, duration: 0.45, ease: "power2.out" },
+    13.75);
+  // BIG SPEECH-BUBBLE ICON — flies in from upper-left
+  tl.set("#s3-icon", { opacity: 0, scale: 0 }, 0);
+  tl.fromTo("#s3-icon",
+    { x: -300, y: -160, scale: 0.4, rotation: 25, opacity: 0 },
+    { x: 0, y: 0, scale: 1, rotation: -6, opacity: 1,
+      duration: 0.6, ease: "back.out(1.7)" },
+    14.1);
+  // bubble bounces (typing dots)
+  tl.fromTo("#s3-icon",
+    { y: 0 },
+    { y: -22, duration: 0.32, ease: "power2.inOut", yoyo: true, repeat: 3 },
+    14.9);
+  // phone breathes
+  tl.fromTo("#s3 .step-phone-wrap",
+    { y: 0 },
+    { y: -16, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    14.5);
+  // headline breathes
+  tl.fromTo("#s3-q",
+    { y: 0 },
+    { y: -6, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    14.7);
+  // ICON OUT
+  tl.to("#s3-icon",
+    { x: -400, y: -100, scale: 0.7, rotation: -25, opacity: 0,
+      duration: 0.45, ease: "power3.in" },
+    18.2);
+  // scene exit
+  tl.to("#s3", { opacity: 0, duration: 0.3, ease: "power2.in" }, 18.7);
+
+  // =========================================================================
+  // SCENE 4 — STEP 03 (19-26s) — Drop it off or pick it up
+  // =========================================================================
+  tl.set("#s4", { opacity: 0 }, 0);
+  tl.fromTo("#s4",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.35, ease: "power2.out" },
+    19.0);
+  tl.fromTo("#s4-kicker",
+    { y: -20, opacity: 0, letterSpacing: "0.7em" },
+    { y: 0, opacity: 1, letterSpacing: "0.42em",
+      duration: 0.45, ease: "power3.out" },
+    19.15);
+  tl.fromTo("#s4-num",
+    { scale: 1.6, opacity: 0, y: 40 },
+    { scale: 1, opacity: 1, y: 0,
+      duration: 0.55, ease: "back.out(1.5)" },
+    19.35);
+  tl.fromTo("#s4-q",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
+    19.75);
+  tl.fromTo("#s4 .step-phone-wrap",
+    { y: 200, opacity: 0, scale: 0.92 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" },
+    20.05);
+  tl.fromTo("#s4-a",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 0.94, duration: 0.45, ease: "power2.out" },
+    20.75);
+  // BIG HEART/HANDSHAKE ICON — flies in from lower-right
+  tl.set("#s4-icon", { opacity: 0, scale: 0 }, 0);
+  tl.fromTo("#s4-icon",
+    { x: 300, y: 220, scale: 0.4, rotation: 30, opacity: 0 },
+    { x: 0, y: 0, scale: 1, rotation: -4, opacity: 1,
+      duration: 0.65, ease: "back.out(1.7)" },
+    21.1);
+  // heart pulses (heartbeat rhythm)
+  tl.fromTo("#s4-icon",
+    { scale: 1.0 },
+    { scale: 1.16, duration: 0.28, ease: "power2.inOut", yoyo: true, repeat: 3 },
+    22.0);
+  // phone breathes
+  tl.fromTo("#s4 .step-phone-wrap",
+    { y: 0 },
+    { y: -14, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    21.5);
+  // headline breathes
+  tl.fromTo("#s4-q",
+    { y: 0 },
+    { y: -6, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    21.7);
+  // ICON OUT
+  tl.to("#s4-icon",
+    { x: 380, y: 180, scale: 0.7, rotation: -30, opacity: 0,
+      duration: 0.45, ease: "power3.in" },
+    25.2);
+  // scene exit
+  tl.to("#s4", { opacity: 0, duration: 0.35, ease: "power2.in" }, 25.65);
+
+  // =========================================================================
+  // SCENE 5 — CTA (26-30s) — BE KIND. USE KINDRED.
+  // =========================================================================
+  tl.set("#s5", { opacity: 0 }, 0);
+  tl.fromTo("#s5",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.4, ease: "power2.out" },
+    25.7);
+  // MADE FOR LOCALS kicker types in first
+  tl.fromTo("#s5-kicker",
+    { y: -20, opacity: 0, letterSpacing: "0.8em" },
+    { y: 0, opacity: 1, letterSpacing: "0.46em",
+      duration: 0.5, ease: "power3.out" },
+    25.85);
+  // logo stamps in
+  tl.fromTo("#s5-watermark",
+    { scale: 0.4, opacity: 0, rotation: -8 },
+    { scale: 1, opacity: 1, rotation: 0,
+      duration: 0.55, ease: "back.out(1.7)" },
+    26.05);
+  // "Be kind. Use Kindred." stamps in big — full mantra at hero size
+  tl.fromTo("#s5-cta",
+    { scale: 0.5, opacity: 0, y: 60 },
+    { scale: 1, opacity: 1, y: 0,
+      duration: 0.85, ease: "back.out(1.5)" },
+    26.25);
+  // URL fades in last
+  tl.fromTo("#s5-url",
+    { y: 30, opacity: 0 },
+    { y: 0, opacity: 0.92,
+      duration: 0.5, ease: "power2.out" },
+    27.4);
+  // CTA breathes for the rest of scene 5
+  tl.fromTo("#s5-cta",
+    { scale: 1.0 },
+    { scale: 1.04, duration: 0.65, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    27.9);
+
+  // Glitter burst on the CTA at 28s if available
+  if (window.glitterFx?.burst) {
+    glitterFx.burst(tl, "#s5", {
+      at: 27.0, duration: 1.6,
+      count: 40, distance: 380,
+      seed: 51,
+    });
+  }
+</script>
+</body>
+</html>

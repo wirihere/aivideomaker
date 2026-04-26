@@ -52,3 +52,13 @@ See `SUGGESTIONS.md` for cross-render patterns (sized, recurring, actionable).
 | 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 7 a11y, 5 palette mismatch, 1 unused asset, 17 near-static, narration overruns, 1 emphasis orphan | needs-fix |
 | 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 1 unused asset, 15 near-static, narration overruns, 1 emphasis orphan | needs-fix |
 | 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 1 unused asset, 15 near-static, narration into cta, 1 emphasis orphan | watch |
+| 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 1 unused asset, 15 near-static, narration into cta, 1 emphasis orphan | watch |
+| 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 1 unused asset, 14 near-static, narration into cta, 1 emphasis orphan | watch |
+| 2026-04-26 | kindred-nz-override | warm-community | — | 30s | 1 headline mismatch, 1 pacing, 4 a11y, 1 unused asset, hero+logo absent, 2 static moments, 13 near-static, 2 scene-mismatch, narration into cta | needs-fix |
+| 2026-04-26 | kindred-nz-override | warm-community | — | 30s | 1 headline mismatch, 1 pacing, 4 a11y, 1 unused asset, hero+logo absent, 2 static moments, 13 near-static, 2 scene-mismatch, narration into cta | needs-fix |
+| 2026-04-26 | kindred-nz-override | warm-community | — | 30s | 1 headline mismatch, 1 pacing, 4 a11y, audio gap, 1 unused asset, hero+logo absent, 2 static moments, 12 near-static, 3 emphasis orphans | needs-fix |
+| 2026-04-26 | kindred-nz-override | warm-community | — | 30s | 1 headline mismatch, 1 pacing, 4 a11y, audio gap, 1 unused asset, hero+logo absent, 2 static moments, 12 near-static, 3 emphasis orphans | needs-fix |
+| 2026-04-26 | kindred-nz-override | warm-community | — | 30s | 1 headline mismatch, 1 pacing, 4 a11y, audio gap, 1 unused asset, hero+logo absent, 3 static moments, 12 near-static, 3 emphasis orphans | needs-fix |
+| 2026-04-26 | kindred-nz | warm-community | — | 30s | 1 headline mismatch, 1 pacing, 4 a11y, audio gap, 1 unused asset, 3 static moments, 12 near-static, 3 emphasis orphans | watch |
+| 2026-04-26 | kindred-nz | warm-community | — | 30s | 1 headline mismatch, 1 pacing, 4 a11y, audio gap, 1 unused asset, 3 static moments, 12 near-static, 3 emphasis orphans | watch |
+| 2026-04-26 | kindred-nz | warm-community | — | 30s | 1 pacing, 4 a11y, audio gap, 1 unused asset, 2 static moments, 12 near-static, 3 emphasis orphans | watch |

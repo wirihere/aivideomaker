@@ -149,6 +149,7 @@ const TEMPLATE_REGISTRY = {
   "product-launch":  { file: "product-launch-30s.html",seconds: 30, dims: [1920, 1080], vibe: "kinetic-pop"    },
   "before-after":    { file: "before-after-30s.html",  seconds: 30, dims: [1920, 1080], vibe: "kinetic-pop"    },
   "faq-quick":       { file: "faq-quick-30s.html",     seconds: 30, dims: [1920, 1080], vibe: "warm-community" },
+  "community-app-tour": { file: "community-app-tour-30s.html", seconds: 30, dims: [1080, 1920], vibe: "warm-community" },
   "testimonial":     { file: "testimonial-45s.html",   seconds: 45, dims: [1920, 1080], vibe: "warm-community" },
   "founder-story":   { file: "founder-story-60s.html", seconds: 60, dims: [1920, 1080], vibe: "documentary"    },
   "case-study":      { file: "case-study-60s.html",    seconds: 60, dims: [1920, 1080], vibe: "documentary"    },
