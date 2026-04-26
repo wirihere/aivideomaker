@@ -26,9 +26,11 @@
 - `c8819c5` — extract-copy `--url=` reads full Playwright deep scrape into framework prompt
 - `ffcc93f` — `scripts/lib/scrape-page.mjs` Playwright deep scraper
 
-### In flight at session end
-- **Script-timing verifier check** (agent `ad5a5eb5e00ba9d9d`) — adding `findings.scriptTiming` category: word-by-word semantic alignment, scene density, silence-beat placement, narration-overrun-into-cta, word-emphasis-orphan. Should land as a single commit on `scripts/verify-render.mjs` + `docs/render-learnings/SUGGESTIONS.md`.
-- If the agent didn't commit before session end: read `git status` for `scripts/verify-render.mjs` modifications. The WIP is salvageable — read the file, sanity-check, commit as-is following the pattern from `bbfd9f8` (the brand-fidelity salvage).
+### Just-shipped at session end
+- ✅ **Script-timing verifier check** — `5e7d084` (verifier code) + `c3511a4` (SUGGESTIONS.md). Six new finding types in `findings.scriptTiming`: script-density-imbalance, scene-narration-mismatch, silence-beat-misplaced, narration-overrun-into-cta (error), word-emphasis-orphan, script-fits-budget. Verifier runtime now 9.5s.
+- **REAL FINDINGS on the current kindred-nz assembled comp** that the silent loop must address:
+  - **narration-overrun-into-cta (ERROR):** narration ends at 29.60s but CTA scene s5 starts at 28.00s → 1.60s overrun. Three options to fix: (a) trim narration to end before 28s, (b) start narration later, (c) move s5 to start at 30s (not viable — CTA needs viewing time). Best: trim narration. Check `compositions/kindred-nz.copy.json` narration field — currently 71 words at -10% rate, runs to 29.6s. Aim for ≤27.5s = ~65 words.
+  - **word-emphasis-orphan (WARN):** identity token "local" at 6.13s in s2 lands in mid-scene quiet. Either move "local" later in the script so it lands at a stamp/burst event, OR add a stamp/burst at t=6.0-6.3 in scene 2.
 
 ### Pending on user clarification
 - **Color palette flow** — user requested but ambiguous. Two interpretations:
