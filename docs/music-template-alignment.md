@@ -22,9 +22,7 @@ duration covering the comp (+20), and curator-vibe match (+12).
 | Track | Dur (s) | BPM (used) | Source | BPM est (conf) | RMS std | Drops | Swells | Vibe (curator) |
 |---|---|---|---|---|---|---|---|---|
 | `claim-mate-v2-bed.mp3` | 82.1 | 63.2 | estimator | 63.2 (0.63) | 0.0433 | 11 | 1 | — |
-| `documentary-01-strings.mp3` | 226.2 | 64 | curator | 160 (0.50) | 0.0468 | 7 | 42 | documentary |
 | `documentary-top.mp3` | 226.2 | 70 | curator | 160 (0.50) | 0.0468 | 7 | 42 | documentary |
-| `energetic-inspiring-pop.mp3` | 90 | 66.7 | estimator | 66.7 (0.38) | 0.0549 | 30 | 0 | — |
 | `kindred-bed.mp3` | 213.1 | 88 | curator | 82.8 (0.97) | 0.0503 | 15 | 1 | warm-community |
 | `kinetic-01-motivational.mp3` | 96 | 124 | curator | — | 0.0828 | 6 | 5 | kinetic-pop |
 | `kinetic-pop-top.mp3` | 90 | 120 | curator | 66.7 (0.38) | 0.0549 | 30 | 0 | kinetic-pop |
@@ -34,13 +32,6 @@ duration covering the comp (+20), and curator-vibe match (+12).
 | `track.mp3` | 122 | ? | unknown | — | 0.0771 | 17 | 0 | — |
 | `v5-inspirational.mp3` | 109.2 | 54.5 | estimator | 54.5 (0.56) | 0.0725 | 18 | 0 | — |
 | `warm-02-folk.mp3` | 102.3 | 84 | curator | 82.8 (0.32) | 0.0518 | 7 | 2 | warm-community |
-
-### Detected duplicate audio
-
-Files with identical (duration, mean RMS, drops, swells) fingerprints:
-
-- `documentary-01-strings.mp3`, `documentary-top.mp3`
-- `energetic-inspiring-pop.mp3`, `kinetic-pop-top.mp3`
 
 ## Per-template top-5 recommendations
 
@@ -101,8 +92,8 @@ Cut grid (s): 0, 4, 12, 20, 28, 30
 | 1 | `kindred-bed.mp3` | 96 | curated for this vibe |
 | 2 | `warm-02-folk.mp3` | 94 | curated for this vibe |
 | 3 | `documentary-top.mp3` | 65 | BPM 70 just outside 80-100; cinematic swells (0.19/s); curated for documentary |
-| 4 | `documentary-01-strings.mp3` | 52 | BPM 64 off (80-100); cinematic swells (0.19/s); curated for documentary |
-| 5 | `kinetic-01-motivational.mp3` | 52 | BPM 124 off (80-100); cinematic swells (0.05/s); curated for kinetic-pop |
+| 4 | `kinetic-01-motivational.mp3` | 52 | BPM 124 off (80-100); cinematic swells (0.05/s); curated for kinetic-pop |
+| 5 | `claim-mate-v2-bed.mp3` | 42 | BPM 63 off (80-100); sharp jumps (0.13 drops/s) — may fight narration |
 
 ### `testimonial-45s` — vibe `warm-community`, 45s
 
@@ -113,8 +104,8 @@ Cut grid (s): 0, 8, 22, 34, 42, 45
 | 1 | `kindred-bed.mp3` | 96 | curated for this vibe |
 | 2 | `warm-02-folk.mp3` | 94 | curated for this vibe |
 | 3 | `documentary-top.mp3` | 65 | BPM 70 just outside 80-100; cinematic swells (0.19/s); curated for documentary |
-| 4 | `documentary-01-strings.mp3` | 52 | BPM 64 off (80-100); cinematic swells (0.19/s); curated for documentary |
-| 5 | `kinetic-01-motivational.mp3` | 52 | BPM 124 off (80-100); cinematic swells (0.05/s); curated for kinetic-pop |
+| 4 | `kinetic-01-motivational.mp3` | 52 | BPM 124 off (80-100); cinematic swells (0.05/s); curated for kinetic-pop |
+| 5 | `claim-mate-v2-bed.mp3` | 42 | BPM 63 off (80-100); sharp jumps (0.13 drops/s) — may fight narration |
 
 ### `founder-story-60s` — vibe `documentary`, 60s
 
@@ -123,10 +114,10 @@ Cut grid (s): 0, 10, 25, 42, 55, 60
 | Rank | Track | Score | Notes |
 |---|---|---|---|
 | 1 | `documentary-top.mp3` | 99 | cinematic swells (0.19/s); curated for this vibe |
-| 2 | `documentary-01-strings.mp3` | 97 | cinematic swells (0.19/s); curated for this vibe |
-| 3 | `warm-02-folk.mp3` | 75 | curated for warm-community |
-| 4 | `kindred-bed.mp3` | 74 | curated for warm-community |
-| 5 | `energetic-inspiring-pop.mp3` | 72 | sharp jumps (0.33 drops/s) — may fight narration |
+| 2 | `warm-02-folk.mp3` | 75 | curated for warm-community |
+| 3 | `kindred-bed.mp3` | 74 | curated for warm-community |
+| 4 | `claim-mate-v2-bed.mp3` | 70 | sharp jumps (0.13 drops/s) — may fight narration |
+| 5 | `premium-01-ambient.mp3` | 66 | sharp jumps (0.19 drops/s) — may fight narration; curated for quiet-premium |
 
 ### `case-study-60s` — vibe `documentary`, 60s
 
@@ -135,8 +126,8 @@ Cut grid (s): 0, 12, 30, 46, 58, 60
 | Rank | Track | Score | Notes |
 |---|---|---|---|
 | 1 | `documentary-top.mp3` | 99 | cinematic swells (0.19/s); curated for this vibe |
-| 2 | `documentary-01-strings.mp3` | 97 | cinematic swells (0.19/s); curated for this vibe |
-| 3 | `warm-02-folk.mp3` | 75 | curated for warm-community |
-| 4 | `kindred-bed.mp3` | 74 | curated for warm-community |
-| 5 | `energetic-inspiring-pop.mp3` | 72 | sharp jumps (0.33 drops/s) — may fight narration |
+| 2 | `warm-02-folk.mp3` | 75 | curated for warm-community |
+| 3 | `kindred-bed.mp3` | 74 | curated for warm-community |
+| 4 | `claim-mate-v2-bed.mp3` | 70 | sharp jumps (0.13 drops/s) — may fight narration |
+| 5 | `premium-01-ambient.mp3` | 66 | sharp jumps (0.19 drops/s) — may fight narration; curated for quiet-premium |
 

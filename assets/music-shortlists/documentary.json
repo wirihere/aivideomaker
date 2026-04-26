@@ -52,17 +52,6 @@
       "tags": ["documentary", "background", "pulses", "emotional"],
       "character": "Subtle pulse + piano, sits cleanly behind narration",
       "best_for": "Mid-scene narration where the story needs space"
-    },
-    {
-      "slug": "documentary-01-strings",
-      "title": "Documentary Strings (documentary-01 audition)",
-      "url": "https://pixabay.com/music/search/cinematic%20piano%20strings%20documentary/",
-      "duration": 197,
-      "bpm": 64,
-      "tags": ["cinematic", "strings", "piano", "documentary"],
-      "character": "Cinematic strings + piano, slow and considered",
-      "best_for": "Anchor scenes for senior decision-maker briefs",
-      "local_file": "assets/music/documentary-01-strings.mp3"
     }
   ]
 }
