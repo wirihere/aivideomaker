@@ -521,7 +521,6 @@ function makeStageRunner(total) {
     const labelText = `${label}`.padEnd(20);
     process.stdout.write(`  [${i}/${total}] ${labelText}`);
     const t0 = Date.now();
-    traceBak(`stage-pre:${label}`);
     try {
       const result = await fn();
       const ms = Date.now() - t0;
@@ -530,14 +529,12 @@ function makeStageRunner(total) {
       const arrow = soft ? "→ " : "→ ";
       const out = output.padEnd(40);
       console.log(`${arrow}${out}(${fmtTime(ms)})`);
-      traceBak(`stage-post:${label}`);
       return { ms, ...((typeof result === "object" && result) || {}), output };
     } catch (err) {
       const ms = Date.now() - t0;
       console.log(`→ FAILED                                  (${fmtTime(ms)})`);
       err.stage = label;
       err.elapsedMs = ms;
-      traceBak(`stage-fail:${label}`);
       throw err;
     }
   };
@@ -657,27 +654,18 @@ function runNodeAsync(scriptPath, args = [], { env = {} } = {}) {
 // leave the live index.html dirty after a successful run.
 
 const indexPath = path.join(projectRoot, "index.html");
-const backupPath = path.join(projectRoot, `.video-orchestrator.index.bak`);
+// Per-process backup path. Earlier the bak lived at a fixed
+// `.video-orchestrator.index.bak`, which broke whenever a child orchestrator
+// ran in parallel (notably smoke:cli's `scripts/video.mjs --dry-run` test) —
+// the child's `restoreIndex` would `unlinkSync` the parent's bak after using
+// it to overwrite the parent's assembled `index.html`. Including the PID
+// keeps each invocation's bak isolated. The legacy fixed path is still
+// honoured on restore so a stale bak from a pre-fix run can still be picked up.
+const backupPath = path.join(projectRoot, `.video-orchestrator.index.${process.pid}.bak`);
+const legacyBackupPath = path.join(projectRoot, `.video-orchestrator.index.bak`);
 let backupCreated = false;
 let backupContents = null; // in-memory fallback (string) — survives bak deletion
 let priorIndexLabel = "(none)";
-
-// Trace probe — opt-in via VIDEO_TRACE_BAK=1. Instruments backup/restore +
-// every stage transition with a timestamped line so we can see WHEN the .bak
-// disappears mid-pipeline. Writes to tmp/orchestrator-trace.log and is silent
-// when the env var is unset (production behaviour unchanged).
-const traceBakEnabled = process.env.VIDEO_TRACE_BAK === "1";
-const traceBakLog = path.join(projectRoot, "tmp", "orchestrator-trace.log");
-function traceBak(label) {
-  if (!traceBakEnabled) return;
-  try {
-    fs.mkdirSync(path.dirname(traceBakLog), { recursive: true });
-    const exists = fs.existsSync(backupPath);
-    const stat = exists ? fs.statSync(backupPath) : null;
-    const line = `${new Date().toISOString()} [${label}] bak=${exists ? `present(${stat.size}B)` : "MISSING"}\n`;
-    fs.appendFileSync(traceBakLog, line);
-  } catch {}
-}
 
 function backupIndex() {
   if (fs.existsSync(indexPath)) {
@@ -685,7 +673,6 @@ function backupIndex() {
     backupContents = contents;
     fs.writeFileSync(backupPath, contents);
     backupCreated = true;
-    traceBak("backupIndex:wrote-bak");
     // Try to derive a label from the <title> for the assemble-stage log line.
     try {
       const m = contents.slice(0, 2048).match(/<title>([^<]+)<\/title>/i);
@@ -695,22 +682,24 @@ function backupIndex() {
 }
 
 function restoreIndex() {
-  traceBak("restoreIndex:enter");
   if (!backupCreated) return;
   if (keepArtifacts) {
     console.log(`  ⓘ --keep-artifacts: index.html left as assembled. Restore with:`);
     console.log(`    cp "${relPath(backupPath)}" index.html`);
     return;
   }
-  // Try on-disk first.
-  if (fs.existsSync(backupPath)) {
+  // Try on-disk first — own PID's bak preferred, then legacy fixed-path bak
+  // for backward compatibility with anything left over from pre-fix runs.
+  // We only consume the LEGACY path; we never write to it.
+  for (const candidate of [backupPath, legacyBackupPath]) {
+    if (!fs.existsSync(candidate)) continue;
     try {
-      fs.copyFileSync(backupPath, indexPath);
-      fs.unlinkSync(backupPath);
+      fs.copyFileSync(candidate, indexPath);
+      fs.unlinkSync(candidate);
       backupCreated = false;
       return;
     } catch (err) {
-      console.error(`  ⚠ on-disk restore failed: ${err.message}`);
+      console.error(`  ⚠ on-disk restore failed (${path.basename(candidate)}): ${err.message}`);
     }
   }
   // Fall back to the in-memory copy.

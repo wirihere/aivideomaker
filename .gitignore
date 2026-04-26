@@ -60,6 +60,7 @@ desktop.ini
 *.log
 *.backup-*
 .video-orchestrator.index.bak
+.video-orchestrator.index.*.bak
 .queue-backup-*.html
 
 # Throwaway debugging scripts (probe-*.mjs etc) — not portable, not in scope
