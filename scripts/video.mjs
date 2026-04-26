@@ -78,6 +78,10 @@ const skipTts = !!flags["no-tts"];
 const skipRender = !!flags["no-render"] || dryRun;
 const autoFix = !!flags["auto-fix"];
 const keepArtifacts = !!flags["keep-artifacts"];
+// Verify stage runs the Playwright-based script-vs-visual checker
+// between assemble and quality-gate. ON by default; --no-verify opts out.
+// Always off in dry-run (synthetic copy doesn't pass meaningful checks).
+const skipVerify = !!flags["no-verify"] || dryRun;
 
 const host = new URL(url).hostname.replace(/^www\./, "").replace(/\.[a-z]+$/, "");
 // In dry-run, default the slug to "dryrun-test" so synthetic outputs are
@@ -651,7 +655,8 @@ if (dryRun) {
 console.log(`  slug: ${slug} · target seconds: ${seconds} · render: ${skipRender ? "no" : "yes"}${withMusic ? " · music: on" : ""}${skipTts ? " · tts: off" : " · tts: on"}`);
 console.log("");
 
-const TOTAL_STAGES = 8;
+// 9 stages when --verify is on (default), 8 when --no-verify is set.
+const TOTAL_STAGES = skipVerify ? 8 : 9;
 const stage = makeStageRunner(TOTAL_STAGES);
 let copyJsonPath = null;
 let assetsDir = null;
@@ -1043,7 +1048,51 @@ try {
     return audioTags.length ? `${note} +${audioTags.length} audio` : note;
   });
 
-  // ----- Stage 7: quality gate --------------------------------------------
+  // ----- Stage 7: verify (script vs visual) -------------------------------
+  // Run `npm run verify` on the assembled index.html — Playwright-based
+  // checker that scrubs the timeline, reads visible text per second, and
+  // cross-references against narration VTT + copy.json. Catches placeholder
+  // leakage, missing brand/URL, low-contrast text, narration overruns.
+  // Verdict from the verifier: ship | watch | needs-fix.
+  //   - exit 0 on ship/watch → continue (watch logs a warning)
+  //   - exit !=0 (needs-fix) → abort the pipeline before render
+  // Skipped on --no-verify or --dry-run.
+  if (!skipVerify) {
+    await stage("verify", () => {
+      const verifyArgs = [
+        path.join(__dirname, "verify-render.mjs"),
+        `--comp=${indexPath}`,
+        `--copy=${copyJsonPath}`,
+      ];
+      const vttPath = path.join(projectRoot, "assets", "voiceover", `${slug}.vtt`);
+      if (fs.existsSync(vttPath)) verifyArgs.push(`--vtt=${vttPath}`);
+      const r = spawnSync(process.execPath, verifyArgs, {
+        cwd: projectRoot,
+        env: process.env,
+        stdio: ["ignore", "pipe", "pipe"],
+        shell: false,
+      });
+      const stdout = (r.stdout || "").toString("utf8");
+      const stderr = (r.stderr || "").toString("utf8");
+      // Pull the verdict + report path from stdout. The verifier prints
+      // `verdict: <ship|watch|needs-fix>` and `md: <path>`.
+      const verdictMatch = stdout.match(/verdict:\s+(\w+)/);
+      const reportMatch = stdout.match(/md:\s+(\S+)/);
+      const verdict = verdictMatch ? verdictMatch[1] : "(unknown)";
+      const report = reportMatch ? reportMatch[1] : null;
+      if (r.status !== 0) {
+        const tail = (stderr || stdout).trim().split("\n").slice(-12).join("\n");
+        throw new Error(`verify failed (verdict=${verdict})${report ? `\n  report: ${report}` : ""}\n----\n${tail}`);
+      }
+      const reportNote = report ? ` · report: ${report}` : "";
+      if (verdict === "watch") {
+        return { output: `verdict: watch (continue, see report)${reportNote}`, soft: true };
+      }
+      return `verdict: ${verdict}${reportNote}`;
+    });
+  }
+
+  // ----- Stage 7/8: quality gate --------------------------------------------
   await stage("quality gate", () => {
     if (dryRun) {
       // In dry-run we run lint only — the full `check` includes a Playwright
