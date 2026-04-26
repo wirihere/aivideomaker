@@ -23,6 +23,10 @@
 //   --no-render        assemble + check, skip render (saves ~5min)
 //   --auto-fix         run `npm run fix:apply` if quality gate fails
 //   --keep-artifacts   don't restore index.html at end (for inspection)
+//   --dry-run          skip every child spawn, write synthetic outputs, lint
+//                      only — exercises orchestrator + parallel-batch wiring
+//                      without burning network quota (target wall-clock <5s).
+//                      URL is optional; defaults to https://example.com.
 //
 // Constraints:
 //   - MUST restore index.html via try/finally even on crash.
@@ -49,10 +53,15 @@ const flags = Object.fromEntries(
   })
 );
 
-const url = positional[0];
+const dryRun = !!flags["dry-run"];
+
+// In dry-run mode we don't need a real URL — fall back to example.com so the
+// orchestrator wiring is exercised end-to-end without touching the network.
+const url = positional[0] || (dryRun ? "https://example.com" : undefined);
 if (!url || !/^https?:\/\//.test(url)) {
   console.error("Usage: npm run video -- <https://example.com> [--seconds=N] [--template=<name>] [--name=<slug>]");
   console.error("       npm run video -- <url> --no-render --keep-artifacts   # quick sanity check");
+  console.error("       npm run video -- --dry-run                            # smoke-test the orchestrator");
   console.error("");
   console.error("Templates: social-reel (15s) | hero-promo (30s) | testimonial (45s) | founder-story | case-study (60s)");
   process.exit(1);
@@ -60,12 +69,17 @@ if (!url || !/^https?:\/\//.test(url)) {
 
 const seconds = Math.max(5, parseInt(flags.seconds ?? "30", 10));
 const withMusic = !!flags["with-music"];
-const skipRender = !!flags["no-render"];
+// In dry-run we never render — the whole point is to exercise wiring without
+// burning quota or wall-clock. OR with the existing flag so both work.
+const skipRender = !!flags["no-render"] || dryRun;
 const autoFix = !!flags["auto-fix"];
 const keepArtifacts = !!flags["keep-artifacts"];
 
 const host = new URL(url).hostname.replace(/^www\./, "").replace(/\.[a-z]+$/, "");
-const slug = String(flags.name ?? host).toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+// In dry-run, default the slug to "dryrun-test" so synthetic outputs are
+// clearly distinguishable from real ones. User-supplied --name= still wins.
+const slugDefault = (dryRun && !positional[0]) ? "dryrun-test" : host;
+const slug = String(flags.name ?? slugDefault).toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
 
 // --- template auto-pick ---------------------------------------------------
 //
@@ -135,6 +149,23 @@ function bucketSeconds(s) {
 }
 
 // --- helpers --------------------------------------------------------------
+
+// Deterministic per-call delay generator for dry-run mode. Each call returns
+// a value in [min, max) drawn from a fixed cycle so the smoke test's wall-
+// clock is repeatable. Bounded 50-200ms so the parallel-batch wall-clock log
+// shows real overlap (sum of per-stage elapsed > batch wall-clock) without
+// dragging out the smoke test.
+let _randCallIdx = 0;
+const _RAND_CYCLE = [120, 80, 170, 60, 140];
+function rand(min, max) {
+  const span = max - min;
+  const v = _RAND_CYCLE[_randCallIdx % _RAND_CYCLE.length];
+  _randCallIdx += 1;
+  return min + (v % span);
+}
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function fmtTime(ms) {
   if (ms < 1000) return `${ms}ms`;
@@ -326,7 +357,12 @@ function restoreIndex() {
 // --- main pipeline --------------------------------------------------------
 
 const totalStart = Date.now();
-console.log(`▶ video: ${url}`);
+if (dryRun) {
+  console.log(`▶ [DRY RUN] video: ${url}`);
+  console.log(`  no child processes spawned · synthetic outputs only · no network`);
+} else {
+  console.log(`▶ video: ${url}`);
+}
 console.log(`  slug: ${slug} · target seconds: ${seconds} · render: ${skipRender ? "no" : "yes"}${withMusic ? " · music: on" : ""}`);
 console.log("");
 
@@ -344,8 +380,34 @@ try {
   // AND a compositions/<slug>.html scaffold (which we ignore — we use the
   // structural template). We pipe its output to /dev/null since the parent
   // stage line is the canonical log.
-  await stage("brand extract", () => {
+  await stage("brand extract", async () => {
     const tokensCssRel = `design/tokens-${slug}.css`;
+    if (dryRun) {
+      // Synthesize a minimal tokens CSS file + meta.json. No Playwright spawn,
+      // no network. The downstream synthesizeCopyFromTokens() reader looks at
+      // Title/Tagline/Logo URL comments, so include them so Stage 2 fallback
+      // produces a sensible-shaped placeholder.
+      await sleep(rand(50, 150));
+      const stubCss = [
+        `/* [DRY RUN] synthetic tokens — slug=${slug} */`,
+        `/* Title: Dry Run Test */`,
+        `/* Tagline: Synthetic output for orchestrator smoke test. */`,
+        `/* Logo URL: (none found) */`,
+        `:root {`,
+        `  --color-bg: #0a0a0a;`,
+        `  --color-fg: #f5f5f5;`,
+        `  --color-accent: #ff6b35;`,
+        `}`,
+        ``,
+      ].join("\n");
+      const tokensCssPath = path.join(projectRoot, tokensCssRel);
+      fs.mkdirSync(path.dirname(tokensCssPath), { recursive: true });
+      fs.writeFileSync(tokensCssPath, stubCss);
+      const metaPath = path.join(projectRoot, "compositions", `${slug}.meta.json`);
+      fs.mkdirSync(path.dirname(metaPath), { recursive: true });
+      fs.writeFileSync(metaPath, JSON.stringify({ slug, url, dryRun: true, _synthesized: true }, null, 2));
+      return `${tokensCssRel} (synthetic)`;
+    }
     const r = runNode(path.join(__dirname, "new-comp.mjs"),
       [url, `--mode=headless`, `--name=${slug}`],
       { quiet: true });
@@ -387,6 +449,17 @@ try {
       {
         label: "copy generate",
         fn: async () => {
+          if (dryRun) {
+            // Write a minimal synthetic copy.json directly, no child spawn.
+            // Random 50-200ms delay so the parallel batch wall-clock log
+            // shows real overlap (sum elapsed > batch wall-clock).
+            await sleep(rand(50, 200));
+            fs.mkdirSync(path.dirname(copyJsonPath), { recursive: true });
+            fs.writeFileSync(copyJsonPath, JSON.stringify({
+              slug, url, _dryRun: true, beats: [], narration: "",
+            }, null, 2));
+            return { output: `compositions/${slug}.copy.json (dry-run)`, soft: true };
+          }
           if (!fs.existsSync(copyScript)) {
             // Graceful degradation — synthesize copy from the brand extract output.
             const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
@@ -418,6 +491,11 @@ try {
       {
         label: "asset pull",
         fn: async () => {
+          if (dryRun) {
+            await sleep(rand(50, 200));
+            fs.mkdirSync(assetsDir, { recursive: true });
+            return { output: `assets/${slug}/ (dry-run, empty)`, soft: true };
+          }
           if (!fs.existsSync(assetsScript)) {
             return { output: `skipped (pull-assets.mjs not found)`, soft: true };
           }
@@ -438,6 +516,14 @@ try {
       {
         label: "music pick",
         fn: async () => {
+          if (dryRun) {
+            await sleep(rand(50, 200));
+            const musicJsonPath = path.join(projectRoot, "compositions", `${slug}.music.json`);
+            fs.writeFileSync(musicJsonPath, JSON.stringify({
+              tracks: [], _dryRun: true,
+            }, null, 2));
+            return { output: `0 candidate tracks (dry-run)`, soft: true };
+          }
           if (!fs.existsSync(musicScript)) {
             return { output: `skipped (pick-music.mjs not found)`, soft: true };
           }
@@ -532,6 +618,17 @@ try {
 
   // ----- Stage 6: quality gate --------------------------------------------
   await stage("quality gate", () => {
+    if (dryRun) {
+      // In dry-run we run lint only — the full `check` includes a Playwright
+      // smoke against the assembled index.html, which fails on synthetic copy
+      // data and would also blow the smoke test's <5s budget. Lint is the
+      // load-bearing wiring signal: it confirms Stage 5 produced a parseable
+      // composition with the synthetic tokens swapped in.
+      const r = runNpm("lint", [], { quiet: true });
+      if (r.status === 0) return { output: "lint pass (dry-run)", soft: true };
+      const tail = (r.stdout || r.stderr || "").trim().split("\n").slice(-12).join("\n");
+      throw new Error(`lint failed (exit ${r.status})\n----\n${tail}`);
+    }
     const r = runNpm("check", [], { quiet: true });
     if (r.status === 0) {
       // Try to extract smoke pass count from stdout (best-effort).

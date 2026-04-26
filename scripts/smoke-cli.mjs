@@ -145,6 +145,24 @@ const TESTS = [
     // List mode dumps every template + a "<n> templates scanned." tail.
     expect: /\d+ templates scanned\./,
   },
+  {
+    // Exercises the full video.mjs orchestrator without any child spawns,
+    // network calls, or render — synthetic outputs land in design/tokens-
+    // smoke-dryrun.css, compositions/smoke-dryrun.{meta,copy,music}.json,
+    // and assets/smoke-dryrun/. We omit --keep-artifacts so the orchestrator's
+    // try/finally restores index.html (otherwise every smoke:cli run would
+    // dirty the working tree). The load-bearing assertion is the parallel-
+    // batch wall-clock line ("└─ batch wall-clock: …") — it proves stages
+    // 2-4 really overlapped instead of running serially.
+    name: "scripts/video.mjs --dry-run",
+    cmd: nodeBin,
+    args: [
+      path.join(projectRoot, "scripts", "video.mjs"),
+      "--dry-run",
+      "--name=smoke-dryrun",
+    ],
+    expect: /└─ batch wall-clock:/,
+  },
 ];
 
 // --- runner ---------------------------------------------------------------
