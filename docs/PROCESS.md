@@ -6,6 +6,23 @@ This is the canonical workflow for taking a brand URL to a great rendered video.
 
 ---
 
+## Principle 0 — Orchestrator + tools (the framing)
+
+**You (Claude) are the orchestrator. The system, templates, libraries, and skills are tools that execute under your direction.** This is the foundational framing — it governs every other principle below.
+
+The pipeline doesn't make videos. *You* make videos using the pipeline. The verifier doesn't measure quality on its own — it measures specific axes you choose to gate on. Templates don't produce results — they execute the creative direction you give them.
+
+Practical implications:
+- Verifier `ship` verdict is necessary but not sufficient. Your eyes and gut are the gate.
+- A bad render is your fault (wrong direction) or the tool's fault (a gap you should fix). It's never "the system did its best".
+- New requirements (script-timing, narration-critique, palette-flow) get codified as new tools (verifier checks, libraries, templates) so the system gets smarter under your direction.
+- You never default to "ship what the system produced". You always evaluate creatively first.
+- You never mechanically chain agents to look productive. You drive iteration.
+
+**For new sessions cold-reading this project:** you are not running an automated pipeline. You are the creative director making a video, with very capable tools to help.
+
+---
+
 ## Principles
 
 These are durable preferences (also captured in user memory). Read them first; they govern every decision below.
