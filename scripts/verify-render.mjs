@@ -22,6 +22,10 @@
 //                           catches "PowerPoint" failure (static / near-static frames)
 //                           pre-render. Frames saved to tmp/verify-frames/<slug>-<stamp>/
 //                           for debug (gitignored).
+//   - script timing         spoken-word ↔ scene ↔ visible-text alignment:
+//                           density imbalance, scene-narration mismatch, silence
+//                           beats, narration overrun into CTA, identity-word
+//                           emphasis orphans, total budget. Heuristic only.
 //
 // Usage:
 //   node scripts/verify-render.mjs                          # default: index.html
@@ -773,11 +777,221 @@ async function scrubTimeline(page, durationS) {
   return samples;
 }
 
+// --- script-timing helpers ------------------------------------------------
+// Tokenize free text → lowercased non-stopword tokens of length ≥ 2.
+// Used by both brand-vocab construction and per-cue / per-scene matching.
+const SCRIPT_TIMING_STOPWORDS = new Set([
+  "a", "an", "the", "is", "of", "to", "and", "or", "for", "with", "in",
+  "on", "at", "it", "be", "by", "as", "we", "i", "you", "your", "our",
+  "no", "not", "do", "does", "did", "have", "has", "had", "will", "this",
+  "that", "these", "those", "but", "if", "so", "from", "up", "out",
+]);
+function tokenizeForScriptTiming(text) {
+  if (!text) return [];
+  return String(text)
+    .toLowerCase()
+    // Replace punctuation with whitespace, keep word chars + apostrophes.
+    .replace(/[^a-z0-9'\s]+/gi, " ")
+    .split(/\s+/)
+    .map(t => t.replace(/^'+|'+$/g, ""))
+    .filter(t => t.length >= 2 && !SCRIPT_TIMING_STOPWORDS.has(t));
+}
+
+// Build per-scene boundaries from the assembled comp HTML. Reads every
+// .scene.clip element's data-start + data-duration from the literal HTML
+// (no DOM round-trip needed) so we can correlate cues to scenes without
+// hitting the page. Returns ordered [{ id, start, end, duration }].
+function parseSceneWindowsFromHtml(html) {
+  if (!html) return [];
+  const scenes = [];
+  // Match <div id="..." class="scene ... clip" ... data-start=".." data-duration="..">
+  // Order doesn't matter — the actual matched-element snippet is what we
+  // parse for id/start/duration.
+  const re = /<(?:div|section)\b[^>]*\bclass="[^"]*\bscene\b[^"]*\bclip\b[^"]*"[^>]*>/gi;
+  for (const m of html.matchAll(re)) {
+    const tag = m[0];
+    const idMatch = tag.match(/\bid="([^"]+)"/);
+    const startMatch = tag.match(/\bdata-start="([\d.]+)"/);
+    const durMatch = tag.match(/\bdata-duration="([\d.]+)"/);
+    if (!idMatch || !startMatch || !durMatch) continue;
+    const start = parseFloat(startMatch[1]);
+    const duration = parseFloat(durMatch[1]);
+    if (!Number.isFinite(start) || !Number.isFinite(duration) || duration <= 0) continue;
+    scenes.push({ id: idMatch[1], start, end: start + duration, duration });
+  }
+  // De-dupe by id (keep first), order by start time.
+  const seen = new Set();
+  const ordered = [];
+  for (const s of scenes) {
+    if (seen.has(s.id)) continue;
+    seen.add(s.id);
+    ordered.push(s);
+  }
+  ordered.sort((a, b) => a.start - b.start);
+  return ordered;
+}
+
+// Find which scene contains time t (first scene where start ≤ t < end).
+function sceneAt(sceneWindows, t) {
+  for (const s of sceneWindows) {
+    if (t >= s.start && t < s.end) return s;
+  }
+  // Edge case: last cue at the very end — assign to the final scene if t == end.
+  if (sceneWindows.length && t >= sceneWindows[sceneWindows.length - 1].end - 0.01) {
+    return sceneWindows[sceneWindows.length - 1];
+  }
+  return null;
+}
+
+// Find which copy.json beat covers the cue based on word index in narration.
+// Beats are sequential in narration, so we just split narration into
+// per-beat character ranges and map the cue's word-index to a beat.
+// Falls back to even time-bands if narration parsing fails.
+function buildCueBeatMap(vttCues, copyJson, durationS) {
+  const beats = Array.isArray(copyJson?.beats) ? copyJson.beats : [];
+  if (!beats.length || !vttCues.length) return new Map();
+  const map = new Map();
+  // Even-time fallback: divide duration into beats.length bands, assign each
+  // cue to the band its midpoint lands in. Simple + robust to narration
+  // tokenization quirks.
+  const band = durationS / beats.length;
+  for (const cue of vttCues) {
+    const mid = (cue.start + cue.end) / 2;
+    let idx = Math.floor(mid / band);
+    if (idx < 0) idx = 0;
+    if (idx >= beats.length) idx = beats.length - 1;
+    map.set(cue, idx);
+  }
+  return map;
+}
+
+// Build per-scene visible-text token sets from the existing per-second samples.
+// Returns Map<sceneId, Set<token>>.
+function buildSceneVisibleTokens(samples) {
+  const out = new Map();
+  for (const s of samples) {
+    if (!s.activeSceneId) continue;
+    const cur = out.get(s.activeSceneId) || new Set();
+    for (const v of s.visible) {
+      for (const tok of tokenizeForScriptTiming(v.text || "")) cur.add(tok);
+    }
+    out.set(s.activeSceneId, cur);
+  }
+  return out;
+}
+
+// Parse emphasis events from the assembled HTML inline <script> blocks.
+// Looks for: comboFx.signalPulse / comboFx.glitchStamp / comboFx.paperTear /
+// comboFx.cinematicReveal / comboFx.testimonialReveal / effectFx.glitchBurst /
+// glitterFx.burst / textFx.cascade — anything that lands as a visual "stamp"
+// moment. Pulls the `at:` parameter as scene-relative or absolute time.
+//
+// Returns Array<{ at, type }> in absolute composition seconds.
+function parseEmphasisEvents(html) {
+  if (!html) return [];
+  const events = [];
+  // Capture inline <script> bodies only — we don't want to pull `at:` strings
+  // out of comments inside the body, but we DO want to scan all <script>
+  // bodies (including those with type="module").
+  const scripts = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
+  const body = scripts.join("\n");
+  // Pattern: <fxNs>.<fxName>(<tlArg>, <selectorArg>?, { ... at: <number> ... });
+  // Cheaper to scan token-style: find each call site, then match `at:` inside
+  // its braces. We accept a small fixed list of FX names.
+  const FX_RE = /(?:comboFx\.signalPulse|comboFx\.glitchStamp|comboFx\.paperTear|comboFx\.cinematicReveal|comboFx\.testimonialReveal|effectFx\.glitchBurst|glitterFx\.burst|textFx\.cascade)\s*\(/g;
+  for (const m of body.matchAll(FX_RE)) {
+    const callIdx = m.index;
+    // Find the opening brace of the options object — the FIRST '{' after the
+    // function call's '('. Then find the matching close brace.
+    const open = body.indexOf("{", callIdx);
+    if (open < 0) continue;
+    let depth = 0;
+    let close = -1;
+    for (let i = open; i < body.length; i++) {
+      const ch = body[i];
+      if (ch === "{") depth++;
+      else if (ch === "}") {
+        depth--;
+        if (depth === 0) { close = i; break; }
+      }
+    }
+    if (close < 0) continue;
+    const opts = body.slice(open, close + 1);
+    const atMatch = opts.match(/\bat\s*:\s*([0-9]+(?:\.[0-9]+)?)/);
+    if (!atMatch) continue;
+    const at = parseFloat(atMatch[1]);
+    if (!Number.isFinite(at)) continue;
+    const fxMatch = m[0].match(/(\w+)\.(\w+)/);
+    const type = fxMatch ? `${fxMatch[1]}.${fxMatch[2]}` : "fx";
+    events.push({ at, type });
+  }
+  // Sort by time so caller can binary-search if they want.
+  events.sort((a, b) => a.at - b.at);
+  return events;
+}
+
+// Build the brand-vocab token set from copy.json — narration + every beat
+// headline/body + cta tagline + brand title/slug. Length-≥4 tokens after
+// stopword removal so we don't drown the signal in "to/and/of" type matches.
+function buildBrandVocab(copyJson) {
+  const out = new Set();
+  if (!copyJson) return out;
+  const consume = (text, minLen) => {
+    for (const tok of tokenizeForScriptTiming(text || "")) {
+      if (tok.length >= minLen) out.add(tok);
+    }
+  };
+  // Narration is the strongest signal — length ≥ 4 per brief.
+  consume(copyJson.narration, 4);
+  // Beats — headline + body (length ≥ 3 here so short headline words still count).
+  for (const b of copyJson.beats || []) {
+    consume(b.headline, 3);
+    consume(b.body, 3);
+    consume(b.kicker, 3);
+  }
+  // CTA — tagline + verb.
+  consume(copyJson?.cta?.tagline, 3);
+  consume(copyJson?.cta?.verb, 2);
+  // Brand title — split on "—|-" first to take the brand prefix.
+  if (copyJson.title) {
+    const probe = String(copyJson.title).split(/[—\-|·:]/)[0].trim();
+    consume(probe, 2);
+  }
+  if (copyJson.slug) consume(copyJson.slug.replace(/-/g, " "), 2);
+  return out;
+}
+
+// Detect identity tokens (brand name + URL host + cta verb + first-beat
+// headline keywords) used by the word-emphasis-orphan check. Length ≥ 4 to
+// avoid trivial verbs like "go".
+function buildIdentityTokens(copyJson, brandName, brandUrl) {
+  const out = new Set();
+  const consume = (text, minLen) => {
+    for (const tok of tokenizeForScriptTiming(text || "")) {
+      if (tok.length >= minLen) out.add(tok);
+    }
+  };
+  consume(brandName, 4);
+  // URL host — first label only ("kindred-nz" → "kindred").
+  try {
+    if (brandUrl) {
+      const host = new URL(brandUrl).hostname.replace(/^www\./, "").toLowerCase();
+      const firstLabel = host.split(".")[0].split("-")[0];
+      if (firstLabel.length >= 4) out.add(firstLabel);
+    }
+  } catch {}
+  consume(copyJson?.cta?.verb, 4);
+  // First-beat headline keywords (the opening hook the brief calls out).
+  const firstBeat = (copyJson?.beats || [])[0];
+  if (firstBeat?.headline) consume(firstBeat.headline, 4);
+  return out;
+}
+
 // --- categorize findings --------------------------------------------------
 function categorize({
   samples, vttCues, copyJson, durationS, brandName, brandUrl,
   compHtml, tokenHexes, tokensPath, manifestAssets, manifestPath, sceneCensus,
-  motionContinuity,
+  motionContinuity, sceneWindowsHtml, emphasisEvents,
 }) {
   const findings = {
     composition: [],
@@ -790,6 +1004,7 @@ function categorize({
     brandAssetUse: [],
     sceneVisualDensity: [],
     motionContinuity: [],
+    scriptTiming: [],
   };
 
   // ---- composition: visible text per scene (length, alignment) -----------
@@ -1243,6 +1458,218 @@ function categorize({
     });
   }
 
+  // ---- script timing ----------------------------------------------------
+  // Cross-check spoken word ↔ visible text ↔ scene structure. Catches three
+  // failure modes the verifier was previously blind to:
+  //   1) script density imbalance — one scene crammed, another empty.
+  //   2) scene-narration mismatch — visuals on a different beat than audio.
+  //   3) word-emphasis orphan — brand-name spoken in mid-scene quiet.
+  // Plus two informational signals: silence beats + total budget.
+  //
+  // Heuristic-only — no LLM calls. Tokenize lowercase non-stopwords, score
+  // overlap. Cheap and deterministic.
+  const stHtmlScenes = Array.isArray(sceneWindowsHtml) ? sceneWindowsHtml : [];
+  const fxEvents = Array.isArray(emphasisEvents) ? emphasisEvents : [];
+
+  if (!vttCues.length) {
+    findings.scriptTiming.push({
+      kind: "no-vtt",
+      message: `no VTT cues — script-timing checks skipped`,
+    });
+  } else if (!stHtmlScenes.length) {
+    findings.scriptTiming.push({
+      kind: "no-scenes",
+      message: `no .scene.clip windows parsed from comp HTML — script-timing checks skipped`,
+    });
+  } else {
+    const sceneVisibleTokens = buildSceneVisibleTokens(samples);
+    const cueBeatMap = buildCueBeatMap(vttCues, copyJson, durationS);
+    const beats = Array.isArray(copyJson?.beats) ? copyJson.beats : [];
+
+    // Group cues by scene (HTML-derived windows — authoritative).
+    const sceneCues = new Map();
+    for (const sc of stHtmlScenes) sceneCues.set(sc.id, []);
+    for (const cue of vttCues) {
+      const cueT = (cue.start + cue.end) / 2;
+      const sc = sceneAt(stHtmlScenes, cueT);
+      if (!sc) continue;
+      sceneCues.get(sc.id).push(cue);
+    }
+
+    // 1) script-density-imbalance ------------------------------------------
+    // Per-scene words/sec vs comp average. Outliers <0.5x or >2.0x flag.
+    let totalSpokenWords = 0;
+    let totalSpokenDur = 0;
+    const densityRows = [];
+    for (const sc of stHtmlScenes) {
+      const cues = sceneCues.get(sc.id) || [];
+      const wps = cues.length / Math.max(0.001, sc.duration);
+      densityRows.push({ sceneId: sc.id, words: cues.length, dur: sc.duration, wps });
+      totalSpokenWords += cues.length;
+      totalSpokenDur += sc.duration;
+    }
+    const compAvgWps = totalSpokenDur > 0 ? totalSpokenWords / totalSpokenDur : 0;
+    if (compAvgWps > 0) {
+      for (const row of densityRows) {
+        // Skip near-empty CTA scenes (<2 spoken words) — narration almost
+        // always tapers before the CTA, that's a feature not a bug.
+        if (row.words < 2) continue;
+        const ratio = row.wps / compAvgWps;
+        if (ratio > 2.0) {
+          findings.scriptTiming.push({
+            kind: "script-density-imbalance",
+            scene: row.sceneId,
+            wordsPerSec: +row.wps.toFixed(2),
+            ratio: +ratio.toFixed(2),
+            message: `scene ${row.sceneId}: ${row.wps.toFixed(2)} words/sec is ${ratio.toFixed(1)}x the comp avg (${compAvgWps.toFixed(2)}) — reads as rushed`,
+          });
+        } else if (ratio < 0.5) {
+          findings.scriptTiming.push({
+            kind: "script-density-imbalance",
+            scene: row.sceneId,
+            wordsPerSec: +row.wps.toFixed(2),
+            ratio: +ratio.toFixed(2),
+            message: `scene ${row.sceneId}: ${row.wps.toFixed(2)} words/sec is ${ratio.toFixed(2)}x the comp avg (${compAvgWps.toFixed(2)}) — reads as draggy`,
+          });
+        }
+      }
+    }
+
+    // 2) scene-narration-mismatch ------------------------------------------
+    // For each scene, what % of its spoken words have ANY token overlap
+    // with the visible text in that scene? <25% = visual drift.
+    for (const sc of stHtmlScenes) {
+      const cues = sceneCues.get(sc.id) || [];
+      if (cues.length < 4) continue; // too few words — skip noise
+      const visTokens = sceneVisibleTokens.get(sc.id) || new Set();
+      if (!visTokens.size) continue; // empty scene already flagged elsewhere
+      let aligned = 0;
+      for (const cue of cues) {
+        const wTokens = tokenizeForScriptTiming(cue.word || "");
+        if (!wTokens.length) continue;
+        const beatIdx = cueBeatMap.get(cue);
+        const beat = (beatIdx != null) ? beats[beatIdx] : null;
+        const beatTokens = beat
+          ? new Set([
+              ...tokenizeForScriptTiming(beat.headline || ""),
+              ...tokenizeForScriptTiming(beat.body || ""),
+              ...tokenizeForScriptTiming(beat.kicker || ""),
+            ])
+          : null;
+        // Alignment fires if (a) the spoken word itself appears in the
+        // scene's visible text, OR (b) the beat the word belongs to shares
+        // any token with the visible text. The former handles literal
+        // matches ("local" → "Just local."), the latter handles paraphrase
+        // (narration says "doors down" while visual says "neighbours").
+        let hit = false;
+        for (const wt of wTokens) {
+          if (visTokens.has(wt)) { hit = true; break; }
+        }
+        if (!hit && beatTokens) {
+          for (const bt of beatTokens) {
+            if (visTokens.has(bt)) { hit = true; break; }
+          }
+        }
+        if (hit) aligned++;
+      }
+      const pct = aligned / cues.length;
+      if (pct < 0.25) {
+        findings.scriptTiming.push({
+          kind: "scene-narration-mismatch",
+          scene: sc.id,
+          alignedWords: aligned,
+          totalWords: cues.length,
+          alignmentPct: +(pct * 100).toFixed(0),
+          message: `scene ${sc.id}: only ${aligned}/${cues.length} spoken words (${(pct * 100).toFixed(0)}%) align with visible text — visuals on a different beat`,
+        });
+      }
+    }
+
+    // 3) silence-beat-misplaced (info) -------------------------------------
+    // Gaps > 1.0s between adjacent VTT cues — informational.
+    for (let i = 1; i < vttCues.length; i++) {
+      const gap = vttCues[i].start - vttCues[i - 1].end;
+      if (gap <= 1.0) continue;
+      const midT = (vttCues[i - 1].end + vttCues[i].start) / 2;
+      const sc = sceneAt(stHtmlScenes, midT);
+      findings.scriptTiming.push({
+        kind: "silence-beat-misplaced",
+        scene: sc ? sc.id : null,
+        atStart: +vttCues[i - 1].end.toFixed(2),
+        atEnd: +vttCues[i].start.toFixed(2),
+        durationS: +gap.toFixed(2),
+        message: `silence gap ${gap.toFixed(2)}s in scene ${sc ? sc.id : "(none)"} (${vttCues[i - 1].end.toFixed(2)}s–${vttCues[i].start.toFixed(2)}s)`,
+      });
+    }
+
+    // 4) narration-overrun-into-cta (error) --------------------------------
+    // Narration must end before the LAST .scene.clip starts (the CTA).
+    if (stHtmlScenes.length >= 2) {
+      const lastScene = stHtmlScenes[stHtmlScenes.length - 1];
+      const lastCueEnd = vttCues[vttCues.length - 1].end;
+      if (lastCueEnd > lastScene.start + 0.05) {
+        findings.scriptTiming.push({
+          kind: "narration-overrun-into-cta",
+          severity: "error",
+          scene: lastScene.id,
+          narrationEnd: +lastCueEnd.toFixed(2),
+          ctaStart: +lastScene.start.toFixed(2),
+          overrunS: +(lastCueEnd - lastScene.start).toFixed(2),
+          message: `narration ends at ${lastCueEnd.toFixed(2)}s but CTA scene ${lastScene.id} starts at ${lastScene.start.toFixed(2)}s — narration overruns into CTA by ${(lastCueEnd - lastScene.start).toFixed(2)}s`,
+        });
+      }
+    }
+
+    // 5) word-emphasis-orphan ----------------------------------------------
+    // Identity tokens (brand name / URL host / cta verb / first-beat keywords)
+    // should land at a visual emphasis moment: first 1.5s of a scene OR
+    // within 0.3s of a stamp/glitch/burst/etc event.
+    const identityTokens = buildIdentityTokens(copyJson, brandName, brandUrl);
+    const orphanSeen = new Set(); // de-dupe per (token, scene)
+    if (identityTokens.size) {
+      for (const cue of vttCues) {
+        const wTokens = tokenizeForScriptTiming(cue.word || "");
+        const isIdentity = wTokens.some(t => identityTokens.has(t));
+        if (!isIdentity) continue;
+        const cueMid = (cue.start + cue.end) / 2;
+        const sc = sceneAt(stHtmlScenes, cueMid);
+        if (!sc) continue;
+        const intoScene = cueMid - sc.start;
+        const inEntrance = intoScene <= 1.5;
+        let nearStamp = false;
+        for (const ev of fxEvents) {
+          if (Math.abs(ev.at - cueMid) <= 0.3) { nearStamp = true; break; }
+        }
+        if (inEntrance || nearStamp) continue;
+        const idTok = wTokens.find(t => identityTokens.has(t)) || cue.word;
+        const key = `${idTok}::${sc.id}`;
+        if (orphanSeen.has(key)) continue;
+        orphanSeen.add(key);
+        findings.scriptTiming.push({
+          kind: "word-emphasis-orphan",
+          scene: sc.id,
+          atSec: +cueMid.toFixed(2),
+          token: idTok,
+          message: `identity word "${cue.word}" spoken at ${cueMid.toFixed(2)}s in scene ${sc.id} lands in mid-scene quiet (no entrance/stamp event within 0.3s)`,
+        });
+      }
+    }
+
+    // 6) script-fits-budget (info) -----------------------------------------
+    // Total narration duration vs comp duration.
+    const lastEnd = vttCues[vttCues.length - 1].end;
+    const slack = durationS - lastEnd;
+    findings.scriptTiming.push({
+      kind: "script-fits-budget",
+      narrationS: +lastEnd.toFixed(2),
+      compS: durationS,
+      slackS: +slack.toFixed(2),
+      message: slack >= 0
+        ? `narration runs ${lastEnd.toFixed(2)}s of ${durationS}s comp — ${slack.toFixed(2)}s slack`
+        : `narration runs ${lastEnd.toFixed(2)}s vs ${durationS}s comp — ${(-slack).toFixed(2)}s overrun`,
+    });
+  }
+
   return findings;
 }
 
@@ -1261,11 +1688,19 @@ function deriveVerdict(findings) {
   const motionMajor = (findings.motionContinuity || []).some(f =>
     f.kind === "scene-frozen" || f.kind === "multiple-static"
   );
+  // Script-timing majors:
+  //   - any narration-overrun-into-cta (error)
+  //   - 2+ scene-narration-mismatch warnings (script + visuals disagree)
+  const scriptTiming = findings.scriptTiming || [];
+  const narrationOverrunsCta = scriptTiming.some(f => f.kind === "narration-overrun-into-cta");
+  const sceneMismatchCount = scriptTiming.filter(f => f.kind === "scene-narration-mismatch").length;
+  const scriptTimingMajor = narrationOverrunsCta || sceneMismatchCount >= 2;
   const newErrors =
     findings.brandPaletteUse.some(f => f.kind === "zero-var-refs") ||
     findings.brandAssetUse.some(f => f.kind === "visual-identity-absent") ||
     findings.sceneVisualDensity.some(f => f.kind === "consecutive-text-only") ||
-    motionMajor;
+    motionMajor ||
+    scriptTimingMajor;
   const hasMajor =
     findings.placeholderLeakage.length > 0 ||
     findings.brandFidelity.some(f => f.kind === "brand-name-missing" || f.kind === "url-missing") ||
@@ -1281,6 +1716,13 @@ function deriveVerdict(findings) {
     findings.sceneVisualDensity.filter(f => f.kind === "text-only-scene").length +
     (findings.motionContinuity || []).filter(f =>
       f.kind === "static-moment" || f.kind === "near-static-moment"
+    ).length +
+    // Script-timing watch signals — density outliers + lone scene-mismatch +
+    // word-emphasis orphans. silence-beat / script-fits-budget are info-only.
+    scriptTiming.filter(f =>
+      f.kind === "script-density-imbalance" ||
+      f.kind === "scene-narration-mismatch" ||
+      f.kind === "word-emphasis-orphan"
     ).length;
   if (hasMajor) return "needs-fix";
   if (watchSignals > 2) return "watch";
@@ -1338,6 +1780,7 @@ function writeMarkdownReport({ outPath, slug, template, tone, durationS, samples
   renderSection("Brand asset use", findings.brandAssetUse, "no asset findings");
   renderSection("Scene visual density", findings.sceneVisualDensity, "no scene-density findings");
   renderSection("Motion continuity", findings.motionContinuity, "no motion-continuity findings");
+  renderSection("Script timing", findings.scriptTiming || [], "no script-timing findings");
 
   lines.push("## Verdict");
   lines.push("");
@@ -1393,6 +1836,17 @@ function appendLedgerRow({ slug, template, tone, durationS, findings, verdict })
   const nearStaticMoments = motion.filter(f => f.kind === "near-static-moment").length;
   if (staticMoments) majorBits.push(`${staticMoments} static moment${staticMoments === 1 ? "" : "s"}`);
   if (nearStaticMoments) majorBits.push(`${nearStaticMoments} near-static`);
+  // Script-timing chips: scene-mismatch · narration overruns · density outliers
+  // · emphasis orphans. silence-beat + script-fits-budget are info-only and
+  // omitted from the ledger row to keep the chips load-bearing.
+  const scriptTiming = findings.scriptTiming || [];
+  const sceneMismatches = scriptTiming.filter(f => f.kind === "scene-narration-mismatch").length;
+  if (sceneMismatches) majorBits.push(`${sceneMismatches} scene-mismatch`);
+  if (scriptTiming.some(f => f.kind === "narration-overrun-into-cta")) majorBits.push("narration overruns");
+  const densityOut = scriptTiming.filter(f => f.kind === "script-density-imbalance").length;
+  if (densityOut) majorBits.push(`${densityOut} density outlier${densityOut === 1 ? "" : "s"}`);
+  const emphasisOrphans = scriptTiming.filter(f => f.kind === "word-emphasis-orphan").length;
+  if (emphasisOrphans) majorBits.push(`${emphasisOrphans} emphasis orphan${emphasisOrphans === 1 ? "" : "s"}`);
   const major = majorBits.length ? majorBits.join(", ") : "clean";
 
   const cells = [dateStr, slug, template || "—", tone || "—", `${durationS}s`, major, verdict];
@@ -1592,10 +2046,16 @@ try {
   }
 } catch {}
 
+// Script-timing prep: parse .scene.clip windows + emphasis events from the
+// assembled comp HTML once. Done here (not in categorize) so we can emit the
+// structured data into the JSON payload alongside findings.
+const sceneWindowsHtml = parseSceneWindowsFromHtml(compHtml);
+const emphasisEvents = parseEmphasisEvents(compHtml);
+
 const findings = categorize({
   samples, vttCues, copyJson, durationS, brandName, brandUrl,
   compHtml, tokenHexes, tokensPath, manifestAssets, manifestPath, sceneCensus,
-  motionContinuity,
+  motionContinuity, sceneWindowsHtml, emphasisEvents,
 });
 const verdict = deriveVerdict(findings);
 
@@ -1628,6 +2088,12 @@ const jsonPayload = {
     frameDir: path.relative(projectRoot, motionContinuity.frameDir).replace(/\\/g, "/"),
     perScene: motionContinuity.perScene,
   } : null,
+  // Script-timing inputs — surfaced so downstream tools (and humans reading
+  // the JSON) can verify the boundaries the checker used. Cheap to include.
+  scriptTiming: {
+    sceneWindows: sceneWindowsHtml,
+    emphasisEvents,
+  },
   samples,
   findings,
   verdict,
@@ -1654,6 +2120,10 @@ const motionMajor = (findings.motionContinuity || []).some(f =>
   f.kind === "scene-frozen" || f.kind === "multiple-static"
 );
 console.log(`  motion continuity   ${findings.motionContinuity.length} entries${motionMajor ? "  ← MAJOR" : ""}`);
+const scriptTimingMajor = (findings.scriptTiming || []).some(f =>
+  f.kind === "narration-overrun-into-cta"
+) || (findings.scriptTiming || []).filter(f => f.kind === "scene-narration-mismatch").length >= 2;
+console.log(`  script timing       ${(findings.scriptTiming || []).length} entries${scriptTimingMajor ? "  ← MAJOR" : ""}`);
 console.log("");
 console.log(`◇ verdict: ${verdict} (${dt}s)`);
 console.log(`  json: ${path.relative(projectRoot, jsonOutPath).replace(/\\/g, "/")}`);
