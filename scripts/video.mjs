@@ -20,6 +20,10 @@
 //   --seconds=N        (default 30) — drives template choice
 //   --template=<name>  override auto-pick (social-reel | hero-promo | case-study | founder-story | testimonial)
 //                      explicit user choice always wins over auto-tone selection
+//   --framework=<name> override the auto-picked copy framework. Pick from:
+//                      AIDA | PAS | FAB | STAR | BAB | Heros-Journey |
+//                      Transformation | Q-Payoff | Sensory. Auto-pick uses
+//                      tone + structural template + copy signal + hostname.
 //   --name=<slug>      override URL-derived slug
 //   --with-music       actually wire the picked music into the composition
 //   --no-tts           skip narration synthesis (default: synthesize TTS from copy)
@@ -253,6 +257,99 @@ function vibeForTemplate(templateName) {
 function bucketSeconds(s) {
   // pick the closest of {15, 30, 60}.
   return [15, 30, 60].sort((a, b) => Math.abs(a - s) - Math.abs(b - s))[0];
+}
+
+// ---------------------------------------------------------------------------
+// Framework picker
+// ---------------------------------------------------------------------------
+// Pick a copy framework (BAB / PAS / FAB / AIDA / STAR / Hero's Journey /
+// Transformation / Q-Payoff / Sensory) given the resolved tone, structural
+// template, scraped/synthesized copy signal, and hostname.
+//
+// Decision matrix per the kindred-nz / stripe / cafe research session:
+//   warm + community signals     → BAB         (.org, share/neighbours/together)
+//   warm + Q&A copy              → Q-Payoff    ("how does it work" lines)
+//   warm + sensory/atmosphere    → Sensory     (hospitality, spa, café)
+//   energetic + product launch   → FAB         (launch/new/introducing)
+//   energetic + DTC/ecommerce    → AIDA        (shop/buy/discount)
+//   energetic + general SaaS     → AIDA        (default)
+//   documentary + founder story  → Heros-Journey
+//   documentary + case study     → STAR        (results/numbers/metrics)
+//   documentary + transformation → Transformation (before/after)
+//   documentary + clear pain     → PAS         (tired of/fix/repair)
+//   neutral / unrecognised       → BAB         (universal — every brand has b/a/b)
+//
+// `copySignal` is a free-form string the orchestrator can build by joining
+// scraped paragraphs / list items / headings; we substring-match against it.
+// Hostname is used to harvest `.org` (community) and similar TLD hints.
+function pickFramework({ tone, structuralTemplate, copySignal, hostname, override }) {
+  if (override) {
+    return { name: override, signals: ["override"], reason: "override" };
+  }
+  const text = String(copySignal || "").toLowerCase();
+  const host = String(hostname || "").toLowerCase();
+  const struct = String(structuralTemplate || "").toLowerCase();
+  const t = String(tone || "").toLowerCase();
+
+  // Helpers — return [hit-words] so we can show them in the log line.
+  const hits = (re) => {
+    const m = text.match(re);
+    return m ? Array.from(new Set(m)).slice(0, 3) : [];
+  };
+
+  if (t === "warm") {
+    const community = [
+      ...(host.endsWith(".org") || host.endsWith(".foundation") ? [`${host} domain`] : []),
+      ...hits(/\b(share|neighbours|neighbors|community|together|local|kind|kindness|streets?)\b/g),
+    ];
+    if (community.length) {
+      return { name: "BAB", signals: [`tone=warm`, ...community], reason: "warm+community" };
+    }
+    const qa = hits(/\b(how does it work|how it works|what is|why|faq)\b/g);
+    if (qa.length || struct === "faq-quick") {
+      return { name: "Q-Payoff", signals: [`tone=warm`, ...qa, struct === "faq-quick" ? "structural=faq-quick" : null].filter(Boolean), reason: "warm+qa" };
+    }
+    const sensory = hits(/\b(hospitality|spa|café|cafe|restaurant|brunch|aroma|warmth|cosy|cozy|candle|linen|stay|booking)\b/g);
+    if (sensory.length) {
+      return { name: "Sensory", signals: [`tone=warm`, ...sensory], reason: "warm+sensory" };
+    }
+    return { name: "BAB", signals: [`tone=warm`, "no specific signal — universal fallback"], reason: "warm+default" };
+  }
+
+  if (t === "energetic") {
+    if (struct === "product-launch") {
+      const launch = hits(/\b(launch(?:ing)?|new|introducing|today|debut|drop)\b/g);
+      return { name: "FAB", signals: [`tone=energetic`, "structural=product-launch", ...launch], reason: "energetic+launch" };
+    }
+    const dtc = hits(/\b(shop|buy|discount|sale|cart|checkout|free shipping|order)\b/g);
+    if (dtc.length) {
+      return { name: "AIDA", signals: [`tone=energetic`, ...dtc], reason: "energetic+dtc" };
+    }
+    return { name: "AIDA", signals: [`tone=energetic`, "general SaaS default"], reason: "energetic+default" };
+  }
+
+  if (t === "documentary") {
+    if (struct === "founder-story") {
+      const founder = hits(/\b(since|founded|i started|we started|origin|story|journey|grew up)\b/g);
+      return { name: "Heros-Journey", signals: [`tone=documentary`, "structural=founder-story", ...founder], reason: "documentary+founder" };
+    }
+    if (struct === "case-study") {
+      const star = hits(/\b(results?|numbers?|metrics?|grew|increased|reduced|saved|roi|revenue|customers?)\b/g);
+      return { name: "STAR", signals: [`tone=documentary`, "structural=case-study", ...star], reason: "documentary+case-study" };
+    }
+    if (struct === "before-after") {
+      const tx = hits(/\b(before|after|transform|transformation|change|swap|new vs old)\b/g);
+      return { name: "Transformation", signals: [`tone=documentary`, "structural=before-after", ...tx], reason: "documentary+transformation" };
+    }
+    const pain = hits(/\b(tired of|fix|repair|broken|stuck|frustrated|hate|painful|problem)\b/g);
+    if (pain.length) {
+      return { name: "PAS", signals: [`tone=documentary`, ...pain], reason: "documentary+pain" };
+    }
+    return { name: "BAB", signals: [`tone=documentary`, "no specific signal — universal fallback"], reason: "documentary+default" };
+  }
+
+  // neutral / unknown tone — universal default.
+  return { name: "BAB", signals: [`tone=${t || "neutral"}`, "universal default"], reason: "default" };
 }
 
 // ---------------------------------------------------------------------------
@@ -835,9 +932,49 @@ try {
   const _vibe = _toneVibe || vibeForTemplate(_structural);
   const _bucket = bucketSeconds(seconds);
 
+  // Pick the copy framework (BAB / PAS / FAB / AIDA / STAR / Heros-Journey
+  // / Transformation / Q-Payoff / Sensory) per the decision matrix in
+  // pickFramework. We use the brand-extract output as the copy signal —
+  // brand-extract.mjs is Stage 1 and writes design tokens; the actual
+  // landing-page text isn't fetched until extract-copy runs in framework
+  // mode, so for hostname/domain signals we have full input here, and for
+  // text signals we use the host-derived slug + a best-effort synth from
+  // the meta.json the brand-extractor wrote.
+  let _framework = "BAB";
+  let _frameworkSignals = ["dry-run"];
+  let _frameworkReason = "dry-run";
+  if (!dryRun) {
+    const hostnameForFramework = (() => {
+      try { return new URL(url).hostname; } catch { return ""; }
+    })();
+    // Try to read a small text signal from the brand-extract meta.json (it
+    // typically carries title/tagline harvested by Stage 1). This keeps the
+    // picker synchronous with Stage 1's output and avoids re-scraping.
+    let copySignal = "";
+    try {
+      const metaPath = path.join(projectRoot, "compositions", `${slug}.meta.json`);
+      if (fs.existsSync(metaPath)) {
+        const meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+        copySignal = [meta.title, meta.tagline, meta.description, meta.summary]
+          .filter(Boolean).join(" ").toLowerCase();
+      }
+    } catch {}
+    const fwPick = pickFramework({
+      tone: resolvedTone,
+      structuralTemplate: _structural,
+      copySignal,
+      hostname: hostnameForFramework,
+      override: flags.framework,
+    });
+    _framework = fwPick.name;
+    _frameworkSignals = fwPick.signals;
+    _frameworkReason = fwPick.reason;
+  }
+
   // Print the tone signal + template choice so the user sees what was
   // inferred. This sits between the brand-extract and parallel-batch lines
-  // so the reader can scan top-down: URL -> tokens -> tone -> template.
+  // so the reader can scan top-down: URL -> tokens -> tone -> template
+  // -> framework.
   if (!dryRun) {
     console.log(`    tone: ${resolvedTone} (${resolvedToneReason})`);
     const overrode = _pickReason === "override" ? " (--template override)"
@@ -845,6 +982,9 @@ try {
                    : ` (${_pickReason})`;
     const musicVibe = _toneVibe ? ` -> music: ${_toneVibe}` : "";
     console.log(`    template: ${_structural}${overrode}${musicVibe}`);
+    const fwOverride = _frameworkReason === "override" ? " (--framework override)" : "";
+    const sig = _frameworkSignals.length ? ` [${_frameworkSignals.slice(0, 4).join(", ")}]` : "";
+    console.log(`    framework: ${_framework}${fwOverride} (${_frameworkReason})${sig}`);
   }
 
   // Deferred warnings — surfaced after the parallel batch finishes so they
@@ -868,6 +1008,23 @@ try {
             }, null, 2));
             return { output: `compositions/${slug}.copy.json (dry-run)`, soft: true };
           }
+          // If the user has hand-authored or pre-generated copy.json, respect
+          // it — don't run extract-copy and don't overwrite. Detected by:
+          //   - file exists
+          //   - has narration (non-empty string)
+          //   - has at least one beat with a headline
+          // This unlocks the manual-curation workflow where someone runs the
+          // full scrape, hand-tunes the copy.json, then re-renders.
+          if (fs.existsSync(copyJsonPath)) {
+            try {
+              const existing = JSON.parse(fs.readFileSync(copyJsonPath, "utf8"));
+              const hasNarration = typeof existing.narration === "string" && existing.narration.trim().length > 0;
+              const hasBeat = Array.isArray(existing.beats) && existing.beats.some(b => b && b.headline);
+              if (hasNarration && hasBeat) {
+                return { output: `compositions/${slug}.copy.json (existing — kept)`, soft: true };
+              }
+            } catch {}
+          }
           if (!fs.existsSync(copyScript)) {
             // Graceful degradation — synthesize copy from the brand extract output.
             const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
@@ -875,16 +1032,43 @@ try {
             fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
             return { output: `compositions/${slug}.copy.json (placeholder)`, soft: true };
           }
+          // Framework mode: scrape the live page (Playwright) so Claude is
+          // grounded in the brand's actual voice, then generate disciplined
+          // copy per the chosen framework. Falls back to legacy URL mode if
+          // ANTHROPIC_API_KEY isn't set, so offline contributors still get a
+          // working pipeline (just lower-discipline copy).
+          //
           // Pass --structural=<name> so extract-copy.mjs can opt-in to the
           // optional person/launch-date harvest for testimonial / founder-story /
           // product-launch templates. Other templates still get plain copy.
-          const r = await runNodeAsync(copyScript,
-            [url, `--template=${_vibe}`, `--seconds=${_bucket}`, `--name=${slug}`, `--structural=${_structural}`]);
+          const useFrameworkMode = !!process.env.ANTHROPIC_API_KEY;
+          let r;
+          if (useFrameworkMode) {
+            r = await runNodeAsync(copyScript, [
+              `--framework=${_framework}`,
+              `--vibe=${_vibe}`,
+              `--duration=${_bucket}`,
+              `--url=${url}`,
+              `--out=${copyJsonPath}`,
+              `--name=${slug}`,
+              `--structural=${_structural}`,
+            ]);
+          } else {
+            // Legacy URL mode (deterministic, offline). Same contract as before.
+            r = await runNodeAsync(copyScript, [
+              url,
+              `--template=${_vibe}`,
+              `--seconds=${_bucket}`,
+              `--name=${slug}`,
+              `--structural=${_structural}`,
+            ]);
+          }
           // exit 2 = "thin narration" warning — the JSON was still written. Treat
           // as soft and continue.
           if (r.status !== 0 && r.status !== 2) {
             const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-5).join("\n");
-            deferredWarnings.push(`extract-copy.mjs failed (exit ${r.status}); using placeholders\n${stderr}`);
+            const modeTag = useFrameworkMode ? "framework mode" : "URL mode";
+            deferredWarnings.push(`extract-copy.mjs failed in ${modeTag} (exit ${r.status}); using placeholders\n${stderr}`);
             const placeholderCopy = synthesizeCopyFromTokens({ slug, seconds });
             fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
             return { output: `compositions/${slug}.copy.json (fallback)`, soft: true };
@@ -895,7 +1079,8 @@ try {
             return { output: `compositions/${slug}.copy.json (synthesized)`, soft: true };
           }
           if (r.status === 2) return { output: `compositions/${slug}.copy.json (thin)`, soft: true };
-          return `compositions/${slug}.copy.json`;
+          const modeTag = useFrameworkMode ? `framework=${_framework}` : "url-mode";
+          return `compositions/${slug}.copy.json (${modeTag})`;
         },
       },
       // ----- Stage 3: asset pull ---------------------------------------

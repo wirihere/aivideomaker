@@ -162,6 +162,40 @@ Useful flags:
   of a 9:16 master gets cut on the 1:1 crop.
 - `--auto-fix` — run `npm run fix:apply` automatically if quality gate fails.
 - `--keep-artifacts` — don't restore `index.html` at the end (for inspection).
+- `--framework=<name>` — override the auto-picked copy framework. Pick from
+  `AIDA | PAS | FAB | STAR | BAB | Heros-Journey | Transformation | Q-Payoff |
+  Sensory`. The orchestrator prints both the chosen framework and the signals
+  that fired (e.g. `framework: BAB (warm+community) [tone=warm, .org domain]`).
+  Without this flag, the picker uses tone + structural template + copy signal
+  + hostname per the matrix in `pickFramework`.
+
+**Copy-generation modes (Stage 2):**
+
+- **Framework mode** (default when `ANTHROPIC_API_KEY` is set in the env):
+  scrapes the live landing page via Playwright (h1/h2/h3, paragraphs, list
+  items, CTA, og tags, JSON-LD), threads the brand context into a strict
+  Claude prompt that obeys `docs/copy-playbook.md`, and returns a
+  framework-shaped copy doc grounded in the brand's actual voice. The raw
+  scrape is persisted to `compositions/<slug>.scrape.json`.
+- **URL mode** (fallback when the API key isn't set): the legacy
+  curl-based deterministic pipeline. Disciplined enough for offline runs and
+  tests; less brand-grounded than framework mode.
+
+Set `ANTHROPIC_API_KEY` in your env to opt in:
+
+```bash
+# Windows PowerShell
+$env:ANTHROPIC_API_KEY = "sk-ant-..."
+
+# bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
+
+Force a specific framework:
+
+```bash
+npm run video -- https://example.com --framework=Sensory
+```
 
 `index.html` is restored from backup via `try/finally` even on crash.
 
