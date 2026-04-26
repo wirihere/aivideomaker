@@ -1,0 +1,791 @@
+{
+  "tolerance": 38,
+  "perFrame": {
+    "cinematicReveal": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32268,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 0,
+          "honey": 0,
+          "cream": 99.6,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32222,
+        "offBrandPct": 0.5,
+        "pcts": {
+          "navy": 3.2,
+          "honey": 0,
+          "cream": 96.3,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32182,
+        "offBrandPct": 0.7,
+        "pcts": {
+          "navy": 3.1,
+          "honey": 0,
+          "cream": 96.2,
+          "warn": 0
+        }
+      }
+    ],
+    "confettiFinale": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 9774,
+        "offBrandPct": 69.8,
+        "pcts": {
+          "navy": 1.7,
+          "honey": 0.3,
+          "cream": 28.2,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 9691,
+        "offBrandPct": 70.1,
+        "pcts": {
+          "navy": 2.1,
+          "honey": 0.1,
+          "cream": 27.7,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 8047,
+        "offBrandPct": 75.2,
+        "pcts": {
+          "navy": 2.1,
+          "honey": 0.1,
+          "cream": 22.6,
+          "warn": 0
+        }
+      }
+    ],
+    "dreamSequence": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 5162,
+        "offBrandPct": 84.1,
+        "pcts": {
+          "navy": 0.4,
+          "honey": 6.1,
+          "cream": 9.3,
+          "warn": 0.1
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 7167,
+        "offBrandPct": 77.9,
+        "pcts": {
+          "navy": 0,
+          "honey": 1.9,
+          "cream": 20.1,
+          "warn": 0.1
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 4636,
+        "offBrandPct": 85.7,
+        "pcts": {
+          "navy": 0,
+          "honey": 6.2,
+          "cream": 7.1,
+          "warn": 1
+        }
+      }
+    ],
+    "focusPull": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 30985,
+        "offBrandPct": 4.4,
+        "pcts": {
+          "navy": 1.2,
+          "honey": 0,
+          "cream": 94.4,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 31136,
+        "offBrandPct": 3.9,
+        "pcts": {
+          "navy": 1.4,
+          "honey": 0,
+          "cream": 94.7,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 30981,
+        "offBrandPct": 4.4,
+        "pcts": {
+          "navy": 1.4,
+          "honey": 0,
+          "cream": 94.2,
+          "warn": 0
+        }
+      }
+    ],
+    "glitchStamp": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32181,
+        "offBrandPct": 0.7,
+        "pcts": {
+          "navy": 2.4,
+          "honey": 0,
+          "cream": 96.9,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32352,
+        "offBrandPct": 0.1,
+        "pcts": {
+          "navy": 2.5,
+          "honey": 0,
+          "cream": 97.4,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32352,
+        "offBrandPct": 0.1,
+        "pcts": {
+          "navy": 2.5,
+          "honey": 0,
+          "cream": 97.4,
+          "warn": 0
+        }
+      }
+    ],
+    "holoFlash": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 28695,
+        "offBrandPct": 11.4,
+        "pcts": {
+          "navy": 0.8,
+          "honey": 6.2,
+          "cream": 75.5,
+          "warn": 6.2
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 27148,
+        "offBrandPct": 16.2,
+        "pcts": {
+          "navy": 0.8,
+          "honey": 6.1,
+          "cream": 70.6,
+          "warn": 6.3
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 27148,
+        "offBrandPct": 16.2,
+        "pcts": {
+          "navy": 0.8,
+          "honey": 6.1,
+          "cream": 70.6,
+          "warn": 6.3
+        }
+      }
+    ],
+    "hyperGlitch": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32344,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 14.4,
+          "honey": 1.5,
+          "cream": 83.9,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32344,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 14.4,
+          "honey": 1.5,
+          "cream": 83.9,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32347,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 14.4,
+          "honey": 1.5,
+          "cream": 83.9,
+          "warn": 0
+        }
+      }
+    ],
+    "kineticBurst": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32296,
+        "offBrandPct": 0.3,
+        "pcts": {
+          "navy": 2.8,
+          "honey": 0,
+          "cream": 96.9,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32322,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 2.8,
+          "honey": 0,
+          "cream": 97,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32322,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 2.8,
+          "honey": 0,
+          "cream": 97,
+          "warn": 0
+        }
+      }
+    ],
+    "paperTear": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32370,
+        "offBrandPct": 0.1,
+        "pcts": {
+          "navy": 0,
+          "honey": 0,
+          "cream": 99.9,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32339,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 1.8,
+          "honey": 0,
+          "cream": 98,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32339,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 1.8,
+          "honey": 0,
+          "cream": 98,
+          "warn": 0
+        }
+      }
+    ],
+    "pricePop": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32224,
+        "offBrandPct": 0.5,
+        "pcts": {
+          "navy": 0.8,
+          "honey": 0,
+          "cream": 98.6,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32286,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 1,
+          "honey": 0,
+          "cream": 98.6,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32286,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 1,
+          "honey": 0,
+          "cream": 98.6,
+          "warn": 0
+        }
+      }
+    ],
+    "signalPulse": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32301,
+        "offBrandPct": 0.3,
+        "pcts": {
+          "navy": 0.4,
+          "honey": 0.2,
+          "cream": 99,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32328,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 0.6,
+          "honey": 0.2,
+          "cream": 99,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32327,
+        "offBrandPct": 0.2,
+        "pcts": {
+          "navy": 0.6,
+          "honey": 0.2,
+          "cream": 99,
+          "warn": 0
+        }
+      }
+    ],
+    "slamCut": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 31765,
+        "offBrandPct": 2,
+        "pcts": {
+          "navy": 1.3,
+          "honey": 0,
+          "cream": 96.8,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32289,
+        "offBrandPct": 0.3,
+        "pcts": {
+          "navy": 2.8,
+          "honey": 0,
+          "cream": 96.8,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32289,
+        "offBrandPct": 0.3,
+        "pcts": {
+          "navy": 2.8,
+          "honey": 0,
+          "cream": 96.8,
+          "warn": 0
+        }
+      }
+    ],
+    "spotlight": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 24653,
+        "offBrandPct": 23.9,
+        "pcts": {
+          "navy": 0.4,
+          "honey": 0,
+          "cream": 75.7,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 24632,
+        "offBrandPct": 24,
+        "pcts": {
+          "navy": 0.3,
+          "honey": 0,
+          "cream": 75.7,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32297,
+        "offBrandPct": 0.3,
+        "pcts": {
+          "navy": 2.3,
+          "honey": 0.3,
+          "cream": 97.1,
+          "warn": 0
+        }
+      }
+    ],
+    "statGroup": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32271,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 2.3,
+          "honey": 0,
+          "cream": 97.2,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32258,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 2.8,
+          "honey": 0,
+          "cream": 96.8,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32259,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 2.8,
+          "honey": 0,
+          "cream": 96.8,
+          "warn": 0
+        }
+      }
+    ],
+    "superImpact": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32120,
+        "offBrandPct": 0.9,
+        "pcts": {
+          "navy": 4.6,
+          "honey": 0,
+          "cream": 94.5,
+          "warn": 0
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32273,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 4.4,
+          "honey": 0,
+          "cream": 95.2,
+          "warn": 0
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32273,
+        "offBrandPct": 0.4,
+        "pcts": {
+          "navy": 4.4,
+          "honey": 0,
+          "cream": 95.2,
+          "warn": 0
+        }
+      }
+    ],
+    "testimonialReveal": [
+      {
+        "t": 1,
+        "total": 32400,
+        "onBrand": 32215,
+        "offBrandPct": 0.6,
+        "pcts": {
+          "navy": 0.5,
+          "honey": 0.5,
+          "cream": 97.7,
+          "warn": 0.7
+        }
+      },
+      {
+        "t": 2,
+        "total": 32400,
+        "onBrand": 32213,
+        "offBrandPct": 0.6,
+        "pcts": {
+          "navy": 0.9,
+          "honey": 0.5,
+          "cream": 97.4,
+          "warn": 0.7
+        }
+      },
+      {
+        "t": 3,
+        "total": 32400,
+        "onBrand": 32211,
+        "offBrandPct": 0.6,
+        "pcts": {
+          "navy": 0.9,
+          "honey": 0.5,
+          "cream": 97.4,
+          "warn": 0.7
+        }
+      }
+    ]
+  },
+  "summary": {
+    "cinematicReveal": {
+      "avgOffBrandPct": 0.5,
+      "peakOffBrandPct": 0.7,
+      "presence": {
+        "navy": 3.2,
+        "honey": 0,
+        "cream": 99.6,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "confettiFinale": {
+      "avgOffBrandPct": 71.7,
+      "peakOffBrandPct": 75.2,
+      "presence": {
+        "navy": 2.1,
+        "honey": 0.3,
+        "cream": 28.2,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "dreamSequence": {
+      "avgOffBrandPct": 82.6,
+      "peakOffBrandPct": 85.7,
+      "presence": {
+        "navy": 0.4,
+        "honey": 6.2,
+        "cream": 20.1,
+        "warn": 1
+      },
+      "pixelPaletteScore": 3
+    },
+    "focusPull": {
+      "avgOffBrandPct": 4.2,
+      "peakOffBrandPct": 4.4,
+      "presence": {
+        "navy": 1.4,
+        "honey": 0,
+        "cream": 94.7,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "glitchStamp": {
+      "avgOffBrandPct": 0.3,
+      "peakOffBrandPct": 0.7,
+      "presence": {
+        "navy": 2.5,
+        "honey": 0,
+        "cream": 97.4,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "holoFlash": {
+      "avgOffBrandPct": 14.6,
+      "peakOffBrandPct": 16.2,
+      "presence": {
+        "navy": 0.8,
+        "honey": 6.2,
+        "cream": 75.5,
+        "warn": 6.3
+      },
+      "pixelPaletteScore": 3
+    },
+    "hyperGlitch": {
+      "avgOffBrandPct": 0.2,
+      "peakOffBrandPct": 0.2,
+      "presence": {
+        "navy": 14.4,
+        "honey": 1.5,
+        "cream": 83.9,
+        "warn": 0
+      },
+      "pixelPaletteScore": 3
+    },
+    "kineticBurst": {
+      "avgOffBrandPct": 0.2,
+      "peakOffBrandPct": 0.3,
+      "presence": {
+        "navy": 2.8,
+        "honey": 0,
+        "cream": 97,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "paperTear": {
+      "avgOffBrandPct": 0.2,
+      "peakOffBrandPct": 0.2,
+      "presence": {
+        "navy": 1.8,
+        "honey": 0,
+        "cream": 99.9,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "pricePop": {
+      "avgOffBrandPct": 0.4,
+      "peakOffBrandPct": 0.5,
+      "presence": {
+        "navy": 1,
+        "honey": 0,
+        "cream": 98.6,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "signalPulse": {
+      "avgOffBrandPct": 0.2,
+      "peakOffBrandPct": 0.3,
+      "presence": {
+        "navy": 0.6,
+        "honey": 0.2,
+        "cream": 99,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "slamCut": {
+      "avgOffBrandPct": 0.9,
+      "peakOffBrandPct": 2,
+      "presence": {
+        "navy": 2.8,
+        "honey": 0,
+        "cream": 96.8,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "spotlight": {
+      "avgOffBrandPct": 16.1,
+      "peakOffBrandPct": 24,
+      "presence": {
+        "navy": 2.3,
+        "honey": 0.3,
+        "cream": 97.1,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "statGroup": {
+      "avgOffBrandPct": 0.4,
+      "peakOffBrandPct": 0.4,
+      "presence": {
+        "navy": 2.8,
+        "honey": 0,
+        "cream": 97.2,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "superImpact": {
+      "avgOffBrandPct": 0.6,
+      "peakOffBrandPct": 0.9,
+      "presence": {
+        "navy": 4.6,
+        "honey": 0,
+        "cream": 95.2,
+        "warn": 0
+      },
+      "pixelPaletteScore": 2
+    },
+    "testimonialReveal": {
+      "avgOffBrandPct": 0.6,
+      "peakOffBrandPct": 0.6,
+      "presence": {
+        "navy": 0.9,
+        "honey": 0.5,
+        "cream": 97.7,
+        "warn": 0.7
+      },
+      "pixelPaletteScore": 3
+    }
+  }
+}

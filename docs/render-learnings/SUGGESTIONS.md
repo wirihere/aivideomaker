@@ -79,3 +79,52 @@ Empirical rules of thumb derived from analysing every track in
 - Next time: when a render's verifier flags music-mismatch, regenerate
   `alignment.json` and look at the per-template ranked list — a track that
   scores below 60 on its assigned template is the most likely culprit.
+
+## Warm-tone combo preferences
+
+- _Source: `combos/brand-fit/kindred-nz.md` — 16 combos × 3 stills under
+  kindred-nz tokens (navy / honey / cream / coral) on a cream backdrop._
+- **Glitch is the warm killer.** Three of the four mismatched combos
+  (`hyperGlitch`, `slamCut` defaults, `holoFlash`'s glitch beat) own a
+  glitchBurst / scanline / RGB-shift moment. The motion grammar reads as
+  cold/digital regardless of palette tokens. For `community-warm` brands,
+  reach first for combos that lead with `cascade`, `stagger`, `inkBleed`,
+  `rackFocus`, `counter`, or expanding `radioRing`.
+- **Hard-coded gradient defaults bypass tokens.** `effectFx.cinemagraphRotate`
+  (used by `dreamSequence`, `confettiFinale`) ships rainbow pinks/teals;
+  `.fx-holo-sticker` ships rainbow iridescent. These ignore `--card-*`
+  tokens. For `dreamSequence` on a warm brand, override the cinemagraph
+  CSS to brand tokens **before** the timeline runs; otherwise expect ~80%
+  off-brand pixels even when the rest of the comp scores 3/3.
+- **`confettiFinale` honors per-scene `--brand-*`.** Setting
+  `--brand-primary / --brand-secondary / --brand-accent / --brand-tertiary`
+  on the finale scene root (NOT just on `:root`) re-tints the confetti to
+  brand. Without them you get default party-rainbow.
+- **Cap intensity at 0.8 for warm brands.** Combo defaults are 1.0–1.2,
+  which is bolder than warm-community should read. Drops `holoFlash`'s
+  near-pop and `slamCut`'s noir-flash to a level that doesn't fight the
+  cream canvas.
+- **`spotlight`'s `dimAmount` defaults are wrong for cream backdrops.**
+  Default 0.55–0.7 crushes the warm paper canvas to grey-black. For
+  warm brands, set `dimAmount ≤ 0.20` and `radius ≥ 50`, or skip the
+  combo entirely (the dim metaphor is investigative-noir).
+- **Top 5 warm-community combos** (kindred-nz validated):
+  `signalPulse` (concentric pulse = "people nearby"), `testimonialReveal`
+  (neighbour quote choreography), `paperTear` (inkBleed = correspondence),
+  `superImpact` (silent counter on cream), `cinematicReveal` (multiplane
+  serif reveal). Honourable mentions: `kineticBurst`, `focusPull`,
+  `statGroup`.
+- **Bottom 5 for warm-community:** `hyperGlitch`, `dreamSequence`,
+  `holoFlash`, `spotlight`, `slamCut`. The first three are hard
+  mismatches (motion-grammar or hard-coded palette); the last two are
+  watchable only at much lower intensity / dim than their defaults.
+- **Pixel-frequency audit > DOM-color scan.** A DOM walk of CSS-declared
+  colors gave every combo 3/3 because the test rig used brand tokens for
+  scaffold. The pixel-audit (`tmp/combo-pixel-audit.mjs`,
+  `combos/brand-fit/pixel-audit.json`) surfaces effects that paint
+  non-brand pixels on top — the only reliable signal for "the rendered
+  output stays in the warm palette".
+- Next time: when picking combos for a `community-warm` brand, gate on
+  the rule "the lead primitive must not be `glitchBurst` /
+  `vhs-jitter` / `noir-flash` / `radialMask`-with-high-dim", and verify
+  with a 3-still pixel-audit pass before committing to a template.
