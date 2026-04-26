@@ -1546,6 +1546,11 @@ Open ideas that aren't blocked but haven't been done. Move into a real task list
 - **Telemetry for renders** — track which effects are used, which fail, which combinations produce the best visual results. Foundation for "auto-suggest effect for scene type".
 - **AI-assisted composition** — feed a brief, get back a populated index.html with template + module choices. The current building blocks (templates, modules, scaffolders) are the substrate; this is the layer above.
 
+### Recently closed (2026-04-26 wave-M end-to-end run)
+
+- ✅ **Parallel pipeline proven on a real brand URL** — ran `npm run video -- https://linear.app --no-render`. Stages 2-4 fanned out: 1.0s wall-clock vs 1.6s sequential (matches Phase 1's predicted 30-50% speedup). Stage 1 (brand extract) is 6.9s network-bound and unchanged. Total Stages 1-6: 15.3s vs ~15-20s pre-Phase-1.
+- ✅ **Stage-6 quality gate fix** (commit `5099755`). The orchestrator was running `npm run check` which includes the visual Playwright smoke — that fails when `hyperframes preview` server isn't on :3002. That's interactive-workflow state, not pipeline state. Replaced with explicit gate chain `lint + lint:strict + check:heads + smoke:cli` (skips visual smoke). Safe because Stage 7 (render) already proves the comp loads. Users who want the visual signal can still run `npm run check` interactively after `npm run video --no-render`.
+
 ### Recently closed (2026-04-26 wave-M continued — bypass-permission run)
 
 - ✅ **Font-var detector skip-pattern fix** (commit `c66b51e`). `scripts/fix.mjs:listCssTargets()` now also excludes `design/cards.css` and `design/templates/*.css` — those files DEFINE the `--card-font-*` vars (token sources), not consume them. Same role as `tokens-*.css` which was already skipped. 15 false-positive warns removed (525 → 510 by grep count). Pre-req for the eventual severity flip to error.
