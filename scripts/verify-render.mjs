@@ -18,6 +18,10 @@
 //   - brand asset use       manifest.json assets actually appearing as src= in HTML
 //   - scene visual density  text-only scenes on default backgrounds (image / decorative
 //                           element census per scene midpoint, consecutive-run detection)
+//   - motion continuity     per-scene PNG-byte-diff between adjacent timestamp samples;
+//                           catches "PowerPoint" failure (static / near-static frames)
+//                           pre-render. Frames saved to tmp/verify-frames/<slug>-<stamp>/
+//                           for debug (gitignored).
 //
 // Usage:
 //   node scripts/verify-render.mjs                          # default: index.html
@@ -486,7 +490,11 @@ const SCENE_CENSUS_FN = `(brandHexes) => {
 // Run a midpoint census per scene. Reuses the active-page after scrubTimeline.
 async function censusScenes(page, sceneWindows, brandHexes) {
   await page.evaluate(`window.__sceneCensus = ${SCENE_CENSUS_FN}`);
-  await page.evaluate(`window.__applyClipVis = window.__applyClipVis || ${APPLY_CLIP_VIS_FN}`);
+  // Parenthesise the RHS — `||` binds tighter than `=`, so without the
+  // outer parens the parser sees `(__applyClipVis || (t)) => {…}` as a
+  // single arrow function with a malformed param list. With parens we get
+  // a clean assignment of the bare-arrow on the right.
+  await page.evaluate(`window.__applyClipVis = (window.__applyClipVis || (${APPLY_CLIP_VIS_FN}))`);
   // De-dupe: scrub once per scene at its midpoint, then read the census filtered
   // to the active scene id.
   const result = new Map();
@@ -514,6 +522,217 @@ async function censusScenes(page, sceneWindows, brandHexes) {
     }
   }
   return result;
+}
+
+// --- motion continuity ----------------------------------------------------
+// Goal: catch the "PowerPoint failure mode" before render — a scene whose
+// pixels barely change between adjacent timestamps reads as a static slide
+// even if the composition + copy alignment look fine on paper.
+//
+// Strategy per scene:
+//   1) Sample 4–9 timestamps inside the scene window: every 0.5s for the
+//      first 3s, then 25% / 50% / 75% of the remaining duration. Short
+//      scenes (≤3s) yield ~4 samples; 8s scenes yield 9 samples.
+//   2) Seek the timeline + scene-clip visibility to that t.
+//   3) Screenshot the comp via page.screenshot({clip}) clipped to the
+//      [data-composition-id] bounding box — comp viewport only, no chrome.
+//   4) For each adjacent pair within the same scene compare:
+//        - sha256(buf) identical → STATIC (zero motion at all)
+//        - else byte-diff: count of bytes where buf[i] !== prev[i]; if
+//          that's <2% of total → near-static
+//        - else moving (good)
+// This is a coarse heuristic — PNG byte-diff is not a perceptual hash, but
+// at the same viewport+codec the encoder is deterministic, so two visually
+// identical frames hash identically and a small visual change moves enough
+// bytes to clear 2%. Good enough to catch full-scene freezes.
+function motionTimestamps(start, duration) {
+  // Roughly 4–6 samples. First three seconds carry the most "settle"
+  // motion (entrance tweens) and the most "did anything start moving"
+  // signal — sample every 0.5s. After that we sample at 25/50/75% of the
+  // remaining duration to surface mid-scene freezes.
+  const ts = [];
+  const earlyEnd = Math.min(3, duration);
+  for (let dt = 0.5; dt <= earlyEnd + 1e-3; dt += 0.5) {
+    ts.push(start + dt);
+  }
+  if (duration > 3) {
+    const rest = duration - 3;
+    ts.push(start + 3 + rest * 0.25);
+    ts.push(start + 3 + rest * 0.5);
+    ts.push(start + 3 + rest * 0.75);
+  }
+  // Clamp + de-dupe + sort.
+  const clamped = ts
+    .map(t => Math.max(start + 0.05, Math.min(start + duration - 0.05, t)))
+    .map(t => Math.round(t * 100) / 100);
+  return [...new Set(clamped)].sort((a, b) => a - b);
+}
+
+async function checkMotionContinuity(browser, compPath, sceneWindows, durationS, slug, stamp) {
+  // Output dir for thumbnail PNGs (gitignored under tmp/).
+  const frameDir = path.join(projectRoot, "tmp", "verify-frames", `${slug}-${stamp}`);
+  fs.mkdirSync(frameDir, { recursive: true });
+
+  // Open a SECOND page in the SAME browser instance pointed at the file:// URL.
+  // Why not reuse the existing preview-server page? The hyperframes preview
+  // shell injects studio-editor chrome and (on this Windows env) appears to
+  // serve the comp HTML in a way that has unbalanced <script> tags — so
+  // pixel screenshots of that page render only the navy body bg with raw
+  // source dumped as text, regardless of seek state. The DOM-based checks
+  // (visible-text scrub, scene census) still work there because they read
+  // textContent, but pixel-diff needs a clean render.
+  //
+  // file:// loading sidesteps the preview-shell injection. Same browser,
+  // same context — no extra browser instance, just a focused 2nd tab.
+  // Per constraints: "DO NOT spawn a separate browser instance".
+  //
+  // Read the comp HTML to detect aspect from data-width/data-height. Falls
+  // back to 1920x1080 if not declared (most templates).
+  let viewportW = 1920, viewportH = 1080;
+  try {
+    const html = fs.readFileSync(compPath, "utf8").slice(0, 8000);
+    const wm = html.match(/data-width="(\d+)"/);
+    const hm = html.match(/data-height="(\d+)"/);
+    if (wm && hm) {
+      viewportW = +wm[1]; viewportH = +hm[1];
+    }
+  } catch {}
+  // Cap viewport to sane sizes (Chromium gets cranky above ~4000px).
+  viewportW = Math.max(320, Math.min(3840, viewportW));
+  viewportH = Math.max(320, Math.min(3840, viewportH));
+
+  const ctx = await browser.newContext({ viewport: { width: viewportW, height: viewportH } });
+  const page = await ctx.newPage();
+  // Load the comp HTML via file:// — bypass the preview server. Use POSIX-
+  // style path so Chromium parses the URL on Windows.
+  const fileUrl = "file:///" + compPath.replace(/\\/g, "/");
+  await page.goto(fileUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
+  await page.waitForFunction(
+    () => window.__timelines && Object.keys(window.__timelines).length > 0,
+    { timeout: 8000 }
+  );
+
+  // Inject the visibility helper. Parenthesise — `||` binds tighter than `=`.
+  await page.evaluate(`window.__applyClipVis = (window.__applyClipVis || (${APPLY_CLIP_VIS_FN}))`);
+
+  // Compute the comp's bounding box for the clip rect. With file:// loading
+  // the comp root has its real (1080x1920 / 1920x1080) rect.
+  let clipRect = null;
+  try {
+    const compRect = await page.evaluate(() => {
+      const el = document.querySelector("[data-composition-id]");
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { x: r.x, y: r.y, width: r.width, height: r.height };
+    });
+    if (compRect && compRect.width >= 50 && compRect.height >= 50) {
+      const cx = Math.max(0, Math.floor(compRect.x));
+      const cy = Math.max(0, Math.floor(compRect.y));
+      const cw = Math.max(1, Math.min(viewportW - cx, Math.round(compRect.width)));
+      const ch = Math.max(1, Math.min(viewportH - cy, Math.round(compRect.height)));
+      if (cw >= 50 && ch >= 50) {
+        clipRect = { x: cx, y: cy, width: cw, height: ch };
+      }
+    }
+  } catch { /* fall through to full viewport */ }
+
+  // Sort scenes by their start time so report order matches viewing order.
+  const orderedScenes = [...sceneWindows.entries()]
+    .sort((a, b) => a[1].start - b[1].start);
+
+  const perScene = []; // { sceneId, samples: [{ t, sha, bytes }], pairs: [{ aT, bT, kind, diffPct }] }
+
+  const sceneT0 = Date.now();
+  for (const [sceneId, w] of orderedScenes) {
+    // Build duration: end is inclusive on samples (lastT covered), so
+    // duration = end - start + 1 in the samples grid. Floor-clamp to 1s.
+    const duration = Math.max(1, w.end - w.start + 1);
+    const ts = motionTimestamps(w.start, duration);
+    const sceneSamples = [];
+    for (const t of ts) {
+      const seekT = Math.min(Math.max(t, 0.05), durationS - 0.05);
+      // Pause + seek + apply clip visibility — same primitives as
+      // scrubTimeline, no extra browser instance.
+      await page.evaluate((seek) => {
+        const tl = window.__timelines[Object.keys(window.__timelines)[0]];
+        tl.pause();
+        tl.seek(seek);
+        window.__applyClipVis(seek);
+      }, seekT);
+      const shotT0 = Date.now();
+      let buf;
+      try {
+        // Use a clip rect so we capture the comp viewport ONLY (not the
+        // preview shell chrome), and don't trip the locator's auto-scroll
+        // wait — which times out at ~3s per shot when scenes are toggled
+        // display:none. clip is fast and deterministic.
+        if (clipRect) {
+          buf = await page.screenshot({ type: "png", clip: clipRect, timeout: 3000 });
+        } else {
+          buf = await page.screenshot({ type: "png", timeout: 3000 });
+        }
+      } catch (err) {
+        // Last-resort fallback — small chance the page navigated mid-loop.
+        buf = await page.screenshot({ type: "png", timeout: 3000 });
+      }
+      if (process.env.VERIFY_DEBUG) {
+        const dt = Date.now() - shotT0;
+        if (dt > 500) console.log(`    shot scene=${sceneId} t=${seekT.toFixed(2)} ${buf.length}b ${dt}ms`);
+      }
+      const sha = crypto.createHash("sha256").update(buf).digest("hex");
+      const fname = `scene${sceneId || "x"}-t${seekT.toFixed(2)}.png`;
+      try { fs.writeFileSync(path.join(frameDir, fname), buf); } catch {}
+      sceneSamples.push({ t: seekT, sha, bytes: buf.length, buf });
+    }
+    // Adjacent-pair comparison within this scene.
+    const pairs = [];
+    for (let i = 1; i < sceneSamples.length; i++) {
+      const prev = sceneSamples[i - 1];
+      const curr = sceneSamples[i];
+      let kind, diffPct;
+      if (prev.sha === curr.sha) {
+        kind = "static";
+        diffPct = 0;
+      } else if (prev.buf.length !== curr.buf.length) {
+        // PNG sizes differ → encoder added at least one different chunk.
+        // Treat any size delta >2% as moving; smaller delta still
+        // counts as moving since byte counts already diverged.
+        const sizeDelta = Math.abs(prev.buf.length - curr.buf.length);
+        const pct = sizeDelta / Math.max(prev.buf.length, curr.buf.length);
+        kind = pct < 0.02 ? "near-static" : "moving";
+        diffPct = pct;
+      } else {
+        // Same length — count byte mismatches.
+        let diff = 0;
+        const len = prev.buf.length;
+        for (let k = 0; k < len; k++) {
+          if (prev.buf[k] !== curr.buf[k]) diff++;
+        }
+        const pct = diff / len;
+        kind = pct < 0.02 ? "near-static" : "moving";
+        diffPct = pct;
+      }
+      pairs.push({ aT: prev.t, bT: curr.t, kind, diffPct });
+    }
+    // Drop the buffer references now we're done — keeps the JSON payload
+    // small and lets GC reclaim ~5–25MB of frame data.
+    perScene.push({
+      sceneId,
+      windowStart: w.start,
+      windowEnd: w.end,
+      samples: sceneSamples.map(({ t, sha, bytes }) => ({ t, sha, bytes })),
+      pairs,
+    });
+    if (process.env.VERIFY_DEBUG) {
+      console.log(`  motion: scene ${sceneId} (${ts.length} samples) — total ${Date.now() - sceneT0}ms`);
+    }
+  }
+
+  // Close the dedicated motion-continuity context. Browser stays open for
+  // the caller (will be closed once verifier finishes).
+  try { await ctx.close(); } catch {}
+
+  return { frameDir, perScene };
 }
 
 // --- per-second scrub -----------------------------------------------------
@@ -558,6 +777,7 @@ async function scrubTimeline(page, durationS) {
 function categorize({
   samples, vttCues, copyJson, durationS, brandName, brandUrl,
   compHtml, tokenHexes, tokensPath, manifestAssets, manifestPath, sceneCensus,
+  motionContinuity,
 }) {
   const findings = {
     composition: [],
@@ -569,6 +789,7 @@ function categorize({
     brandPaletteUse: [],
     brandAssetUse: [],
     sceneVisualDensity: [],
+    motionContinuity: [],
   };
 
   // ---- composition: visible text per scene (length, alignment) -----------
@@ -947,6 +1168,81 @@ function categorize({
     });
   }
 
+  // ---- motion continuity ------------------------------------------------
+  // Per-scene PNG-byte-diff between adjacent timestamp samples (see
+  // checkMotionContinuity). Emit one finding per static / near-static pair,
+  // and escalate when a single scene racks up 2+ static pairs or all of its
+  // pairs are near-static (whole-scene freeze).
+  if (motionContinuity && Array.isArray(motionContinuity.perScene) && motionContinuity.perScene.length) {
+    for (const scene of motionContinuity.perScene) {
+      const staticPairs = scene.pairs.filter(p => p.kind === "static");
+      const nearPairs = scene.pairs.filter(p => p.kind === "near-static");
+      const nonMoving = staticPairs.length + nearPairs.length;
+
+      // (1) Whole-scene freeze: every pair is static OR near-static (and we
+      //     have at least 2 pairs to draw a conclusion from).
+      if (scene.pairs.length >= 2 && nonMoving === scene.pairs.length) {
+        const sceneDur = (scene.windowEnd - scene.windowStart + 1).toFixed(0);
+        findings.motionContinuity.push({
+          kind: "scene-frozen",
+          severity: "error",
+          scene: scene.sceneId,
+          pairCount: scene.pairs.length,
+          message: `scene ${scene.sceneId} is fully static across its ${sceneDur}s duration — no visible motion in any sampled pair`,
+        });
+        continue; // don't double-report individual moments for a frozen scene
+      }
+
+      // (2) Multiple static moments in same scene = "PowerPoint" hand-off.
+      if (staticPairs.length >= 2) {
+        findings.motionContinuity.push({
+          kind: "multiple-static",
+          severity: "error",
+          scene: scene.sceneId,
+          staticCount: staticPairs.length,
+          pairs: staticPairs.map(p => `${p.aT}s–${p.bT}s`),
+          message: `scene ${scene.sceneId} has ${staticPairs.length} consecutive static frames (${staticPairs.map(p => `${p.aT}s–${p.bT}s`).join(", ")}) — reads as PowerPoint, not video`,
+        });
+        // fall through — we still want to surface near-static moments
+      }
+
+      // (3) Single static or near-static moment → warn, one per pair.
+      for (const p of staticPairs) {
+        // If we already escalated via (2), skip the per-pair warns.
+        if (staticPairs.length >= 2) continue;
+        findings.motionContinuity.push({
+          kind: "static-moment",
+          scene: scene.sceneId,
+          atStart: p.aT,
+          atEnd: p.bT,
+          message: `scene ${scene.sceneId} at t=${p.aT}s–${p.bT}s: identical frames, no visible motion`,
+        });
+      }
+      for (const p of nearPairs) {
+        findings.motionContinuity.push({
+          kind: "near-static-moment",
+          scene: scene.sceneId,
+          atStart: p.aT,
+          atEnd: p.bT,
+          diffPct: p.diffPct,
+          message: `scene ${scene.sceneId} at t=${p.aT}s–${p.bT}s: near-static (${(p.diffPct * 100).toFixed(2)}% byte change)`,
+        });
+      }
+    }
+    // Add an "ok" line if no findings — useful for the markdown report.
+    if (findings.motionContinuity.length === 0) {
+      findings.motionContinuity.push({
+        kind: "ok",
+        message: `all ${motionContinuity.perScene.length} scenes show pixel motion between adjacent samples`,
+      });
+    }
+  } else {
+    findings.motionContinuity.push({
+      kind: "no-frames",
+      message: `motion continuity check did not run (no scene windows or screenshot failure)`,
+    });
+  }
+
   return findings;
 }
 
@@ -958,13 +1254,18 @@ function deriveVerdict(findings) {
   //   - zero var(--card-) refs in assembled <style> (palette bypassed)
   //   - both hero AND logo unused (visual identity absent)
   //   - 3+ consecutive text-only scenes (editorial slideshow)
+  //   - any motion-continuity error (scene-frozen / multiple-static)
   // We deliberately don't escalate `beat-headline-missing` to major: the comp
   // may have been hand-written or recut without exact-headline-substring
   // match, which is fine. It's a "watch" signal.
+  const motionMajor = (findings.motionContinuity || []).some(f =>
+    f.kind === "scene-frozen" || f.kind === "multiple-static"
+  );
   const newErrors =
     findings.brandPaletteUse.some(f => f.kind === "zero-var-refs") ||
     findings.brandAssetUse.some(f => f.kind === "visual-identity-absent") ||
-    findings.sceneVisualDensity.some(f => f.kind === "consecutive-text-only");
+    findings.sceneVisualDensity.some(f => f.kind === "consecutive-text-only") ||
+    motionMajor;
   const hasMajor =
     findings.placeholderLeakage.length > 0 ||
     findings.brandFidelity.some(f => f.kind === "brand-name-missing" || f.kind === "url-missing") ||
@@ -977,7 +1278,10 @@ function deriveVerdict(findings) {
     findings.audioCoverage.filter(f => f.kind !== "ok").length +
     findings.brandPaletteUse.filter(f => f.kind === "scene-bg-off-palette").length +
     findings.brandAssetUse.filter(f => f.kind === "asset-unused").length +
-    findings.sceneVisualDensity.filter(f => f.kind === "text-only-scene").length;
+    findings.sceneVisualDensity.filter(f => f.kind === "text-only-scene").length +
+    (findings.motionContinuity || []).filter(f =>
+      f.kind === "static-moment" || f.kind === "near-static-moment"
+    ).length;
   if (hasMajor) return "needs-fix";
   if (watchSignals > 2) return "watch";
   return "ship";
@@ -1033,6 +1337,7 @@ function writeMarkdownReport({ outPath, slug, template, tone, durationS, samples
   renderSection("Brand palette use", findings.brandPaletteUse, "no palette findings");
   renderSection("Brand asset use", findings.brandAssetUse, "no asset findings");
   renderSection("Scene visual density", findings.sceneVisualDensity, "no scene-density findings");
+  renderSection("Motion continuity", findings.motionContinuity, "no motion-continuity findings");
 
   lines.push("## Verdict");
   lines.push("");
@@ -1074,6 +1379,20 @@ function appendLedgerRow({ slug, template, tone, durationS, findings, verdict })
   if (findings.brandAssetUse.some(f => f.kind === "visual-identity-absent")) majorBits.push("hero+logo absent");
   const textOnly = findings.sceneVisualDensity.filter(f => f.kind === "text-only-scene").length;
   if (textOnly) majorBits.push(`${textOnly} text-only`);
+  // Motion continuity chips: per-scene freezes / static-moment counts.
+  const motion = findings.motionContinuity || [];
+  const frozenScenes = motion.filter(f => f.kind === "scene-frozen").map(f => f.scene);
+  if (frozenScenes.length) {
+    majorBits.push(`scene ${frozenScenes.join(",")} fully static`);
+  }
+  const multiStatic = motion.filter(f => f.kind === "multiple-static");
+  for (const m of multiStatic) {
+    majorBits.push(`scene ${m.scene}: ${m.staticCount} static moments`);
+  }
+  const staticMoments = motion.filter(f => f.kind === "static-moment").length;
+  const nearStaticMoments = motion.filter(f => f.kind === "near-static-moment").length;
+  if (staticMoments) majorBits.push(`${staticMoments} static moment${staticMoments === 1 ? "" : "s"}`);
+  if (nearStaticMoments) majorBits.push(`${nearStaticMoments} near-static`);
   const major = majorBits.length ? majorBits.join(", ") : "clean";
 
   const cells = [dateStr, slug, template || "—", tone || "—", `${durationS}s`, major, verdict];
@@ -1202,6 +1521,24 @@ try {
   console.warn(`  ! scene census failed: ${err.message}`);
 }
 
+// Compute the run stamp NOW so the motion-continuity frame dir can use it
+// (the same stamp later names the JSON + markdown report).
+const stamp = tsStamp();
+
+// Run motion-continuity check — capture comp-rect screenshots and PNG-byte-
+// diff between adjacent samples per scene. Catches "PowerPoint" failure
+// mode in <30s, before the 7-minute MP4 render. Uses a 2nd page in the
+// SAME browser instance pointed at the file:// URL (the preview server's
+// shell injects studio chrome that breaks pixel screenshots on this env).
+let motionContinuity = null;
+try {
+  motionContinuity = await checkMotionContinuity(
+    browser, compPath, sceneWindowsForCensus, durationS, slug, stamp
+  );
+} catch (err) {
+  console.warn(`  ! motion-continuity check failed: ${err.message}`);
+}
+
 await browser.close();
 
 // Read manifest.json (canonical asset list from pull-assets.mjs).
@@ -1258,11 +1595,12 @@ try {
 const findings = categorize({
   samples, vttCues, copyJson, durationS, brandName, brandUrl,
   compHtml, tokenHexes, tokensPath, manifestAssets, manifestPath, sceneCensus,
+  motionContinuity,
 });
 const verdict = deriveVerdict(findings);
 
 // --- write outputs --------------------------------------------------------
-const stamp = tsStamp();
+// stamp was computed pre-browser-close so motion-continuity frame dir aligns.
 const learnDir = path.join(projectRoot, "docs", "render-learnings");
 fs.mkdirSync(learnDir, { recursive: true });
 
@@ -1286,6 +1624,10 @@ const jsonPayload = {
   manifestPath: manifestPath ? path.relative(projectRoot, manifestPath).replace(/\\/g, "/") : null,
   manifestAssetCount: Array.isArray(manifestAssets) ? manifestAssets.length : 0,
   sceneCensus: Array.from(sceneCensus.entries()).map(([id, c]) => ({ id, ...c })),
+  motionContinuity: motionContinuity ? {
+    frameDir: path.relative(projectRoot, motionContinuity.frameDir).replace(/\\/g, "/"),
+    perScene: motionContinuity.perScene,
+  } : null,
   samples,
   findings,
   verdict,
@@ -1308,6 +1650,10 @@ const densityMajor = findings.sceneVisualDensity.some(f => f.kind === "consecuti
 console.log(`  brand palette use   ${findings.brandPaletteUse.length} entries${paletteMajor ? "  ← MAJOR" : ""}`);
 console.log(`  brand asset use     ${findings.brandAssetUse.length} entries${assetMajor ? "  ← MAJOR" : ""}`);
 console.log(`  scene visual density ${findings.sceneVisualDensity.length} entries${densityMajor ? " ← MAJOR" : ""}`);
+const motionMajor = (findings.motionContinuity || []).some(f =>
+  f.kind === "scene-frozen" || f.kind === "multiple-static"
+);
+console.log(`  motion continuity   ${findings.motionContinuity.length} entries${motionMajor ? "  ← MAJOR" : ""}`);
 console.log("");
 console.log(`◇ verdict: ${verdict} (${dt}s)`);
 console.log(`  json: ${path.relative(projectRoot, jsonOutPath).replace(/\\/g, "/")}`);

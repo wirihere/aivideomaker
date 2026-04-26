@@ -36,6 +36,31 @@ Structure:
 - Next time: verifier flags `brand fidelity` if `brandName` from copy.json
   doesn't appear in any per-second visible-text snapshot.
 
+## Motion continuity — two adjacent same-frame samples = static
+
+- _Initial entry._ A scene whose pixel content barely changes between adjacent
+  timestamps reads as a slide, not a video — even when the composition + copy
+  alignment look correct on paper. The eye locks onto the lack of motion before
+  it processes the headline.
+- The verifier samples 4–9 timestamps per scene (every 0.5s for the first 3s,
+  then 25%/50%/75% of remaining duration), screenshots the comp paint area,
+  hashes the PNG, and compares adjacent pairs. Identical hash = static (0%
+  byte change). <2% byte change = near-static. Anything else = moving (good).
+- Decision rules:
+  - 2+ static pairs in one scene → **error** ("PowerPoint" hand-off — bumps
+    verdict to `needs-fix`).
+  - All sampled pairs in a scene non-moving → **error** (whole-scene freeze).
+  - Single static or near-static pair → warn (counts toward `watch`).
+- Next time: when a render scores `watch` from motion alone, bias the
+  template toward continuous within-scene motion (drift, breathe, rotate,
+  audio-reactive pulse) rather than entrance-only animation. Templates with
+  3-4s scene durations need ≥1 motion event per second; templates with 6-8s
+  scenes need ambient motion across the whole window or the back half reads
+  as a slide.
+- Frames are saved to `tmp/verify-frames/<slug>-<stamp>/` for inspection;
+  diff two adjacent PNGs visually to confirm whether the byte-diff signal
+  reflects a real motion gap or just a tiny encoder fluctuation.
+
 ## Music tempo and scene timing
 
 Empirical rules of thumb derived from analysing every track in
