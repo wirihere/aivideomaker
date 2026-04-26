@@ -11,15 +11,17 @@
 //   2. copy generate      → <slug>.copy.json    (scripts/extract-copy.mjs, optional)
 //   3. asset pull         → assets/<slug>/      (scripts/pull-assets.mjs, optional)
 //   4. music pick         → candidate tracks    (scripts/pick-music.mjs, optional)
-//   5. composition assemble → index.html        (template + tokens + copy)
-//   6. quality gate       → npm run check       (lint + smoke)
-//   7. render             → renders/<slug>-<ts>-graded[-wm].mp4
+//   5. tts narration      → assets/voiceover/<slug>.mp3 (scripts/fetch-tts-edge.mjs, optional)
+//   6. composition assemble → index.html        (template + tokens + copy + audio)
+//   7. quality gate       → npm run check       (lint + smoke)
+//   8. render             → renders/<slug>-<ts>-graded[-wm].mp4
 //
 // Flags:
 //   --seconds=N        (default 30) — drives template choice
 //   --template=<name>  override auto-pick (social-reel | hero-promo | case-study | founder-story | testimonial)
 //   --name=<slug>      override URL-derived slug
 //   --with-music       actually wire the picked music into the composition
+//   --no-tts           skip narration synthesis (default: synthesize TTS from copy)
 //   --no-render        assemble + check, skip render (saves ~5min)
 //   --auto-fix         run `npm run fix:apply` if quality gate fails
 //   --keep-artifacts   don't restore index.html at end (for inspection)
@@ -69,6 +71,7 @@ if (!url || !/^https?:\/\//.test(url)) {
 
 const seconds = Math.max(5, parseInt(flags.seconds ?? "30", 10));
 const withMusic = !!flags["with-music"];
+const skipTts = !!flags["no-tts"];
 // In dry-run we never render — the whole point is to exercise wiring without
 // burning quota or wall-clock. OR with the existing flag so both work.
 const skipRender = !!flags["no-render"] || dryRun;
@@ -188,7 +191,7 @@ function makeStageRunner(total) {
   let i = 0;
   // Allow callers to skip indices that were taken by a prior parallel batch.
   // After fanning out stages 2-4 in parallel we set `runner.i = 4` so the
-  // next sequential stage prints `[5/7]`.
+  // next sequential stage prints `[5/8]`.
   const api = async function stage(label, fn) {
     i += 1;
     const labelText = `${label}`.padEnd(20);
@@ -363,14 +366,17 @@ if (dryRun) {
 } else {
   console.log(`▶ video: ${url}`);
 }
-console.log(`  slug: ${slug} · target seconds: ${seconds} · render: ${skipRender ? "no" : "yes"}${withMusic ? " · music: on" : ""}`);
+console.log(`  slug: ${slug} · target seconds: ${seconds} · render: ${skipRender ? "no" : "yes"}${withMusic ? " · music: on" : ""}${skipTts ? " · tts: off" : " · tts: on"}`);
 console.log("");
 
-const stage = makeStageRunner(7);
+const TOTAL_STAGES = 8;
+const stage = makeStageRunner(TOTAL_STAGES);
 let copyJsonPath = null;
 let assetsDir = null;
 let musicCandidates = null;
 let chosenTemplate = null;
+let ttsAudioPath = null;
+let ttsDurationSec = null;
 
 let stageError = null;
 
@@ -440,7 +446,7 @@ try {
   const _bucket = bucketSeconds(seconds);
 
   // Deferred warnings — surfaced after the parallel batch finishes so they
-  // don't garble the in-flight `[N-M/7] (parallel: …)` header.
+  // don't garble the in-flight `[N-M/8] (parallel: …)` header.
   const deferredWarnings = [];
 
   const parallelResults = await runStagesInParallel(
@@ -552,10 +558,10 @@ try {
         },
       },
     ],
-    { startIndex: stage.i, total: 7 },
+    { startIndex: stage.i, total: TOTAL_STAGES },
   );
   // Bump the sequential counter past the parallel batch so the next stage
-  // prints `[5/7]` not `[2/7]`.
+  // prints `[5/8]` not `[2/8]`.
   stage.i = stage.i + parallelResults.length;
 
   // Surface any captured warnings from the parallel batch.
@@ -577,7 +583,55 @@ try {
     throw err;
   }
 
-  // ----- Stage 5: composition assemble ------------------------------------
+  // ----- Stage 5: tts narration -------------------------------------------
+  // Synthesize Edge TTS audio from copy.json's `narration` field. Land at
+  // assets/voiceover/<slug>.mp3 (+ word-level VTT). Soft-fail on:
+  //   · --no-tts flag
+  //   · empty/missing narration text (typical for --dry-run)
+  //   · network failure / Edge protocol break
+  // The assemble stage checks for the mp3 on disk and only wires <audio> if
+  // the file exists, so a soft skip here just yields a music-only comp.
+  await stage("tts narration", async () => {
+    if (skipTts) return { output: "skipped (--no-tts)", soft: true };
+
+    let copy = {};
+    try { copy = JSON.parse(fs.readFileSync(copyJsonPath, "utf8")); } catch {}
+    const narrationText = sanitizeForTts(buildNarrationScript(copy, { seconds }));
+    if (!narrationText) {
+      // Empty narration — typical for --dry-run + thin/missing copy.json.
+      return { output: "skipped (empty narration)", soft: true };
+    }
+
+    const ttsScript = path.join(__dirname, "fetch-tts-edge.mjs");
+    if (!fs.existsSync(ttsScript)) {
+      return { output: "skipped (fetch-tts-edge.mjs not found)", soft: true };
+    }
+
+    if (dryRun) {
+      // No real network/spawn in dry-run. Synthesize a placeholder mp3 path so
+      // the rest of the pipeline keeps shape, but DON'T write the file (the
+      // assemble stage's existsSync check will gate the <audio> injection,
+      // matching the no-narration path the smoke test relies on).
+      await sleep(rand(50, 150));
+      return { output: "skipped (dry-run)", soft: true };
+    }
+
+    const r = runNode(ttsScript,
+      [narrationText, `${slug}.mp3`, `--voice=en-US-JennyNeural`],
+      { quiet: true });
+    const expectedPath = path.join(projectRoot, "assets", "voiceover", `${slug}.mp3`);
+    if (r.status !== 0 || !fs.existsSync(expectedPath)) {
+      const stderr = (r.stderr || r.stdout || "").trim().split("\n").slice(-3).join("\n");
+      console.warn(`    ⚠ fetch-tts-edge.mjs failed (exit ${r.status}); continuing without narration\n      ${stderr.replace(/\n/g, "\n      ")}`);
+      return { output: "skipped (tts failed)", soft: true };
+    }
+    ttsAudioPath = expectedPath;
+    ttsDurationSec = readVttDuration(expectedPath.replace(/\.mp3$/, ".vtt")) || Math.min(seconds, 30);
+    const wordCount = narrationText.split(/\s+/).filter(Boolean).length;
+    return `assets/voiceover/${slug}.mp3 (${wordCount} words)`;
+  });
+
+  // ----- Stage 6: composition assemble ------------------------------------
   // Pick a template, copy to index.html, rewrite paths, swap tokens, inject copy.
   await stage("assemble", () => {
     backupIndex();
@@ -608,15 +662,58 @@ try {
     } catch {}
     html = applyCopyToTemplate(html, copy, resolved.name);
 
+    // Inject <audio> tags for TTS narration (track 9) + music bed (track 8).
+    // Both are gated by file existence on disk, so the same code path handles
+    // music-only (--no-tts), tts-only (--with-music absent), full-stack, or
+    // dry-run (no files = no <audio> injected, lint stays clean).
+    const audioTags = [];
+    const compSeconds = TEMPLATE_REGISTRY[resolved.name]?.seconds || seconds || 30;
+
+    // Music — only if --with-music + a downloaded track is on disk.
+    if (withMusic) {
+      const musicSrc = findMusicTrackPath(slug);
+      if (musicSrc) {
+        audioTags.push(buildAudioTag({
+          id: "audio-music",
+          src: musicSrc,
+          duration: compSeconds,
+          trackIndex: 8,
+          volume: 0.18,
+        }));
+      }
+    }
+
+    // Narration — only if Stage 5 produced an mp3 on disk (or one was left
+    // over from a prior run; either way, an existing file means a comp can
+    // legitimately wire it). Prefer the in-memory ttsDurationSec when Stage 5
+    // ran this session; otherwise re-read the sibling VTT to avoid stretching
+    // a short narration to fill the comp.
+    const ttsExpected = path.join(projectRoot, "assets", "voiceover", `${slug}.mp3`);
+    if (fs.existsSync(ttsExpected)) {
+      const vttDur = ttsDurationSec || readVttDuration(ttsExpected.replace(/\.mp3$/, ".vtt"));
+      const dur = vttDur || compSeconds;
+      audioTags.push(buildAudioTag({
+        id: "audio-narration",
+        src: `assets/voiceover/${slug}.mp3`,
+        duration: Math.min(dur, compSeconds),
+        trackIndex: 9,
+        volume: 0.95,
+      }));
+    }
+
+    if (audioTags.length) {
+      html = injectAudioTags(html, audioTags);
+    }
+
     fs.writeFileSync(indexPath, html);
 
     const note = resolved.fallbackFor
       ? `index.html (fallback ${resolved.name} for ${resolved.fallbackFor}; was: ${priorIndexLabel})`
       : `index.html (was: ${priorIndexLabel})`;
-    return note;
+    return audioTags.length ? `${note} +${audioTags.length} audio` : note;
   });
 
-  // ----- Stage 6: quality gate --------------------------------------------
+  // ----- Stage 7: quality gate --------------------------------------------
   await stage("quality gate", () => {
     if (dryRun) {
       // In dry-run we run lint only — the full `check` includes a Playwright
@@ -657,7 +754,7 @@ try {
     throw new Error(`quality gate failed at \`npm run ${result.gate}\` (exit ${result.r.status})\n----\n${tail}`);
   });
 
-  // ----- Stage 7: render --------------------------------------------------
+  // ----- Stage 8: render --------------------------------------------------
   await stage("render", () => {
     if (skipRender) {
       return { output: `skipped (--no-render)`, soft: true };
@@ -665,7 +762,7 @@ try {
     const beforeFiles = listRendersDir();
     // The render child emits its own progress bar (via render-progress.mjs).
     // Drop a newline first so the bar gets its own row instead of clobbering
-    // the stage runner's `[7/7] render` label. The closing `→ output (Xs)`
+    // the stage runner's `[8/8] render` label. The closing `→ output (Xs)`
     // lands on a fresh row because the bar's done() ends with \n.
     process.stdout.write("\n");
     const r = runNpm("render", ["--watermark"], { quiet: false });
@@ -860,4 +957,168 @@ function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   }[c]));
+}
+
+// =============================================================================
+// Narration script synthesis + Edge TTS sanitisation
+// =============================================================================
+// Build a 75-90 word spoken narration from the copy.json. Prefer the canonical
+// `copy.narration` field (extract-copy.mjs already produces it, sanitised for
+// TTS). Fall back to assembling from beats + cta when narration is empty.
+function buildNarrationScript(copy, { seconds }) {
+  if (!copy || typeof copy !== "object") return "";
+
+  // 1. Canonical path — extract-copy.mjs writes a sanitised narration. Use as-is.
+  if (typeof copy.narration === "string" && copy.narration.trim().length > 20) {
+    return copy.narration.trim();
+  }
+
+  // 2. Fallback — synthesise from beats + cta. Cap at ~90 words for 30s.
+  const targetWords = Math.min(110, Math.max(30, Math.round((seconds || 30) * 2.8)));
+  const parts = [];
+  const beats = Array.isArray(copy.beats) ? copy.beats : [];
+  for (const b of beats) {
+    if (b.headline) parts.push(String(b.headline).trim().replace(/\s+/g, " "));
+    if (b.body)     parts.push(String(b.body).trim().replace(/\s+/g, " "));
+  }
+  const ctaTagline = copy.cta?.tagline ? String(copy.cta.tagline).trim() : "";
+  if (ctaTagline) parts.push(ctaTagline);
+
+  // Join, dedupe punctuation, then word-cap.
+  let joined = parts
+    .filter(Boolean)
+    .map(s => s.endsWith(".") || s.endsWith("!") || s.endsWith("?") ? s : `${s}.`)
+    .join(" ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const words = joined.split(/\s+/);
+  if (words.length > targetWords) {
+    joined = words.slice(0, targetWords).join(" ").replace(/[,;:]?\s*$/, "") + ".";
+  }
+  return joined;
+}
+
+// Defensive Maori-word sanitiser. The canonical extract-copy.mjs ttsSafetyWorker
+// already runs this map, but if the orchestrator gets a hand-edited copy.json
+// (or the dry-run synthesises from a template that bypasses sanitisation),
+// re-apply here as a belt-and-braces guard. Edge TTS (en-US-JennyNeural)
+// mispronounces te reo, per the user's standing memory rule.
+//
+// Patterns are constructed inside the function (not module-level) so the
+// orchestrator's main pipeline — which runs at top level — can call this
+// function without hitting the temporal-dead-zone on module-level consts
+// declared further down the file.
+function sanitizeForTts(text) {
+  if (!text) return "";
+  const patterns = [
+    [/\bAotearoa\b/g, "New Zealand"],
+    [/\bTāmaki Makaurau\b/gi, "Auckland"],
+    [/\bTamaki Makaurau\b/gi, "Auckland"],
+    [/\bTe Whanganui-a-Tara\b/gi, "Wellington"],
+    [/\bŌtautahi\b/gi, "Christchurch"],
+    [/\bOtautahi\b/gi, "Christchurch"],
+    [/\bkia ora\b/gi, "hello"],
+    [/\bwhānau\b/gi, "family"],
+    [/\bwhanau\b/gi, "family"],
+    [/\bmana\b/gi, "respect"],
+    [/\bmahi\b/gi, "work"],
+    [/\bawhi\b/gi, "support"],
+    [/\baroha\b/gi, "love"],
+    [/\bkaupapa\b/gi, "purpose"],
+    [/\bhapū\b/gi, "community"],
+    [/\bhapu\b/gi, "community"],
+    [/\biwi\b/gi, "community"],
+    [/\bmarae\b/gi, "meeting place"],
+    [/\bngā\b/gi, "the"],
+    [/\btēnā\b/gi, "greetings"],
+  ];
+  let out = String(text);
+  for (const [re, repl] of patterns) out = out.replace(re, repl);
+  return out.replace(/\s{2,}/g, " ").trim();
+}
+
+// Read the LAST cue end-time from a Whisper-style VTT file. Used to set the
+// <audio> tag's data-duration so the TTS doesn't get truncated. Returns null
+// if the VTT can't be parsed — the caller falls back to comp duration.
+function readVttDuration(vttPath) {
+  try {
+    if (!fs.existsSync(vttPath)) return null;
+    const txt = fs.readFileSync(vttPath, "utf8");
+    // Cue lines look like: "00:00:01.234 --> 00:00:02.567"
+    const matches = [...txt.matchAll(/(\d{2}):(\d{2}):(\d{2})\.(\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})\.(\d{3})/g)];
+    if (!matches.length) return null;
+    const last = matches[matches.length - 1];
+    const h = parseInt(last[5], 10);
+    const m = parseInt(last[6], 10);
+    const s = parseInt(last[7], 10);
+    const ms = parseInt(last[8], 10);
+    return h * 3600 + m * 60 + s + ms / 1000;
+  } catch { return null; }
+}
+
+// =============================================================================
+// Audio wiring (music + narration)
+// =============================================================================
+// Find the on-disk path for the picked music track. Priority:
+//   1. Track #1 in compositions/<slug>.music.json with an existing local_file
+//   2. assets/music/<top-track.slug>.mp3 (the path pick-music's --download writes)
+// Returns a project-relative POSIX path, or null if none found.
+function findMusicTrackPath(slug) {
+  const musicJsonPath = path.join(projectRoot, "compositions", `${slug}.music.json`);
+  if (!fs.existsSync(musicJsonPath)) return null;
+  let data;
+  try { data = JSON.parse(fs.readFileSync(musicJsonPath, "utf8")); }
+  catch { return null; }
+  const tracks = Array.isArray(data?.tracks) ? data.tracks : [];
+  if (!tracks.length) return null;
+
+  // 1. The first track with a working local_file.
+  for (const t of tracks) {
+    if (t.local_file) {
+      const abs = path.isAbsolute(t.local_file)
+        ? t.local_file
+        : path.join(projectRoot, t.local_file);
+      if (fs.existsSync(abs)) {
+        return path.relative(projectRoot, abs).replace(/\\/g, "/");
+      }
+    }
+  }
+  // 2. Inferred path from --download convention.
+  const top = tracks[0];
+  if (top?.slug) {
+    const slugSafe = String(top.slug).replace(/[^a-z0-9-]/gi, "-").toLowerCase();
+    const inferred = path.join(projectRoot, "assets", "music", `${slugSafe}.mp3`);
+    if (fs.existsSync(inferred)) {
+      return `assets/music/${slugSafe}.mp3`;
+    }
+  }
+  return null;
+}
+
+// Build a single <audio> tag string for HyperFrames. Mirrors the canonical
+// pattern from compositions/kindred-production-30s.html: class="clip", a
+// unique data-track-index, full-comp data-start/data-duration, data-volume.
+function buildAudioTag({ id, src, duration, trackIndex, volume }) {
+  const dur = (Math.round(Number(duration) * 100) / 100).toString();
+  return `  <audio id="${id}" src="${src}" data-start="0" data-duration="${dur}" data-track-index="${trackIndex}" data-volume="${volume}" class="clip" preload="auto"></audio>`;
+}
+
+// Inject one or more <audio> tags into the assembled index.html. Insertion
+// point: immediately after the root `<div … class="comp clip" … data-start=… >`
+// open-tag (matches kindred-production-30s.html convention — audio tags live
+// inside the comp wrapper so they participate in the same timeline). Falls
+// back to inserting before `</body>` if the comp wrapper isn't found.
+function injectAudioTags(html, tags) {
+  const block = `\n  <!-- ============== AUDIO TRACKS (orchestrator) ============== -->\n${tags.join("\n")}\n`;
+  // Match the comp wrapper opening tag (greedy across attributes, single tag).
+  const compOpenRe = /(<div\b[^>]*\bclass="comp clip"[^>]*>)/i;
+  if (compOpenRe.test(html)) {
+    return html.replace(compOpenRe, (m) => `${m}${block}`);
+  }
+  // Fallback: just before </body>.
+  if (/<\/body>/i.test(html)) {
+    return html.replace(/<\/body>/i, `${block}\n</body>`);
+  }
+  // Last resort: append.
+  return html + block;
 }
