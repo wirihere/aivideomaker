@@ -91,10 +91,11 @@ if (flags.framework) {
 const url = positional[0];
 if (!url || !/^https?:\/\//.test(url)) {
   console.error("Usage:");
-  console.error("  URL mode:       node scripts/extract-copy.mjs <https://example.com> [--template=warm-community] [--seconds=30] [--name=<slug>]");
+  console.error("  URL mode:       node scripts/extract-copy.mjs <https://example.com> [--template=warm-community] [--seconds=30] [--name=<slug>] [--structural=<testimonial|founder-story|product-launch>]");
   console.error("  Framework mode: node scripts/extract-copy.mjs --framework=<name> --brand=\"<one-line description>\" [--vibe=kinetic-pop] [--duration=30] [--dry-run] [--out=path]");
   console.error("Templates:  warm-community | kinetic-pop | documentary | quiet-premium");
   console.error("Seconds:    15 | 30 | 60");
+  console.error("Structural: testimonial | founder-story | product-launch (optional — opts in to person/launch-date harvest)");
   console.error(`Frameworks: ${SUPPORTED_FRAMEWORKS.join(" | ")}`);
   process.exit(1);
 }
@@ -104,6 +105,19 @@ const SECONDS_OK = [15, 30, 60];
 
 const template = flags.template ?? "warm-community";
 const seconds = parseInt(flags.seconds ?? "30", 10);
+
+// Structural template (e.g. testimonial, founder-story, product-launch) — used
+// only as a gate for the optional personFieldsWorker. Does NOT change the
+// vibe/narration pipeline, so it's intentionally a separate flag from
+// --template (which selects voice). Default null = no extra extraction.
+const structuralTemplate = typeof flags.structural === "string"
+  ? flags.structural
+  : null;
+const STRUCTURAL_TEMPLATES_NEEDING_PERSON_FIELDS = new Set([
+  "testimonial",
+  "founder-story",
+  "product-launch",
+]);
 
 if (!TEMPLATES.includes(template)) {
   console.error(`✗ Unknown template: ${template}. Pick from: ${TEMPLATES.join(", ")}`);
@@ -128,6 +142,9 @@ const preset = PRESETS[seconds];
 
 console.log(`▶ extract-copy "${slug}" from ${url}`);
 console.log(`  template: ${template} · seconds: ${seconds} · target ${preset.narrLow}-${preset.narrHigh} words · ${preset.beatCount} beats`);
+if (structuralTemplate) {
+  console.log(`  structural: ${structuralTemplate}${STRUCTURAL_TEMPLATES_NEEDING_PERSON_FIELDS.has(structuralTemplate) ? " (will harvest person/launch fields)" : ""}`);
+}
 
 // =====================================================================
 // 1. scrapeWorker — curl the URL, extract semantic copy.
@@ -230,7 +247,13 @@ function scrapeWorker(targetUrl) {
     `  [scrape] title="${title}" · meta=${metaDescription ? metaDescription.length + "ch" : "—"} · h1=${headings.h1.length} · h2=${headings.h2.length} · h3=${headings.h3.length} · p=${paragraphs.length} · li=${listItems.length}`
   );
 
-  return { title, metaDescription, headings, paragraphs, listItems, ctaText };
+  // `rawHtml` is the original (un-stripped) HTML so personFieldsWorker can
+  // search <script type="application/ld+json"> blocks etc.; `strippedHtml` is
+  // the same body with <script>/<style>/<noscript> removed for tag walking.
+  return {
+    title, metaDescription, headings, paragraphs, listItems, ctaText,
+    rawHtml: html, strippedHtml: stripped,
+  };
 }
 
 // =====================================================================
@@ -597,6 +620,244 @@ function ttsSafetyWorker(narration) {
 }
 
 // =====================================================================
+// 6. personFieldsWorker — harvest optional template-specific fields:
+//
+//    - customerName / customerRole  (testimonial templates)
+//    - founderName  / founderRole   (founder-story templates)
+//    - launchDate                   (product-launch templates)
+//
+// Runs only when `--structural=<name>` opts in to one of:
+//   testimonial | founder-story | product-launch
+//
+// Returns `null` for any field it can't pin down with confidence — we
+// never invent customer/founder names (memory: no fake facts about real
+// brands). The render pipeline falls back to brandName / kicker / CTA verb
+// if the field is null, so missing values degrade gracefully.
+//
+// Sources we look at, in order of trust:
+//   1. schema.org JSON-LD (Person, Review, Organization.founder, Event,
+//      Product.releaseDate). Hand-tuned by the brand → highest signal.
+//   2. Microdata / RDFa hints (`itemtype` / `property` on visible blocks).
+//   3. HTML pattern matches in the rendered copy: "Meet our founder, X",
+//      "X, Co-Founder", "Available <date>", review/quote attributions.
+//
+// We deliberately keep this conservative — false positives are worse than
+// nulls because templates have safe fallbacks but injected wrong names hit
+// the screen verbatim.
+// =====================================================================
+
+function personFieldsWorker(scraped, { structuralTemplate }) {
+  // Default — populate ALL three pairs as null; they're optional schema
+  // fields and downstream template-injection treats null as "skip / fall back".
+  const empty = {
+    customerName: null,
+    customerRole: null,
+    founderName: null,
+    founderRole: null,
+    launchDate: null,
+  };
+  if (!structuralTemplate || !STRUCTURAL_TEMPLATES_NEEDING_PERSON_FIELDS.has(structuralTemplate)) {
+    return empty;
+  }
+
+  const raw = scraped.rawHtml || "";
+  const stripped = scraped.strippedHtml || "";
+  if (!raw) return empty;
+
+  // ----- 1. Collect JSON-LD blocks (the strongest signal). ------------
+  // schema.org snippets are wrapped in <script type="application/ld+json">…</script>.
+  // The exact keys we care about live under @type Person, Review, Organization,
+  // Product, Event, NewsArticle (PR-style press release).
+  const ldBlocks = [];
+  for (const m of raw.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
+    const txt = m[1].trim();
+    if (!txt) continue;
+    try {
+      const parsed = JSON.parse(txt);
+      if (Array.isArray(parsed)) ldBlocks.push(...parsed);
+      else if (parsed && parsed["@graph"] && Array.isArray(parsed["@graph"])) ldBlocks.push(...parsed["@graph"]);
+      else ldBlocks.push(parsed);
+    } catch {
+      // Some sites emit malformed JSON-LD — skip silently.
+    }
+  }
+
+  // Walk a node + nested children, collecting nodes whose @type matches the
+  // requested set (case-insensitive, supports arrays).
+  const collectByType = (typeNames) => {
+    const wanted = new Set(typeNames.map((t) => t.toLowerCase()));
+    const out = [];
+    const visit = (node) => {
+      if (!node || typeof node !== "object") return;
+      const t = node["@type"];
+      const types = Array.isArray(t) ? t : (t ? [t] : []);
+      if (types.some((x) => typeof x === "string" && wanted.has(x.toLowerCase()))) out.push(node);
+      // Recurse into nested known props.
+      for (const key of Object.keys(node)) {
+        const v = node[key];
+        if (Array.isArray(v)) v.forEach(visit);
+        else if (v && typeof v === "object") visit(v);
+      }
+    };
+    ldBlocks.forEach(visit);
+    return out;
+  };
+
+  // Helper: pull a person's display name + role/jobTitle from a JSON-LD node.
+  const personFromNode = (node) => {
+    if (!node) return null;
+    let name = null;
+    if (typeof node.name === "string") name = node.name;
+    else if (node.name && typeof node.name === "object" && typeof node.name["@value"] === "string") name = node.name["@value"];
+    else if (typeof node.givenName === "string" && typeof node.familyName === "string") name = `${node.givenName} ${node.familyName}`;
+    if (typeof name !== "string") return null;
+    name = name.replace(/\s+/g, " ").trim();
+    if (!name || name.length < 2 || name.length > 60) return null;
+    let role = null;
+    for (const key of ["jobTitle", "role", "description"]) {
+      const v = node[key];
+      if (typeof v === "string" && v.trim().length >= 2 && v.trim().length <= 80) { role = v.trim(); break; }
+    }
+    return { name, role };
+  };
+
+  const out = { ...empty };
+
+  // ----- 2. Customer (testimonial) ------------------------------------
+  if (structuralTemplate === "testimonial") {
+    // 2a. JSON-LD Review: { author: Person|string, reviewBody, … }
+    const reviews = collectByType(["Review"]);
+    for (const r of reviews) {
+      const author = r.author;
+      let person = null;
+      if (typeof author === "string") person = { name: author.trim(), role: null };
+      else if (author && typeof author === "object") person = personFromNode(author);
+      if (person && person.name) {
+        out.customerName = person.name;
+        out.customerRole = person.role;
+        break;
+      }
+    }
+    // 2b. Fallback: <figure>/<blockquote> with cite + small role label.
+    //     Look for <cite>Name</cite>, then a sibling chip with "—" or a
+    //     comma-separated role.
+    if (!out.customerName) {
+      // Pattern: <blockquote>"…"</blockquote><cite>Mei Tan, Operations Lead</cite>
+      const m = stripped.match(/<cite\b[^>]*>\s*([A-Z][A-Za-z'\-\s]{1,40}?)(?:\s*[,—–-]\s*([A-Za-z'\-\s,&]{2,60}))?\s*<\/cite>/);
+      if (m) {
+        const candName = m[1].trim();
+        if (candName.split(/\s+/).length >= 2) {
+          out.customerName = candName;
+          if (m[2]) out.customerRole = m[2].trim().replace(/\s+/g, " ");
+        }
+      }
+    }
+  }
+
+  // ----- 3. Founder (founder-story) -----------------------------------
+  if (structuralTemplate === "founder-story") {
+    // 3a. JSON-LD Organization.founder
+    const orgs = collectByType(["Organization", "Corporation", "LocalBusiness"]);
+    for (const org of orgs) {
+      const f = org.founder ?? org.founders;
+      const cands = Array.isArray(f) ? f : (f ? [f] : []);
+      for (const c of cands) {
+        const person = typeof c === "string"
+          ? { name: c.trim(), role: "Founder" }
+          : personFromNode(c);
+        if (person && person.name) {
+          out.founderName = person.name;
+          out.founderRole = person.role || "Founder";
+          break;
+        }
+      }
+      if (out.founderName) break;
+    }
+    // 3b. JSON-LD Person with jobTitle containing "founder|ceo|chief".
+    if (!out.founderName) {
+      const persons = collectByType(["Person"]);
+      for (const p of persons) {
+        const person = personFromNode(p);
+        if (!person) continue;
+        if (person.role && /\b(founder|co-?founder|ceo|chief|owner)\b/i.test(person.role)) {
+          out.founderName = person.name;
+          out.founderRole = person.role;
+          break;
+        }
+      }
+    }
+    // 3c. Fallback: HTML pattern "Meet our founder, X" / "Founded by X".
+    if (!out.founderName) {
+      const patterns = [
+        /(?:meet (?:our|the))\s+(?:co-?)?founder[,:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z'\-]+){1,2})/i,
+        /founded by\s+([A-Z][a-z]+(?:\s+[A-Z][a-z'\-]+){1,2})/i,
+        /([A-Z][a-z]+(?:\s+[A-Z][a-z'\-]+){1,2})\s*[,—–-]\s*(?:co-?)?founder\b/,
+      ];
+      for (const re of patterns) {
+        const m = stripped.match(re);
+        if (m && m[1]) {
+          out.founderName = m[1].trim();
+          if (!out.founderRole) {
+            // Sniff a role nearby ("Co-Founder & CEO").
+            const roleMatch = stripped.match(new RegExp(`${m[1].replace(/[-\\^$*+?.()|[\\]{}]/g, "\\$&")}[^<]{0,80}?\\b((?:co-?)?founder(?:[^.<]{0,40})?)`, "i"));
+            out.founderRole = roleMatch ? roleMatch[1].trim() : "Founder";
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  // ----- 4. Launch date (product-launch) ------------------------------
+  if (structuralTemplate === "product-launch") {
+    // 4a. JSON-LD Product.releaseDate / datePublished
+    const products = collectByType(["Product", "SoftwareApplication", "MobileApplication"]);
+    for (const p of products) {
+      const d = p.releaseDate || p.datePublished;
+      if (typeof d === "string" && d.trim().length >= 4) { out.launchDate = d.trim(); break; }
+    }
+    // 4b. JSON-LD Event.startDate
+    if (!out.launchDate) {
+      const events = collectByType(["Event"]);
+      for (const e of events) {
+        const d = e.startDate;
+        if (typeof d === "string" && d.trim().length >= 4) { out.launchDate = d.trim(); break; }
+      }
+    }
+    // 4c. NewsArticle.datePublished (press releases announcing a launch).
+    if (!out.launchDate) {
+      const news = collectByType(["NewsArticle", "Article", "PressRelease"]);
+      for (const n of news) {
+        const d = n.datePublished;
+        if (typeof d === "string" && d.trim().length >= 4) { out.launchDate = d.trim(); break; }
+      }
+    }
+    // 4d. Fallback: HTML pattern matching common launch phrasing.
+    if (!out.launchDate) {
+      const patterns = [
+        /\bAvailable\s+(?:from\s+|on\s+)?([A-Z][a-z]+\s+\d{1,2},?\s+\d{4})/,
+        /\bLaunch(?:ing|es)\s+(?:on\s+)?([A-Z][a-z]+\s+\d{1,2},?\s+\d{4})/,
+        /\bComing\s+([A-Z][a-z]+\s+\d{4})/,
+        /\b(\d{4}-\d{2}-\d{2})\b/, // bare ISO date — last resort
+      ];
+      for (const re of patterns) {
+        const m = stripped.match(re);
+        if (m && m[1]) { out.launchDate = m[1].trim(); break; }
+      }
+    }
+  }
+
+  // Tidy log line — only mention fields we actually populated.
+  const populated = Object.entries(out).filter(([, v]) => v !== null && v !== "");
+  if (populated.length) {
+    console.log(`  [person-fields] harvested: ${populated.map(([k, v]) => `${k}="${String(v).slice(0, 40)}"`).join(", ")}`);
+  } else {
+    console.log(`  [person-fields] no candidates found for ${structuralTemplate} (fields will be null — template fallbacks apply)`);
+  }
+  return out;
+}
+
+// =====================================================================
 // Run the pipeline.
 // =====================================================================
 const scraped = scrapeWorker(url);
@@ -679,6 +940,13 @@ const cta = {
 };
 
 // =====================================================================
+// Optional template-specific person/launch-date fields. Skipped entirely
+// unless --structural=<testimonial|founder-story|product-launch>. Returns
+// an object with all five keys; nulls mean "not found, fall back".
+// =====================================================================
+const personFields = personFieldsWorker(scraped, { structuralTemplate });
+
+// =====================================================================
 // Build final output document and write it.
 // =====================================================================
 const COPY_SCHEMA = {
@@ -690,11 +958,25 @@ const COPY_SCHEMA = {
   narration,
   beats,
   cta,
+  // Optional fields — only emitted into the JSON when this run is for a
+  // structural template that needs them. Existing copy.json files written
+  // before this addition stay valid: applyCopyToTemplate() reads the keys
+  // with `?.` and falls back to brandName / kicker / CTA verb when absent.
+  ...(structuralTemplate && STRUCTURAL_TEMPLATES_NEEDING_PERSON_FIELDS.has(structuralTemplate)
+    ? {
+        customerName: personFields.customerName,
+        customerRole: personFields.customerRole,
+        founderName: personFields.founderName,
+        founderRole: personFields.founderRole,
+        launchDate: personFields.launchDate,
+      }
+    : {}),
   // Diagnostic — useful for the orchestrator to know how the document was built.
   meta: {
     generatedAt: new Date().toISOString().slice(0, 10), // date only, deterministic
     wordCount: narration.split(/\s+/).filter(Boolean).length,
     beatCount: beats.length,
+    structuralTemplate: structuralTemplate || null,
     sourcedFrom: {
       metaDescription: !!scraped.metaDescription,
       h1Count: scraped.headings.h1.length,

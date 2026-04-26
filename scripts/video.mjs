@@ -826,8 +826,11 @@ try {
             fs.writeFileSync(copyJsonPath, JSON.stringify(placeholderCopy, null, 2));
             return { output: `compositions/${slug}.copy.json (placeholder)`, soft: true };
           }
+          // Pass --structural=<name> so extract-copy.mjs can opt-in to the
+          // optional person/launch-date harvest for testimonial / founder-story /
+          // product-launch templates. Other templates still get plain copy.
           const r = await runNodeAsync(copyScript,
-            [url, `--template=${_vibe}`, `--seconds=${_bucket}`, `--name=${slug}`]);
+            [url, `--template=${_vibe}`, `--seconds=${_bucket}`, `--name=${slug}`, `--structural=${_structural}`]);
           // exit 2 = "thin narration" warning — the JSON was still written. Treat
           // as soft and continue.
           if (r.status !== 0 && r.status !== 2) {
@@ -1364,10 +1367,15 @@ function applyCopyToTemplate(html, copy, templateName) {
   html = replaceText(html, "s1-supporting", b(0, "body") || bodies[0] || "");
   html = replaceText(html, "s1-mark", brandName.toUpperCase());
   // founder-story s1: name + role + tag (intro to founder).
-  // Use brandName for the "name" slot (we don't have a real founder name from
-  // copy.json, but the brand acts as the storytelling subject).
-  html = replaceText(html, "s1-name", brandName);
-  html = replaceText(html, "s1-role", b(0, "kicker") || "");
+  // Prefer copy.founderName when extract-copy.mjs harvested it from the
+  // source page (schema.org Person / Organization.founder, "Meet our
+  // founder" prose, etc.). Fall back to brandName so the slot still fills
+  // when no founder data was found — the brand acts as the storytelling
+  // subject in that case.
+  const founderName = (typeof copy.founderName === "string" && copy.founderName.trim()) || brandName;
+  const founderRole = (typeof copy.founderRole === "string" && copy.founderRole.trim()) || b(0, "kicker") || "";
+  html = replaceText(html, "s1-name", founderName);
+  html = replaceText(html, "s1-role", founderRole);
   // s1-tag: short subhead. faq-quick + product-launch use it as a tagline /
   // launch chip; founder-story uses it as a one-line setup. Prefer the brand
   // tagline (cta.tagline), fall back to first beat body.
@@ -1438,18 +1446,30 @@ function applyCopyToTemplate(html, copy, templateName) {
   html = replaceText(html, "s4-cta-verb", ctaVerb);
   // Case-study quote.
   html = replaceText(html, "s4-quote", b(3, "headline") || ctaTagline || "");
-  // testimonial s4: attribution name. Use brandName so the testimonial reads
-  // as attributed to the brand voice (we have no real customer name in copy).
-  html = replaceText(html, "s4-name", brandName);
+  // testimonial s4: attribution name + role chip. Prefer the harvested
+  // customer details when extract-copy.mjs found a Review/Person on the
+  // source page; otherwise fall back to brandName for the name and skip
+  // the role (so the chip just reads as the brand mark, not an invented
+  // role like "Customer"). Memory rule: never invent customer names.
+  const customerName = (typeof copy.customerName === "string" && copy.customerName.trim()) || brandName;
+  html = replaceText(html, "s4-name", customerName);
+  if (typeof copy.customerRole === "string" && copy.customerRole.trim()) {
+    html = replaceText(html, "s4-role", copy.customerRole.trim());
+  }
   // founder-story s4: closing headline, e.g. "where we are now".
   html = replaceText(html, "s4-headline", b(3, "headline") || headlines[3] || "");
   // faq-quick s4: 3rd Q&A pair — beat 2.
   html = replaceText(html, "s4-q", b(2, "headline") || headlines[2] || "");
   html = replaceText(html, "s4-a", b(2, "body") || bodies[2] || "");
-  // product-launch s4: availability "date" stamp — use the CTA verb as the
-  // call-to-action chip (e.g. "VISIT" / "TRY"), since the copy schema
-  // doesn't carry a launch date. Better than the hardcoded "TUESDAY".
-  if (ctaVerb) html = replaceText(html, "s4-date", ctaVerb.toUpperCase());
+  // product-launch s4: availability "date" stamp. Prefer copy.launchDate
+  // when extract-copy.mjs harvested one (schema.org Product.releaseDate,
+  // Event.startDate, "Available <date>" patterns). Fall back to the CTA
+  // verb (e.g. "VISIT" / "TRY") so the chip still fills with something
+  // meaningful, beating the hardcoded template default of "TUESDAY".
+  const launchStamp = (typeof copy.launchDate === "string" && copy.launchDate.trim())
+    ? copy.launchDate.trim().toUpperCase()
+    : (ctaVerb ? ctaVerb.toUpperCase() : "");
+  if (launchStamp) html = replaceText(html, "s4-date", launchStamp);
 
   // --- scene 5 (final CTA) ------------------------------------------------
   // Templates with a verb-span inside s5-cta keep the existing verb-only swap.
