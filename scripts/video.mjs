@@ -1237,6 +1237,17 @@ function applyCopyToTemplate(html, copy, templateName) {
   })();
   const ctaVerb = copy.cta?.verb || "Try";
 
+  // Useful derived values reused across scenes.
+  const ctaTagline = copy.cta?.tagline || "";
+  // CTA full sentence (no <span> inner) — used by templates whose s4-cta /
+  // s5-cta is a flat heading. For templates that wrap the verb in a child
+  // <span id="s[N]-cta-verb">, we skip the outer-tag swap to preserve the
+  // span structure and just replace the verb word.
+  const ctaFull = ctaTagline
+    ? `${ctaVerb} ${ctaTagline.replace(/^(visit|try|read|see|book|start|join|learn|get|use)\s+/i, "")}`.replace(/\s+/g, " ").trim()
+    : `${ctaVerb} ${brandName}`.trim();
+  const hasVerbSpan = /^(hero-promo-30s|case-study-60s|founder-story-60s)$/.test(templateName || "");
+
   // --- scene 1 (hook / hero) ---------------------------------------------
   // social-reel uses #s1-hook, hero-promo uses #s1-headline, case-study uses
   // #s1-headline + #s1-supporting. Cover all of them.
@@ -1246,15 +1257,35 @@ function applyCopyToTemplate(html, copy, templateName) {
   html = replaceText(html, "s1-support", b(0, "body") || bodies[0] || "");
   html = replaceText(html, "s1-supporting", b(0, "body") || bodies[0] || "");
   html = replaceText(html, "s1-mark", brandName.toUpperCase());
+  // founder-story s1: name + role + tag (intro to founder).
+  // Use brandName for the "name" slot (we don't have a real founder name from
+  // copy.json, but the brand acts as the storytelling subject).
+  html = replaceText(html, "s1-name", brandName);
+  html = replaceText(html, "s1-role", b(0, "kicker") || "");
+  // s1-tag: short subhead. faq-quick + product-launch use it as a tagline /
+  // launch chip; founder-story uses it as a one-line setup. Prefer the brand
+  // tagline (cta.tagline), fall back to first beat body.
+  html = replaceText(html, "s1-tag", ctaTagline || b(0, "body") || bodies[0] || "");
+  // before-after s1: "BEFORE" stamp (leave) + s1-state (state line) +
+  // s1-detail (supporting line). Map to first beat.
+  html = replaceText(html, "s1-state", hookText);
+  html = replaceText(html, "s1-detail", b(0, "body") || bodies[0] || "");
   // Decorative giant background typography (hero-promo s1, case-study s2):
   // ship the brand name as the texture rather than the literal word
   // "HEADLINE" / "SOLUTION", which reads as an unfilled placeholder.
   if (brandName) html = replaceText(html, "s1-bg-text", brandName.toUpperCase());
   if (brandName) html = replaceText(html, "s2-bg-text", brandName.toUpperCase());
 
-  // --- scene 2 (punch / benefits / solution) ------------------------------
+  // --- scene 2 (punch / benefits / solution / quote) ----------------------
   html = replaceText(html, "s2-headline", b(1, "headline") || headlines[1] || "");
+  html = replaceText(html, "s2-support", b(1, "body") || bodies[1] || "");
   html = replaceText(html, "s2-line", b(1, "body") || b(1, "headline") || bodies[1] || "");
+  // testimonial s2: pull-quote. Use the strongest line we have (beat 1
+  // headline), fall back to the brand's tagline.
+  html = replaceText(html, "s2-quote", b(1, "headline") || headlines[1] || ctaTagline || "");
+  // faq-quick s2: Q&A pair — beat 0 headline as question, beat 0 body as answer.
+  html = replaceText(html, "s2-q", b(0, "headline") || headlines[0] || "");
+  html = replaceText(html, "s2-a", b(0, "body") || bodies[0] || "");
   // Three-up benefits: pull single-word leaders out of headlines[1..3].
   const benefits = [headlines[1], headlines[2], headlines[3]]
     .filter(Boolean)
@@ -1263,27 +1294,62 @@ function applyCopyToTemplate(html, copy, templateName) {
   if (benefits[0]) html = replaceText(html, "s2-b1-title", benefits[0].toUpperCase());
   if (benefits[1]) html = replaceText(html, "s2-b2-title", benefits[1].toUpperCase());
   if (benefits[2]) html = replaceText(html, "s2-b3-title", benefits[2].toUpperCase());
-  // Bullets in case-study scene 2.
+  // Bullets in case-study / founder-story scene 2/3.
   if (bodies[1]) html = replaceText(html, "s2-b1", bodies[1]);
   if (bodies[2]) html = replaceText(html, "s2-b2", bodies[2]);
   if (bodies[3]) html = replaceText(html, "s2-b3", bodies[3]);
 
-  // --- scene 3 (stat / outcome) ------------------------------------------
+  // --- scene 3 (stat / outcome / Q&A / before-after AFTER) ---------------
   html = replaceText(html, "s3-headline", b(2, "headline") || headlines[2] || "");
   html = replaceText(html, "s3-line", b(2, "body") || bodies[2] || "");
+  // before-after s3: AFTER stamp (leave) + s3-state + s3-detail. Map to 2nd beat.
+  html = replaceText(html, "s3-state", b(1, "headline") || headlines[1] || "");
+  html = replaceText(html, "s3-detail", b(1, "body") || bodies[1] || "");
+  // faq-quick s3: 2nd Q&A pair — beat 1.
+  html = replaceText(html, "s3-q", b(1, "headline") || headlines[1] || "");
+  html = replaceText(html, "s3-a", b(1, "body") || bodies[1] || "");
+  // founder-story s3: bullets and headline kicker.
+  if (bodies[1]) html = replaceText(html, "s3-b1", bodies[1]);
+  if (bodies[2]) html = replaceText(html, "s3-b2", bodies[2]);
+  if (bodies[3]) html = replaceText(html, "s3-b3", bodies[3]);
+  // product-launch s3: three feature cells — single-word leaders again.
+  if (benefits[0]) html = replaceText(html, "s3-t1", benefits[0].toUpperCase());
+  if (benefits[1]) html = replaceText(html, "s3-t2", benefits[1].toUpperCase());
+  if (benefits[2]) html = replaceText(html, "s3-t3", benefits[2].toUpperCase());
 
-  // --- scene 4 (quote / CTA depending on template) -----------------------
-  // social-reel s4 = CTA wordmark + URL; case-study s4 = quote.
+  // --- scene 4 (quote / CTA / Q&A / closing headline) --------------------
+  // social-reel s4 = CTA wordmark + URL; case-study s4 = quote;
+  // testimonial s4 = name/role chip; founder-story s4 = closing headline;
+  // product-launch s4 = availability + URL; faq-quick s4 = 3rd Q&A.
   html = replaceText(html, "s4-mark", brandName.toUpperCase());
   html = replaceText(html, "s4-url", ctaUrl);
   html = replaceText(html, "s4-cta-verb", ctaVerb);
   // Case-study quote.
-  html = replaceText(html, "s4-quote", b(3, "headline") || copy.cta?.tagline || "");
-  // (Don't overwrite attrib/role — placeholders are fine without copy data.)
+  html = replaceText(html, "s4-quote", b(3, "headline") || ctaTagline || "");
+  // testimonial s4: attribution name. Use brandName so the testimonial reads
+  // as attributed to the brand voice (we have no real customer name in copy).
+  html = replaceText(html, "s4-name", brandName);
+  // founder-story s4: closing headline, e.g. "where we are now".
+  html = replaceText(html, "s4-headline", b(3, "headline") || headlines[3] || "");
+  // faq-quick s4: 3rd Q&A pair — beat 2.
+  html = replaceText(html, "s4-q", b(2, "headline") || headlines[2] || "");
+  html = replaceText(html, "s4-a", b(2, "body") || bodies[2] || "");
+  // product-launch s4: availability "date" stamp — use the CTA verb as the
+  // call-to-action chip (e.g. "VISIT" / "TRY"), since the copy schema
+  // doesn't carry a launch date. Better than the hardcoded "TUESDAY".
+  if (ctaVerb) html = replaceText(html, "s4-date", ctaVerb.toUpperCase());
 
-  // --- scene 5 (case-study CTA) ------------------------------------------
+  // --- scene 5 (final CTA) ------------------------------------------------
+  // Templates with a verb-span inside s5-cta keep the existing verb-only swap.
+  // Templates without (faq-quick, testimonial) get the full CTA sentence.
   html = replaceText(html, "s5-cta-verb", ctaVerb);
   html = replaceText(html, "s5-url", ctaUrl);
+  html = replaceText(html, "s5-mark", ctaTagline || `${ctaVerb}.`);
+  if (!hasVerbSpan) {
+    html = replaceText(html, "s5-cta", ctaFull);
+  }
+  // before-after s4 also has a "label" line.
+  html = replaceText(html, "s4-label", b(2, "headline") || headlines[2] || "");
 
   return html;
 }
