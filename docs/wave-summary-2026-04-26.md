@@ -1,5 +1,13 @@
 # Wave summary — 2026-04-26 session
 
+> **Process note (added 2026-04-26):** This doc records the early-session
+> wave-shipping pattern (16 parallel subagents). That pattern has since
+> been **superseded** by the loop-until-perfect workflow in
+> [docs/PROCESS.md](PROCESS.md). The waves below are kept for historical
+> context — they shipped real infrastructure that's still load-bearing
+> — but the breadth-first dispatching style they describe is no longer
+> the operating model.
+
 Across one session, dispatched 16 parallel subagents in three waves. This
 doc consolidates verdicts so a cold-reading future-self has one place to
 look. Per-topic detail lives in the linked docs.

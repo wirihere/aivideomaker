@@ -134,14 +134,24 @@ That means at resume, do NOT just blindly execute the in-flight task list. Inste
 
 When the in-flight 4 are done, scan §8 parking lot for the next-best candidate and propose it to the user, OR proceed via the "always be looking for stack improvements" standing directive if they're unavailable.
 
-## Standing directives that still apply
+## Standing directives — SUPERSEDED 2026-04-26
 
-From `LEARNINGS.md` §5.5:
+**The directives below were the operating model when this doc was first
+written. They've been replaced.** The current canonical workflow is in
+`docs/PROCESS.md` — read that first for any session that's about
+producing or improving rendered videos.
 
-1. **Always be looking for stack improvements** — the recursive-supervisor pattern works; keep dispatching agents.
-2. **Always plan for long-term task completion + surface more as you go** — §8 parking lot is the roadmap.
-3. **Always use as many subagents as possible** — fan out per task, supervisors can spawn workers.
-4. **Commit regularly + in logical chunks** — the next session should commit each completed piece, not let work pile up.
+Old directives (kept for historical context):
+
+1. ~~Always be looking for stack improvements — keep dispatching agents.~~
+   Now: dispatch when work is well-scoped, expensive in tokens, or
+   read-only research. Don't dispatch just to be dispatching.
+2. **Always plan for long-term task completion + surface more as you go**
+   — §8 parking lot is still the roadmap. Still true.
+3. ~~Always use as many subagents as possible — fan out per task.~~ **Replaced**
+   — use the number of agents the work needs, sequenced when dependent.
+   Loop-until-perfect is the new mode, not breadth-first.
+4. **Commit regularly + in logical chunks** — still true.
 
 ## Final state summary
 

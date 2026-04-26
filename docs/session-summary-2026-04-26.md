@@ -57,12 +57,24 @@
 2. **`font-var` migration + lint promotion** — 482 sites to rewrite from `var(--font-x)` → direct names + `@font-face`, then flip detector to error. Multi-hour but unblocks compiler determinism warnings.
 3. **WebGL Phase 4 (real DOM sampling)** — pixel-true bokeh via canvas snapshot of DOM content (currently procedural-only). Needs a working `Page.captureScreenshot` → texture path. Multi-day.
 
-## Session standing directives (still active)
+## Session standing directives (SUPERSEDED 2026-04-26 — see [docs/PROCESS.md](PROCESS.md))
 
-1. Always look for stack improvements — surface to LEARNINGS §8.
-2. Plan long-term completion via §8.
-3. Use as many parallel subagents as possible.
-4. Commit regularly + in logical chunks.
+The directives below were the operating model for the early-session waves
+(M, N, O). They were replaced mid-session when the user named the
+quality-over-speed principle and the loop-until-perfect workflow.
+
+The current canonical process lives in `docs/PROCESS.md`. Read that
+first.
+
+Old directives (kept for historical context, not for guidance):
+
+1. ~~Always look for stack improvements — surface to LEARNINGS §8.~~ Still
+   true, but only when the work measurably improves quality.
+2. ~~Plan long-term completion via §8.~~ Still true.
+3. ~~Use as many parallel subagents as possible.~~ **Replaced** — use the
+   number of agents the work actually needs, sequenced when dependent.
+   Loop-until-perfect, not breadth-first.
+4. ~~Commit regularly + in logical chunks.~~ Still true.
 
 ## Memory feedback this session
 - [Plain-language status updates](../../../.claude/projects/C--Users-wirihere-aivideomaker/memory/feedback_plain_language.md) — group ships by outcome (faster/cleaner/safer/new tool); names + hashes are supporting detail not headline.

@@ -1015,6 +1015,8 @@ Each fetcher calls `check()` before the request and `record()` after success. Ap
 ## 5.5 User preferences (standing directives)
 
 > These are not patterns or anti-patterns — they are the user's explicit standing preferences. Future sessions should default to these without re-deriving them from first principles. Override only if the brief explicitly contradicts them.
+>
+> **Process note (2026-04-26):** the canonical workflow is now [docs/PROCESS.md](docs/PROCESS.md). It supersedes the breadth-first "spawn many parallel subagents" pattern that earlier directives in this section assumed. The directives below have been edited inline where they clashed with the new loop-until-perfect mode. The 18 durable user-feedback rules (in user memory under `~/.claude/projects/.../memory/`) are the canonical source for behaviour — this section is a project-local mirror.
 
 ### Hybrid composition — HTML overlays + real stock footage/photos (not one or the other)
 
@@ -1075,13 +1077,17 @@ ME (vision + integration + final QA)
 
 The Effect Combinator was the deepest test: it ran a 7-phase internal pipeline (audit → plan → 3 implementor workers in parallel → demo → catalog → bundle → docs) and returned a single self-contained increment. The pattern scales.
 
-### Always use as many subagents as possible (standing directive — 2026-04-25)
-For multi-step or multi-file work, default to **parallel general-purpose subagents** rather than driving everything from main thread. The 2026-04-25 streamline pass shipped 8 streamlines in one turn — 5 from main thread, 3 from agents running concurrently — because each agent had a self-contained brief with non-overlapping target files.
+### Always use as many subagents as possible (standing directive — 2026-04-25) — SUPERSEDED 2026-04-26
+**Replaced by the loop-until-perfect process in [docs/PROCESS.md](docs/PROCESS.md).**
 
-**When to fan out:**
-- 2+ independent deliverables that touch different files.
+The "fan out as much as possible" pattern shipped a lot of infrastructure in 2026-04-25 → early 2026-04-26 (16 parallel subagents in three waves), but it produced shipped-but-mediocre rendered videos because no one stayed on a single piece long enough to make it model-quality. Replaced with the loop-until-perfect workflow in `docs/PROCESS.md`.
+
+The text below is kept for historical context — the dispatching mechanics it describes are still correct *when* you're dispatching agents — but the "fan out for the sake of fanning out" defaulting is no longer the operating model.
+
+**When to fan out (revised):**
+- The work is genuinely independent (different files, no shared state, no sequential dependency).
+- The result will be CONSUMED by the loop-until-perfect process, not shipped without review.
 - Each task has a clear acceptance criterion (verifiable command output).
-- The user has signaled batch/auto mode ("do all you can", "in parallel", etc.).
 
 **How to brief them well:**
 - Goal in one sentence + acceptance criteria + files to touch.
