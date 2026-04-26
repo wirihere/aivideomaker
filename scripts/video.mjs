@@ -1536,7 +1536,11 @@ try {
     // Per docs/template-models.md: locked templates render freely, iterating
     // and legacy templates need an explicit override. Looks up the template's
     // file basename (e.g. "community-app-tour-30s") in the status registry.
-    const templateBasename = path.basename(resolved.file, ".html");
+    // chosenTemplate is set inside the assemble stage closure (line ~1266).
+    if (!chosenTemplate) {
+      throw new Error("template not resolved — assemble stage must run before render");
+    }
+    const templateBasename = path.basename(chosenTemplate.file, ".html");
     const tStatus = statusFor(templateBasename);
     const tClass = classifyStatus(tStatus);
     if (tClass === "iterating" || tClass === "unlisted") {
