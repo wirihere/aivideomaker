@@ -38,9 +38,11 @@
 
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import { fileURLToPath } from "url";
 import { spawnSync, spawn } from "child_process";
 import { node as nodeBin, npmArgs } from "./lib/platform-bin.mjs";
+import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -993,7 +995,7 @@ try {
 
   // ----- Stage 6: composition assemble ------------------------------------
   // Pick a template, copy to index.html, rewrite paths, swap tokens, inject copy.
-  await stage("assemble", () => {
+  await stage("assemble", async () => {
     backupIndex();
     // Reuse the tone-aware pick from Stages 2-4 so the assemble stage can't
     // disagree with the music vibe / copy template that was generated above.
@@ -1064,16 +1066,46 @@ try {
     const audioTags = [];
     const compSeconds = TEMPLATE_REGISTRY[resolved.name]?.seconds || seconds || 30;
 
-    // Music — only if --with-music + a downloaded track is on disk.
+    // Determine narration presence first — the envelope baker needs the VTT
+    // cue list to compute duck windows, and we wire narration into the audio
+    // tags below regardless of whether music ducking applies.
+    const ttsExpected = path.join(projectRoot, "assets", "voiceover", `${slug}.mp3`);
+    const hasNarrationFile = fs.existsSync(ttsExpected);
+    const vttPath = path.join(projectRoot, "assets", "voiceover", `${slug}.vtt`);
+
+    // Music — only if --with-music + a downloaded track is on disk. Bake the
+    // dynamics envelope OFFLINE (FFmpeg) into a derived file: fade-in,
+    // narration ducking, CTA swell, fade-out. HyperFrames bakes <audio>
+    // data-volume into a single FFmpeg `volume=X` filter at render time, so
+    // any in-browser GSAP tween on audio.volume is clobbered — the envelope
+    // must already be in the file. Music + narration stay as separate
+    // <audio> elements; only the music waveform changes.
+    let envelopeNote = null;
     if (withMusic) {
-      const musicSrc = findMusicTrackPath(slug);
-      if (musicSrc) {
+      const musicRel = findMusicTrackPath(slug);
+      if (musicRel) {
+        const musicAbs = path.isAbsolute(musicRel) ? musicRel : path.join(projectRoot, musicRel);
+        const cues = hasNarrationFile ? parseVttCues(vttPath) : [];
+        const ducks = buildDuckWindows(cues, { compSeconds });
+        const lastSceneStart = parseLastSceneStart(html);
+        const plan = computeEnvelopePlan({
+          compSeconds,
+          duckWindows: ducks,
+          lastSceneStart,
+        });
+        const baked = await bakeMusicEnvelope({ srcAbs: musicAbs, slug, plan });
+        const useSrc = baked || musicRel;
+        envelopeNote = baked
+          ? `envelope: ${ducks.length} duck${ducks.length === 1 ? "" : "s"}${plan.swellAt !== null ? " + swell" : ""}`
+          : "envelope: skipped (ffmpeg unavailable)";
+        // data-volume="1.0" because the envelope is already baked in. The
+        // HyperFrames runtime's static volume filter just becomes a pass-through.
         audioTags.push(buildAudioTag({
           id: "audio-music",
-          src: musicSrc,
+          src: useSrc,
           duration: compSeconds,
           trackIndex: 8,
-          volume: 0.18,
+          volume: 1.0,
         }));
       }
     }
@@ -1083,8 +1115,7 @@ try {
     // legitimately wire it). Prefer the in-memory ttsDurationSec when Stage 5
     // ran this session; otherwise re-read the sibling VTT to avoid stretching
     // a short narration to fill the comp.
-    const ttsExpected = path.join(projectRoot, "assets", "voiceover", `${slug}.mp3`);
-    if (fs.existsSync(ttsExpected)) {
+    if (hasNarrationFile) {
       const vttDur = ttsDurationSec || readVttDuration(ttsExpected.replace(/\.mp3$/, ".vtt"));
       const dur = vttDur || compSeconds;
       audioTags.push(buildAudioTag({
@@ -1105,7 +1136,9 @@ try {
     const note = resolved.fallbackFor
       ? `index.html (fallback ${resolved.name} for ${resolved.fallbackFor}; was: ${priorIndexLabel})`
       : `index.html (was: ${priorIndexLabel})`;
-    return audioTags.length ? `${note} +${audioTags.length} audio` : note;
+    const audioNote = audioTags.length ? ` +${audioTags.length} audio` : "";
+    const envNote = envelopeNote ? ` · ${envelopeNote}` : "";
+    return `${note}${audioNote}${envNote}`;
   });
 
   // ----- Stage 7: verify (script vs visual) -------------------------------
@@ -1654,4 +1687,191 @@ function injectAudioTags(html, tags) {
   }
   // Last resort: append.
   return html + block;
+}
+
+// =============================================================================
+// Audio dynamics — fade-in/out, narration ducking, CTA swell
+// =============================================================================
+// HyperFrames' clip system bakes <audio data-volume="X"> into the rendered
+// FFmpeg filter graph as a single CONSTANT per track (see node_modules/
+// hyperframes/dist/cli.js around `volume=${track.volume}`). Setting
+// audio.volume from JS only affects browser preview playback — the rendered
+// MP4 always uses the static value. So we apply the envelope OFFLINE: take
+// the source music file, run an FFmpeg filter chain (afade + per-window
+// volume= filters), and write a derived mp3. The orchestrator then points
+// <audio id="audio-music"> at that derived file with data-volume="1.0".
+// Music + narration stay as separate <audio> elements, so the dual-track
+// structure is preserved (per the spec).
+
+// Parse a Whisper-style VTT into an array of {start, end} cues in seconds.
+// Returns [] when the file is missing/unparseable so callers degrade gracefully.
+function parseVttCues(vttPath) {
+  try {
+    if (!vttPath || !fs.existsSync(vttPath)) return [];
+    const txt = fs.readFileSync(vttPath, "utf8");
+    const matches = [...txt.matchAll(/(\d{2}):(\d{2}):(\d{2})\.(\d{3})\s*-->\s*(\d{2}):(\d{2}):(\d{2})\.(\d{3})/g)];
+    return matches.map((m) => {
+      const start = (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]) + (+m[4]) / 1000;
+      const end = (+m[5]) * 3600 + (+m[6]) * 60 + (+m[7]) + (+m[8]) / 1000;
+      return { start, end };
+    });
+  } catch { return []; }
+}
+
+// Merge cues into ducking windows. Cues whose gap < gapMergeSec collapse into
+// one window; final list is capped to maxWindows by length-desc to avoid
+// stutter from too many filter segments. Each window is padded by `pad`
+// seconds at the edges so ducking starts slightly before speech and releases
+// slightly after — gives the music a subtle "lean back" feel rather than a
+// hard gate.
+function buildDuckWindows(cues, { gapMergeSec = 0.5, maxWindows = 8, pad = 0.1, compSeconds = Infinity } = {}) {
+  if (!cues.length) return [];
+  // 1. Merge close-spaced cues.
+  const merged = [];
+  let cur = { start: cues[0].start, end: cues[0].end };
+  for (let i = 1; i < cues.length; i++) {
+    const c = cues[i];
+    if (c.start - cur.end <= gapMergeSec) {
+      cur.end = Math.max(cur.end, c.end);
+    } else {
+      merged.push(cur);
+      cur = { start: c.start, end: c.end };
+    }
+  }
+  merged.push(cur);
+  // 2. Apply edge padding + clamp.
+  const padded = merged.map((w) => ({
+    start: Math.max(0, w.start - pad),
+    end: Math.min(compSeconds, w.end + pad),
+  })).filter((w) => w.end > w.start);
+  if (padded.length <= maxWindows) return padded;
+  // 3. Too many windows — keep the longest, then sort back by start.
+  return padded
+    .map((w, i) => ({ ...w, _len: w.end - w.start, _i: i }))
+    .sort((a, b) => b._len - a._len)
+    .slice(0, maxWindows)
+    .sort((a, b) => a.start - b.start)
+    .map((w) => ({ start: w.start, end: w.end }));
+}
+
+// Find the start time (data-start, seconds) of the LAST `.scene.clip` element
+// in the HTML. Used to time the CTA swell. Returns null when no scene is
+// found — the envelope plan then skips the swell stage.
+function parseLastSceneStart(html) {
+  const re = /<div\b[^>]*\bclass="[^"]*\bscene\b[^"]*\bclip\b[^"]*"[^>]*\bdata-start="([0-9.]+)"/gi;
+  let last = null;
+  for (const m of html.matchAll(re)) last = parseFloat(m[1]);
+  return Number.isFinite(last) ? last : null;
+}
+
+// Compute the deterministic envelope plan: fade-in, duck windows, CTA swell,
+// fade-out. Pure function — same inputs always produce the same plan, used
+// as both the FFmpeg filter source AND the cache fingerprint key.
+function computeEnvelopePlan({
+  compSeconds,
+  duckWindows = [],
+  lastSceneStart = null,
+  baseVolume = 0.18,
+  duckVolume = 0.10,
+  swellVolume = 0.24,
+  fadeInSec = 1.0,
+  fadeOutSec = 1.5,
+} = {}) {
+  const fadeOutAt = Math.max(fadeInSec, compSeconds - fadeOutSec);
+  const swellAt = (Number.isFinite(lastSceneStart) && lastSceneStart > fadeInSec && lastSceneStart < fadeOutAt)
+    ? lastSceneStart
+    : null;
+  // Drop duck windows that fight the envelope edges or the CTA swell region.
+  const ducks = duckWindows
+    .map((w) => ({ start: Math.max(fadeInSec, w.start), end: Math.min(fadeOutAt, w.end) }))
+    .filter((w) => w.end - w.start > 0.15)
+    .filter((w) => swellAt === null || w.end <= swellAt + 0.05)
+    .map((w) => ({
+      start: Math.round(w.start * 100) / 100,
+      end: Math.round(w.end * 100) / 100,
+    }));
+  return {
+    compSeconds: Math.round(compSeconds * 100) / 100,
+    fadeInSec, fadeOutSec,
+    fadeOutAt: Math.round(fadeOutAt * 100) / 100,
+    baseVolume, duckVolume, swellVolume,
+    swellAt: swellAt === null ? null : Math.round(swellAt * 100) / 100,
+    ducks,
+  };
+}
+
+// Build the FFmpeg filter chain that applies the envelope to a single audio
+// stream. The chain composes:
+//   1. master gain (volume=baseVolume) — sets the resting level
+//   2. per-duck-window volume= filters with `enable='between(t,A,B)'` that
+//      multiply by the duck ratio (≈0.55 → drops to ~40% of base)
+//   3. swell volume= filter with `enable='between(t,A,B)'` that multiplies
+//      by the swell ratio (≈1.33 → bumps to ~133% of base)
+//   4. afade in (0→fadeInSec) + afade out (fadeOutAt→compSeconds) for smooth
+//      taper at the edges
+// Use `volume=eval=frame` so the `enable` expression is re-evaluated each
+// audio frame (default is `eval=once` which would only sample at start).
+function buildEnvelopeFilter(plan) {
+  const segs = [];
+  // Master gain.
+  segs.push(`volume=${plan.baseVolume.toFixed(3)}:eval=frame`);
+  // Duck windows.
+  for (const w of plan.ducks) {
+    const ratio = (plan.duckVolume / plan.baseVolume).toFixed(3);
+    segs.push(`volume=enable='between(t,${w.start},${w.end})':volume=${ratio}:eval=frame`);
+  }
+  // Swell.
+  if (plan.swellAt !== null) {
+    const ratio = (plan.swellVolume / plan.baseVolume).toFixed(3);
+    segs.push(`volume=enable='between(t,${plan.swellAt},${plan.fadeOutAt})':volume=${ratio}:eval=frame`);
+  }
+  // Edge fades.
+  segs.push(`afade=t=in:st=0:d=${plan.fadeInSec}:curve=tri`);
+  segs.push(`afade=t=out:st=${plan.fadeOutAt}:d=${plan.fadeOutSec}:curve=tri`);
+  return segs.join(",");
+}
+
+// Bake the envelope into a derived audio file. Reads `srcAbs`, applies the
+// FFmpeg filter chain, writes to a deterministic cache path. Returns the
+// project-relative POSIX path the assembler should put on the <audio> tag,
+// or null if FFmpeg isn't available / the bake failed (caller falls back to
+// the original file).
+async function bakeMusicEnvelope({ srcAbs, slug, plan }) {
+  // Cache directory + deterministic filename. The fingerprint includes both
+  // the source path AND the plan so changing either invalidates correctly.
+  const cacheDir = path.join(projectRoot, "assets", "music", ".envelope");
+  if (!fs.existsSync(cacheDir)) fs.mkdirSync(cacheDir, { recursive: true });
+  const fingerprint = crypto
+    .createHash("sha1")
+    .update(JSON.stringify({ src: path.relative(projectRoot, srcAbs).replace(/\\/g, "/"), plan }))
+    .digest("hex")
+    .slice(0, 12);
+  const baseName = path.basename(srcAbs, path.extname(srcAbs));
+  const outAbs = path.join(cacheDir, `${baseName}.${slug}.${fingerprint}.mp3`);
+  const outRel = path.relative(projectRoot, outAbs).replace(/\\/g, "/");
+  if (fs.existsSync(outAbs)) return outRel; // cache hit
+
+  let ffmpeg;
+  try { ffmpeg = await getFfmpegPath(); }
+  catch { return null; }
+  const filter = buildEnvelopeFilter(plan);
+  // -y overwrite, -i source, -af filter, -t total duration so the output mp3
+  // ends cleanly at compSeconds even if the source is longer. -c:a libmp3lame
+  // -b:a 192k matches the typical music-pick output.
+  const args = [
+    "-y", "-loglevel", "error",
+    "-i", srcAbs,
+    "-af", filter,
+    "-t", String(plan.compSeconds),
+    "-c:a", "libmp3lame", "-b:a", "192k",
+    outAbs,
+  ];
+  const r = spawnSync(ffmpeg, args, { stdio: ["ignore", "pipe", "pipe"] });
+  if (r.status !== 0) {
+    const tail = ((r.stderr || r.stdout || Buffer.from("")).toString("utf8") || "").trim();
+    console.warn(`    ⚠ envelope bake failed (ffmpeg exit ${r.status}); falling back to flat music. ${tail.slice(0, 200)}`);
+    try { fs.unlinkSync(outAbs); } catch {}
+    return null;
+  }
+  return outRel;
 }
