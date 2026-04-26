@@ -19,6 +19,7 @@
 // Flags:
 //   --seconds=N        (default 30) — drives template choice
 //   --template=<name>  override auto-pick (social-reel | hero-promo | case-study | founder-story | testimonial)
+//                      explicit user choice always wins over auto-tone selection
 //   --name=<slug>      override URL-derived slug
 //   --with-music       actually wire the picked music into the composition
 //   --no-tts           skip narration synthesis (default: synthesize TTS from copy)
@@ -107,19 +108,80 @@ const TEMPLATE_REGISTRY = {
   "case-study":      { file: "case-study-60s.html",    seconds: 60, dims: [1920, 1080], vibe: "documentary"    },
 };
 
-function pickTemplate({ seconds, override }) {
+// Tone -> template preference ladders. Each ladder is an ordered list of
+// "preferred-given-this-tone" templates; we walk it in order and pick the
+// first whose seconds bucket is closest to the requested seconds.
+//
+// Per LEARNINGS section 8 (kindred-nz finding 2026-04-26): a community brand
+// at 30s was being forced into hero-promo (kinetic-pop synth-pop) purely by
+// duration bucket. The tone ladders below let warm-community brands land on
+// testimonial/faq-quick instead.
+const TONE_PREFERENCE = {
+  warm:        ["faq-quick", "testimonial", "founder-story"],
+  energetic:   ["social-reel", "hero-promo", "product-launch", "before-after"],
+  documentary: ["founder-story", "case-study"],
+  // neutral falls through to duration-only buckets
+};
+
+// Music vibe map. pick-music.mjs reads from the tone-mapped vibe shortlist.
+// Keep in sync with TONE_PREFERENCE: the tone determines BOTH the template
+// ladder AND the music shortlist (so a "warm" brand always pulls warm-
+// community music even if the requested seconds force a fallback template
+// that is normally tagged kinetic-pop).
+const TONE_TO_VIBE = {
+  warm: "warm-community",
+  energetic: "kinetic-pop",
+  documentary: "documentary",
+  neutral: null,
+};
+
+function pickTemplate({ seconds, tone, override }) {
   if (override) {
     if (!TEMPLATE_REGISTRY[override]) {
       throw new Error(`Unknown template "${override}". Pick from: ${Object.keys(TEMPLATE_REGISTRY).join(", ")}`);
     }
-    return override;
+    return { name: override, reason: "override" };
   }
-  // Bucket by seconds.
-  if (seconds <= 20) return "social-reel";
-  if (seconds <= 35) return "hero-promo";
-  if (seconds <= 50) return "testimonial";
-  if (seconds <= 75) return "case-study";
-  return "case-study";
+
+  const ladder = TONE_PREFERENCE[tone];
+  if (ladder && ladder.length) {
+    // Short-form (<=20s) has no tone-specific template yet. Warm + 15s falls
+    // back to social-reel because there's no warm 15s template; same for
+    // documentary. Energetic stays on its ladder (social-reel IS the top
+    // entry there, so this branch picks correctly via the normal ranking).
+    if (seconds <= 20 && tone !== "energetic") {
+      return {
+        name: "social-reel",
+        reason: `tone=${tone} (no warm/documentary 15s template yet — using social-reel)`,
+      };
+    }
+    // Pick the ladder entry whose seconds bucket is closest to the requested
+    // seconds. Ties broken by ladder order (earlier = preferred for this tone).
+    const ranked = ladder
+      .map((name, idx) => ({
+        name,
+        idx,
+        diff: Math.abs((TEMPLATE_REGISTRY[name]?.seconds ?? 30) - seconds),
+      }))
+      .sort((a, b) => a.diff - b.diff || a.idx - b.idx);
+    const pick = ranked[0];
+    const dur = TEMPLATE_REGISTRY[pick.name].seconds;
+    let reason = `tone=${tone}`;
+    if (tone === "documentary" && seconds <= 35) {
+      reason += " (warning: documentary tone in <=35s is awkward; narrative needs room)";
+    }
+    if (Math.abs(dur - seconds) > 20) {
+      reason += ` (seconds=${seconds} drifts from template natural ${dur}s)`;
+    }
+    return { name: pick.name, reason };
+  }
+
+  // tone=neutral or unrecognised - duration-only fallback (today's behaviour).
+  if (seconds <= 20) return { name: "social-reel", reason: "duration-bucket" };
+  if (seconds <= 35) return { name: "hero-promo", reason: "duration-bucket" };
+  if (seconds <= 50) return { name: "testimonial", reason: "duration-bucket" };
+  if (seconds <= 75) return { name: "case-study", reason: "duration-bucket" };
+  return { name: "case-study", reason: "duration-bucket" };
 }
 
 function resolveTemplatePath(templateName) {
@@ -149,6 +211,226 @@ function vibeForTemplate(templateName) {
 function bucketSeconds(s) {
   // pick the closest of {15, 30, 60}.
   return [15, 30, 60].sort((a, b) => Math.abs(a - s) - Math.abs(b - s))[0];
+}
+
+// ---------------------------------------------------------------------------
+// Brand-tone reader
+// ---------------------------------------------------------------------------
+// Combines three signals into one of: "warm" | "energetic" | "documentary" |
+// "neutral". Per LEARNINGS section 8 (kindred-nz finding 2026-04-26), the
+// duration-only picker forced warm community brands into kinetic-pop slots.
+// Each signal returns {tone -> score} contributions; we sum across signals
+// and pick the highest. Below a small floor we fall back to "neutral".
+//
+// Signals (none alone is decisive — the picker requires consensus):
+//   1. Palette warmth/saturation (parsed from design/tokens-<slug>.css)
+//   2. Copy voice vocabulary    (parsed from compositions/<slug>.copy.json)
+//   3. Hostname/vertical hint   (.org/.foundation -> warm; shop/labs/io -> energetic)
+
+// Convert a hex string (#rrggbb or #rgb) to {h, s, v} where:
+//   h in [0, 360), s in [0, 1], v in [0, 1]
+function hexToHsv(hex) {
+  if (typeof hex !== "string") return null;
+  let h = hex.trim().replace(/^#/, "");
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  if (!/^[0-9a-f]{6}$/i.test(h)) return null;
+  const r = parseInt(h.slice(0, 2), 16) / 255;
+  const g = parseInt(h.slice(2, 4), 16) / 255;
+  const b = parseInt(h.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let hue = 0;
+  if (d > 0) {
+    if (max === r) hue = ((g - b) / d) % 6;
+    else if (max === g) hue = (b - r) / d + 2;
+    else hue = (r - g) / d + 4;
+    hue *= 60;
+    if (hue < 0) hue += 360;
+  }
+  const sat = max === 0 ? 0 : d / max;
+  return { h: hue, s: sat, v: max };
+}
+
+// Score a single hex against the four tones.
+//  - warm hue band (0-60 or 300-360) AND moderate-sat -> warm
+//  - cool/electric hue (180-260) at high sat -> energetic
+//  - very low sat (any hue), or earthy sat AND mid-luminance -> documentary
+function scoreColor(hex) {
+  const hsv = hexToHsv(hex);
+  if (!hsv) return null;
+  const { h, s, v } = hsv;
+  const out = { warm: 0, energetic: 0, documentary: 0 };
+  // Skip near-pure white/black — they don't signal tone.
+  if (v < 0.05 || (v > 0.97 && s < 0.05)) return out;
+
+  const isWarmHue = (h <= 60) || (h >= 300);
+  const isCoolHue = (h >= 180 && h <= 260);
+
+  if (isWarmHue && s >= 0.25 && s <= 0.85) out.warm += 1;
+  if (isCoolHue && s >= 0.5) out.energetic += 1;
+  // Desaturated palette of any hue (museum/print/document feel).
+  if (s < 0.2 && v >= 0.15 && v <= 0.85) out.documentary += 0.7;
+  // Earthy mid-sat warm (browns, terracotta, ochre) — also reads documentary.
+  if (isWarmHue && s >= 0.15 && s <= 0.45 && v < 0.6) out.documentary += 0.5;
+  return out;
+}
+
+// Parse a tokens-<slug>.css file's hex codes from the well-known palette
+// variables and aggregate per-tone scores.
+function paletteSignal(tokensCssPath) {
+  if (!tokensCssPath || !fs.existsSync(tokensCssPath)) {
+    return { warm: 0, energetic: 0, documentary: 0, hexes: [], note: "(no tokens.css)" };
+  }
+  let css = "";
+  try { css = fs.readFileSync(tokensCssPath, "utf8"); } catch { return { warm: 0, energetic: 0, documentary: 0, hexes: [], note: "(unreadable)" }; }
+
+  // Pull hex values from --bg/--fg/--accent/--brand-color/--card-* and any
+  // other CSS custom property whose name suggests a brand color. We look at
+  // the value of the property, not the name's tone, so naming variations
+  // (`--card-paper` vs `--brand-yellow`) all flow through.
+  const propRe = /--(?:bg|fg|color|accent|brand[-_a-z]*|card-[-_a-z]+|primary|secondary|tertiary|surface|on-surface|paper|navy|slate|warn|ok)\s*:\s*(#[0-9a-fA-F]{3,8})/g;
+  const hexes = [];
+  let m;
+  while ((m = propRe.exec(css)) != null) {
+    hexes.push(m[1].toLowerCase());
+  }
+  // Dedupe — many palettes alias the same hex across multiple tokens, which
+  // would over-count one color's signal.
+  const uniq = [...new Set(hexes)];
+  const totals = { warm: 0, energetic: 0, documentary: 0 };
+  for (const hex of uniq) {
+    const s = scoreColor(hex);
+    if (!s) continue;
+    totals.warm += s.warm;
+    totals.energetic += s.energetic;
+    totals.documentary += s.documentary;
+  }
+  // Determine a short label for logs.
+  const top = Object.entries(totals).sort((a, b) => b[1] - a[1])[0];
+  let note = "(palette neutral)";
+  if (top && top[1] > 0) {
+    if (top[0] === "warm") note = "palette warm";
+    else if (top[0] === "energetic") note = "palette cool-saturated";
+    else if (top[0] === "documentary") note = "palette muted/earthy";
+  }
+  return { ...totals, hexes: uniq, note };
+}
+
+// Score copy.json voice vocabulary. Per the user's spec we look in
+// `narration` + `beats[].headline` + `beats[].body` for tone-revealing words.
+const COPY_LEXICON = {
+  warm: ["neighbour", "neighbor", "community", "share", "sharing", "help", "local", "kind", "kindness", "together", "care", "caring", "family", "support", "neighbours", "neighbors", "give", "gift", "friend"],
+  energetic: ["boost", "launch", "fast", "instant", "transform", "unlock", "scale", "save time", "10x", "explosive", "supercharge", "growth", "ship", "ai-powered", "automate", "rocket", "blazing", "rapid", "accelerate"],
+  documentary: ["story", "journey", "founded", "since", "discovered", "research", "study", "deep dive", "history", "investigated", "decade", "century", "tradition", "legacy", "archive", "origin", "evolved", "uncovered"],
+};
+
+function copySignal(copyJsonPath) {
+  if (!copyJsonPath || !fs.existsSync(copyJsonPath)) {
+    return { warm: 0, energetic: 0, documentary: 0, note: "(no copy.json)" };
+  }
+  let copy = null;
+  try { copy = JSON.parse(fs.readFileSync(copyJsonPath, "utf8")); }
+  catch { return { warm: 0, energetic: 0, documentary: 0, note: "(unparseable)" }; }
+
+  const corpus = [
+    typeof copy.narration === "string" ? copy.narration : "",
+    typeof copy.title === "string" ? copy.title : "",
+    ...(Array.isArray(copy.beats) ? copy.beats.flatMap((b) => [b?.headline || "", b?.body || ""]) : []),
+    copy?.cta?.tagline || "",
+  ].join(" ").toLowerCase();
+
+  if (!corpus.trim()) return { warm: 0, energetic: 0, documentary: 0, note: "(empty corpus)" };
+
+  const totals = { warm: 0, energetic: 0, documentary: 0 };
+  for (const [tone, words] of Object.entries(COPY_LEXICON)) {
+    for (const w of words) {
+      // Word-boundary match (case-insensitive). Multi-word phrases like
+      // "save time" use a literal substring search.
+      if (w.includes(" ")) {
+        if (corpus.includes(w)) totals[tone] += 1;
+      } else {
+        const re = new RegExp(`\\b${w.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}\\b`, "i");
+        if (re.test(corpus)) totals[tone] += 1;
+      }
+    }
+  }
+  // Convert a discrete count into a smooth contribution. 1 hit barely
+  // matters; 3+ is a clear voice signal.
+  for (const k of Object.keys(totals)) totals[k] = Math.min(totals[k] / 3, 2);
+
+  const top = Object.entries(totals).sort((a, b) => b[1] - a[1])[0];
+  let note = "(copy neutral)";
+  if (top && top[1] >= 0.34) {
+    if (top[0] === "warm") note = "copy: community-vocab";
+    else if (top[0] === "energetic") note = "copy: growth-vocab";
+    else if (top[0] === "documentary") note = "copy: narrative-vocab";
+  }
+  return { ...totals, note };
+}
+
+// Hostname / vertical hint. Light bias only — never enough to flip the
+// decision on its own, but tiebreaks against a neutral palette+copy.
+function domainSignal(hostname) {
+  const out = { warm: 0, energetic: 0, documentary: 0, note: "(domain neutral)" };
+  if (!hostname || typeof hostname !== "string") return out;
+  const lower = hostname.toLowerCase();
+
+  // Warm-bias TLDs and substrings.
+  if (/(\.org|\.community|\.foundation|\.charity|\.church|\.school|\.edu)$/.test(lower)
+      || /(\.co\.nz|\.org\.nz|\.org\.au|\.org\.uk)$/.test(lower)
+      || /(community|coop|trust|aid|relief|nonprofit)/.test(lower)) {
+    out.warm += 0.6;
+    out.note = `domain: ${lower.match(/\.[a-z.]+$/)?.[0] || "warm-vertical"}`;
+  }
+
+  // Energetic-bias commerce/tech substrings + TLDs.
+  if (/(shop|store|market|cart|labs|\.ai|\.io|\.app|\.dev|\.tech|saas|cloud)/.test(lower)
+      || /\.(ai|io|app|dev|tech|sh)$/.test(lower)) {
+    out.energetic += 0.6;
+    out.note = `domain: tech/commerce`;
+  }
+
+  // Documentary-bias substrings (museums, archives, news).
+  if (/(museum|archive|press|news|times|review|chronicle|journal|history|institute)/.test(lower)) {
+    out.documentary += 0.4;
+    out.note = `domain: editorial/archive`;
+  }
+
+  return out;
+}
+
+// Combine the three signals. Returns:
+//   { tone, reason, palette, copy, domain }
+// where `tone` is one of warm | energetic | documentary | neutral and
+// `reason` is a short " · "-joined string of which signals fired.
+function extractBrandTone({ tokensCssPath, copyJsonPath, hostname }) {
+  const palette = paletteSignal(tokensCssPath);
+  const copy = copySignal(copyJsonPath);
+  const domain = domainSignal(hostname);
+
+  const totals = { warm: 0, energetic: 0, documentary: 0 };
+  for (const sig of [palette, copy, domain]) {
+    totals.warm += sig.warm || 0;
+    totals.energetic += sig.energetic || 0;
+    totals.documentary += sig.documentary || 0;
+  }
+
+  const ranked = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+  const [topTone, topScore] = ranked[0];
+  const [, secondScore] = ranked[1] || ["", 0];
+
+  // Floor for "we have a real signal": top score >= 0.6 AND meaningfully
+  // ahead of the runner-up (margin >= 0.3). Otherwise neutral.
+  let tone = "neutral";
+  if (topScore >= 0.6 && (topScore - secondScore) >= 0.3) {
+    tone = topTone;
+  }
+
+  const reasonParts = [palette.note, copy.note, domain.note]
+    .filter((s) => s && !/neutral|none|empty|unparseable/.test(s));
+  const reason = reasonParts.length ? reasonParts.join(" · ") : "no strong signal";
+  return { tone, reason, palette, copy, domain, totals };
 }
 
 // --- helpers --------------------------------------------------------------
@@ -440,10 +722,52 @@ try {
   copyJsonPath = path.join(projectRoot, "compositions", `${slug}.copy.json`);
   assetsDir = path.join(projectRoot, "assets", slug);
 
-  // Pre-compute shared inputs the stage closures need.
-  const _structural = pickTemplate({ seconds, override: flags.template });
-  const _vibe = vibeForTemplate(_structural);
+  // ----- Tone resolution --------------------------------------------------
+  // Run after Stage 1 so the palette signal can read tokens-<slug>.css.
+  // copy.json may not exist yet (it's written by the upcoming parallel
+  // Stage 2). The tone reader gracefully skips that signal if the file
+  // is missing — palette + domain are still enough on most brands.
+  // Dry-run bypasses the reader: synthetic tokens don't carry brand intent
+  // and the smoke test asserts on a fixed wall-clock signature.
+  let resolvedTone = "neutral";
+  let resolvedToneReason = "(dry-run)";
+  if (!dryRun) {
+    const tokensCssPath = path.join(projectRoot, "design", `tokens-${slug}.css`);
+    const hostnameRaw = (() => {
+      try { return new URL(url).hostname; } catch { return ""; }
+    })();
+    const toneReport = extractBrandTone({
+      tokensCssPath,
+      copyJsonPath, // best-effort; missing file is fine (skips signal)
+      hostname: hostnameRaw,
+    });
+    resolvedTone = toneReport.tone;
+    resolvedToneReason = toneReport.reason;
+  }
+
+  // Pre-compute shared inputs the stage closures need. Now tone-aware.
+  const _picked = pickTemplate({ seconds, tone: resolvedTone, override: flags.template });
+  const _structural = _picked.name;
+  const _pickReason = _picked.reason;
+  // Music vibe: tone-mapped vibe wins over the template's hardcoded vibe
+  // when a tone is set. Otherwise fall back to the template's vibe (today's
+  // behaviour). pick-music.mjs accepts BOTH --template and --tone; --tone
+  // overrides --template's vibe inference downstream.
+  const _toneVibe = TONE_TO_VIBE[resolvedTone] || null;
+  const _vibe = _toneVibe || vibeForTemplate(_structural);
   const _bucket = bucketSeconds(seconds);
+
+  // Print the tone signal + template choice so the user sees what was
+  // inferred. This sits between the brand-extract and parallel-batch lines
+  // so the reader can scan top-down: URL -> tokens -> tone -> template.
+  if (!dryRun) {
+    console.log(`    tone: ${resolvedTone} (${resolvedToneReason})`);
+    const overrode = _pickReason === "override" ? " (--template override)"
+                   : _pickReason === "duration-bucket" ? " (duration bucket)"
+                   : ` (${_pickReason})`;
+    const musicVibe = _toneVibe ? ` -> music: ${_toneVibe}` : "";
+    console.log(`    template: ${_structural}${overrode}${musicVibe}`);
+  }
 
   // Deferred warnings — surfaced after the parallel batch finishes so they
   // don't garble the in-flight `[N-M/8] (parallel: …)` header.
@@ -534,6 +858,10 @@ try {
             return { output: `skipped (pick-music.mjs not found)`, soft: true };
           }
           const args = [`--template=${_vibe}`, `--seconds=${seconds}`, `--json`];
+          // Pass --tone so pick-music.mjs can override the template-derived
+          // vibe when the brand's tone disagrees with the structural template's
+          // hardcoded vibe (e.g. forced fallback templates).
+          if (resolvedTone && resolvedTone !== "neutral") args.push(`--tone=${resolvedTone}`);
           if (withMusic) args.push("--download");
           const r = await runNodeAsync(musicScript, args);
           if (r.status !== 0) {
@@ -635,7 +963,9 @@ try {
   // Pick a template, copy to index.html, rewrite paths, swap tokens, inject copy.
   await stage("assemble", () => {
     backupIndex();
-    const requested = pickTemplate({ seconds, override: flags.template });
+    // Reuse the tone-aware pick from Stages 2-4 so the assemble stage can't
+    // disagree with the music vibe / copy template that was generated above.
+    const requested = _structural;
     const resolved = resolveTemplatePath(requested);
     if (!resolved) {
       throw new Error(`no template available — looked for "${requested}" and shipped fallbacks in compositions/templates/`);

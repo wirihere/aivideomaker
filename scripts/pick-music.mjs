@@ -23,9 +23,16 @@
 //   node scripts/pick-music.mjs --template=warm-community
 //   node scripts/pick-music.mjs --template=kinetic-pop --seconds=30
 //   node scripts/pick-music.mjs --template=documentary --download
+//   node scripts/pick-music.mjs --tone=warm                      # tone -> vibe shortlist
 //
 // Flags:
-//   --template=<name>   (required)  warm-community | kinetic-pop | documentary | quiet-premium
+//   --template=<name>   (required unless --tone is set)  warm-community | kinetic-pop | documentary | quiet-premium
+//   --tone=<name>       (optional)  warm | energetic | documentary | neutral.
+//                                   Overrides --template's vibe inference. Maps tone -> vibe:
+//                                     warm        -> warm-community
+//                                     energetic   -> kinetic-pop
+//                                     documentary -> documentary
+//                                     neutral     -> falls back to --template
 //   --seconds=N         (optional)  filter to tracks where duration >= N + 5s buffer
 //   --top=N             (optional)  return at most N tracks (default 5)
 //   --download          (optional)  download the top pick into assets/music/<slug>.mp3
@@ -55,9 +62,19 @@ const projectRoot = path.resolve(__dirname, "..");
 
 const VALID_TEMPLATES = ["warm-community", "kinetic-pop", "documentary", "quiet-premium"];
 
+// Tone -> vibe-shortlist mapping. Mirrors TONE_TO_VIBE in scripts/video.mjs.
+// Kept here too so pick-music.mjs can be invoked standalone with just a tone.
+const TONE_TO_TEMPLATE = {
+  warm: "warm-community",
+  energetic: "kinetic-pop",
+  documentary: "documentary",
+  neutral: null, // signals "use --template instead"
+};
+const VALID_TONES = Object.keys(TONE_TO_TEMPLATE);
+
 // --- Argument parsing --------------------------------------------------------
 function parseArgs(argv) {
-  const out = { template: null, seconds: null, top: 5, download: false, json: false };
+  const out = { template: null, tone: null, seconds: null, top: 5, download: false, json: false };
   for (const arg of argv.slice(2)) {
     const m = arg.match(/^--([^=]+)(?:=(.*))?$/);
     if (!m) continue;
@@ -65,6 +82,9 @@ function parseArgs(argv) {
     switch (key) {
       case "template":
         out.template = val || null;
+        break;
+      case "tone":
+        out.tone = val || null;
         break;
       case "seconds":
         out.seconds = val ? Number(val) : null;
@@ -92,14 +112,16 @@ function parseArgs(argv) {
 
 function printHelp() {
   process.stdout.write(
-    "Usage: node scripts/pick-music.mjs --template=<name> [--seconds=N] [--top=N] [--download] [--json]\n" +
+    "Usage: node scripts/pick-music.mjs --template=<name> [--tone=<name>] [--seconds=N] [--top=N] [--download] [--json]\n" +
     "\n" +
     "Templates: " + VALID_TEMPLATES.join(", ") + "\n" +
+    "Tones:     " + VALID_TONES.join(", ") + "  (overrides --template vibe)\n" +
     "\n" +
     "Examples:\n" +
     "  node scripts/pick-music.mjs --template=warm-community\n" +
     "  node scripts/pick-music.mjs --template=kinetic-pop --seconds=30\n" +
-    "  node scripts/pick-music.mjs --template=documentary --download\n"
+    "  node scripts/pick-music.mjs --template=documentary --download\n" +
+    "  node scripts/pick-music.mjs --tone=warm                          # picks warm-community shortlist\n"
   );
 }
 
@@ -270,22 +292,51 @@ async function main() {
     process.exit(0);
   }
 
-  if (!args.template) {
-    console.error("[pick-music] ERROR: --template is required");
+  // --tone, when set + non-neutral, overrides --template's vibe inference.
+  // This lets `video.mjs` pass `--tone=warm` and have music swing to the
+  // warm-community shortlist even when the structural template was forced
+  // by a fallback path to a kinetic-pop default.
+  let resolvedTemplate = args.template;
+  let toneOverrideNote = "";
+  if (args.tone) {
+    if (!VALID_TONES.includes(args.tone)) {
+      console.error(
+        `[pick-music] ERROR: unknown tone "${args.tone}". Valid: ${VALID_TONES.join(", ")}`
+      );
+      process.exit(2);
+    }
+    const mapped = TONE_TO_TEMPLATE[args.tone];
+    if (mapped) {
+      if (resolvedTemplate && resolvedTemplate !== mapped) {
+        toneOverrideNote = `tone=${args.tone} -> ${mapped} (overrode --template=${resolvedTemplate})`;
+      } else {
+        toneOverrideNote = `tone=${args.tone} -> ${mapped}`;
+      }
+      resolvedTemplate = mapped;
+    }
+    // tone=neutral falls through to --template (mapped is null).
+  }
+
+  if (!resolvedTemplate) {
+    console.error("[pick-music] ERROR: --template (or --tone) is required");
     printHelp();
     process.exit(2);
   }
 
-  if (!VALID_TEMPLATES.includes(args.template)) {
+  if (!VALID_TEMPLATES.includes(resolvedTemplate)) {
     console.error(
-      `[pick-music] ERROR: unknown template "${args.template}". Valid: ${VALID_TEMPLATES.join(", ")}`
+      `[pick-music] ERROR: unknown template "${resolvedTemplate}". Valid: ${VALID_TEMPLATES.join(", ")}`
     );
     process.exit(2);
   }
 
+  if (toneOverrideNote && !args.json) {
+    console.error(`[pick-music] ${toneOverrideNote}`);
+  }
+
   let shortlist;
   try {
-    shortlist = loadShortlist(args.template);
+    shortlist = loadShortlist(resolvedTemplate);
   } catch (err) {
     console.error(`[pick-music] ERROR: ${err.message}`);
     process.exit(1);
