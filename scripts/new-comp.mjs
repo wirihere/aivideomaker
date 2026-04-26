@@ -422,8 +422,26 @@ ${fontImports.length ? `\n${fontImports.map(u => `@import url("${u}");`).join("\
 `;
 
 const tokensPath = path.join(projectRoot, "design", `tokens-${slug}.css`);
-fs.writeFileSync(tokensPath, tokensCss);
-console.log(`✓ wrote design/tokens-${slug}.css`);
+// Preserve hand-tuned tokens if the existing file has the HAND-TUNED sentinel.
+// Auto-extraction routinely guesses wrong on accent colors (sale tags / form
+// borders) so once a human edits + marks the file, the orchestrator must NOT
+// re-clobber it on subsequent runs.
+const HAND_TUNED_SENTINEL = "HAND-TUNED";
+let preservedHandTuned = false;
+try {
+  if (fs.existsSync(tokensPath)) {
+    const existing = fs.readFileSync(tokensPath, "utf8");
+    if (existing.includes(HAND_TUNED_SENTINEL)) {
+      preservedHandTuned = true;
+    }
+  }
+} catch {}
+if (!preservedHandTuned) {
+  fs.writeFileSync(tokensPath, tokensCss);
+  console.log(`✓ wrote design/tokens-${slug}.css`);
+} else {
+  console.log(`✓ kept design/tokens-${slug}.css (HAND-TUNED sentinel detected)`);
+}
 
 // --- write compositions/<slug>.html ---------------------------------------
 

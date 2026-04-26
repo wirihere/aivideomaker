@@ -36,6 +36,12 @@
 //                      tag = 9x16 | 1x1 | 16x9. Default keeps existing
 //                      single-file output (byte-identical to pre-flag).
 //   --auto-fix         run `npm run fix:apply` if quality gate fails
+//   --allow-watch      allow render even when the verifier verdict is `watch`.
+//                      Default: BLOCKED. Per docs/PROCESS.md (wave-Q lesson),
+//                      only `ship` verdicts pass — `watch` triggers another
+//                      iteration of the silent loop. Pass --allow-watch to
+//                      override (e.g., when intentionally rendering for
+//                      critique).
 //   --keep-artifacts   don't restore index.html at end (for inspection)
 //   --dry-run          skip every child spawn, write synthetic outputs, lint
 //                      only — exercises orchestrator + parallel-batch wiring
@@ -95,6 +101,10 @@ const keepArtifacts = !!flags["keep-artifacts"];
 // between assemble and quality-gate. ON by default; --no-verify opts out.
 // Always off in dry-run (synthetic copy doesn't pass meaningful checks).
 const skipVerify = !!flags["no-verify"] || dryRun;
+// Per docs/PROCESS.md: only `ship` verdicts pass the render gate. `watch`
+// blocks render by default, forcing another silent-loop iteration. Pass
+// --allow-watch to override (e.g. when the user wants to render-and-critique).
+const allowWatch = !!flags["allow-watch"] || dryRun;
 
 // --- aspects --------------------------------------------------------------
 // Multi-aspect rendering for ad placements (Meta, Google Ads, Scalify):
@@ -150,6 +160,7 @@ const TEMPLATE_REGISTRY = {
   "before-after":    { file: "before-after-30s.html",  seconds: 30, dims: [1920, 1080], vibe: "kinetic-pop"    },
   "faq-quick":       { file: "faq-quick-30s.html",     seconds: 30, dims: [1920, 1080], vibe: "warm-community" },
   "community-app-tour": { file: "community-app-tour-30s.html", seconds: 30, dims: [1080, 1920], vibe: "warm-community" },
+  "kinetic-product":    { file: "kinetic-product-30s.html",    seconds: 30, dims: [1080, 1920], vibe: "kinetic-pop"   },
   "testimonial":     { file: "testimonial-45s.html",   seconds: 45, dims: [1920, 1080], vibe: "warm-community" },
   "founder-story":   { file: "founder-story-60s.html", seconds: 60, dims: [1920, 1080], vibe: "documentary"    },
   "case-study":      { file: "case-study-60s.html",    seconds: 60, dims: [1920, 1080], vibe: "documentary"    },
@@ -826,8 +837,11 @@ if (dryRun) {
 console.log(`  slug: ${slug} · target seconds: ${seconds} · render: ${skipRender ? "no" : "yes"}${withMusic ? " · music: on" : ""}${skipTts ? " · tts: off" : " · tts: on"}${aspectsExplicit ? ` · aspects: ${aspects.join(",")}` : ""}`);
 console.log("");
 
-// 9 stages when --verify is on (default), 8 when --no-verify is set.
-const TOTAL_STAGES = skipVerify ? 8 : 9;
+// 10 stages when --verify is on (default — incl. frame flipbook), 8 when
+// --no-verify is set (skips both verify + flipbook). The flipbook stage runs
+// after quality-gate and before render — it's the agent/human-readable
+// version of the verifier's Playwright scrub.
+const TOTAL_STAGES = skipVerify ? 8 : (skipRender ? 9 : 10);
 const stage = makeStageRunner(TOTAL_STAGES);
 let copyJsonPath = null;
 let assetsDir = null;
@@ -1412,7 +1426,18 @@ try {
       }
       const reportNote = report ? ` · report: ${report}` : "";
       if (verdict === "watch") {
-        return { output: `verdict: watch (continue, see report)${reportNote}`, soft: true };
+        // Per docs/PROCESS.md (wave-Q lesson): only `ship` verdicts pass the
+        // render gate. `watch` triggers another iteration of the silent loop,
+        // not a render. Hard-block by default; --allow-watch opts out for the
+        // case where the user explicitly wants to render anyway and critique.
+        if (allowWatch) {
+          return { output: `verdict: watch (allowed via --allow-watch)${reportNote}`, soft: true };
+        }
+        throw new Error(
+          `verdict: watch — render BLOCKED by default (PROCESS.md gate)${reportNote}\n` +
+          `  Loop the silent cycle (fix findings → re-verify) until verdict=ship.\n` +
+          `  Override: pass --allow-watch to render anyway.`
+        );
       }
       return `verdict: ${verdict}${reportNote}`;
     });
@@ -1466,6 +1491,28 @@ try {
   // variants alongside the canonical render — cheap (~5s/aspect on a 30s
   // clip) compared to re-rendering. The default (no --aspects flag) is
   // byte-identical to pre-flag behaviour: one render, one MP4.
+  // ----- Stage 8.5: frame flipbook ----------------------------------------
+  // Per docs/PROCESS.md cycle step 2 + memory rule
+  // `feedback_silent_loop_not_skipped`: the verifier scrub is not enough on
+  // its own. Extract frames the agent + human can READ before render.
+  // Skipped on --no-verify and --no-render (both imply not gating render).
+  if (!skipVerify && !skipRender) {
+    await stage("frame flipbook", async () => {
+      const flipbookScript = path.join(__dirname, "frame-flipbook.mjs");
+      if (!fs.existsSync(flipbookScript)) {
+        return { output: "skipped (frame-flipbook.mjs missing)", soft: true };
+      }
+      const r = runNode(flipbookScript, [`--slug=${slug}`], { quiet: true });
+      if (r.status !== 0) {
+        return { output: `frame-flipbook failed (exit ${r.status}) — see stderr`, soft: true };
+      }
+      const out = (r.stdout || "").toString("utf8");
+      const dirMatch = out.match(/in (tmp\/[^/\s]+)\//);
+      const dirPart = dirMatch ? `tmp/${path.basename(dirMatch[1])}/` : "(see stdout)";
+      return `${dirPart}`;
+    });
+  }
+
   await stage("render", async () => {
     if (skipRender) {
       return { output: `skipped (--no-render)`, soft: true };
