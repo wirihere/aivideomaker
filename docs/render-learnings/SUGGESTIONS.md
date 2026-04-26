@@ -153,3 +153,51 @@ Empirical rules of thumb derived from analysing every track in
   the rule "the lead primitive must not be `glitchBurst` /
   `vhs-jitter` / `noir-flash` / `radialMask`-with-high-dim", and verify
   with a 3-still pixel-audit pass before committing to a template.
+
+## Script timing — narration ↔ scene ↔ visible-text alignment
+
+- _Initial entry._ The verifier was previously blind to whether the words
+  being spoken at time `t` agree with what's on screen at time `t`. A comp
+  could pass every other check and still feel "off-beat" because the
+  narrator was on beat 3 while the visual stack still showed beat 2.
+- The verifier now correlates VTT cues, `.scene.clip` data-start/duration
+  windows from the assembled HTML, the per-second visible-text scrub, and
+  the `at:` parameter on every `comboFx.* / effectFx.* / glitterFx.* /
+  textFx.cascade` call to surface six findings:
+  - **`script-density-imbalance` (warn)** — a scene's words/sec must sit
+    within 0.5x–2.0x of the comp average. Outliers >2x feel rushed,
+    <0.5x feel draggy.
+  - **`scene-narration-mismatch` (warn)** — for each scene, ≥25% of its
+    spoken words must share a token with the scene's visible text or
+    its assigned beat (paraphrase-tolerant). Below that = visual is on
+    a different beat than the audio.
+  - **`silence-beat-misplaced` (info)** — VTT gaps >1.0s recorded with
+    the scene they land in. Not a bug; just data so future runs can
+    confirm planned silences survived.
+  - **`narration-overrun-into-cta` (error)** — narration must end before
+    the LAST `.scene.clip` starts. If it doesn't, the CTA reads as a
+    fade-out under late-running narration. Bumps verdict to `needs-fix`.
+  - **`word-emphasis-orphan` (warn)** — identity tokens (brand name +
+    URL host first label + cta verb + first-beat headline keywords)
+    should land in the first 1.5s of a scene OR within 0.3s of a
+    stamp/glitch/burst event. Mid-scene quiet utterances of identity
+    words read as throwaway.
+  - **`script-fits-budget` (info)** — total narration vs comp duration.
+    Records slack/overrun.
+- Decision rules:
+  - Any `narration-overrun-into-cta` → **error** (`needs-fix`).
+  - 2+ `scene-narration-mismatch` warnings → **error** (`needs-fix`).
+  - Single mismatches, density outliers, emphasis orphans → `watch`.
+- Next time:
+  - Target ~0.85–1.15x the comp avg words/sec per scene. The CTA scene
+    can fall outside the band (it's deliberately near-silent).
+  - Land identity utterances at scene starts or near a stamp/burst —
+    don't drop the brand name in mid-scene quiet. Audit the
+    `at:` params during template authoring.
+  - Plan the narration script so its tail ends ~0.3s before the CTA
+    scene begins. Edge-TTS pronunciation jitter can extend a 28s read
+    to 29.6s — assume +5% slop.
+  - When `scene-narration-mismatch` fires twice on the same template,
+    the visuals and copy are out of sync; either the copy generator
+    needs to map beats to scene ids (not just rely on time-bands) or
+    the template needs an extra scene to absorb the misaligned beat.
