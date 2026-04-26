@@ -1010,6 +1010,39 @@ try {
     // Token swap: tokens-PLACEHOLDER.css → tokens-<slug>.css
     html = html.replace(/tokens-PLACEHOLDER\.css/g, `tokens-${slug}.css`);
 
+    // Asset path swap: assets/PLACEHOLDER/ → assets/<slug>/
+    // Templates ship with placeholder src attributes like
+    // `assets/PLACEHOLDER/hero.png`. Rewrite to the real per-brand directory
+    // pull-assets.mjs writes. Per-image existence + fallback handled below.
+    html = html.replace(/assets\/PLACEHOLDER\//g, `assets/${slug}/`);
+
+    // Per-template image-slot fallback. The hero image is optional — if the
+    // brand only has a logo on disk, fall back to that. If neither exists,
+    // strip the src so the browser shows nothing rather than a broken-image
+    // glyph. Path is the conventional assets/<slug>/<kind>.png that
+    // pull-assets.mjs writes.
+    const heroDisk = path.join(projectRoot, "assets", slug, "hero.png");
+    const logoDisk = path.join(projectRoot, "assets", slug, "logo.png");
+    const heroExists = fs.existsSync(heroDisk);
+    const logoExists = fs.existsSync(logoDisk);
+
+    // s1-hero: prefer hero.png, fall back to logo.png, else strip src.
+    if (!heroExists) {
+      const replacement = logoExists ? `assets/${slug}/logo.png` : "";
+      html = html.replace(
+        /(<img[^>]*\bid="s1-hero"[^>]*\bsrc=")[^"]*(")/i,
+        `$1${replacement}$2`,
+      );
+    }
+    // s5-logo: prefer logo.png, fall back to hero.png, else strip src.
+    if (!logoExists) {
+      const replacement = heroExists ? `assets/${slug}/hero.png` : "";
+      html = html.replace(
+        /(<img[^>]*\bid="s5-logo"[^>]*\bsrc=")[^"]*(")/i,
+        `$1${replacement}$2`,
+      );
+    }
+
     // Copy injection — load whatever's in compositions/<slug>.copy.json and
     // splice into the placeholder strings the templates use. This is a
     // best-effort textual swap so we don't have to know each template's

@@ -44,13 +44,16 @@
 <!-- /HEAD-INCLUDE -->
 
 <style>
-  body { margin: 0; background: var(--card-paper, #FAFAFA); font-family: var(--card-font-ui); }
+  /* Background uses --card-slate (warm paper/cream) so brand tokens drive
+     the canvas. Falling back to --card-paper, then a neutral hex if neither
+     token is defined. */
+  body { margin: 0; background: var(--card-slate, var(--card-paper, #F4EFE7)); font-family: var(--card-font-ui); }
 
   .comp {
     width: 1080px; height: 1920px;
     position: relative; overflow: hidden;
-    background: var(--card-paper, #FAFAFA);
-    color: var(--card-navy, #0F1115);
+    background: var(--card-slate, var(--card-paper, #F4EFE7));
+    color: var(--card-navy, var(--card-accent, #1B2A3D));
   }
 
   .scene {
@@ -68,7 +71,7 @@
     letter-spacing: var(--card-kicker-track, 0.28em);
     text-transform: uppercase;
     font-weight: 500;
-    color: var(--card-accent, #5A7BAE);
+    color: var(--card-accent, #1B2A3D);
     margin-bottom: 36px;
     opacity: 0.9;
   }
@@ -84,11 +87,24 @@
 
   /* ---- Scene 1: Brand chip ---- */
   .s1 {
-    background: var(--card-paper, #FAFAFA);
+    /* Warm paper/cream surface — brand tokens decide the actual hue. */
+    background: var(--card-slate, var(--card-paper, #F4EFE7));
   }
   .s1-content {
     display: flex; flex-direction: column;
     align-items: center; text-align: center;
+  }
+  .s1-hero {
+    /* Brand hero/screenshot. Sized at ~30% viewport height (≈ 576px for
+       a 1920-tall comp), centered, contained so portrait phone screenshots
+       aren't stretched. Drop-shadow gives just enough lift on cream. */
+    display: block;
+    height: 560px;
+    max-width: 70%;
+    object-fit: contain;
+    margin: 0 auto 56px auto;
+    filter: drop-shadow(0 12px 28px rgba(27, 42, 61, 0.18));
+    border-radius: 24px;
   }
   .s1-mark {
     font-family: var(--card-font-display);
@@ -96,7 +112,7 @@
     font-size: 180px;
     letter-spacing: -0.025em;
     line-height: 0.95;
-    color: var(--card-navy, #0F1115);
+    color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
     margin: 0;
   }
   .s1-tag {
@@ -105,8 +121,9 @@
     font-weight: 400;
     letter-spacing: 0.20em;
     text-transform: uppercase;
-    color: var(--card-slate-ink, #4b5a6d);
+    color: var(--card-accent, var(--card-navy, #1B2A3D));
     margin-top: 36px;
+    opacity: 0.78;
   }
 
   /* ---- Q+A scenes ---- */
@@ -119,7 +136,7 @@
     font-family: var(--card-font-display);
     font-weight: 300;
     font-size: 96px;
-    color: var(--card-accent, #5A7BAE);
+    color: var(--card-accent, #1B2A3D);
     line-height: 1;
     margin-bottom: 36px;
     letter-spacing: -0.02em;
@@ -130,7 +147,7 @@
     font-size: 84px;
     line-height: 1.08;
     letter-spacing: -0.02em;
-    color: var(--card-navy, #0F1115);
+    color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
     margin: 0;
     max-width: 880px;
   }
@@ -139,15 +156,16 @@
     font-weight: 400;
     font-size: 38px;
     line-height: 1.45;
-    color: var(--card-slate-ink, #4b5a6d);
+    color: var(--card-navy, var(--card-accent, #1B2A3D));
     margin: 28px 0 0 0;
     max-width: 880px;
+    opacity: 0.82;
   }
   .qa-rule {
     width: 80px;
     height: 1px;
-    background: var(--card-slate-ink, #4b5a6d);
-    opacity: 0.32;
+    background: var(--card-warn, var(--card-accent, #1B2A3D));
+    opacity: 0.55;
     margin: 32px 0;
     display: block;
     transform-origin: left center;
@@ -155,18 +173,28 @@
 
   /* ---- Scene 5: CTA ---- */
   .s5 {
-    background: var(--card-navy, #0F1115);
-    color: var(--card-paper, #FAFAFA);
+    background: var(--card-accent, var(--card-navy, #1B2A3D));
+    color: var(--card-paper, #F4C96B);
   }
   .s5-content {
     display: flex; flex-direction: column;
     align-items: center; text-align: center;
   }
+  .s5-logo {
+    /* Small brand mark next to the CTA wordmark. Square logos look best
+       at ~96px so they read as a stamp, not a hero element. */
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    margin: 0 auto 32px auto;
+    border-radius: 18px;
+  }
   .s5-cta {
     font-family: var(--card-font-display);
     font-weight: 300;
     font-size: 140px;
-    color: var(--card-paper, #FAFAFA);
+    color: var(--card-paper, #F4C96B);
     letter-spacing: -0.025em;
     line-height: 1.0;
     margin: 0;
@@ -175,7 +203,7 @@
     font-family: var(--card-font-ui);
     font-weight: 400;
     font-size: 36px;
-    color: var(--card-paper-soft, #d7dce3);
+    color: var(--card-paper-soft, var(--card-paper, #F4C96B));
     letter-spacing: 0.10em;
     margin-top: 32px;
     opacity: 0.92;
@@ -195,6 +223,7 @@
        data-start="0" data-duration="4" data-track-index="1"
        data-scene-grade="soft">
     <div class="s1-content">
+      <img id="s1-hero" class="s1-hero" src="assets/PLACEHOLDER/hero.png" alt="">
       <div id="s1-kicker" class="scene__kicker">THREE QUESTIONS</div>
       <h1 id="s1-mark" class="s1-mark">Asked often.</h1>
       <div id="s1-tag" class="s1-tag">ANSWERED PLAINLY</div>
@@ -238,6 +267,7 @@
   <div id="s5" class="scene s5 clip"
        data-start="28" data-duration="2" data-track-index="1">
     <div class="s5-content">
+      <img id="s5-logo" class="s5-logo" src="assets/PLACEHOLDER/logo.png" alt="">
       <h2 id="s5-cta" class="s5-cta">Book a session.</h2>
       <div id="s5-url" class="s5-url">yourbrand.com/book</div>
     </div>
@@ -273,6 +303,10 @@
   window.__timelines["faq-quick-30s"] = tl;
 
   // ---- Scene 1: 0–4s — brand chip -----------------------------------
+  tl.fromTo("#s1-hero",
+    { y: 24, opacity: 0, scale: 0.97 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: "power1.out" },
+    0.2);
   tl.fromTo("#s1 .scene__kicker",
     { y: 16, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
@@ -329,6 +363,10 @@
     23.4);
 
   // ---- Scene 5: 28–30s — CTA ----------------------------------------
+  tl.fromTo("#s5-logo",
+    { y: 12, opacity: 0, scale: 0.92 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "power1.out" },
+    28.0);
   tl.fromTo("#s5-cta",
     { y: 24, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
@@ -338,7 +376,7 @@
     { y: 0, opacity: 1, duration: 0.6, ease: "power1.out" },
     28.7);
   // Final fade — only the last scene may animate elements out.
-  tl.to(["#s5-cta", "#s5-url"], { opacity: 0.92, duration: 0.3 }, 29.5);
+  tl.to(["#s5-logo", "#s5-cta", "#s5-url"], { opacity: 0.92, duration: 0.3 }, 29.5);
 
   // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
   if (window === window.top) {
