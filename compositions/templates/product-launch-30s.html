@@ -43,13 +43,15 @@
 <!-- /HEAD-INCLUDE -->
 
 <style>
-  body { margin: 0; background: var(--card-paper, #0E0E12); font-family: var(--card-font-ui); }
+  /* Light brand canvas — paper/cream. Fallback chain prefers a light neutral
+     so the launch composition doesn't read as black-on-white. */
+  body { margin: 0; background: var(--card-paper, var(--card-slate, #FBF9F6)); font-family: var(--card-font-ui); }
 
   .comp {
     width: 1920px; height: 1080px;
     position: relative; overflow: hidden;
-    background: var(--card-paper, #0E0E12);
-    color: var(--card-navy, #FBF9F6);
+    background: var(--card-paper, var(--card-slate, #FBF9F6));
+    color: var(--card-navy, var(--card-navy-deep, var(--card-accent, #1B2A3D)));
   }
 
   .scene {
@@ -67,19 +69,32 @@
     letter-spacing: var(--card-kicker-track, 0.32em);
     text-transform: uppercase;
     font-weight: 700;
-    color: var(--card-accent, #1A9E8F);
+    color: var(--card-accent, var(--card-navy, #1A9E8F));
     margin-bottom: 28px;
     opacity: 0.92;
   }
 
   /* ---- Scene 1: Brand chip ---- */
+  /* Brand-arrival surface: deep navy fill with cream wordmark. Hero image
+     sits above the wordmark to anchor brand recognition. */
   .s1 {
-    background: var(--card-navy, #0E0E12);
-    color: var(--card-paper, #FBF9F6);
+    background: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
+    color: var(--card-paper, var(--card-paper-soft, #FBF9F6));
   }
   .s1-content {
     display: flex; flex-direction: column;
     align-items: center; text-align: center;
+  }
+  .s1-hero {
+    /* Brand hero/screenshot above the wordmark. Sized to lift but not
+       overshadow the BRAND mark below. */
+    display: block;
+    height: 320px;
+    max-width: 60%;
+    object-fit: contain;
+    margin: 0 auto 40px auto;
+    border-radius: 22px;
+    filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.32));
   }
   .s1-mark {
     font-family: var(--card-font-display);
@@ -87,11 +102,11 @@
     font-size: 280px;
     letter-spacing: -0.03em;
     line-height: 0.95;
-    color: var(--card-paper, #FBF9F6);
+    color: var(--card-paper, var(--card-paper-soft, #FBF9F6));
     margin: 0;
   }
   .s1-mark-em {
-    color: var(--card-accent, #1A9E8F);
+    color: var(--card-accent, var(--card-warn, #1A9E8F));
     display: inline-block;
   }
   .s1-tag {
@@ -100,19 +115,19 @@
     font-weight: 700;
     letter-spacing: 0.32em;
     text-transform: uppercase;
-    color: var(--card-paper-soft, #d7dce3);
+    color: var(--card-paper-soft, var(--card-paper, #d7dce3));
     margin-top: 30px;
   }
 
   /* ---- Scene 2: Product reveal — multiplane dolly + cascade ---- */
   .s2 {
-    background: var(--card-paper, #FBF9F6);
-    color: var(--card-navy, #0E0E12);
+    background: var(--card-paper, var(--card-slate, #FBF9F6));
+    color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
   }
   .s2 .plane-bg {
     font-family: var(--card-font-display);
     font-size: 460px; font-weight: 800;
-    color: rgba(26, 158, 143, 0.12);
+    color: color-mix(in srgb, var(--card-accent, #1A9E8F) 12%, transparent);
     letter-spacing: -0.04em;
     text-align: center;
     line-height: 0.9;
@@ -123,20 +138,20 @@
     font-size: 200px;
     letter-spacing: -0.03em;
     line-height: 0.95;
-    color: var(--card-navy);
+    color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
     text-align: center;
     margin: 0;
     max-width: 1700px;
   }
   .s2-headline-em {
-    color: var(--card-accent, #1A9E8F);
+    color: var(--card-accent, var(--card-warn, #1A9E8F));
     display: inline-block;
   }
   .s2-support {
     font-family: var(--card-font-ui);
     font-size: 38px;
     font-weight: 600;
-    color: var(--card-slate-ink, #4b5a6d);
+    color: var(--card-slate-ink, var(--card-navy, #4b5a6d));
     line-height: 1.3;
     text-align: center;
     margin-top: 28px;
@@ -145,8 +160,8 @@
 
   /* ---- Scene 3: Three-feature row + ambient sparkle ---- */
   .s3 {
-    background: var(--card-navy, #0E0E12);
-    color: var(--card-paper, #FBF9F6);
+    background: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
+    color: var(--card-paper, var(--card-paper-soft, #FBF9F6));
   }
   .s3-sparkle-host {
     position: absolute; inset: 0;
@@ -168,8 +183,8 @@
   .s3-icon {
     width: 130px; height: 130px;
     border-radius: 26px;
-    background: var(--card-accent, #1A9E8F);
-    color: var(--card-paper, #FBF9F6);
+    background: var(--card-accent, var(--card-warn, #1A9E8F));
+    color: var(--card-paper, var(--card-paper-soft, #FBF9F6));
     display: flex; align-items: center; justify-content: center;
     font-size: 64px; line-height: 1;
     margin-bottom: 32px;
@@ -179,7 +194,7 @@
     font-weight: 800;
     font-size: 76px;
     letter-spacing: -0.02em;
-    color: var(--card-paper, #FBF9F6);
+    color: var(--card-paper, var(--card-paper-soft, #FBF9F6));
     line-height: 1;
     margin-bottom: 14px;
   }
@@ -187,15 +202,15 @@
     font-family: var(--card-font-ui);
     font-size: 28px;
     font-weight: 500;
-    color: var(--card-paper-soft, #d7dce3);
+    color: var(--card-paper-soft, var(--card-paper, #d7dce3));
     line-height: 1.4;
     max-width: 380px;
   }
 
   /* ---- Scene 4: Available now + URL — glitter burst ---- */
   .s4 {
-    background: var(--card-paper, #FBF9F6);
-    color: var(--card-navy, #0E0E12);
+    background: var(--card-paper, var(--card-slate, #FBF9F6));
+    color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
   }
   .s4-burst-host {
     position: absolute; inset: 0;
@@ -207,24 +222,33 @@
     display: flex; flex-direction: column;
     align-items: center; text-align: center;
   }
+  .s4-logo {
+    /* Small brand stamp above the availability date. */
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    margin: 0 auto 24px auto;
+    border-radius: 18px;
+  }
   .s4-availability {
     font-family: var(--card-font-display);
     font-weight: 800;
     font-size: 160px;
-    color: var(--card-navy, #0E0E12);
+    color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
     letter-spacing: -0.025em;
     line-height: 0.95;
     margin: 0;
   }
   .s4-date {
-    color: var(--card-accent, #1A9E8F);
+    color: var(--card-accent, var(--card-warn, #1A9E8F));
     display: inline-block;
   }
   .s4-url {
     font-family: var(--card-font-ui);
     font-weight: 700;
     font-size: 44px;
-    color: var(--card-slate-ink, #4b5a6d);
+    color: var(--card-slate-ink, var(--card-navy, #4b5a6d));
     letter-spacing: 0.06em;
     margin-top: 36px;
     opacity: 0.92;
@@ -244,6 +268,7 @@
        data-start="0" data-duration="4" data-track-index="1"
        data-scene-grade="noir">
     <div class="s1-content">
+      <img id="s1-hero" class="s1-hero" src="assets/PLACEHOLDER/hero.png" alt="">
       <h1 id="s1-mark" class="s1-mark"><span id="s1-mark-em" class="s1-mark-em">BRAND</span></h1>
       <div id="s1-tag" class="s1-tag">LAUNCHING TUESDAY</div>
     </div>
@@ -294,7 +319,8 @@
        data-start="24" data-duration="6" data-track-index="1">
     <div id="s4-burst-host" class="s4-burst-host"></div>
     <div class="s4-content">
-      <div class="scene__kicker" style="color: var(--card-accent, #1A9E8F);">SHIPS</div>
+      <img id="s4-logo" class="s4-logo" src="assets/PLACEHOLDER/logo.png" alt="">
+      <div class="scene__kicker" style="color: var(--card-accent, var(--card-navy, #1A9E8F));">SHIPS</div>
       <h2 id="s4-availability" class="s4-availability"><span id="s4-date" class="s4-date">TUESDAY</span></h2>
       <div id="s4-url" class="s4-url">yourbrand.com/order</div>
     </div>
@@ -330,6 +356,10 @@
   window.__timelines["product-launch-30s"] = tl;
 
   // ---- Scene 1: 0–4s — brand stamp + glitch -------------------------
+  tl.fromTo("#s1-hero",
+    { y: 18, opacity: 0, scale: 0.95 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "power1.out" },
+    0.0);
   textFx.stamp(tl, "#s1-mark", { at: 0.2, duration: 0.6, fromScale: 1.5 });
   effectFx.glitchBurst(tl, "#s1-mark-em", { at: 0.9, duration: 0.18 });
   effectFx.glitchBurst(tl, "#s1-mark-em", { at: 1.5, duration: 0.18 });
@@ -366,6 +396,10 @@
   textFx.stagger(tl, "#s3-t3", { at: 15.5, duration: 0.5, stagger: 0.04, rotation: -10 });
 
   // ---- Scene 4: 24–30s — available now + URL + glitter burst -------
+  tl.fromTo("#s4-logo",
+    { y: 12, opacity: 0, scale: 0.92 },
+    { y: 0, opacity: 1, scale: 1, duration: 0.4, ease: "power1.out" },
+    24.0);
   tl.fromTo("#s4 .scene__kicker",
     { y: 18, opacity: 0 },
     { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
@@ -384,7 +418,7 @@
     { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
     26.4);
   // Final fade — only the last scene may animate elements out.
-  tl.to(["#s4-availability", "#s4-url"], { opacity: 0.92, duration: 0.4 }, 29.4);
+  tl.to(["#s4-logo", "#s4-availability", "#s4-url"], { opacity: 0.92, duration: 0.4 }, 29.4);
 
   // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
   if (window === window.top) {

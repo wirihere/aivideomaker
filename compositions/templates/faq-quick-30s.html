@@ -2,32 +2,40 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>FAQ Quick — 30s vertical (quiet-premium)</title>
+<title>FAQ Quick — 30s vertical (motion-saturated explainer)</title>
 
 <!--
   STRUCTURAL TEMPLATE — FAQ QUICK (30s, 1080×1920)
   ================================================
-  Format:        Vertical 30-second three-question FAQ explainer.
-  Base template: quiet-premium (spacious, light Inter, generous whitespace).
-  Recommended LUT: --lut=cool --strength=0.55
+  Format:        Vertical 30-second three-step explainer.
+  Base template: warm-community (cream/honey palette, soft motion).
+  Recommended LUT: --lut=warm --strength=0.55
   Scenes:
-    1.  0–4s   Brand chip — wordmark + kicker
-    2.  4–12s  Q1 + A1 — fade-up + hairline rule
-    3. 12–20s  Q2 + A2 — fade-up + hairline rule
-    4. 20–28s  Q3 + A3 — fade-up + hairline rule
-    5. 28–30s  CTA — wordmark + URL
+    1.  0–4s   Brand intro — kenBurns hero + cinematicReveal mark + ambient glitter
+    2.  4–12s  Step 01 — cropped hero parallax + cascade headline + audio-reactive pulse
+    3. 12–20s  Step 02 — corner hero + testimonialReveal headline + dot cascade
+    4. 20–28s  Step 03 — full hero + glow halo + glitchBurst stamp
+    5. 28–30s  CTA — watermark hero + signalPulse + glitterFx.burst
+
+  Motion design:
+    Every scene has at least 3 motion events: an entry, a persistent drift /
+    audio-reactive pulse, and a decorative motion (line draw, particle, sparkle).
+    The hero image appears in scenes 1-4 with different framing each time so
+    the eye reads "video" not "slides".
 
   TO USE THIS TEMPLATE:
     1. Copy this file to your project root as `index.html`.
     2. Replace `tokens-PLACEHOLDER.css` with your real `tokens-<brand>.css`.
-       (Adjust href back to `design/tokens-<brand>.css` once relocated.)
-    3. Fill in placeholder copy (Q1/A1, Q2/A2, Q3/A3, CTA, URL).
-    4. Run: npx hyperframes preview     (sanity check)
-    5. Run: npx hyperframes render      (final MP4)
+    3. Fill in placeholder copy.
+    4. (Optional) Run `node scripts/extract-amp.mjs assets/<slug>/music.mp3
+       --out=assets/amp/<slug>.json` so the audio-reactive bind has data.
+       The template degrades gracefully when the amp file is missing.
+    5. Run: npx hyperframes preview     (sanity check)
+    6. Run: npx hyperframes render      (final MP4)
 -->
 
-<!-- 2. Vibe template — quiet-premium sets calm pace, light Inter. -->
-<link rel="stylesheet" href="../../design/templates/quiet-premium.css">
+<!-- 2. Vibe template — warm-community sets calm pace, soft motion. -->
+<link rel="stylesheet" href="../../design/templates/warm-community.css">
 <!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
 <link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
 <!-- Shared boilerplate: cards.css + effects + module bundle + GSAP.
@@ -43,169 +51,335 @@
 <script src="../../design/modules/all.js"></script>
 <!-- /HEAD-INCLUDE -->
 
+<!-- shader-fx is opt-in (not in compose-head). Scene 4 uses shaderFx.glow. -->
+<script src="../../design/vendor/twgl.min.js"></script>
+<script src="../../design/modules/shader-fx.js"></script>
+
 <style>
-  /* Background uses --card-slate (warm paper/cream) so brand tokens drive
-     the canvas. Falling back to --card-paper, then a neutral hex if neither
-     token is defined. */
+  /* ===========================================================
+     CANVAS — 1080×1920 vertical with a slow gradient drift.
+     The background is a 200% wide warm gradient; we tween its
+     background-position across the 30s for a subliminal warming
+     of the canvas (cream → honey).
+     =========================================================== */
   body { margin: 0; background: var(--card-slate, var(--card-paper, #F4EFE7)); font-family: var(--card-font-ui); }
 
   .comp {
     width: 1080px; height: 1920px;
     position: relative; overflow: hidden;
-    background: var(--card-slate, var(--card-paper, #F4EFE7));
     color: var(--card-navy, var(--card-accent, #1B2A3D));
+    background:
+      radial-gradient(ellipse at 30% 10%, rgba(255,255,255,0.55) 0%, transparent 55%),
+      linear-gradient(135deg,
+        var(--card-slate,  #F4EFE7) 0%,
+        var(--card-paper,  #F1E2BD) 45%,
+        var(--card-paper-soft, var(--card-paper, #E9D49A)) 100%);
+    background-size: 200% 200%;
+    background-position: 0% 0%;
+    will-change: background-position;
   }
+
+  /* Persistent ambient glitter host — full-bleed, behind everything. */
+  .ambient-host {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  /* Decorative SVG drifters — slow horizontal/vertical pan at very low alpha. */
+  .deco-drift {
+    position: absolute;
+    z-index: 0; pointer-events: none;
+    opacity: 0.06;
+    will-change: transform;
+  }
+  .deco-drift--1 { top: 12%; left: -10%; width: 360px; }
+  .deco-drift--2 { bottom: 8%;  right: -10%; width: 420px; }
 
   .scene {
     position: absolute; inset: 0;
     display: flex;
     align-items: center; justify-content: center;
     flex-direction: column;
-    padding: 160px 96px;
+    padding: 120px 96px;
     box-sizing: border-box;
+    overflow: hidden;
+    z-index: 1;
   }
 
   .scene__kicker {
     font-family: var(--card-font-ui);
-    font-size: var(--card-kicker-size, 16px);
-    letter-spacing: var(--card-kicker-track, 0.28em);
+    font-size: var(--card-kicker-size, 18px);
+    letter-spacing: var(--card-kicker-track, 0.32em);
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--card-accent, #1B2A3D);
-    margin-bottom: 36px;
+    margin-bottom: 32px;
     opacity: 0.9;
   }
 
-  .vibe-rule {
-    display: block;
-    width: 80px;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.32;
-    margin: 28px 0;
-  }
-
-  /* ---- Scene 1: Brand chip ---- */
-  .s1 {
-    /* Warm paper/cream surface — brand tokens decide the actual hue. */
-    background: var(--card-slate, var(--card-paper, #F4EFE7));
-  }
-  .s1-content {
+  /* ============================================================
+     SCENE 1 — brand chip with kenBurns hero + cinematicReveal
+     ============================================================ */
+  .s1-stage {
     display: flex; flex-direction: column;
-    align-items: center; text-align: center;
+    align-items: center; justify-content: center;
+    width: 100%;
+    gap: 28px;
+    position: relative; z-index: 2;
+  }
+  .s1-hero-wrap {
+    /* Inner mask so the kenBurns scale doesn't bleed past the rounded box. */
+    width: 720px; height: 600px;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: 0 18px 60px rgba(27, 42, 61, 0.18);
+    position: relative;
   }
   .s1-hero {
-    /* Brand hero/screenshot. Sized at ~30% viewport height (≈ 576px for
-       a 1920-tall comp), centered, contained so portrait phone screenshots
-       aren't stretched. Drop-shadow gives just enough lift on cream. */
-    display: block;
-    height: 560px;
-    max-width: 70%;
-    object-fit: contain;
-    margin: 0 auto 56px auto;
-    filter: drop-shadow(0 12px 28px rgba(27, 42, 61, 0.18));
-    border-radius: 24px;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform-origin: 50% 40%;
+    will-change: transform;
   }
   .s1-mark {
     font-family: var(--card-font-display);
-    font-weight: 300;
-    font-size: 180px;
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    font-size: 168px;
+    letter-spacing: -0.030em;
     line-height: 0.95;
     color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
     margin: 0;
+    text-shadow: 0 4px 24px rgba(27, 42, 61, 0.12);
   }
   .s1-tag {
     font-family: var(--card-font-ui);
     font-size: 32px;
-    font-weight: 400;
+    font-weight: 500;
     letter-spacing: 0.20em;
     text-transform: uppercase;
     color: var(--card-accent, var(--card-navy, #1B2A3D));
-    margin-top: 36px;
     opacity: 0.78;
   }
 
-  /* ---- Q+A scenes ---- */
-  .qa-content {
+  /* ============================================================
+     SCENE 2 — Step 01 with cropped phone-screen parallax hero
+     ============================================================ */
+  .s2-content {
+    position: relative; z-index: 2;
     display: flex; flex-direction: column;
     align-items: flex-start; text-align: left;
     width: 100%; max-width: 880px;
+    gap: 22px;
+  }
+  .s2-hero-crop {
+    /* Cropped hero — top-half of the source image, slid in from right.
+       Use object-position to bias toward the device chrome / app UI. */
+    position: absolute;
+    top: 110px; right: -40px;
+    width: 480px; height: 320px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(27, 42, 61, 0.22);
+    transform: rotate(2deg);
+    will-change: transform;
+  }
+  .s2-hero-crop img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 50% 18%;
   }
   .qa-num {
     font-family: var(--card-font-display);
-    font-weight: 300;
-    font-size: 96px;
+    font-weight: 700;
+    font-size: 132px;
     color: var(--card-accent, #1B2A3D);
     line-height: 1;
-    margin-bottom: 36px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
+    margin: 0;
+    text-shadow: 0 6px 20px rgba(27, 42, 61, 0.15);
+    will-change: transform;
+  }
+  .qa-num-pulse {
+    /* Audio-reactive honey-coloured circle next to the number. Reads as a
+       beacon. ampBind drives --amp-bass on its parent which we map into
+       both scale and the box-shadow's spread. Gracefully degrades to a
+       static glow when the amp file is missing. */
+    display: inline-block;
+    width: 36px; height: 36px;
+    margin-left: 24px;
+    border-radius: 50%;
+    background: var(--card-warn, var(--card-paper, #F4C96B));
+    transform: translateY(-32px) scale(calc(1 + var(--amp-bass, 0) * 0.55));
+    box-shadow:
+      0 0 calc(20px + var(--amp-bass, 0) * 60px)
+        rgba(244, 201, 107, calc(0.40 + var(--amp-bass, 0) * 0.45));
+    will-change: transform, box-shadow;
   }
   .qa-question {
     font-family: var(--card-font-display);
-    font-weight: 400;
-    font-size: 84px;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
+    font-weight: 600;
+    font-size: 88px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
     color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
     margin: 0;
     max-width: 880px;
   }
+  .qa-rule {
+    width: 280px;
+    height: 2px;
+    background: var(--card-warn, var(--card-accent, #1B2A3D));
+    opacity: 0.7;
+    display: block;
+    transform-origin: left center;
+    transform: scaleX(0);
+    will-change: transform;
+  }
   .qa-answer {
     font-family: var(--card-font-ui);
-    font-weight: 400;
+    font-weight: 500;
     font-size: 38px;
     line-height: 1.45;
     color: var(--card-navy, var(--card-accent, #1B2A3D));
-    margin: 28px 0 0 0;
+    margin: 0;
     max-width: 880px;
-    opacity: 0.82;
-  }
-  .qa-rule {
-    width: 80px;
-    height: 1px;
-    background: var(--card-warn, var(--card-accent, #1B2A3D));
-    opacity: 0.55;
-    margin: 32px 0;
-    display: block;
-    transform-origin: left center;
+    opacity: 0.86;
   }
 
-  /* ---- Scene 5: CTA ---- */
+  /* ============================================================
+     SCENE 3 — Step 02 with corner hero + decorative dot row
+     ============================================================ */
+  .s3-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column;
+    align-items: flex-start; text-align: left;
+    width: 100%; max-width: 880px;
+    gap: 22px;
+  }
+  .s3-hero-corner {
+    /* Scaled-down hero floating top-right with gentle tilt animation. */
+    position: absolute;
+    top: 90px; right: 0;
+    width: 280px; height: 280px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(27, 42, 61, 0.22);
+    will-change: transform;
+  }
+  .s3-hero-corner img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .s3-deco-dots {
+    /* Bottom-aligned decorative dots — staggered cascade in. */
+    position: absolute;
+    left: 96px; right: 96px;
+    bottom: 200px;
+    display: flex; gap: 28px;
+    z-index: 2;
+  }
+  .s3-deco-dots span {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--card-accent, var(--card-warn, #1B2A3D));
+    opacity: 0.6;
+    transform: translateY(20px) scale(0);
+    will-change: transform;
+  }
+  .s3-decorline {
+    /* Slowly rotating SVG line pattern in the background. */
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 1400px; height: 1400px;
+    margin: -700px 0 0 -700px;
+    z-index: 0; pointer-events: none;
+    opacity: 0.05;
+    will-change: transform;
+  }
+
+  /* ============================================================
+     SCENE 4 — Step 03 with full hero + shader glow halo
+     ============================================================ */
+  .s4-content {
+    position: relative; z-index: 3;
+    display: flex; flex-direction: column;
+    align-items: flex-start; text-align: left;
+    width: 100%; max-width: 880px;
+    gap: 22px;
+  }
+  .s4-hero-full {
+    /* Big hero, gradually drifts down + scales — subliminal Ken Burns. */
+    position: absolute;
+    top: 100px; left: 50%;
+    width: 560px; height: 380px;
+    margin-left: -280px;
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(27, 42, 61, 0.28);
+    z-index: 2;
+    will-change: transform;
+  }
+  .s4-hero-full img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .s4-sparkle-sweep {
+    /* A diagonal highlight that sweeps across the headline at ~22s. */
+    position: absolute;
+    top: 0; left: -200px;
+    width: 220px; height: 100%;
+    background: linear-gradient(120deg,
+      transparent 0%,
+      rgba(255, 248, 232, 0.55) 50%,
+      transparent 100%);
+    transform: skewX(-15deg);
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    will-change: transform;
+  }
+
+  /* ============================================================
+     SCENE 5 — CTA on dark surface + signalPulse + glitter burst
+     ============================================================ */
   .s5 {
     background: var(--card-accent, var(--card-navy, #1B2A3D));
     color: var(--card-paper, #F4C96B);
   }
   .s5-content {
+    position: relative; z-index: 2;
     display: flex; flex-direction: column;
     align-items: center; text-align: center;
+    gap: 20px;
   }
-  .s5-logo {
-    /* Small brand mark next to the CTA wordmark. Square logos look best
-       at ~96px so they read as a stamp, not a hero element. */
-    display: block;
-    width: 96px;
-    height: 96px;
-    object-fit: contain;
-    margin: 0 auto 32px auto;
+  .s5-watermark {
+    /* The hero image shrinks to a small watermark. */
+    width: 80px; height: 80px;
     border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.42);
+  }
+  .s5-watermark img {
+    width: 100%; height: 100%;
+    object-fit: cover;
   }
   .s5-cta {
     font-family: var(--card-font-display);
-    font-weight: 300;
-    font-size: 140px;
+    font-weight: 700;
+    font-size: 156px;
     color: var(--card-paper, #F4C96B);
-    letter-spacing: -0.025em;
-    line-height: 1.0;
+    letter-spacing: -0.030em;
+    line-height: 0.98;
     margin: 0;
+    text-shadow: 0 6px 24px rgba(0, 0, 0, 0.34);
   }
   .s5-url {
     font-family: var(--card-font-ui);
-    font-weight: 400;
+    font-weight: 500;
     font-size: 36px;
     color: var(--card-paper-soft, var(--card-paper, #F4C96B));
     letter-spacing: 0.10em;
-    margin-top: 32px;
+    margin-top: 18px;
     opacity: 0.92;
   }
 </style>
@@ -218,56 +392,108 @@
      data-width="1080" data-height="1920"
      data-start="0" data-duration="30" data-track-index="0">
 
-  <!-- Scene 1 — Brand chip (0–4s) -->
+  <!-- Persistent ambient + decorative drifters across the full 30s. -->
+  <div id="ambient-host" class="ambient-host clip"
+       data-start="0" data-duration="30" data-track-index="11"></div>
+  <svg id="deco-drift-1" class="deco-drift deco-drift--1 clip" viewBox="0 0 200 200"
+       data-start="0" data-duration="30" data-track-index="11" aria-hidden="true">
+    <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="1.4" />
+    <circle cx="100" cy="100" r="64" fill="none" stroke="currentColor" stroke-width="1" />
+    <circle cx="100" cy="100" r="36" fill="none" stroke="currentColor" stroke-width="1" />
+  </svg>
+  <svg id="deco-drift-2" class="deco-drift deco-drift--2 clip" viewBox="0 0 200 200"
+       data-start="0" data-duration="30" data-track-index="11" aria-hidden="true">
+    <path d="M10 180 Q100 40 190 180" fill="none" stroke="currentColor" stroke-width="1.6" />
+    <path d="M10 150 Q100 60 190 150" fill="none" stroke="currentColor" stroke-width="1.2" />
+  </svg>
+
+  <!-- ============================================================
+       Scene 1 — Brand chip (0–4s)
+       ============================================================ -->
   <div id="s1" class="scene s1 clip"
        data-start="0" data-duration="4" data-track-index="1"
        data-scene-grade="soft">
-    <div class="s1-content">
-      <img id="s1-hero" class="s1-hero" src="assets/PLACEHOLDER/hero.png" alt="">
-      <div id="s1-kicker" class="scene__kicker">THREE QUESTIONS</div>
+    <div class="s1-stage">
+      <div class="s1-hero-wrap">
+        <img id="s1-hero" class="s1-hero" src="assets/PLACEHOLDER/hero.png" alt="">
+      </div>
+      <div id="s1-kicker" class="scene__kicker">ONE FREE APP</div>
       <h1 id="s1-mark" class="s1-mark">Asked often.</h1>
       <div id="s1-tag" class="s1-tag">ANSWERED PLAINLY</div>
     </div>
   </div>
 
-  <!-- Scene 2 — Q1 + A1 (4–12s) -->
+  <!-- ============================================================
+       Scene 2 — Step 01 (4–12s)
+       ============================================================ -->
   <div id="s2" class="scene s2 clip"
        data-start="4" data-duration="8" data-track-index="1">
-    <div class="qa-content">
-      <div id="s2-num" class="qa-num">01</div>
-      <h2 id="s2-q" class="qa-question">How long does a session take?</h2>
+    <div class="s2-hero-crop">
+      <img src="assets/PLACEHOLDER/hero.png" alt="">
+    </div>
+    <div class="s2-content">
+      <div class="qa-num-row" style="display:flex;align-items:flex-start;">
+        <div id="s2-num" class="qa-num">01</div>
+        <span id="s2-num-pulse" class="qa-num-pulse"></span>
+      </div>
+      <h2 id="s2-q" class="qa-question">Post a give or an ask.</h2>
       <div id="s2-rule" class="qa-rule"></div>
-      <p id="s2-a" class="qa-answer">Ninety minutes. Then thirty for the conversation that matters.</p>
+      <p id="s2-a" class="qa-answer">Snap a photo. Tag it.</p>
     </div>
   </div>
 
-  <!-- Scene 3 — Q2 + A2 (12–20s) -->
+  <!-- ============================================================
+       Scene 3 — Step 02 (12–20s)
+       ============================================================ -->
   <div id="s3" class="scene s3 clip"
        data-start="12" data-duration="8" data-track-index="1">
-    <div class="qa-content">
+    <svg id="s3-decorline" class="s3-decorline" viewBox="0 0 200 200" aria-hidden="true">
+      <circle cx="100" cy="100" r="98" fill="none" stroke="currentColor" stroke-width="0.5" />
+      <line x1="100" y1="2"   x2="100" y2="198" stroke="currentColor" stroke-width="0.5"/>
+      <line x1="2"   y1="100" x2="198" y2="100" stroke="currentColor" stroke-width="0.5"/>
+      <line x1="30"  y1="30"  x2="170" y2="170" stroke="currentColor" stroke-width="0.5"/>
+      <line x1="170" y1="30"  x2="30"  y2="170" stroke="currentColor" stroke-width="0.5"/>
+    </svg>
+    <div class="s3-hero-corner">
+      <img src="assets/PLACEHOLDER/hero.png" alt="">
+    </div>
+    <div class="s3-content">
       <div id="s3-num" class="qa-num">02</div>
-      <h2 id="s3-q" class="qa-question">What does the first visit cost?</h2>
+      <h2 id="s3-q" class="qa-question">A neighbour messages.</h2>
       <div id="s3-rule" class="qa-rule"></div>
-      <p id="s3-a" class="qa-answer">One flat number. No upsell, no add-ons. The price you read is the price you pay.</p>
+      <p id="s3-a" class="qa-answer">Sort a time. Have a yarn.</p>
+    </div>
+    <div id="s3-dots" class="s3-deco-dots">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
   </div>
 
-  <!-- Scene 4 — Q3 + A3 (20–28s) -->
+  <!-- ============================================================
+       Scene 4 — Step 03 (20–28s)
+       ============================================================ -->
   <div id="s4" class="scene s4 clip"
        data-start="20" data-duration="8" data-track-index="1">
-    <div class="qa-content">
+    <div id="s4-hero-full" class="s4-hero-full">
+      <img src="assets/PLACEHOLDER/hero.png" alt="">
+    </div>
+    <div class="s4-content" style="margin-top: 540px; position:relative; overflow:hidden;">
       <div id="s4-num" class="qa-num">03</div>
-      <h2 id="s4-q" class="qa-question">Is this the right fit for me?</h2>
+      <h2 id="s4-q" class="qa-question">Drop it off or pick it up.</h2>
       <div id="s4-rule" class="qa-rule"></div>
-      <p id="s4-a" class="qa-answer">If you want quick noise, no. If you want something kept honest, yes.</p>
+      <p id="s4-a" class="qa-answer">Built for real streets.</p>
+      <div id="s4-sparkle-sweep" class="s4-sparkle-sweep"></div>
     </div>
   </div>
 
-  <!-- Scene 5 — CTA (28–30s) -->
+  <!-- ============================================================
+       Scene 5 — CTA (28–30s)
+       ============================================================ -->
   <div id="s5" class="scene s5 clip"
        data-start="28" data-duration="2" data-track-index="1">
     <div class="s5-content">
-      <img id="s5-logo" class="s5-logo" src="assets/PLACEHOLDER/logo.png" alt="">
+      <div id="s5-watermark" class="s5-watermark">
+        <img id="s5-logo" src="assets/PLACEHOLDER/logo.png" alt="">
+      </div>
       <h2 id="s5-cta" class="s5-cta">Book a session.</h2>
       <div id="s5-url" class="s5-url">yourbrand.com/book</div>
     </div>
@@ -298,85 +524,354 @@
 </svg>
 
 <script>
+  // =========================================================================
+  // TIMELINE — faq-quick-30s (motion-saturated)
+  //
+  // Each scene combines:
+  //   - an ENTRY (combo or effect-fx primitive — never bare opacity tween)
+  //   - a PERSISTENT motion (kenBurns / parallax / drift / audio-reactive pulse)
+  //   - a DECORATIVE motion (rule draw, dot cascade, sparkle, particle)
+  //
+  // Hero image appears in scenes 1–4 with different framing each time:
+  //   1 = full-screen rounded card, kenBurns
+  //   2 = cropped + tilted, parallax in from right
+  //   3 = corner watermark with tilt
+  //   4 = full size with shaderFx.glow halo + Ken Burns drift
+  //   5 = small watermark
+  // =========================================================================
+
   window.__timelines = window.__timelines || {};
   const tl = gsap.timeline({ paused: true });
   window.__timelines["faq-quick-30s"] = tl;
 
-  // ---- Scene 1: 0–4s — brand chip -----------------------------------
+  // ---- Background gradient drift across 30s (cream → honey) ---------------
+  tl.to("#faq-quick-30s",
+    { backgroundPosition: "100% 100%", duration: 30, ease: "none" },
+    0);
+
+  // ---- Decorative SVG drifters — slow horizontal pan ----------------------
+  tl.fromTo("#deco-drift-1",
+    { x: 0, rotation: 0 },
+    { x: 280, rotation: 18, duration: 30, ease: "none" },
+    0);
+  tl.fromTo("#deco-drift-2",
+    { x: 0, rotation: 0 },
+    { x: -240, rotation: -12, duration: 30, ease: "none" },
+    0);
+
+  // ---- Ambient honey sparkle behind everything (low density, 30s) ---------
+  glitterFx.ambient(tl, "#ambient-host", {
+    at: 0.0, duration: 30.0,
+    count: 28, seed: 3,
+    sizeRange: [3, 7],
+  });
+
+  // =========================================================================
+  // SCENE 1 — 0–4s — Brand intro (cinematicReveal + kenBurns + cascade)
+  // =========================================================================
+  // Entry: cinematicReveal on the wordmark — letter cascade with rack-focus.
+  comboFx.cinematicReveal(tl, "#s1", {
+    at: 0.20, duration: 1.6,
+    headline: "#s1-mark",
+    intensity: 1.0, seed: 11,
+    stagger: 0.05,
+  });
+  // Persistent: kenBurns on the hero — slow zoom + slight pan over the 4s.
   tl.fromTo("#s1-hero",
-    { y: 24, opacity: 0, scale: 0.97 },
-    { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: "power1.out" },
-    0.2);
-  tl.fromTo("#s1 .scene__kicker",
-    { y: 16, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
-    0.4);
-  textFx.cascade(tl, "#s1-mark", { at: 0.9, duration: 0.7, stagger: 0.10 });
+    { scale: 1.06, x: -10, y: 6 },
+    { scale: 1.18, x: 10, y: -8, duration: 4.0, ease: "power1.inOut" },
+    0);
+  // Decorative: kicker types in (warm) and tag stamps in just before exit.
+  textFx.cascade(tl, "#s1-kicker", { at: 0.4, duration: 0.6, stagger: 0.05 });
   tl.fromTo("#s1-tag",
-    { y: 18, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
-    2.2);
+    { letterSpacing: "0.6em", opacity: 0 },
+    { letterSpacing: "0.20em", opacity: 0.78, duration: 0.7, ease: "power2.out" },
+    2.0);
+  // Soft outro for scene 1 — paperTear-style camera drift before scene 2.
+  tl.to("#s1", { opacity: 0.0, duration: 0.45, ease: "power2.in" }, 3.55);
 
-  // ---- Scene 2: 4–12s — Q1 + A1 -------------------------------------
-  tl.fromTo("#s2-num",
-    { y: 30, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
+  // =========================================================================
+  // SCENE 2 — 4–12s — Step 01 (cascade headline + parallax hero + amp pulse)
+  // =========================================================================
+  // Entry: pre-roll opacity at 3.7 so the scene is visible the moment the
+  // boundary tick arrives (no dead frame at exact t=4.0).
+  tl.set("#s2", { opacity: 0 }, 0);
+  tl.fromTo("#s2",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.4, ease: "power2.out" },
+    3.75);
+  // Cropped hero parallax — slides in from off-screen right with rotation.
+  tl.fromTo("#s2 .s2-hero-crop",
+    { x: 600, rotation: 8, opacity: 0 },
+    { x: 0,   rotation: 2, opacity: 1, duration: 0.9, ease: "power3.out" },
     4.2);
-  textFx.cascade(tl, "#s2-q", { at: 4.8, duration: 0.8, stagger: 0.10 });
+  // Persistent: hero-crop drifts gently upward across the 8s.
+  tl.to("#s2 .s2-hero-crop",
+    { y: -28, rotation: 1, duration: 7.0, ease: "power1.inOut" },
+    4.5);
+  // Number stamps in with shake — comboFx.glitchStamp gives a warm beat.
+  comboFx.glitchStamp(tl, "#s2-num", {
+    at: 4.6, duration: 0.85,
+    fromScale: 1.6, bursts: 1, glitter: false,
+    intensity: 0.8, shake: true,
+  });
+  // Number drifts upward subtly for the rest of the scene.
+  tl.to("#s2-num", { y: -16, duration: 6.5, ease: "power1.inOut" }, 5.2);
+  // Audio-reactive honey pulse next to the number — purely CSS-driven via
+  // ampBind below; we add a fallback static pulse if amp file is missing.
+  tl.fromTo("#s2-num-pulse",
+    { scale: 0, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.7)" },
+    5.0);
+  // Headline cascades word-by-word.
+  textFx.cascade(tl, "#s2-q", {
+    at: 5.4, duration: 0.85, stagger: 0.10,
+    distance: 80, ease: "power3.out",
+  });
+  // Hairline rule draws left-to-right under the headline.
   tl.fromTo("#s2-rule",
-    { scaleX: 0, opacity: 0 },
-    { scaleX: 1, opacity: 1, duration: 0.7, ease: "power1.out" },
+    { scaleX: 0 },
+    { scaleX: 1, duration: 0.6, ease: "power2.out" },
     7.0);
+  // Body slides up after headline lands.
   tl.fromTo("#s2-a",
-    { y: 24, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
+    { y: 28, opacity: 0 },
+    { y: 0, opacity: 0.86, duration: 0.7, ease: "power3.out" },
     7.4);
+  // Scene 2 → 3: radialMask wipe (warm).
+  effectFx.radialMask(tl, "#s2", {
+    at: 11.55, duration: 0.45,
+    from: 60, to: 0,
+    centerX: 50, centerY: 50, feather: 14,
+    ease: "power2.in",
+    clearAfter: true,
+  });
+  tl.to("#s2", { opacity: 0, duration: 0.3, ease: "power2.in" }, 11.7);
 
-  // ---- Scene 3: 12–20s — Q2 + A2 ------------------------------------
-  tl.fromTo("#s3-num",
-    { y: 30, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
+  // =========================================================================
+  // SCENE 3 — 12–20s — Step 02 (testimonialReveal + corner hero + dots)
+  // =========================================================================
+  tl.set("#s3", { opacity: 0 }, 0);
+  tl.fromTo("#s3",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.45, ease: "power2.out" },
+    11.75);
+  // Background line pattern slowly rotates across the 8s.
+  tl.fromTo("#s3-decorline",
+    { rotation: 0 },
+    { rotation: 90, duration: 8.0, ease: "none" },
+    12.0);
+  // Corner hero swoops in from upper-right.
+  tl.fromTo("#s3 .s3-hero-corner",
+    { x: 200, y: -120, scale: 0.5, opacity: 0, rotation: 12 },
+    { x: 0,   y: 0,    scale: 1,   opacity: 1, rotation: -3,
+      duration: 0.85, ease: "back.out(1.4)" },
     12.2);
-  textFx.cascade(tl, "#s3-q", { at: 12.8, duration: 0.8, stagger: 0.10 });
+  // Persistent: corner hero drifts with subtle tilt animation.
+  tl.to("#s3 .s3-hero-corner",
+    { rotation: 3, duration: 7.5, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    12.5);
+  // Number 02 enters with comboFx.paperTear-style stamp + drift.
+  tl.fromTo("#s3-num",
+    { scale: 1.3, opacity: 0, y: 40, filter: "blur(8px)" },
+    { scale: 1,   opacity: 1, y: 0,  filter: "blur(0px)",
+      duration: 0.7, ease: "power3.out" },
+    12.6);
+  effectFx.glitchBurst(tl, "#s3-num", { at: 13.05, duration: 0.16, shake: false });
+  tl.to("#s3-num", { y: -12, duration: 6.5, ease: "power1.inOut" }, 13.2);
+  // Headline lands with testimonialReveal — name + quote choreography.
+  comboFx.testimonialReveal(tl, "#s3", {
+    at: 13.4, duration: 1.6,
+    name: "#s3-q",
+    quote: "#s3-a",
+    intensity: 0.8, seed: 33,
+    ambient: false,
+  });
+  // Hairline rule draws.
   tl.fromTo("#s3-rule",
-    { scaleX: 0, opacity: 0 },
-    { scaleX: 1, opacity: 1, duration: 0.7, ease: "power1.out" },
-    15.0);
-  tl.fromTo("#s3-a",
-    { y: 24, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
-    15.4);
+    { scaleX: 0 },
+    { scaleX: 1, duration: 0.6, ease: "power2.out" },
+    14.6);
+  // Decorative dots cascade in across the bottom — staggered scale-up.
+  tl.fromTo("#s3-dots span",
+    { scale: 0, y: 24, opacity: 0 },
+    { scale: 1, y: 0,  opacity: 0.6,
+      duration: 0.5, stagger: 0.08, ease: "back.out(1.6)" },
+    15.6);
+  // Dots gently pulse until end of scene (bounded repeat — never -1, since
+  // an infinite repeat blows the timeline duration past 30s).
+  tl.to("#s3-dots span",
+    { scale: 1.18, duration: 1.0,
+      stagger: { each: 0.10, yoyo: true, repeat: 2 }, ease: "sine.inOut" },
+    17.0);
+  // Scene 3 → 4: radialMask warm wipe.
+  effectFx.radialMask(tl, "#s3", {
+    at: 19.55, duration: 0.45,
+    from: 60, to: 0,
+    centerX: 50, centerY: 50, feather: 14,
+    ease: "power2.in",
+    clearAfter: true,
+  });
+  tl.to("#s3", { opacity: 0, duration: 0.3, ease: "power2.in" }, 19.7);
 
-  // ---- Scene 4: 20–28s — Q3 + A3 ------------------------------------
+  // =========================================================================
+  // SCENE 4 — 20–28s — Step 03 (full hero + glow halo + cascade + sparkle)
+  // =========================================================================
+  tl.set("#s4", { opacity: 0 }, 0);
+  tl.fromTo("#s4",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.45, ease: "power2.out" },
+    19.75);
+  // Full hero scales up + drifts down + slight scale across remaining time.
+  tl.fromTo("#s4 .s4-hero-full",
+    { scale: 0.88, opacity: 0, y: -40 },
+    { scale: 1.0, opacity: 1, y: 0,
+      duration: 0.9, ease: "power3.out" },
+    20.1);
+  tl.to("#s4 .s4-hero-full",
+    { y: 60, scale: 1.06, duration: 7.0, ease: "power1.inOut" },
+    20.5);
+  // Shader glow halo on the hero — warm gold rim-light at 0.65 intensity.
+  // Falls back to invisible canvas if WebGL2 unavailable (graceful per
+  // shader-fx.js init() — timeline duration is preserved either way).
+  shaderFx.glow(tl, "#s4", {
+    at: 20.40, duration: 3.6,
+    intensity: 0.65, seed: 19,
+    origin: [0.5, 0.30],
+    tint: [1.0, 0.78, 0.42],
+  });
+  // Number 03 enters with a single subtle glitchBurst.
   tl.fromTo("#s4-num",
-    { y: 30, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.8, ease: "power1.out" },
-    20.2);
-  textFx.cascade(tl, "#s4-q", { at: 20.8, duration: 0.8, stagger: 0.10 });
+    { scale: 1.4, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.8)" },
+    20.7);
+  effectFx.glitchBurst(tl, "#s4-num", { at: 21.0, duration: 0.18, shake: false });
+  // Headline cascades.
+  textFx.cascade(tl, "#s4-q", {
+    at: 21.2, duration: 0.85, stagger: 0.10,
+    distance: 80, ease: "power3.out",
+  });
+  // Rule.
   tl.fromTo("#s4-rule",
-    { scaleX: 0, opacity: 0 },
-    { scaleX: 1, opacity: 1, duration: 0.7, ease: "power1.out" },
-    23.0);
-  tl.fromTo("#s4-a",
-    { y: 24, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.9, ease: "power1.out" },
-    23.4);
+    { scaleX: 0 },
+    { scaleX: 1, duration: 0.6, ease: "power2.out" },
+    22.7);
+  // Body letter-cascade (textFx.cascade splits by words; for letter feel use
+  // textFx.stagger with a small rotation).
+  textFx.stagger(tl, "#s4-a", {
+    at: 23.2, duration: 0.7, stagger: 0.025,
+    rotation: -6, ease: "back.out(1.4)",
+  });
+  // Sparkle sweep crosses the headline at ~22s — a single highlight pass.
+  tl.fromTo("#s4-sparkle-sweep",
+    { x: -200, opacity: 0 },
+    { x: 1000, opacity: 0.85, duration: 1.4, ease: "power2.out" },
+    22.0);
+  tl.to("#s4-sparkle-sweep", { opacity: 0, duration: 0.4, ease: "power2.in" }, 23.0);
+  // Scene 4 → 5: paperTear (warm texture matches the brand).
+  comboFx.paperTear(tl, "#s4", {
+    at: 27.30, duration: 0.7,
+    outgoing: "#s4-q",
+    incoming: null,
+    stage: "#s4",
+    intensity: 0.7, seed: 44,
+  });
+  tl.to("#s4", { opacity: 0, duration: 0.4, ease: "power2.in" }, 27.7);
 
-  // ---- Scene 5: 28–30s — CTA ----------------------------------------
-  tl.fromTo("#s5-logo",
-    { y: 12, opacity: 0, scale: 0.92 },
-    { y: 0, opacity: 1, scale: 1, duration: 0.6, ease: "power1.out" },
-    28.0);
+  // =========================================================================
+  // SCENE 5 — 28–30s — CTA (signalPulse + watermark hero + glitter burst)
+  // =========================================================================
+  tl.set("#s5", { opacity: 0 }, 0);
+  tl.fromTo("#s5",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.35, ease: "power2.out" },
+    27.75);
+  // Hero shrinks to corner watermark — already small via CSS, just fade in.
+  tl.fromTo("#s5-watermark",
+    { scale: 0.4, opacity: 0, rotation: -8 },
+    { scale: 1,   opacity: 1, rotation: 0,
+      duration: 0.55, ease: "back.out(1.7)" },
+    28.05);
+  // Brand wordmark with comboFx.signalPulse — concentric rings + ambient.
+  comboFx.signalPulse(tl, "#s5", {
+    at: 28.20, duration: 1.6,
+    caption: "#s5-url",
+    counter: null,
+    ringCount: 4,
+    intensity: 0.8, seed: 47,
+  });
+  // Wordmark stamps in over the rings.
   tl.fromTo("#s5-cta",
-    { y: 24, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.7, ease: "power1.out" },
-    28.2);
-  tl.fromTo("#s5-url",
-    { y: 16, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.6, ease: "power1.out" },
-    28.7);
+    { scale: 0.7, opacity: 0, y: 30 },
+    { scale: 1, opacity: 1, y: 0,
+      duration: 0.75, ease: "back.out(1.6)" },
+    28.20);
+  // URL types in below.
+  textFx.cascade(tl, "#s5-url", {
+    at: 28.85, duration: 0.6, stagger: 0.04,
+    distance: 16, ease: "power2.out",
+  });
+  // Single well-timed glitter burst on the CTA at 28.5s.
+  glitterFx.burst(tl, "#s5", {
+    at: 28.50, duration: 1.2,
+    count: 36, distance: 360,
+    seed: 51,
+  });
   // Final fade — only the last scene may animate elements out.
-  tl.to(["#s5-logo", "#s5-cta", "#s5-url"], { opacity: 0.92, duration: 0.3 }, 29.5);
+  tl.to(["#s5-watermark", "#s5-cta", "#s5-url"],
+    { opacity: 0.92, duration: 0.3 }, 29.55);
+
+  // =========================================================================
+  // AUDIO-REACTIVE BIND — graceful degrade
+  //
+  // Tries to load assets/amp/<comp-id>.json. If present, drives --amp-bass on
+  // the qa-num-pulse parent. If missing (e.g. orchestrator hasn't run
+  // extract-amp.mjs yet), the static CSS values keep the pulse looking
+  // tasteful — no broken visuals.
+  //
+  // Resolves the comp slug from data-composition-id; this lets a copied
+  // index.html find its own amp file under assets/amp/<slug>.json. The
+  // rendering pipeline is expected to put the amp file there post-assemble.
+  // =========================================================================
+  (async () => {
+    try {
+      if (typeof window.ampBind !== "function") return;
+      const compId = document.querySelector("[data-composition-id]")?.dataset?.compositionId
+                  || "faq-quick-30s";
+      // Try a list of plausible paths — composition lives at root or under
+      // compositions/, and assets folder is sibling either way.
+      const candidates = [
+        `assets/amp/${compId}.json`,
+        `../assets/amp/${compId}.json`,
+        `assets/amp/kindred-bed.json`,
+      ];
+      let amp = null;
+      for (const url of candidates) {
+        try {
+          const r = await fetch(url);
+          if (r.ok) { amp = await r.json(); break; }
+        } catch (_) { /* try next */ }
+      }
+      if (!amp) {
+        // Soft fallback — drive --amp-bass with a slow sine so the pulse
+        // still breathes, just untethered to music. ~70 BPM ≈ 1.17 Hz.
+        const tl2 = window.__timelines["faq-quick-30s"];
+        if (tl2) {
+          for (let i = 0; i < 60; i++) {
+            const t = i * 0.5;
+            const v = 0.18 + 0.18 * Math.abs(Math.sin(t * 1.2));
+            tl2.set("#s2-num-pulse", { "--amp-bass": v.toFixed(3) }, t);
+          }
+        }
+        return;
+      }
+      window.ampBind(tl, amp, "#s2-num-pulse", {
+        stride: 2, smooth: 0.55, gate: 0.06,
+      });
+    } catch (err) {
+      // Stay quiet — fallback CSS keeps the visual safe.
+    }
+  })();
 
   // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
   if (window === window.top) {
