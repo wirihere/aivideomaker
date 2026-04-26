@@ -588,6 +588,24 @@
     { letterSpacing: "0.6em", opacity: 0 },
     { letterSpacing: "0.20em", opacity: 0.78, duration: 0.7, ease: "power2.out" },
     2.0);
+
+  // [CONTINUOUS] — wordmark breathes after reveal completes (every second of scene 1).
+  // Reveal lands ~1.6s; breathe runs 1.7s → 4.0s. duration*yoyo*(repeat+1) = 0.7*2*2 = 2.8s.
+  tl.fromTo("#s1-mark",
+    { scale: 1.0 },
+    { scale: 1.014, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    1.7);
+  // [CONTINUOUS] — kicker x-drift across full scene (after typed-in entrance).
+  tl.fromTo("#s1-kicker",
+    { x: -3 },
+    { x: 3, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    1.0);
+  // [CONTINUOUS] — tag y-drift after stamp lands.
+  tl.fromTo("#s1-tag",
+    { y: 0 },
+    { y: -3, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    2.7);
+
   // Soft outro for scene 1 — paperTear-style camera drift before scene 2.
   tl.to("#s1", { opacity: 0.0, duration: 0.45, ease: "power2.in" }, 3.55);
 
@@ -629,16 +647,48 @@
     at: 5.4, duration: 0.85, stagger: 0.10,
     distance: 80, ease: "power3.out",
   });
-  // Hairline rule draws left-to-right under the headline.
+  // Hairline rule draws left-to-right under the headline (moved earlier so
+  // body lands within ~0.5s of the headline).
   tl.fromTo("#s2-rule",
     { scaleX: 0 },
-    { scaleX: 1, duration: 0.6, ease: "power2.out" },
-    7.0);
-  // Body slides up after headline lands.
+    { scaleX: 1, duration: 0.5, ease: "power2.out" },
+    5.85);
+  // Body slides up immediately after the headline cascade — was 7.4 (1.15s
+  // gap reading as "headline pause body"); now 5.95 lands the block as one.
   tl.fromTo("#s2-a",
     { y: 28, opacity: 0 },
-    { y: 0, opacity: 0.86, duration: 0.7, ease: "power3.out" },
-    7.4);
+    { y: 0, opacity: 0.86, duration: 0.6, ease: "power3.out" },
+    5.95);
+
+  // [CONTINUOUS] — hero crop x-drift parallax (the y-drift above is single-pass,
+  // so x oscillates to keep the eye busy after the y settles).
+  tl.fromTo("#s2 .s2-hero-crop",
+    { x: 0 },
+    { x: -10, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    5.4);
+  // [CONTINUOUS] — number scale-breathe after glitchStamp lands.
+  tl.fromTo("#s2 .qa-num-row",
+    { scale: 1.0 },
+    { scale: 1.025, duration: 0.75, ease: "sine.inOut", yoyo: true, repeat: 7 },
+    5.6);
+  // [CONTINUOUS] — headline parent y-drift (cascade animates child word spans;
+  // parent drift compounds visually without colliding on the same elements).
+  tl.fromTo("#s2-q",
+    { y: 0 },
+    { y: -3, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    6.4);
+  // [CONTINUOUS] — body x-drift after entrance.
+  tl.fromTo("#s2-a",
+    { x: 0 },
+    { x: 2, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    6.7);
+  // [CONTINUOUS] — rule width pulse (60→80→60-style breathing of the underline).
+  // Triggers AFTER the initial draw at 5.85+0.5=6.35.
+  tl.fromTo("#s2-rule",
+    { scaleX: 1.0 },
+    { scaleX: 0.78, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    6.4);
+
   // Scene 2 → 3: radialMask wipe (warm).
   effectFx.radialMask(tl, "#s2", {
     at: 11.55, duration: 0.45,
@@ -705,6 +755,51 @@
     { scale: 1.18, duration: 1.0,
       stagger: { each: 0.10, yoyo: true, repeat: 2 }, ease: "sine.inOut" },
     17.0);
+
+  // [CONTINUOUS] — corner hero x/y drift parallax (rotation already oscillates
+  // via the existing tween above; add positional drift on different axes).
+  tl.fromTo("#s3 .s3-hero-corner",
+    { x: 0 },
+    { x: -10, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    13.5);
+  tl.fromTo("#s3 .s3-hero-corner",
+    { y: 0 },
+    { y: 5, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    13.8);
+  // [CONTINUOUS] — wireframe SVG decorline scale-breathe (rotation runs
+  // 12.0 → 20.0 already; scale is a separate property — no conflict).
+  tl.fromTo("#s3-decorline",
+    { scale: 0.96 },
+    { scale: 1.04, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    12.0);
+  // [CONTINUOUS] — number 02 micro-rotation (different from existing y-drift).
+  tl.fromTo("#s3-num",
+    { rotation: -1.5 },
+    { rotation: 1.5, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    13.5);
+  // [CONTINUOUS] — headline parent y-drift after testimonialReveal lands.
+  tl.fromTo("#s3-q",
+    { y: 0 },
+    { y: -3, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    14.7);
+  // [CONTINUOUS] — body x-drift.
+  tl.fromTo("#s3-a",
+    { x: 0 },
+    { x: 2, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    15.0);
+  // [CONTINUOUS] — rule width pulse after initial draw.
+  tl.fromTo("#s3-rule",
+    { scaleX: 1.0 },
+    { scaleX: 0.78, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    15.3);
+  // [CONTINUOUS] — dots y-oscillation after the existing scale pulse settles
+  // (existing pulse runs 17.0→~19.0; oscillate y from 18.5 to scene end).
+  tl.fromTo("#s3-dots span",
+    { y: 0 },
+    { y: -4, duration: 0.9, ease: "sine.inOut",
+      stagger: { each: 0.06, yoyo: true, repeat: 1 } },
+    18.0);
+
   // Scene 3 → 4: radialMask warm wipe.
   effectFx.radialMask(tl, "#s3", {
     at: 19.55, duration: 0.45,
@@ -752,17 +847,58 @@
     at: 21.2, duration: 0.85, stagger: 0.10,
     distance: 80, ease: "power3.out",
   });
-  // Rule.
+  // Rule (moved earlier so body lands within ~0.5s of the headline).
   tl.fromTo("#s4-rule",
     { scaleX: 0 },
-    { scaleX: 1, duration: 0.6, ease: "power2.out" },
-    22.7);
-  // Body letter-cascade (textFx.cascade splits by words; for letter feel use
-  // textFx.stagger with a small rotation).
+    { scaleX: 1, duration: 0.5, ease: "power2.out" },
+    21.7);
+  // Body letter-cascade — moved earlier (was 23.2, 1.15s gap reading as a
+  // dead pause; now 22.1 lands the body block immediately after the headline).
   textFx.stagger(tl, "#s4-a", {
-    at: 23.2, duration: 0.7, stagger: 0.025,
+    at: 22.1, duration: 0.6, stagger: 0.025,
     rotation: -6, ease: "back.out(1.4)",
   });
+
+  // [CONTINUOUS] — full hero rotation (existing tween animates y+scale; rotation
+  // is a separate property → no conflict, runs the full 7s window).
+  tl.fromTo("#s4 .s4-hero-full",
+    { rotation: -0.5 },
+    { rotation: 0.5, duration: 4.0, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    20.5);
+  // [CONTINUOUS] — number 03 y-drift + scale-breathe (substituting for the
+  // requested chromatic shimmer — same persistent-motion goal).
+  tl.fromTo("#s4-num",
+    { y: 0 },
+    { y: -4, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 5 },
+    21.3);
+  tl.fromTo("#s4-num",
+    { scale: 1.0 },
+    { scale: 1.03, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 6 },
+    21.5);
+  // [CONTINUOUS] — headline parent y-drift.
+  tl.fromTo("#s4-q",
+    { y: 0 },
+    { y: -3, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    22.2);
+  // [CONTINUOUS] — body x-drift.
+  tl.fromTo("#s4-a",
+    { x: 0 },
+    { x: 2, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    22.8);
+  // [CONTINUOUS] — rule width pulse after initial draw.
+  tl.fromTo("#s4-rule",
+    { scaleX: 1.0 },
+    { scaleX: 0.78, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    22.4);
+  // [CONTINUOUS] — CSS halo box-shadow pulse on the hero (substitute for
+  // tweening shader intensity which is fixed at construction). Pulses from
+  // 22.0 → 27.0, ~2.4s cycle as briefed.
+  tl.fromTo("#s4 .s4-hero-full",
+    { boxShadow: "0 20px 60px rgba(27, 42, 61, 0.28), 0 0 0px 0px rgba(244, 201, 107, 0.0)" },
+    { boxShadow: "0 20px 60px rgba(27, 42, 61, 0.28), 0 0 60px 6px rgba(244, 201, 107, 0.55)",
+      duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    22.0);
+
   // Sparkle sweep crosses the headline at ~22s — a single highlight pass.
   tl.fromTo("#s4-sparkle-sweep",
     { x: -200, opacity: 0 },
@@ -818,6 +954,24 @@
     count: 36, distance: 360,
     seed: 51,
   });
+
+  // [CONTINUOUS] — wordmark scale-breathe over the 2s scene (signalPulse runs
+  // its own internal motion; this is a parent-element breathe on top).
+  tl.fromTo("#s5-cta",
+    { scale: 1.0 },
+    { scale: 1.02, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    29.0);
+  // [CONTINUOUS] — URL drift.
+  tl.fromTo("#s5-url",
+    { x: -2 },
+    { x: 2, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    29.45);
+  // [CONTINUOUS] — watermark gentle rotation.
+  tl.fromTo("#s5-watermark",
+    { rotation: -1.5 },
+    { rotation: 1.5, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    28.7);
+
   // Final fade — only the last scene may animate elements out.
   tl.to(["#s5-watermark", "#s5-cta", "#s5-url"],
     { opacity: 0.92, duration: 0.3 }, 29.55);
