@@ -1689,14 +1689,26 @@ function applyCopyToTemplate(html, copy, templateName) {
   const ctaVerb = copy.cta?.verb || "Try";
 
   // Useful derived values reused across scenes.
-  const ctaTagline = copy.cta?.tagline || "";
+  const ctaTagline = (copy.cta?.tagline || "").trim();
   // CTA full sentence (no <span> inner) — used by templates whose s4-cta /
   // s5-cta is a flat heading. For templates that wrap the verb in a child
   // <span id="s[N]-cta-verb">, we skip the outer-tag swap to preserve the
   // span structure and just replace the verb word.
-  const ctaFull = ctaTagline
-    ? `${ctaVerb} ${ctaTagline.replace(/^(visit|try|read|see|book|start|join|learn|get|use)\s+/i, "")}`.replace(/\s+/g, " ").trim()
-    : `${ctaVerb} ${brandName}`.trim();
+  //
+  // Bug guarded: prepending the verb to a tagline that's already a complete
+  // imperative produces ungrammatical "Visit Share with neighbours. Find
+  // local help." Detect imperative taglines (terminal punctuation OR a
+  // leading action verb) and use them alone.
+  const TAGLINE_IMPERATIVE_VERBS = /^(?:visit|try|read|see|book|start|join|learn|get|use|share|find|discover|explore|watch|save|build|create|make|send|browse|shop|schedule|claim|download|install|sign|register|follow|subscribe|support|donate|give|help|contact|call|order|buy|hire|connect|meet|view|check|take|pick|choose|streamline|automate|simplify|reach|grow|launch|ship|listen|stop|skip|own|run|lead|move|open|talk|message|text|ask|request)\b/i;
+  const taglineIsImperative = ctaTagline && (
+    /[.!?]/.test(ctaTagline) ||
+    TAGLINE_IMPERATIVE_VERBS.test(ctaTagline)
+  );
+  const ctaFull = !ctaTagline
+    ? `${ctaVerb} ${brandName}`.trim()
+    : taglineIsImperative
+      ? ctaTagline.replace(/\s+/g, " ")
+      : `${ctaVerb} ${ctaTagline.replace(/^(visit|try|read|see|book|start|join|learn|get|use)\s+/i, "")}`.replace(/\s+/g, " ").trim();
   const hasVerbSpan = /^(hero-promo-30s|case-study-60s|founder-story-60s)$/.test(templateName || "");
 
   // --- scene 1 (hook / hero) ---------------------------------------------
