@@ -392,17 +392,18 @@
      data-width="1080" data-height="1920"
      data-start="0" data-duration="30" data-track-index="0">
 
-  <!-- Persistent ambient + decorative drifters across the full 30s. -->
+  <!-- Persistent ambient + decorative drifters across the full 30s.
+       Each on its own track to avoid overlap-on-same-track lint error. -->
   <div id="ambient-host" class="ambient-host clip"
        data-start="0" data-duration="30" data-track-index="11"></div>
   <svg id="deco-drift-1" class="deco-drift deco-drift--1 clip" viewBox="0 0 200 200"
-       data-start="0" data-duration="30" data-track-index="11" aria-hidden="true">
+       data-start="0" data-duration="30" data-track-index="12" aria-hidden="true">
     <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="1.4" />
     <circle cx="100" cy="100" r="64" fill="none" stroke="currentColor" stroke-width="1" />
     <circle cx="100" cy="100" r="36" fill="none" stroke="currentColor" stroke-width="1" />
   </svg>
   <svg id="deco-drift-2" class="deco-drift deco-drift--2 clip" viewBox="0 0 200 200"
-       data-start="0" data-duration="30" data-track-index="11" aria-hidden="true">
+       data-start="0" data-duration="30" data-track-index="13" aria-hidden="true">
     <path d="M10 180 Q100 40 190 180" fill="none" stroke="currentColor" stroke-width="1.6" />
     <path d="M10 150 Q100 60 190 150" fill="none" stroke="currentColor" stroke-width="1.2" />
   </svg>
