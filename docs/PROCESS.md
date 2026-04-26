@@ -1,6 +1,6 @@
 # Process — how to make a great video with this system
 
-**Last updated: 2026-04-26 (replaces the wave-shipping pattern from earlier this session).**
+**Last updated: 2026-04-26 (wave-Q — research-first for unknown shapes).**
 
 This is the canonical workflow for taking a brand URL to a great rendered video. It's simple by design. Every other process doc that contradicts this one is superseded.
 
@@ -15,6 +15,44 @@ These are durable preferences (also captured in user memory). Read them first; t
 3. **Templates amortize.** Build each template perfectly once; brand-specific data (colors, words, photos, music, voice) is the easy plug-in. Spend unbounded effort on templates because they get reused across infinite brands.
 4. **Loop-until-perfect, then surface.** Iterate silently using the verifier + frame-flipbook checks. Only ping the user when the work is genuinely ready for review.
 5. **Templates lock in as models** once approved. Tagged commit + entry in `docs/template-models.md` + validation against multiple brands.
+6. **Research-first for unknown shapes.** When the target shape is new (Reel/TikTok/Shorts vs cinematic-promo, ecommerce vs community-app, motorcycle-tech vs warm-community), read `docs/social-video-patterns.md` BEFORE designing. If a gap remains, do real research (web search + benchmarks) and codify findings — don't tweak from training-data assumptions.
+
+---
+
+## Step 0 — match brand to template (run BEFORE the cycle)
+
+Before assembling anything, decide whether a locked template already fits the brief.
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ a. Read docs/template-models.md                          │
+│    Does a LOCKED template match the brand's shape?       │
+│      YES → use it. Skip to the cycle (step 1).           │
+│      NO  → continue.                                     │
+│                                                          │
+│ b. Read docs/social-video-patterns.md                    │
+│    Find the shape pattern that matches the brief.        │
+│    (15 platform-mechanical rules + 7 community-app      │
+│    patterns + anti-patterns + format reference.)         │
+│                                                          │
+│ c. Use the website-to-hyperframes skill's gated docs    │
+│    for any NEW template shape:                           │
+│      DESIGN.md   — brand cheat-sheet                     │
+│      SCRIPT.md   — narration script (story backbone)     │
+│      STORYBOARD.md — per-beat creative direction         │
+│    These force decision-points before code touches CSS,  │
+│    avoiding the "tweak before understanding" failure    │
+│    mode that wasted hours in wave-Q.                     │
+│                                                          │
+│ d. Build the new template skeleton in compositions/     │
+│    templates/<name>-<seconds>s.html. Register in         │
+│    scripts/video.mjs TEMPLATE_REGISTRY.                  │
+│                                                          │
+│ e. Enter the cycle (step 1).                             │
+└──────────────────────────────────────────────────────────┘
+```
+
+**Wave-Q precedent:** kindred-nz was force-fitted into faq-quick-30s for hours before the user pushed back ("you don't understand what makes a good social media video"). That CSS-tweak-before-understanding loop is the failure mode step 0 prevents. Saves several hours per new shape.
 
 ---
 
@@ -103,7 +141,9 @@ The change is about how we sequence the *work of building templates* — not how
 ## See also
 
 - `LEARNINGS.md §8` — full waves history with what shipped, what was deferred, what was retired
-- `~/.claude/projects/<this-project>/memory/MEMORY.md` — the 18 durable user-preference rules
+- `~/.claude/projects/<this-project>/memory/MEMORY.md` — the durable user-preference rules
 - `docs/render-learnings/LEDGER.md` — per-render verdict trend
 - `docs/render-learnings/SUGGESTIONS.md` — cross-render pattern library
-- `docs/template-models.md` — locked-in model templates (created on first lock)
+- `docs/template-models.md` — locked-in model templates (read FIRST when matching a brand to a template)
+- `docs/social-video-patterns.md` — canonical reference for 9:16 short-form shape (15 platform rules + 7 community-app patterns + anti-patterns)
+- `~/.claude/skills/website-to-hyperframes/` — the gated DESIGN.md / SCRIPT.md / STORYBOARD.md workflow for new template shapes
