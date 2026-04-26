@@ -1602,20 +1602,36 @@ function categorize({
       });
     }
 
-    // 4) narration-overrun-into-cta (error) --------------------------------
-    // Narration must end before the LAST .scene.clip starts (the CTA).
+    // 4) narration-overrun-into-cta (watch) + narration-past-comp-end (error)
+    // Two related cases:
+    //  - Narration runs past the LAST .scene.clip start (the CTA): WATCH.
+    //    Some templates deliberately speak the CTA tagline as the CTA
+    //    appears (designed audio/visual sync). Flagging as a watch keeps
+    //    it visible without blocking ship.
+    //  - Narration runs past the COMP end: ERROR. The audio gets clipped
+    //    at render time — definitely a bug.
     if (stHtmlScenes.length >= 2) {
       const lastScene = stHtmlScenes[stHtmlScenes.length - 1];
       const lastCueEnd = vttCues[vttCues.length - 1].end;
-      if (lastCueEnd > lastScene.start + 0.05) {
+      const compEnd = lastScene.end;
+      if (lastCueEnd > compEnd + 0.05) {
+        findings.scriptTiming.push({
+          kind: "narration-past-comp-end",
+          severity: "error",
+          scene: lastScene.id,
+          narrationEnd: +lastCueEnd.toFixed(2),
+          compEnd: +compEnd.toFixed(2),
+          overrunS: +(lastCueEnd - compEnd).toFixed(2),
+          message: `narration ends at ${lastCueEnd.toFixed(2)}s but comp ends at ${compEnd.toFixed(2)}s — narration will be clipped by ${(lastCueEnd - compEnd).toFixed(2)}s`,
+        });
+      } else if (lastCueEnd > lastScene.start + 0.05) {
         findings.scriptTiming.push({
           kind: "narration-overrun-into-cta",
-          severity: "error",
           scene: lastScene.id,
           narrationEnd: +lastCueEnd.toFixed(2),
           ctaStart: +lastScene.start.toFixed(2),
           overrunS: +(lastCueEnd - lastScene.start).toFixed(2),
-          message: `narration ends at ${lastCueEnd.toFixed(2)}s but CTA scene ${lastScene.id} starts at ${lastScene.start.toFixed(2)}s — narration overruns into CTA by ${(lastCueEnd - lastScene.start).toFixed(2)}s`,
+          message: `narration ends at ${lastCueEnd.toFixed(2)}s but CTA scene ${lastScene.id} starts at ${lastScene.start.toFixed(2)}s — narration overruns into CTA by ${(lastCueEnd - lastScene.start).toFixed(2)}s (acceptable when narration speaks the CTA tagline)`,
         });
       }
     }
@@ -1689,12 +1705,14 @@ function deriveVerdict(findings) {
     f.kind === "scene-frozen" || f.kind === "multiple-static"
   );
   // Script-timing majors:
-  //   - any narration-overrun-into-cta (error)
+  //   - any narration-past-comp-end (audio clipped at render — hard error)
   //   - 2+ scene-narration-mismatch warnings (script + visuals disagree)
+  // narration-overrun-into-cta is a watch signal, not a major — it's a
+  // designed pattern in some templates (CTA tagline spoken as CTA appears).
   const scriptTiming = findings.scriptTiming || [];
-  const narrationOverrunsCta = scriptTiming.some(f => f.kind === "narration-overrun-into-cta");
+  const narrationPastEnd = scriptTiming.some(f => f.kind === "narration-past-comp-end");
   const sceneMismatchCount = scriptTiming.filter(f => f.kind === "scene-narration-mismatch").length;
-  const scriptTimingMajor = narrationOverrunsCta || sceneMismatchCount >= 2;
+  const scriptTimingMajor = narrationPastEnd || sceneMismatchCount >= 2;
   const newErrors =
     findings.brandPaletteUse.some(f => f.kind === "zero-var-refs") ||
     findings.brandAssetUse.some(f => f.kind === "visual-identity-absent") ||
@@ -1718,11 +1736,14 @@ function deriveVerdict(findings) {
       f.kind === "static-moment" || f.kind === "near-static-moment"
     ).length +
     // Script-timing watch signals — density outliers + lone scene-mismatch +
-    // word-emphasis orphans. silence-beat / script-fits-budget are info-only.
+    // word-emphasis orphans + narration-overrun-into-cta (designed pattern
+    // when narration speaks the CTA tagline, but worth surfacing).
+    // silence-beat / script-fits-budget are info-only.
     scriptTiming.filter(f =>
       f.kind === "script-density-imbalance" ||
       f.kind === "scene-narration-mismatch" ||
-      f.kind === "word-emphasis-orphan"
+      f.kind === "word-emphasis-orphan" ||
+      f.kind === "narration-overrun-into-cta"
     ).length;
   if (hasMajor) return "needs-fix";
   if (watchSignals > 2) return "watch";
@@ -1842,7 +1863,8 @@ function appendLedgerRow({ slug, template, tone, durationS, findings, verdict })
   const scriptTiming = findings.scriptTiming || [];
   const sceneMismatches = scriptTiming.filter(f => f.kind === "scene-narration-mismatch").length;
   if (sceneMismatches) majorBits.push(`${sceneMismatches} scene-mismatch`);
-  if (scriptTiming.some(f => f.kind === "narration-overrun-into-cta")) majorBits.push("narration overruns");
+  if (scriptTiming.some(f => f.kind === "narration-past-comp-end")) majorBits.push("narration past comp end");
+  if (scriptTiming.some(f => f.kind === "narration-overrun-into-cta")) majorBits.push("narration into cta");
   const densityOut = scriptTiming.filter(f => f.kind === "script-density-imbalance").length;
   if (densityOut) majorBits.push(`${densityOut} density outlier${densityOut === 1 ? "" : "s"}`);
   const emphasisOrphans = scriptTiming.filter(f => f.kind === "word-emphasis-orphan").length;
@@ -1907,13 +1929,18 @@ const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
 const page = await context.newPage();
 
-// hyperframes preview serves the project from a per-project route. We use the
-// project name from the working directory (matches smoke.mjs's pattern).
-const projectName = path.basename(projectRoot);
-const previewUrl = `http://localhost:${port}/api/projects/${projectName}/preview`;
+// Load the comp via file:// rather than the preview server's per-project
+// route. Why: the preview-shell injects studio chrome that historically
+// rendered comp content as raw source-as-text on this Windows env, which
+// silently zeroed out the visible-text capture (every scene looked
+// "no visible text at any sampled second"). The motion-continuity check
+// already side-steps the same issue by using file:// for screenshots —
+// reuse that proven path here. The preview server stays up (ensureServer
+// above) so the user can keep the studio open while we verify.
+const fileUrl = "file:///" + compPath.replace(/\\/g, "/");
 
 try {
-  await page.goto(previewUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
+  await page.goto(fileUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
   await page.waitForFunction(
     () => window.__timelines && Object.keys(window.__timelines).length > 0,
     { timeout: 8000 }

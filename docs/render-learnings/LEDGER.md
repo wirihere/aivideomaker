@@ -49,3 +49,6 @@ See `SUGGESTIONS.md` for cross-render patterns (sized, recurring, actionable).
 | 2026-04-26 | index | warm-community | — | 30s | brand missing, 4 headline mismatch, 1 pacing, 1 unused asset, 17 near-static | needs-fix |
 | 2026-04-26 | kindred-nz | warm-community | — | 30s | brand missing, 4 headline mismatch, 1 pacing, 1 unused asset, hero+logo absent, scene s4,s5 fully static, scene s1: 5 static moments, scene s3: 7 static moments, 4 near-static | needs-fix |
 | 2026-04-26 | index | warm-community | — | 30s | brand missing, 4 headline mismatch, 1 pacing, 1 unused asset, 17 near-static, narration overruns, 1 emphasis orphan | needs-fix |
+| 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 7 a11y, 5 palette mismatch, 1 unused asset, 17 near-static, narration overruns, 1 emphasis orphan | needs-fix |
+| 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 1 unused asset, 15 near-static, narration overruns, 1 emphasis orphan | needs-fix |
+| 2026-04-26 | index | warm-community | — | 31s | 2 headline mismatch, 1 pacing, 1 unused asset, 15 near-static, narration into cta, 1 emphasis orphan | watch |
