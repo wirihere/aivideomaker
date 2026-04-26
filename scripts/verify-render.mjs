@@ -1893,10 +1893,20 @@ if (!fileExists(compPath)) {
   process.exit(2);
 }
 
-// Slug derivation: explicit --copy wins, else use comp filename without
-// extension, then strip the well-known suffix variants.
+// Slug derivation: explicit --copy wins (its filename IS the slug), else
+// use comp filename without extension, then guessSlugFromIndex for index.html.
+// Without the --copy short-circuit, guessSlugFromIndex's sha256 lookup can
+// match stale per-brand meta.json files and pick the wrong slug — caller
+// already passed --copy, trust that.
 const compBaseName = path.basename(compPath, ".html");
-const slug = compBaseName === "index" ? guessSlugFromIndex(compPath) : compBaseName;
+let slug;
+if (copyArg) {
+  slug = path.basename(copyArg).replace(/\.copy\.json$/, "");
+} else if (compBaseName === "index") {
+  slug = guessSlugFromIndex(compPath);
+} else {
+  slug = compBaseName;
+}
 
 const copyPath = abs(copyArg || `compositions/${slug}.copy.json`);
 const vttPath = abs(vttArg || `assets/voiceover/${slug}.vtt`);
