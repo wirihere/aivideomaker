@@ -37,9 +37,18 @@
   width: 760px;
   height: 760px;
   border-radius: 60px;
+  /* Brand-driven holo gradient — the original 6-stop rainbow scored 3/3 on
+     DOM lint but rendered 82%+ off-brand pixels. Card tokens drive the
+     palette; literal hexes remain only as last-resort fallback for comps
+     that haven't loaded design/cards.css. The gradient is still 5 stops
+     so background-position drift still produces the holo shimmer, but
+     all five stops sit inside the brand's range. */
   background: linear-gradient(115deg,
-    #ff5cb1 0%, #9b6bff 18%, #3affe6 36%,
-    #5cffaa 56%, #f5d35a 75%, #ff5cb1 100%);
+    var(--card-accent,    #ff5cb1) 0%,
+    var(--card-paper,     #9b6bff) 25%,
+    var(--card-ok,        #3affe6) 50%,
+    var(--card-warn,      #f5d35a) 75%,
+    var(--card-accent,    #ff5cb1) 100%);
   background-size: 300% 300%;
   box-shadow:
     0 30px 80px rgba(0, 0, 0, 0.5),

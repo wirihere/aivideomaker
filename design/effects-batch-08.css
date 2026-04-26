@@ -236,20 +236,35 @@
   height: 140%;
   left: -20%;
   top: -20%;
+  /* Brand-driven 2-color conic — was a 4-color rainbow that scored 3/3 on
+     DOM lint but rendered 82%+ off-brand. Card tokens come first; --brand-*
+     and literal hexes are last-resort fallbacks for compositions that
+     haven't loaded design/cards.css. */
   background: conic-gradient(
     from 0deg at 50% 50%,
-    var(--brand-primary,   #1a9e8f) 0%,
-    var(--brand-secondary, #f5d35a) 25%,
-    var(--brand-accent,    #ff5cb1) 50%,
-    var(--brand-tertiary,  #5cb6ff) 75%,
-    var(--brand-primary,   #1a9e8f) 100%
+    var(--card-accent, var(--brand-primary,   #1a9e8f)) 0%,
+    var(--card-paper,  var(--brand-secondary, #f5d35a)) 50%,
+    var(--card-accent, var(--brand-primary,   #1a9e8f)) 100%
   );
   filter: blur(120px) saturate(1.4);
   opacity: 0.55;
   will-change: transform;
   /* Animate via GSAP — keep finite for deterministic capture:
      gsap.to('.fx-cinemagraph-bg::before', {rotation:360, duration:scene_dur, ease:'none'})
-     Or via inline finite @keyframes wrapped in scene timing. */
+     Or via inline finite @keyframes wrapped in scene timing.
+     To override per-composition, set --card-accent / --card-paper at the
+     scene root, OR set --cg-color-a / --cg-color-b on .fx-cinemagraph-bg. */
+}
+/* Optional per-comp override — set these on the host to use custom colors
+   without overriding card tokens globally. */
+.fx-cinemagraph-bg[style*="--cg-color-a"]::before,
+.fx-cinemagraph-bg[style*="--cg-color-b"]::before {
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    var(--cg-color-a, var(--card-accent, #1a9e8f)) 0%,
+    var(--cg-color-b, var(--card-paper,  #f5d35a)) 50%,
+    var(--cg-color-a, var(--card-accent, #1a9e8f)) 100%
+  );
 }
 .fx-cinemagraph-bg::after {
   /* frosted-glass overlay sits between blob and content */
