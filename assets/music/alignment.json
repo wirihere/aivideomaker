@@ -1,0 +1,1803 @@
+{
+  "schema_version": 1,
+  "generated_by": "scripts/analyze-music-alignment.mjs",
+  "tracks": [
+    {
+      "file": "claim-mate-v2-bed.mp3",
+      "path": "assets/music/claim-mate-v2-bed.mp3",
+      "duration_sec": 82.1,
+      "bpm_used": 63.2,
+      "bpm_source": "estimator",
+      "bpm_estimated": 63.2,
+      "bpm_estimate_confidence": 0.63,
+      "bpm_bin": "slow",
+      "bpm_curated": null,
+      "rms_mean": 0.1184,
+      "rms_std": 0.0433,
+      "rms_min": 0.0041,
+      "rms_max": 0.1808,
+      "drops": [
+        1,
+        2,
+        9,
+        10,
+        14,
+        15,
+        16,
+        17,
+        22,
+        30,
+        76
+      ],
+      "swells": [
+        18
+      ],
+      "curator_vibe": null,
+      "curator_slug": null,
+      "curator_title": null,
+      "curator_character": null,
+      "curator_best_for": null,
+      "curator_tags": []
+    },
+    {
+      "file": "documentary-01-strings.mp3",
+      "path": "assets/music/documentary-01-strings.mp3",
+      "duration_sec": 226.2,
+      "bpm_used": 64,
+      "bpm_source": "curator",
+      "bpm_estimated": 160,
+      "bpm_estimate_confidence": 0.5,
+      "bpm_bin": "slow",
+      "bpm_curated": 64,
+      "rms_mean": 0.1616,
+      "rms_std": 0.0468,
+      "rms_min": 0.0004,
+      "rms_max": 0.2243,
+      "drops": [
+        1,
+        2,
+        15,
+        18,
+        21,
+        24,
+        25
+      ],
+      "swells": [
+        5,
+        6,
+        34,
+        35,
+        36,
+        46,
+        47,
+        48,
+        59,
+        60,
+        71,
+        72,
+        73,
+        83,
+        84,
+        85,
+        95,
+        96,
+        97,
+        108,
+        109,
+        120,
+        121,
+        122,
+        132,
+        133,
+        134,
+        145,
+        146,
+        157,
+        158,
+        159,
+        170,
+        171,
+        182,
+        183,
+        196,
+        206,
+        207,
+        208,
+        219,
+        220
+      ],
+      "curator_vibe": "documentary",
+      "curator_slug": "documentary-01-strings",
+      "curator_title": "Documentary Strings (documentary-01 audition)",
+      "curator_character": "Cinematic strings + piano, slow and considered",
+      "curator_best_for": "Anchor scenes for senior decision-maker briefs",
+      "curator_tags": [
+        "cinematic",
+        "strings",
+        "piano",
+        "documentary"
+      ]
+    },
+    {
+      "file": "documentary-top.mp3",
+      "path": "assets/music/documentary-top.mp3",
+      "duration_sec": 226.2,
+      "bpm_used": 70,
+      "bpm_source": "curator",
+      "bpm_estimated": 160,
+      "bpm_estimate_confidence": 0.5,
+      "bpm_bin": "slow",
+      "bpm_curated": 70,
+      "rms_mean": 0.1616,
+      "rms_std": 0.0468,
+      "rms_min": 0.0004,
+      "rms_max": 0.2243,
+      "drops": [
+        1,
+        2,
+        15,
+        18,
+        21,
+        24,
+        25
+      ],
+      "swells": [
+        5,
+        6,
+        34,
+        35,
+        36,
+        46,
+        47,
+        48,
+        59,
+        60,
+        71,
+        72,
+        73,
+        83,
+        84,
+        85,
+        95,
+        96,
+        97,
+        108,
+        109,
+        120,
+        121,
+        122,
+        132,
+        133,
+        134,
+        145,
+        146,
+        157,
+        158,
+        159,
+        170,
+        171,
+        182,
+        183,
+        196,
+        206,
+        207,
+        208,
+        219,
+        220
+      ],
+      "curator_vibe": "documentary",
+      "curator_slug": "cinematic-documentary-emotional-underscore",
+      "curator_title": "Cinematic Documentary – Emotional Underscore for Storytelling",
+      "curator_character": "Cinematic ambient piano underscore, hypnosis-ready, emotional storytelling",
+      "curator_best_for": "Default Documentary Considered bed; B2B explainers, regulated industries",
+      "curator_tags": [
+        "cinematic",
+        "documentary",
+        "ambient",
+        "piano",
+        "emotional"
+      ]
+    },
+    {
+      "file": "energetic-inspiring-pop.mp3",
+      "path": "assets/music/energetic-inspiring-pop.mp3",
+      "duration_sec": 90,
+      "bpm_used": 66.7,
+      "bpm_source": "estimator",
+      "bpm_estimated": 66.7,
+      "bpm_estimate_confidence": 0.38,
+      "bpm_bin": "slow",
+      "bpm_curated": null,
+      "rms_mean": 0.1241,
+      "rms_std": 0.0549,
+      "rms_min": 0.0053,
+      "rms_max": 0.2436,
+      "drops": [
+        2,
+        7,
+        9,
+        11,
+        14,
+        16,
+        18,
+        21,
+        25,
+        27,
+        28,
+        32,
+        34,
+        39,
+        41,
+        43,
+        46,
+        48,
+        50,
+        53,
+        55,
+        57,
+        59,
+        62,
+        64,
+        71,
+        75,
+        78,
+        80,
+        82
+      ],
+      "swells": [],
+      "curator_vibe": null,
+      "curator_slug": null,
+      "curator_title": null,
+      "curator_character": null,
+      "curator_best_for": null,
+      "curator_tags": []
+    },
+    {
+      "file": "kindred-bed.mp3",
+      "path": "assets/music/kindred-bed.mp3",
+      "duration_sec": 213.1,
+      "bpm_used": 88,
+      "bpm_source": "curator",
+      "bpm_estimated": 82.8,
+      "bpm_estimate_confidence": 0.97,
+      "bpm_bin": "slow",
+      "bpm_curated": 88,
+      "rms_mean": 0.1795,
+      "rms_std": 0.0503,
+      "rms_min": 0,
+      "rms_max": 0.3033,
+      "drops": [
+        2,
+        4,
+        7,
+        11,
+        23,
+        25,
+        31,
+        60,
+        61,
+        72,
+        78,
+        140,
+        146,
+        148,
+        162
+      ],
+      "swells": [
+        196
+      ],
+      "curator_vibe": "warm-community",
+      "curator_slug": "kindred-bed",
+      "curator_title": "Acoustic Community (Kindred bed)",
+      "curator_character": "Gentle acoustic guitar fingerstyle, soft pad underneath, mid-tempo",
+      "curator_best_for": "Default Warm Community bed; community apps, charities, NGOs",
+      "curator_tags": [
+        "acoustic",
+        "guitar",
+        "warm",
+        "fingerstyle",
+        "pad"
+      ]
+    },
+    {
+      "file": "kinetic-01-motivational.mp3",
+      "path": "assets/music/kinetic-01-motivational.mp3",
+      "duration_sec": 96,
+      "bpm_used": 124,
+      "bpm_source": "curator",
+      "bpm_estimated": null,
+      "bpm_estimate_confidence": 0.06,
+      "bpm_bin": "fast",
+      "bpm_curated": 124,
+      "rms_mean": 0.3027,
+      "rms_std": 0.0828,
+      "rms_min": 0.0502,
+      "rms_max": 0.5031,
+      "drops": [
+        9,
+        46,
+        51,
+        54,
+        55,
+        80
+      ],
+      "swells": [
+        9,
+        10,
+        11,
+        12,
+        55
+      ],
+      "curator_vibe": "kinetic-pop",
+      "curator_slug": "kinetic-01-motivational",
+      "curator_title": "Kinetic Motivational (kinetic-01 audition)",
+      "curator_character": "Upbeat electronic motivational energy",
+      "curator_best_for": "Generic Kinetic Pop fallback when a stronger track isn't available",
+      "curator_tags": [
+        "electronic",
+        "motivational",
+        "upbeat"
+      ]
+    },
+    {
+      "file": "kinetic-pop-top.mp3",
+      "path": "assets/music/kinetic-pop-top.mp3",
+      "duration_sec": 90,
+      "bpm_used": 120,
+      "bpm_source": "curator",
+      "bpm_estimated": 66.7,
+      "bpm_estimate_confidence": 0.38,
+      "bpm_bin": "mid",
+      "bpm_curated": 120,
+      "rms_mean": 0.1241,
+      "rms_std": 0.0549,
+      "rms_min": 0.0053,
+      "rms_max": 0.2436,
+      "drops": [
+        2,
+        7,
+        9,
+        11,
+        14,
+        16,
+        18,
+        21,
+        25,
+        27,
+        28,
+        32,
+        34,
+        39,
+        41,
+        43,
+        46,
+        48,
+        50,
+        53,
+        55,
+        57,
+        59,
+        62,
+        64,
+        71,
+        75,
+        78,
+        80,
+        82
+      ],
+      "swells": [],
+      "curator_vibe": "kinetic-pop",
+      "curator_slug": "energetic-inspiring-pop",
+      "curator_title": "Energetic Inspiring Pop (Motivational Positive Electronic Pop)",
+      "curator_character": "Tropical-electronic pop with confident kick, scroll-native energy",
+      "curator_best_for": "Default Kinetic Pop bed; DTC and lifestyle brands",
+      "curator_tags": [
+        "electronic",
+        "pop",
+        "tropical",
+        "motivational",
+        "inspirational"
+      ]
+    },
+    {
+      "file": "premium-01-ambient.mp3",
+      "path": "assets/music/premium-01-ambient.mp3",
+      "duration_sec": 124,
+      "bpm_used": 62,
+      "bpm_source": "curator",
+      "bpm_estimated": null,
+      "bpm_estimate_confidence": 0.05,
+      "bpm_bin": "slow",
+      "bpm_curated": 62,
+      "rms_mean": 0.0528,
+      "rms_std": 0.0433,
+      "rms_min": 0.0023,
+      "rms_max": 0.2008,
+      "drops": [
+        1,
+        6,
+        8,
+        16,
+        22,
+        24,
+        31,
+        37,
+        46,
+        47,
+        52,
+        54,
+        58,
+        62,
+        67,
+        68,
+        77,
+        83,
+        92,
+        98,
+        100,
+        107,
+        113,
+        115
+      ],
+      "swells": [],
+      "curator_vibe": "quiet-premium",
+      "curator_slug": "premium-01-ambient",
+      "curator_title": "Premium Ambient (premium-01 audition)",
+      "curator_character": "Ambient atmospheric pad with sparse piano motif",
+      "curator_best_for": "Quiet Premium fallback bed",
+      "curator_tags": [
+        "ambient",
+        "piano",
+        "minimal",
+        "atmospheric"
+      ]
+    },
+    {
+      "file": "quiet-premium-top.mp3",
+      "path": "assets/music/quiet-premium-top.mp3",
+      "duration_sec": 189.9,
+      "bpm_used": 60,
+      "bpm_source": "curator",
+      "bpm_estimated": 150,
+      "bpm_estimate_confidence": 0.17,
+      "bpm_bin": "slow",
+      "bpm_curated": 60,
+      "rms_mean": 0.1403,
+      "rms_std": 0.0699,
+      "rms_min": 0,
+      "rms_max": 0.3079,
+      "drops": [
+        1,
+        3,
+        5,
+        6,
+        12,
+        13,
+        19,
+        26,
+        32,
+        38,
+        45,
+        51,
+        54,
+        61,
+        64,
+        76,
+        83,
+        86,
+        105,
+        114,
+        115,
+        127,
+        134,
+        141,
+        153,
+        154,
+        160,
+        166
+      ],
+      "swells": [
+        5,
+        6,
+        7,
+        112,
+        113,
+        114,
+        115,
+        116
+      ],
+      "curator_vibe": "quiet-premium",
+      "curator_slug": "minimal-piano-emotional-ambient-cinematic-peaceful-calm-smooth",
+      "curator_title": "Minimal Piano Emotional Ambient Cinematic Peaceful Calm Smooth",
+      "curator_character": "Minimal felt-piano with peaceful calm air, cinematic but understated",
+      "curator_best_for": "Default Quiet Premium bed; luxury, hospitality, fashion",
+      "curator_tags": [
+        "ambient",
+        "piano",
+        "minimal",
+        "peaceful",
+        "cinematic"
+      ]
+    },
+    {
+      "file": "track-faded.mp3",
+      "path": "assets/music/track-faded.mp3",
+      "duration_sec": 30,
+      "bpm_used": 120,
+      "bpm_source": "estimator",
+      "bpm_estimated": 120,
+      "bpm_estimate_confidence": 0.11,
+      "bpm_bin": "mid",
+      "bpm_curated": null,
+      "rms_mean": 0.1379,
+      "rms_std": 0.0607,
+      "rms_min": 0.0033,
+      "rms_max": 0.2271,
+      "drops": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        17
+      ],
+      "swells": [],
+      "curator_vibe": null,
+      "curator_slug": null,
+      "curator_title": null,
+      "curator_character": null,
+      "curator_best_for": null,
+      "curator_tags": []
+    },
+    {
+      "file": "track.mp3",
+      "path": "assets/music/track.mp3",
+      "duration_sec": 122,
+      "bpm_used": null,
+      "bpm_source": "unknown",
+      "bpm_estimated": null,
+      "bpm_estimate_confidence": 0.07,
+      "bpm_bin": "unknown",
+      "bpm_curated": null,
+      "rms_mean": 0.1637,
+      "rms_std": 0.0771,
+      "rms_min": 0.0007,
+      "rms_max": 0.2555,
+      "drops": [
+        1,
+        3,
+        5,
+        7,
+        9,
+        17,
+        51,
+        53,
+        55,
+        63,
+        65,
+        67,
+        69,
+        71,
+        73,
+        81,
+        115
+      ],
+      "swells": [],
+      "curator_vibe": null,
+      "curator_slug": null,
+      "curator_title": null,
+      "curator_character": null,
+      "curator_best_for": null,
+      "curator_tags": []
+    },
+    {
+      "file": "v5-inspirational.mp3",
+      "path": "assets/music/v5-inspirational.mp3",
+      "duration_sec": 109.2,
+      "bpm_used": 54.5,
+      "bpm_source": "estimator",
+      "bpm_estimated": 54.5,
+      "bpm_estimate_confidence": 0.56,
+      "bpm_bin": "slow",
+      "bpm_curated": null,
+      "rms_mean": 0.2239,
+      "rms_std": 0.0725,
+      "rms_min": 0.0077,
+      "rms_max": 0.3502,
+      "drops": [
+        11,
+        17,
+        25,
+        29,
+        38,
+        42,
+        47,
+        51,
+        55,
+        59,
+        60,
+        64,
+        68,
+        70,
+        73,
+        77,
+        86,
+        99
+      ],
+      "swells": [],
+      "curator_vibe": null,
+      "curator_slug": null,
+      "curator_title": null,
+      "curator_character": null,
+      "curator_best_for": null,
+      "curator_tags": []
+    },
+    {
+      "file": "warm-02-folk.mp3",
+      "path": "assets/music/warm-02-folk.mp3",
+      "duration_sec": 102.3,
+      "bpm_used": 84,
+      "bpm_source": "curator",
+      "bpm_estimated": 82.8,
+      "bpm_estimate_confidence": 0.32,
+      "bpm_bin": "slow",
+      "bpm_curated": 84,
+      "rms_mean": 0.167,
+      "rms_std": 0.0518,
+      "rms_min": 0.0007,
+      "rms_max": 0.2652,
+      "drops": [
+        20,
+        23,
+        35,
+        46,
+        58,
+        73,
+        97
+      ],
+      "swells": [
+        46,
+        47
+      ],
+      "curator_vibe": "warm-community",
+      "curator_slug": "warm-02-folk",
+      "curator_title": "Warm Folk (warm-02 audition)",
+      "curator_character": "Warm acoustic folk with inspirational lift",
+      "curator_best_for": "Mid-tempo features section",
+      "curator_tags": [
+        "folk",
+        "acoustic",
+        "warm",
+        "inspirational"
+      ]
+    }
+  ],
+  "templates": {
+    "social-reel-15s": {
+      "vibe": "kinetic-pop",
+      "seconds": 15,
+      "cuts": [
+        0,
+        3,
+        8,
+        13,
+        15
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 3
+        },
+        {
+          "start": 3,
+          "duration": 5
+        },
+        {
+          "start": 8,
+          "duration": 5
+        },
+        {
+          "start": 13,
+          "duration": 2
+        }
+      ],
+      "ranked": [
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 92,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 90,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": 84,
+          "reasons": [
+            "1 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "track.mp3",
+          "score": 49,
+          "reasons": [
+            "BPM unknown",
+            "1 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "kindred-bed.mp3",
+          "score": 44,
+          "reasons": [
+            "BPM 88 off (110-130)",
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 34,
+          "reasons": [
+            "BPM 63 clashes with 110-130",
+            "1 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 33,
+          "reasons": [
+            "BPM 60 clashes with 110-130",
+            "2 drop/swell near cuts",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 64 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "documentary-top.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 70 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 67 clashes with 110-130"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 62 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 55 clashes with 110-130"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 26,
+          "reasons": [
+            "BPM 84 clashes with 110-130",
+            "curated for warm-community"
+          ]
+        }
+      ]
+    },
+    "hero-promo-30s": {
+      "vibe": "kinetic-pop",
+      "seconds": 30,
+      "cuts": [
+        0,
+        8,
+        18,
+        26,
+        30
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 8
+        },
+        {
+          "start": 8,
+          "duration": 10
+        },
+        {
+          "start": 18,
+          "duration": 8
+        },
+        {
+          "start": 26,
+          "duration": 4
+        }
+      ],
+      "ranked": [
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 96,
+          "reasons": [
+            "1 drop/swell near cuts",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 90,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": 80,
+          "reasons": []
+        },
+        {
+          "file": "track.mp3",
+          "score": 45,
+          "reasons": [
+            "BPM unknown"
+          ]
+        },
+        {
+          "file": "kindred-bed.mp3",
+          "score": 44,
+          "reasons": [
+            "BPM 88 off (110-130)",
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 37,
+          "reasons": [
+            "BPM 63 clashes with 110-130",
+            "2 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 34,
+          "reasons": [
+            "BPM 67 clashes with 110-130",
+            "1 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 64 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "documentary-top.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 70 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 62 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 60 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 55 clashes with 110-130"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 26,
+          "reasons": [
+            "BPM 84 clashes with 110-130",
+            "curated for warm-community"
+          ]
+        }
+      ]
+    },
+    "product-launch-30s": {
+      "vibe": "kinetic-pop",
+      "seconds": 30,
+      "cuts": [
+        0,
+        4,
+        14,
+        24,
+        30
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 4
+        },
+        {
+          "start": 4,
+          "duration": 10
+        },
+        {
+          "start": 14,
+          "duration": 10
+        },
+        {
+          "start": 24,
+          "duration": 6
+        }
+      ],
+      "ranked": [
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 96,
+          "reasons": [
+            "1 drop/swell near cuts",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 90,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": 80,
+          "reasons": []
+        },
+        {
+          "file": "kindred-bed.mp3",
+          "score": 48,
+          "reasons": [
+            "BPM 88 off (110-130)",
+            "1 drop/swell near cuts",
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "track.mp3",
+          "score": 45,
+          "reasons": [
+            "BPM unknown"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 37,
+          "reasons": [
+            "BPM 63 clashes with 110-130",
+            "2 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 34,
+          "reasons": [
+            "BPM 67 clashes with 110-130",
+            "1 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 64 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "documentary-top.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 70 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 62 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 55 clashes with 110-130"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 26,
+          "reasons": [
+            "BPM 60 clashes with 110-130",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 26,
+          "reasons": [
+            "BPM 84 clashes with 110-130",
+            "curated for warm-community"
+          ]
+        }
+      ]
+    },
+    "before-after-20s": {
+      "vibe": "kinetic-pop",
+      "seconds": 20,
+      "cuts": [
+        0,
+        7,
+        9,
+        16,
+        19,
+        20
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 7
+        },
+        {
+          "start": 7,
+          "duration": 2
+        },
+        {
+          "start": 9,
+          "duration": 7
+        },
+        {
+          "start": 16,
+          "duration": 3
+        },
+        {
+          "start": 19,
+          "duration": 1
+        }
+      ],
+      "ranked": [
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 101,
+          "reasons": [
+            "3 drop/swell near cuts",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 96,
+          "reasons": [
+            "2 drop/swell near cuts",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": 86,
+          "reasons": [
+            "2 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "track.mp3",
+          "score": 51,
+          "reasons": [
+            "BPM unknown",
+            "2 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "kindred-bed.mp3",
+          "score": 47,
+          "reasons": [
+            "BPM 88 off (110-130)",
+            "1 drop/swell near cuts",
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 39,
+          "reasons": [
+            "BPM 67 clashes with 110-130",
+            "3 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 36,
+          "reasons": [
+            "BPM 63 clashes with 110-130",
+            "2 drop/swell near cuts"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 32,
+          "reasons": [
+            "BPM 60 clashes with 110-130",
+            "2 drop/swell near cuts",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 30,
+          "reasons": [
+            "BPM 55 clashes with 110-130"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 29,
+          "reasons": [
+            "BPM 62 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 29,
+          "reasons": [
+            "BPM 84 clashes with 110-130",
+            "1 drop/swell near cuts",
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 26,
+          "reasons": [
+            "BPM 64 clashes with 110-130",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "documentary-top.mp3",
+          "score": 26,
+          "reasons": [
+            "BPM 70 clashes with 110-130",
+            "curated for documentary"
+          ]
+        }
+      ]
+    },
+    "faq-quick-30s": {
+      "vibe": "warm-community",
+      "seconds": 30,
+      "cuts": [
+        0,
+        4,
+        12,
+        20,
+        28,
+        30
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 4
+        },
+        {
+          "start": 4,
+          "duration": 8
+        },
+        {
+          "start": 12,
+          "duration": 8
+        },
+        {
+          "start": 20,
+          "duration": 8
+        },
+        {
+          "start": 28,
+          "duration": 2
+        }
+      ],
+      "ranked": [
+        {
+          "file": "kindred-bed.mp3",
+          "score": 96,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 94,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "documentary-top.mp3",
+          "score": 65,
+          "reasons": [
+            "BPM 70 just outside 80-100",
+            "cinematic swells (0.19/s)",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 52,
+          "reasons": [
+            "BPM 64 off (80-100)",
+            "cinematic swells (0.19/s)",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 52,
+          "reasons": [
+            "BPM 124 off (80-100)",
+            "cinematic swells (0.05/s)",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 43,
+          "reasons": [
+            "BPM 67 off (80-100)",
+            "sharp jumps (0.33 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 42,
+          "reasons": [
+            "BPM 63 off (80-100)",
+            "sharp jumps (0.13 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": 42,
+          "reasons": [
+            "BPM 120 off (80-100)",
+            "sharp jumps (0.20 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "track.mp3",
+          "score": 39,
+          "reasons": [
+            "BPM unknown",
+            "sharp jumps (0.14 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 38,
+          "reasons": [
+            "BPM 120 off (80-100)",
+            "sharp jumps (0.33 drops/s) — may fight narration",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 38,
+          "reasons": [
+            "BPM 62 off (80-100)",
+            "sharp jumps (0.19 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 38,
+          "reasons": [
+            "BPM 60 off (80-100)",
+            "sharp jumps (0.15 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 24,
+          "reasons": [
+            "BPM 55 clashes with 80-100",
+            "sharp jumps (0.16 drops/s) — may fight narration"
+          ]
+        }
+      ]
+    },
+    "testimonial-45s": {
+      "vibe": "warm-community",
+      "seconds": 45,
+      "cuts": [
+        0,
+        8,
+        22,
+        34,
+        42,
+        45
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 8
+        },
+        {
+          "start": 8,
+          "duration": 14
+        },
+        {
+          "start": 22,
+          "duration": 12
+        },
+        {
+          "start": 34,
+          "duration": 8
+        },
+        {
+          "start": 42,
+          "duration": 3
+        }
+      ],
+      "ranked": [
+        {
+          "file": "kindred-bed.mp3",
+          "score": 96,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 94,
+          "reasons": [
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "documentary-top.mp3",
+          "score": 65,
+          "reasons": [
+            "BPM 70 just outside 80-100",
+            "cinematic swells (0.19/s)",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 52,
+          "reasons": [
+            "BPM 64 off (80-100)",
+            "cinematic swells (0.19/s)",
+            "curated for documentary"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 52,
+          "reasons": [
+            "BPM 124 off (80-100)",
+            "cinematic swells (0.05/s)",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 43,
+          "reasons": [
+            "BPM 67 off (80-100)",
+            "sharp jumps (0.33 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 42,
+          "reasons": [
+            "BPM 63 off (80-100)",
+            "sharp jumps (0.13 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "track.mp3",
+          "score": 39,
+          "reasons": [
+            "BPM unknown",
+            "sharp jumps (0.14 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 38,
+          "reasons": [
+            "BPM 120 off (80-100)",
+            "sharp jumps (0.33 drops/s) — may fight narration",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 38,
+          "reasons": [
+            "BPM 62 off (80-100)",
+            "sharp jumps (0.19 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 38,
+          "reasons": [
+            "BPM 60 off (80-100)",
+            "sharp jumps (0.15 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 24,
+          "reasons": [
+            "BPM 55 clashes with 80-100",
+            "sharp jumps (0.16 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": 17,
+          "reasons": [
+            "too short (30.0s vs 45s comp)",
+            "BPM 120 off (80-100)",
+            "sharp jumps (0.20 drops/s) — may fight narration"
+          ]
+        }
+      ]
+    },
+    "founder-story-60s": {
+      "vibe": "documentary",
+      "seconds": 60,
+      "cuts": [
+        0,
+        10,
+        25,
+        42,
+        55,
+        60
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 10
+        },
+        {
+          "start": 10,
+          "duration": 15
+        },
+        {
+          "start": 25,
+          "duration": 17
+        },
+        {
+          "start": 42,
+          "duration": 13
+        },
+        {
+          "start": 55,
+          "duration": 5
+        }
+      ],
+      "ranked": [
+        {
+          "file": "documentary-top.mp3",
+          "score": 99,
+          "reasons": [
+            "cinematic swells (0.19/s)",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 97,
+          "reasons": [
+            "cinematic swells (0.19/s)",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 75,
+          "reasons": [
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "kindred-bed.mp3",
+          "score": 74,
+          "reasons": [
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 72,
+          "reasons": [
+            "sharp jumps (0.33 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 70,
+          "reasons": [
+            "sharp jumps (0.13 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 66,
+          "reasons": [
+            "sharp jumps (0.19 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 65,
+          "reasons": [
+            "sharp jumps (0.15 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 55,
+          "reasons": [
+            "BPM 55 just outside 60-90",
+            "sharp jumps (0.16 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "track.mp3",
+          "score": 39,
+          "reasons": [
+            "BPM unknown",
+            "sharp jumps (0.14 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 34,
+          "reasons": [
+            "BPM 124 clashes with 60-90",
+            "cinematic swells (0.05/s)",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 20,
+          "reasons": [
+            "BPM 120 clashes with 60-90",
+            "sharp jumps (0.33 drops/s) — may fight narration",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": -1,
+          "reasons": [
+            "too short (30.0s vs 60s comp)",
+            "BPM 120 clashes with 60-90",
+            "sharp jumps (0.20 drops/s) — may fight narration"
+          ]
+        }
+      ]
+    },
+    "case-study-60s": {
+      "vibe": "documentary",
+      "seconds": 60,
+      "cuts": [
+        0,
+        12,
+        30,
+        46,
+        58,
+        60
+      ],
+      "scenes": [
+        {
+          "start": 0,
+          "duration": 12
+        },
+        {
+          "start": 12,
+          "duration": 18
+        },
+        {
+          "start": 30,
+          "duration": 16
+        },
+        {
+          "start": 46,
+          "duration": 12
+        },
+        {
+          "start": 58,
+          "duration": 2
+        }
+      ],
+      "ranked": [
+        {
+          "file": "documentary-top.mp3",
+          "score": 99,
+          "reasons": [
+            "cinematic swells (0.19/s)",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "documentary-01-strings.mp3",
+          "score": 97,
+          "reasons": [
+            "cinematic swells (0.19/s)",
+            "curated for this vibe"
+          ]
+        },
+        {
+          "file": "warm-02-folk.mp3",
+          "score": 75,
+          "reasons": [
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "kindred-bed.mp3",
+          "score": 74,
+          "reasons": [
+            "curated for warm-community"
+          ]
+        },
+        {
+          "file": "energetic-inspiring-pop.mp3",
+          "score": 72,
+          "reasons": [
+            "sharp jumps (0.33 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "claim-mate-v2-bed.mp3",
+          "score": 70,
+          "reasons": [
+            "sharp jumps (0.13 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "premium-01-ambient.mp3",
+          "score": 66,
+          "reasons": [
+            "sharp jumps (0.19 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "quiet-premium-top.mp3",
+          "score": 65,
+          "reasons": [
+            "sharp jumps (0.15 drops/s) — may fight narration",
+            "curated for quiet-premium"
+          ]
+        },
+        {
+          "file": "v5-inspirational.mp3",
+          "score": 55,
+          "reasons": [
+            "BPM 55 just outside 60-90",
+            "sharp jumps (0.16 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "track.mp3",
+          "score": 39,
+          "reasons": [
+            "BPM unknown",
+            "sharp jumps (0.14 drops/s) — may fight narration"
+          ]
+        },
+        {
+          "file": "kinetic-01-motivational.mp3",
+          "score": 34,
+          "reasons": [
+            "BPM 124 clashes with 60-90",
+            "cinematic swells (0.05/s)",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "kinetic-pop-top.mp3",
+          "score": 20,
+          "reasons": [
+            "BPM 120 clashes with 60-90",
+            "sharp jumps (0.33 drops/s) — may fight narration",
+            "curated for kinetic-pop"
+          ]
+        },
+        {
+          "file": "track-faded.mp3",
+          "score": -1,
+          "reasons": [
+            "too short (30.0s vs 60s comp)",
+            "BPM 120 clashes with 60-90",
+            "sharp jumps (0.20 drops/s) — may fight narration"
+          ]
+        }
+      ]
+    }
+  },
+  "duplicates": [
+    {
+      "signature": "226.2|0.1616|7|42",
+      "files": [
+        "documentary-01-strings.mp3",
+        "documentary-top.mp3"
+      ]
+    },
+    {
+      "signature": "90.0|0.1241|30|0",
+      "files": [
+        "energetic-inspiring-pop.mp3",
+        "kinetic-pop-top.mp3"
+      ]
+    }
+  ],
+  "failures": []
+}

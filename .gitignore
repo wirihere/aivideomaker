@@ -2,9 +2,16 @@
 renders/
 
 # Large fetched media binaries — regenerable via scripts/fetch-pixabay-music.mjs
-# and fetch-pixabay-video.mjs. Don't bloat the repo.
-assets/music/
+# and fetch-pixabay-video.mjs. Don't bloat the repo. We exclude file contents
+# rather than the directory itself so a force-include below can re-add the
+# small machine-readable alignment.json.
+assets/music/*
 assets/videos/
+
+# Track the music/template alignment matrix even though assets/music/ is
+# ignored — it's small, deterministic, and consulted by the picker. Regenerate
+# via scripts/analyze-music-alignment.mjs.
+!assets/music/alignment.json
 
 # Edge TTS voice previews — regenerable via `npm run voices:preview`
 assets/voice-library/
