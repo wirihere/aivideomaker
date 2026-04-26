@@ -235,6 +235,21 @@ function downloadTrack(track) {
   // Use the slug for the filename — predictable, matches LEARNINGS conventions.
   const slug = (track.slug || "music").replace(/[^a-z0-9-]/gi, "-").toLowerCase();
   const outName = `${slug}.mp3`;
+
+  // Skip the network fetch entirely if the track already has a local file on
+  // disk — that's the whole point of the +1000 ranking score. Avoids hitting
+  // Pixabay's 403 rate-limiter when a re-run targets a track we already have.
+  if (track.local_file) {
+    const localAbs = path.isAbsolute(track.local_file)
+      ? track.local_file
+      : path.join(projectRoot, track.local_file);
+    if (fs.existsSync(localAbs)) {
+      console.log(`[pick-music] Top pick already on disk: ${track.title}`);
+      console.log(`[pick-music]   at:   ${path.relative(projectRoot, localAbs)}`);
+      return localAbs;
+    }
+  }
+
   const fetcher = path.join(projectRoot, "scripts", "fetch-pixabay-music.mjs");
   if (!fs.existsSync(fetcher)) {
     throw new Error(`Fetcher not found: ${fetcher}`);
