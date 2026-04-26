@@ -50,6 +50,8 @@
     "backup:list": "node scripts/backup.mjs list",
     "backup:restore": "node scripts/backup.mjs restore",
     "backup:prune": "node scripts/backup.mjs prune",
+    "verify": "node scripts/verify-render.mjs",
+    "verify:assembled": "node scripts/verify-render.mjs --comp=index.html",
     "help": "node scripts/help.mjs"
   },
   "keywords": [],

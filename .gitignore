@@ -81,3 +81,9 @@ compositions/*.backup-*
 # Derived Claude-Design upload artifacts — regenerable from source playbooks
 claude-design-upload/
 claude-design-context.md
+
+# Per-render verifier outputs — regenerable via `npm run verify`. Keep
+# LEDGER.md + SUGGESTIONS.md tracked (cumulative knowledge), ignore the
+# per-render artifacts (one .json + one timestamped .md per run).
+docs/render-learnings/*.json
+docs/render-learnings/*-[0-9]*.md
