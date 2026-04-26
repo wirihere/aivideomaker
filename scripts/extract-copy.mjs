@@ -12,6 +12,15 @@
 //   node scripts/extract-copy.mjs --framework=PAS  --brand="…" --dry-run
 //   node scripts/extract-copy.mjs --framework=FAB  --brand="…" --out=copy.json
 //
+// Framework mode with full Playwright scrape (preferred):
+//   node scripts/extract-copy.mjs --framework=BAB --vibe=warm-community --duration=30 \
+//        --url=https://kindred-nz.org --out=compositions/kindred-nz.copy.json
+//   When --url= is passed, the brand's actual landing page is scraped via
+//   Playwright (h1/h2/h3, paragraphs, list items, CTA, og tags, JSON-LD) and
+//   threaded into the prompt under "BRAND CONTEXT". Claude is instructed to
+//   borrow the brand's own voice for the lines, while the framework still
+//   dictates the SHAPE.
+//
 // Templates (set tone + lexical bias):
 //   warm-community  — warm/grounded, "we" pronouns, no jargon
 //   kinetic-pop     — punchy, short sentences, action verbs
@@ -1012,6 +1021,7 @@ if (COPY_SCHEMA.meta.wordCount < preset.narrLow) {
 async function runFrameworkMode({ flags, projectRoot }) {
   const framework = flags.framework;
   const brand = flags.brand;
+  const targetUrl = typeof flags.url === "string" ? flags.url : null;
   const vibe = flags.vibe ?? "kinetic-pop";
   const duration = parseInt(flags.duration ?? "30", 10);
   const model = flags.model ?? "claude-sonnet-4-6";
@@ -1020,6 +1030,12 @@ async function runFrameworkMode({ flags, projectRoot }) {
     : 0.4;
   const isDryRun = flags["dry-run"] === true;
   const outFlag = flags.out;
+  // Optional structural template — orchestrator passes this so the framework
+  // prompt can be told what kind of comp the copy will land in (used to
+  // format the schema hints; doesn't change framework rules).
+  const structuralTemplate = typeof flags.structural === "string"
+    ? flags.structural
+    : null;
 
   // 1. Validate framework name.
   if (!SUPPORTED_FRAMEWORKS.includes(framework)) {
@@ -1027,10 +1043,16 @@ async function runFrameworkMode({ flags, projectRoot }) {
     process.exit(1);
   }
 
-  // 2. Validate brand brief.
-  if (typeof brand !== "string" || brand.length < 8) {
-    console.error("✗ --brand=\"<one-line description>\" is required (min 8 chars).");
-    console.error(`  e.g. node scripts/extract-copy.mjs --framework=${framework} --brand="Local cafe with rotating brunch menu, walk-up only, weekends busiest"`);
+  // 2. Either --url= or --brand= must be supplied. --url= is preferred (rich
+  //    grounding); --brand= stays as a 1-line fallback for offline / quick
+  //    drafts and for backward-compat with anyone calling this directly.
+  const hasBrand = typeof brand === "string" && brand.length >= 8;
+  const hasUrl = typeof targetUrl === "string" && /^https?:\/\//i.test(targetUrl);
+  if (!hasUrl && !hasBrand) {
+    console.error("✗ Pass either --url=<https://…> (preferred — full landing-page scrape)");
+    console.error("  or --brand=\"<one-line description>\" (offline fallback, min 8 chars).");
+    console.error(`  e.g. node scripts/extract-copy.mjs --framework=${framework} --url=https://example.com`);
+    console.error(`       node scripts/extract-copy.mjs --framework=${framework} --brand="Local cafe with rotating brunch menu"`);
     process.exit(1);
   }
 
@@ -1067,34 +1089,72 @@ async function runFrameworkMode({ flags, projectRoot }) {
   }
   const playbookText = fs.readFileSync(playbookPath, "utf8");
 
-  // 6. Slug — derive from brand brief if --name not given.
-  const slug = (flags.name
-    ? String(flags.name)
-    : brand.toLowerCase().split(/\s+/).slice(0, 3).join("-")
-  ).toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "brand";
+  // 6. Slug — derive from --name, --url host, or --brand brief.
+  let derivedSlug;
+  if (flags.name) {
+    derivedSlug = String(flags.name);
+  } else if (hasUrl) {
+    try {
+      const host = new URL(targetUrl).hostname.replace(/^www\./, "");
+      derivedSlug = host.replace(/\.[a-z]+$/, "");
+    } catch { derivedSlug = "brand"; }
+  } else {
+    derivedSlug = brand.toLowerCase().split(/\s+/).slice(0, 3).join("-");
+  }
+  const slug = derivedSlug.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "brand";
 
-  // 7. Build the prompt.
+  // 7. If --url= passed, scrape the live landing page so the prompt is
+  //    grounded in the brand's own voice. Persist the raw scrape next to the
+  //    copy.json so the verifier / future runs can re-read it.
+  let scrape = null;
+  if (hasUrl) {
+    const scrapePath = path.join(projectRoot, "compositions", `${slug}.scrape.json`);
+    console.log(`  [framework] scraping ${targetUrl} via Playwright…`);
+    try {
+      const { scrapePage } = await import("./lib/scrape-page.mjs");
+      scrape = await scrapePage(targetUrl, { outPath: scrapePath });
+      const fellBack = scrape?.stats?.fellBack ? " (fell back from DCL→load)" : "";
+      console.log(`  [framework] scrape: title=${(scrape.title||"").length}ch · h1=${scrape.h1.length} · h2=${scrape.h2.length} · p=${scrape.paragraphs.length} · li=${scrape.listItems.length} · cta=${scrape.ctaCandidates.length}${fellBack}`);
+    } catch (err) {
+      console.warn(`  [framework] scrape failed (${err.message}) — falling back to brand brief only`);
+      scrape = null;
+    }
+  }
+
+  // 8. Build the prompt.
+  // If we have a brief from the user, keep it; otherwise synthesize a short
+  // brief from the scrape (title + meta) so the prompt always has *some*
+  // single-line summary near the top of INPUTS.
+  const briefForPrompt = hasBrand
+    ? brand
+    : (scrape && [scrape.title, scrape.metaDescription].filter(Boolean).join(" — ").slice(0, 220))
+      || "(see BRAND CONTEXT section below)";
+
   const prompt = buildFrameworkPrompt({
     framework,
-    brand,
+    brand: briefForPrompt,
     vibe,
     duration,
     preset,
     playbookText,
     slug,
+    scrape,                    // null if --brand-only path
+    targetUrl,
+    structuralTemplate,
   });
 
   if (isDryRun) {
     console.log("▶ extract-copy [framework mode · DRY RUN] — prompt below, no API call");
     console.log(`  framework: ${framework} · vibe: ${vibe} · duration: ${duration}s · model: ${model} · temp: ${temperature}`);
-    console.log(`  brand: ${brand}`);
+    if (hasUrl) console.log(`  url: ${targetUrl}${scrape ? ` (scraped, ${scrape.paragraphs.length}p / ${scrape.listItems.length}li)` : " (scrape failed — brief-only)"}`);
+    if (briefForPrompt) console.log(`  brief: ${briefForPrompt.slice(0, 120)}${briefForPrompt.length > 120 ? "…" : ""}`);
     console.log("─".repeat(72));
     console.log(prompt);
     console.log("─".repeat(72));
     process.exit(0);
   }
 
-  // 8. Auth check.
+  // 9. Auth check.
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     console.error("✗ ANTHROPIC_API_KEY is not set in the environment.");
@@ -1103,15 +1163,16 @@ async function runFrameworkMode({ flags, projectRoot }) {
     process.exit(1);
   }
 
-  console.log(`▶ extract-copy [framework mode] — ${framework} for "${brand.slice(0, 60)}${brand.length > 60 ? "…" : ""}"`);
+  const sourceLabel = hasUrl ? targetUrl : brand;
+  console.log(`▶ extract-copy [framework mode] — ${framework} for "${String(sourceLabel).slice(0, 60)}${String(sourceLabel).length > 60 ? "…" : ""}"`);
   console.log(`  vibe: ${vibe} · duration: ${duration}s · target ${preset.narrLow}-${preset.narrHigh} words · ${preset.beatCount} beats`);
   console.log(`  model: ${model} · temperature: ${temperature}`);
 
-  // 9. Call the Anthropic Messages API.
+  // 10. Call the Anthropic Messages API.
   const data = await callAnthropic({ apiKey, model, prompt, temperature });
 
-  // 10. Parse the JSON response.
-  const copyDoc = parseModelJson(data, { framework, brand, vibe, duration, slug, preset });
+  // 11. Parse the JSON response.
+  const copyDoc = parseModelJson(data, { framework, brand: briefForPrompt, vibe, duration, slug, preset, sourceUrl: targetUrl, scrape });
 
   // 11. Write or print.
   const json = JSON.stringify(copyDoc, null, 2) + "\n";
@@ -1132,15 +1193,18 @@ async function runFrameworkMode({ flags, projectRoot }) {
   process.exit(0);
 }
 
-function buildFrameworkPrompt({ framework, brand, vibe, duration, preset, playbookText, slug }) {
+function buildFrameworkPrompt({ framework, brand, vibe, duration, preset, playbookText, slug, scrape, targetUrl, structuralTemplate }) {
   // Trim playbook to the load-bearing sections to keep the prompt focused.
   // Sections 2 (frameworks), 4 (per-line rules), 6 (vibes), 9 (lint), 10
   // (earned word + big idea) are mandatory.
-  return [
+  const brandContextBlock = scrape ? renderBrandContextBlock(scrape, targetUrl) : null;
+
+  const lines = [
     "You are HyperFrames' copy supervisor. Generate a strict-JSON copy document",
     "for one short-form video, obeying the playbook below. Do not invent facts",
-    "about the brand beyond what the brief explicitly states. If a slot would",
-    "require an invented stat, use a sensory image or a brand-truth instead.",
+    "about the brand beyond what the brief and BRAND CONTEXT explicitly state.",
+    "If a slot would require an invented stat, use a sensory image or a",
+    "brand-truth pulled from the BRAND CONTEXT section instead.",
     "",
     "INPUTS",
     `- Framework: ${framework}`,
@@ -1149,6 +1213,8 @@ function buildFrameworkPrompt({ framework, brand, vibe, duration, preset, playbo
     `- Slug: ${slug}`,
     `- Narration target: ${preset.narrLow}-${preset.narrHigh} words across ${preset.beatCount} beats`,
     `- Brand brief: ${brand}`,
+    structuralTemplate ? `- Structural template: ${structuralTemplate}` : null,
+    targetUrl ? `- Source URL: ${targetUrl}` : null,
     "",
     "HARD CONSTRAINTS (every line must obey)",
     "- Hook ≤ 7 words. Single clause. No brand name unless brand IS the hook.",
@@ -1165,6 +1231,23 @@ function buildFrameworkPrompt({ framework, brand, vibe, duration, preset, playbo
     "- Narration: no Māori words (Edge TTS mispronounces). English equivalents only.",
     "- Kicker: 1-3 words, ALL CAPS. Categorical, not promotional. Distinct per scene.",
     "",
+  ];
+
+  if (brandContextBlock) {
+    lines.push(
+      "BRAND CONTEXT (from landing page — use this voice; do not invent facts)",
+      "Use the brand's own sentences as raw material for the lines. The framework",
+      `(${framework}) is the SHAPE — the words come from the page below. Borrow`,
+      "phrasing, vocabulary, cadence. If a fact (number, name, claim) is not in",
+      "this block, do NOT include it in the copy.",
+      "─".repeat(72),
+      brandContextBlock,
+      "─".repeat(72),
+      "",
+    );
+  }
+
+  lines.push(
     "OUTPUT — return ONE JSON object, no prose, no markdown fences. Schema:",
     "{",
     `  "slug": "${slug}",`,
@@ -1176,7 +1259,7 @@ function buildFrameworkPrompt({ framework, brand, vibe, duration, preset, playbo
     "  \"narration\": \"<spoken-track copy, sentences end with periods, target word band met>\",",
     `  "beats": [ { "kicker": "...", "headline": "...", "body": "..." }, ... ${preset.beatCount} entries ],`,
     "  \"cta\": { \"verb\": \"<verb-first 2-5 word CTA>\", \"url\": \"<placeholder URL or brand domain if obvious from brief>\", \"tagline\": \"<≤80 chars, the why-now line>\" },",
-    "  \"meta\": { \"generatedAt\": \"<YYYY-MM-DD>\", \"wordCount\": <int>, \"beatCount\": <int>, \"sourcedFrom\": { \"brief\": true } }",
+    "  \"meta\": { \"generatedAt\": \"<YYYY-MM-DD>\", \"wordCount\": <int>, \"beatCount\": <int>, \"sourcedFrom\": { \"brief\": true" + (scrape ? ", \"scrape\": true" : "") + " } }",
     "}",
     "",
     "PLAYBOOK (source of truth — sections 2, 4, 6, 8, 9, 10):",
@@ -1185,7 +1268,56 @@ function buildFrameworkPrompt({ framework, brand, vibe, duration, preset, playbo
     "─".repeat(72),
     "",
     "Now generate the copy document. JSON only. No commentary.",
-  ].join("\n");
+  );
+
+  return lines.filter(Boolean).join("\n");
+}
+
+// Render the scraped brand context into a compact, prompt-friendly block.
+// Caps each section so the total brand-context payload stays under ~3KB and
+// the prompt remains under typical context windows alongside the playbook.
+function renderBrandContextBlock(scrape, targetUrl) {
+  if (!scrape) return null;
+  const out = [];
+  if (targetUrl || scrape.finalUrl) {
+    out.push(`URL: ${scrape.finalUrl || targetUrl}`);
+  }
+  if (scrape.title) out.push(`TITLE: ${scrape.title}`);
+  if (scrape.metaDescription) out.push(`META DESCRIPTION: ${scrape.metaDescription}`);
+
+  if (scrape.h1 && scrape.h1.length) {
+    out.push("");
+    out.push("H1 LINES:");
+    for (const h of scrape.h1.slice(0, 4)) out.push(`- ${h}`);
+  }
+  if (scrape.h2 && scrape.h2.length) {
+    out.push("");
+    out.push("H2 LINES (first 3):");
+    for (const h of scrape.h2.slice(0, 3)) out.push(`- ${h}`);
+  }
+  if (scrape.paragraphs && scrape.paragraphs.length) {
+    out.push("");
+    out.push("PARAGRAPHS (first 8 — the brand's actual sentences):");
+    for (const p of scrape.paragraphs.slice(0, 8)) out.push(`- ${p}`);
+  }
+  if (scrape.listItems && scrape.listItems.length) {
+    out.push("");
+    out.push("LIST ITEMS (first 12 — features/benefits in their voice):");
+    for (const li of scrape.listItems.slice(0, 12)) out.push(`- ${li}`);
+  }
+  if (scrape.ctaCandidates && scrape.ctaCandidates.length) {
+    const top = scrape.ctaCandidates.slice(0, 3);
+    out.push("");
+    out.push("CTA CANDIDATES (text + href — what the brand asks visitors to do):");
+    for (const c of top) out.push(`- "${c.text}" → ${c.href || "(in-page)"}`);
+  }
+  // OG tags — title/description sometimes carry a tighter brand sentence than
+  // the meta description. Include them if present and non-redundant.
+  const ogTitle = scrape.ogTags?.["og:title"];
+  const ogDesc = scrape.ogTags?.["og:description"];
+  if (ogTitle && ogTitle !== scrape.title) out.push(`OG TITLE: ${ogTitle}`);
+  if (ogDesc && ogDesc !== scrape.metaDescription) out.push(`OG DESCRIPTION: ${ogDesc}`);
+  return out.join("\n");
 }
 
 async function callAnthropic({ apiKey, model, prompt, temperature }) {
@@ -1273,6 +1405,7 @@ function parseModelJson(apiResponse, ctx) {
 
   return {
     slug: parsed.slug || ctx.slug,
+    url: ctx.sourceUrl || parsed.url || "",
     framework: parsed.framework || ctx.framework,
     vibe: parsed.vibe || ctx.vibe,
     duration: parsed.duration || ctx.duration,
@@ -1280,12 +1413,26 @@ function parseModelJson(apiResponse, ctx) {
     earnedWord: parsed.earnedWord || "",
     narration,
     beats,
-    cta: parsed.cta || { verb: "", url: "", tagline: "" },
+    cta: parsed.cta || { verb: "", url: ctx.sourceUrl || "", tagline: "" },
     meta: {
       generatedAt: (parsed.meta && parsed.meta.generatedAt) || new Date().toISOString().slice(0, 10),
       wordCount: (parsed.meta && parsed.meta.wordCount) || wordCount,
       beatCount: (parsed.meta && parsed.meta.beatCount) || beats.length,
-      sourcedFrom: { brief: true, framework: ctx.framework },
+      sourcedFrom: {
+        brief: true,
+        framework: ctx.framework,
+        ...(ctx.scrape ? {
+          scrape: true,
+          scrapeUrl: ctx.sourceUrl || ctx.scrape?.finalUrl || "",
+          scrapeStats: {
+            h1: ctx.scrape.h1?.length || 0,
+            h2: ctx.scrape.h2?.length || 0,
+            paragraphs: ctx.scrape.paragraphs?.length || 0,
+            listItems: ctx.scrape.listItems?.length || 0,
+            ctaCandidates: ctx.scrape.ctaCandidates?.length || 0,
+          },
+        } : {}),
+      },
     },
   };
 }
