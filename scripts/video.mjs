@@ -41,7 +41,13 @@
 //                      only `ship` verdicts pass — `watch` triggers another
 //                      iteration of the silent loop. Pass --allow-watch to
 //                      override (e.g., when intentionally rendering for
-//                      critique).
+//                      critique). ALSO overrides the template-status gate
+//                      for `iterating` / `unlisted` templates.
+//   --use-legacy       allow render against a `legacy` template (one built
+//                      before the gated process formalized — see
+//                      docs/template-models.md). Default: BLOCKED for legacy
+//                      templates. Better long-term: run the legacy template
+//                      through the loop and lock it as v1.
 //   --keep-artifacts   don't restore index.html at end (for inspection)
 //   --dry-run          skip every child spawn, write synthetic outputs, lint
 //                      only — exercises orchestrator + parallel-batch wiring
@@ -60,6 +66,7 @@ import { fileURLToPath } from "url";
 import { spawnSync, spawn } from "child_process";
 import { node as nodeBin, npmArgs } from "./lib/platform-bin.mjs";
 import { getFfmpegPath } from "./lib/ffmpeg-path.mjs";
+import { statusFor, classifyStatus } from "./lib/template-status.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -105,6 +112,11 @@ const skipVerify = !!flags["no-verify"] || dryRun;
 // blocks render by default, forcing another silent-loop iteration. Pass
 // --allow-watch to override (e.g. when the user wants to render-and-critique).
 const allowWatch = !!flags["allow-watch"] || dryRun;
+// Per docs/template-models.md: legacy templates (built before the gated
+// process formalized) are blocked from render by default. Pass --use-legacy
+// to opt in. Doesn't bypass the verify+frame-flipbook gates — just the
+// template-status check.
+const useLegacy = !!flags["use-legacy"] || dryRun;
 
 // --- aspects --------------------------------------------------------------
 // Multi-aspect rendering for ad placements (Meta, Google Ads, Scalify):
@@ -1427,11 +1439,14 @@ try {
       const reportNote = report ? ` · report: ${report}` : "";
       if (verdict === "watch") {
         // Per docs/PROCESS.md (wave-Q lesson): only `ship` verdicts pass the
-        // render gate. `watch` triggers another iteration of the silent loop,
-        // not a render. Hard-block by default; --allow-watch opts out for the
-        // case where the user explicitly wants to render anyway and critique.
+        // render gate. `watch` triggers another iteration of the silent loop.
+        // Block only when render would actually run — --no-render iterations
+        // continue (the whole point is to loop without burning render time).
         if (allowWatch) {
           return { output: `verdict: watch (allowed via --allow-watch)${reportNote}`, soft: true };
+        }
+        if (skipRender) {
+          return { output: `verdict: watch (--no-render, iteration mode)${reportNote}`, soft: true };
         }
         throw new Error(
           `verdict: watch — render BLOCKED by default (PROCESS.md gate)${reportNote}\n` +
@@ -1517,6 +1532,38 @@ try {
     if (skipRender) {
       return { output: `skipped (--no-render)`, soft: true };
     }
+    // ----- Template-status gate ----------------------------------------------
+    // Per docs/template-models.md: locked templates render freely, iterating
+    // and legacy templates need an explicit override. Looks up the template's
+    // file basename (e.g. "community-app-tour-30s") in the status registry.
+    const templateBasename = path.basename(resolved.file, ".html");
+    const tStatus = statusFor(templateBasename);
+    const tClass = classifyStatus(tStatus);
+    if (tClass === "iterating" || tClass === "unlisted") {
+      if (!allowWatch) {
+        throw new Error(
+          `template "${templateBasename}" status: ${tStatus} — render BLOCKED.\n` +
+          `  Per docs/template-models.md, only "locked-*" templates render by default.\n` +
+          `  Iterating templates must complete the silent loop ending in ship verdict\n` +
+          `  before the user approves the lock. Override: pass --allow-watch.`
+        );
+      }
+      // proceed with explicit override
+    } else if (tClass === "legacy") {
+      if (!useLegacy) {
+        throw new Error(
+          `template "${templateBasename}" status: legacy — render BLOCKED.\n` +
+          `  Per docs/template-models.md, legacy templates were built before\n` +
+          `  the gated process. They likely violate one or more rules in\n` +
+          `  docs/social-video-patterns.md. Override: pass --use-legacy.\n` +
+          `  Better: run the template through the loop and lock it as v1.`
+        );
+      }
+      // proceed with explicit override
+    }
+    // tClass === "locked" → no extra gate; the verify + flipbook gates above
+    // already ran as guard-rails.
+
     const beforeFiles = listRendersDir();
     // The render child emits its own progress bar (via render-progress.mjs).
     // Drop a newline first so the bar gets its own row instead of clobbering

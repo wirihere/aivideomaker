@@ -1,9 +1,55 @@
 # Template Models — Locked Reference Renders
 
-Canonical list of templates that have been **user-approved as production-quality** and locked at a specific git tag. New brands get assembled with these. Templates not on this list are still in iteration — don't ship them as defaults.
+Canonical list of every template in `TEMPLATE_REGISTRY` and its production-readiness status. The orchestrator reads this file (`scripts/lib/template-status.mjs`) before render to decide whether a render is allowed.
 
 For the rules each template should follow, see `docs/social-video-patterns.md`.
 For the production playbook, see `docs/playbooks/cinematic-vertical-promo.md`.
+
+---
+
+## Lifecycle (the per-template loop the orchestrator gates against)
+
+```
+NEW TEMPLATE
+  ↓
+DESIGN.md / SCRIPT.md / STORYBOARD.md (gated docs)
+  ↓
+build skeleton, register in TEMPLATE_REGISTRY (status: iterating)
+  ↓
+silent loop — assemble → verify → frame-flipbook → fix
+  ↓ (only when verdict = ship + frames look right)
+pre-render review (user)
+  ↓
+render
+  ↓
+USER APPROVE → tag commit, set status: locked-vN, list in registry below
+              → next brand can render against this template without re-looping
+                (gates still run as guard-rails, but render allowed)
+```
+
+## Status registry
+
+Machine-readable per template. Each row's status governs the orchestrator's render-gate:
+
+- `locked-vN` — user-approved at this tag. Render allowed. Gates run as guards.
+- `iterating` — actively in build/fix loop. Render blocked unless `--allow-watch`.
+- `legacy` — built before the gated process. Render blocked unless `--use-legacy`.
+- `unlisted` (template in registry but not in this table) — treated as `iterating`.
+
+| template                  | status     | tag                       | locked date | brands validated                |
+| ------------------------- | ---------- | ------------------------- | ----------- | ------------------------------- |
+| community-app-tour-30s    | locked-v1  | community-app-tour-v1     | 2026-04-26  | kindred-nz                      |
+| kinetic-product-30s       | iterating  | —                         | —           | resurgence-indigo (in progress) |
+| faq-quick-30s             | legacy     | —                         | —           | (pre-loop renders only)         |
+| hero-promo-30s            | legacy     | —                         | —           | —                               |
+| product-launch-30s        | legacy     | —                         | —           | —                               |
+| before-after-30s          | legacy     | —                         | —           | —                               |
+| testimonial-45s           | legacy     | —                         | —           | —                               |
+| founder-story-60s         | legacy     | —                         | —           | —                               |
+| case-study-60s            | legacy     | —                         | —           | —                               |
+| social-reel-15s           | legacy     | —                         | —           | —                               |
+
+Update this table when a template's status changes. The parser splits on `|`, trims, ignores rows where the first column is `template`/`---` (header), and looks up `status` by the first column.
 
 ---
 
