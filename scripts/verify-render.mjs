@@ -240,6 +240,13 @@ const SEED_COPY_PATTERNS = [
   /^Q&A$/i,
   /^QUESTION(?:\s+\d+)?$/i,
   /^ANSWER(?:\s+\d+)?$/i,
+  // faq-quick + similar templates ship with small-caps kickers like
+  // "THREE QUESTIONS" / "ANSWERED PLAINLY" that read as broken UX when
+  // the orchestrator doesn't swap them for non-Q&A brand copy.
+  /^THREE QUESTIONS$/i,
+  /^ANSWERED PLAINLY$/i,
+  /^ASKED OFTEN$/i,
+  /^FREQUENTLY ASKED$/i,
   // faq-quick wellness/coaching seed (the leakage the previous Playwright
   // agent flagged on kindred-nz when faq-quick wasn't fully substituted)
   /^How long does a session take\??$/i,

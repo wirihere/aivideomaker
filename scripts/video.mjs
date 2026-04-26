@@ -607,20 +607,29 @@ function runNodeAsync(scriptPath, args = [], { env = {} } = {}) {
 }
 
 // --- backup / restore index.html -----------------------------------------
+//
+// Dual-strategy: copy index.html → on-disk .bak file AND keep an in-memory
+// string. On restore, prefer the on-disk .bak (survives parent-process
+// crashes) but fall back to the in-memory copy if the .bak got deleted
+// somewhere mid-pipeline (intermittent issue with some downstream tool).
+// Both reach the same correct end state — the orchestrator should never
+// leave the live index.html dirty after a successful run.
 
 const indexPath = path.join(projectRoot, "index.html");
 const backupPath = path.join(projectRoot, `.video-orchestrator.index.bak`);
 let backupCreated = false;
+let backupContents = null; // in-memory fallback (string) — survives bak deletion
 let priorIndexLabel = "(none)";
 
 function backupIndex() {
   if (fs.existsSync(indexPath)) {
-    fs.copyFileSync(indexPath, backupPath);
+    const contents = fs.readFileSync(indexPath, "utf8");
+    backupContents = contents;
+    fs.writeFileSync(backupPath, contents);
     backupCreated = true;
     // Try to derive a label from the <title> for the assemble-stage log line.
     try {
-      const head = fs.readFileSync(indexPath, "utf8").slice(0, 2048);
-      const m = head.match(/<title>([^<]+)<\/title>/i);
+      const m = contents.slice(0, 2048).match(/<title>([^<]+)<\/title>/i);
       if (m) priorIndexLabel = m[1].trim().split(/[—\-|]/)[0].trim().slice(0, 30);
     } catch {}
   }
@@ -633,14 +642,29 @@ function restoreIndex() {
     console.log(`    cp "${relPath(backupPath)}" index.html`);
     return;
   }
-  try {
-    fs.copyFileSync(backupPath, indexPath);
-    fs.unlinkSync(backupPath);
-    backupCreated = false;
-  } catch (err) {
-    console.error(`  ⚠ failed to restore index.html: ${err.message}`);
-    console.error(`    backup is still at: ${relPath(backupPath)}`);
+  // Try on-disk first.
+  if (fs.existsSync(backupPath)) {
+    try {
+      fs.copyFileSync(backupPath, indexPath);
+      fs.unlinkSync(backupPath);
+      backupCreated = false;
+      return;
+    } catch (err) {
+      console.error(`  ⚠ on-disk restore failed: ${err.message}`);
+    }
   }
+  // Fall back to the in-memory copy.
+  if (backupContents !== null) {
+    try {
+      fs.writeFileSync(indexPath, backupContents);
+      backupCreated = false;
+      console.log(`  ⓘ index.html restored from in-memory backup (.bak was missing)`);
+      return;
+    } catch (err) {
+      console.error(`  ⚠ in-memory restore failed: ${err.message}`);
+    }
+  }
+  console.error(`  ⚠ index.html may be left dirty — both backup paths failed`);
 }
 
 // --- main pipeline --------------------------------------------------------
@@ -1315,6 +1339,12 @@ function applyCopyToTemplate(html, copy, templateName) {
   // launch chip; founder-story uses it as a one-line setup. Prefer the brand
   // tagline (cta.tagline), fall back to first beat body.
   html = replaceText(html, "s1-tag", ctaTagline || b(0, "body") || bodies[0] || "");
+  // faq-quick s1: small-caps kicker above the brand mark. Template ships
+  // with literal "THREE QUESTIONS" which only fits Q&A-shaped copy. Map to
+  // the first beat's kicker (e.g. "INTRO") if present, otherwise upper-case
+  // the brand-vertical hint or fall back to a neutral "INTRODUCING".
+  const kickerText = b(0, "kicker") || "INTRODUCING";
+  html = replaceText(html, "s1-kicker", kickerText.toUpperCase());
   // before-after s1: "BEFORE" stamp (leave) + s1-state (state line) +
   // s1-detail (supporting line). Map to first beat.
   html = replaceText(html, "s1-state", hookText);
