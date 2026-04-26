@@ -180,13 +180,17 @@
   }
   .s2-hero-crop {
     /* Cropped hero — top-half of the source image, slid in from right.
-       Use object-position to bias toward the device chrome / app UI. */
+       Use object-position to bias toward the device chrome / app UI.
+       Sized 720x520 (was 480x320) — at 1080×1920 canvas the smaller card
+       reads as decorative; at this size the actual screenshot content
+       (app cards, headlines, brand chrome) is legible at thumbnail and
+       full-screen alike. */
     position: absolute;
-    top: 110px; right: -40px;
-    width: 480px; height: 320px;
-    border-radius: 28px;
+    top: 110px; right: -60px;
+    width: 720px; height: 520px;
+    border-radius: 32px;
     overflow: hidden;
-    box-shadow: 0 18px 50px rgba(27, 42, 61, 0.22);
+    box-shadow: 0 24px 60px rgba(27, 42, 61, 0.26);
     transform: rotate(2deg);
     will-change: transform;
   }
@@ -233,13 +237,13 @@
   }
   .qa-question {
     font-family: var(--card-font-display);
-    font-weight: 600;
-    font-size: 88px;
-    line-height: 1.05;
-    letter-spacing: -0.025em;
+    font-weight: 700;
+    font-size: 108px;
+    line-height: 1.02;
+    letter-spacing: -0.030em;
     color: var(--card-navy-deep, var(--card-navy, var(--card-accent, #1B2A3D)));
     margin: 0;
-    max-width: 880px;
+    max-width: 920px;
   }
   .qa-rule {
     width: 280px;
@@ -254,12 +258,12 @@
   .qa-answer {
     font-family: var(--card-font-ui);
     font-weight: 500;
-    font-size: 38px;
-    line-height: 1.45;
+    font-size: 52px;
+    line-height: 1.35;
     color: var(--card-navy, var(--card-accent, #1B2A3D));
     margin: 0;
-    max-width: 880px;
-    opacity: 0.86;
+    max-width: 920px;
+    opacity: 0.94;
   }
 
   /* ============================================================
