@@ -34,12 +34,13 @@
     6. Run: npx hyperframes render      (final MP4)
 -->
 
-<!-- 2. Vibe template — warm-community sets calm pace, soft motion. -->
-<link rel="stylesheet" href="../../design/templates/warm-community.css">
-<!-- 3. Brand tokens — replace with your tokens-<brand>.css -->
-<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
-<!-- Shared boilerplate: cards.css + effects + module bundle + GSAP.
-     Single source: design/compose-head.html (hydrated by build:bundle). -->
+<!-- Shared boilerplate: structural base + effects + module bundle + GSAP.
+     Single source: design/compose-head.html (hydrated by build:bundle).
+     LOAD ORDER MATTERS: cards.css's :root defines fallback brand tokens
+     (--card-accent: #7aa0d4 default). The brand tokens-<slug>.css MUST
+     load AFTER cards.css to win the cascade — same selector, last-wins.
+     Likewise, the warm-community vibe template loads BEFORE the brand
+     tokens so per-brand overrides take precedence. -->
 <!-- HEAD-INCLUDE -->
 <!-- 1. Structural base -->
 <link rel="stylesheet" href="../../design/cards.css">
@@ -50,6 +51,12 @@
 <script src="../../design/vendor/gsap.min.js"></script>
 <script src="../../design/modules/all.js"></script>
 <!-- /HEAD-INCLUDE -->
+
+<!-- 2. Vibe template — warm-community sets calm pace, soft motion. -->
+<link rel="stylesheet" href="../../design/templates/warm-community.css">
+<!-- 3. Brand tokens — replace with your tokens-<brand>.css. MUST be the
+     LAST stylesheet so :root overrides win over cards.css defaults. -->
+<link rel="stylesheet" href="../../design/tokens-PLACEHOLDER.css">
 
 <!-- shader-fx is opt-in (not in compose-head). Scene 4 uses shaderFx.glow. -->
 <script src="../../design/vendor/twgl.min.js"></script>
@@ -186,17 +193,26 @@
   .s2-hero-crop img {
     width: 100%; height: 100%;
     object-fit: cover;
-    object-position: 50% 18%;
+    /* Bias toward the top of the source — device chrome / app bar / first
+       fold of the page. 18% was pulling partial UI text into the crop and
+       that text fought the body copy. 0% keeps the crop on identity-strong
+       hero pixels. */
+    object-position: 50% 0%;
   }
   .qa-num {
     font-family: var(--card-font-display);
-    font-weight: 700;
-    font-size: 132px;
-    color: var(--card-accent, #1B2A3D);
+    font-weight: 800;
+    font-size: 144px;
+    color: var(--card-navy-deep, var(--card-navy, #1B2A3D));
     line-height: 1;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.05em;
     margin: 0;
-    text-shadow: 0 6px 20px rgba(27, 42, 61, 0.15);
+    /* Navy numeral with chunky honey offset shadow — strong palette pop
+       on cream without a layout-changing chip. Two-tone read at any
+       distance, retro-badge feel. */
+    text-shadow:
+      6px 6px 0 var(--card-warn, var(--card-paper, #F4C96B)),
+      0 12px 28px rgba(27, 42, 61, 0.20);
     will-change: transform;
   }
   .qa-num-pulse {
@@ -578,9 +594,11 @@
     stagger: 0.05,
   });
   // Persistent: kenBurns on the hero — slow zoom + slight pan over the 4s.
+  // Amplitudes bumped from 1.18→1.28 and ±10→±20 px so adjacent-frame byte
+  // diff clears the verifier's 2% near-static threshold (was hitting 0.19%).
   tl.fromTo("#s1-hero",
-    { scale: 1.06, x: -10, y: 6 },
-    { scale: 1.18, x: 10, y: -8, duration: 4.0, ease: "power1.inOut" },
+    { scale: 1.06, x: -20, y: 12 },
+    { scale: 1.28, x: 20, y: -16, duration: 4.0, ease: "power1.inOut" },
     0);
   // Decorative: kicker types in (warm) and tag stamps in just before exit.
   textFx.cascade(tl, "#s1-kicker", { at: 0.4, duration: 0.6, stagger: 0.05 });
@@ -590,20 +608,21 @@
     2.0);
 
   // [CONTINUOUS] — wordmark breathes after reveal completes (every second of scene 1).
-  // Reveal lands ~1.6s; breathe runs 1.7s → 4.0s. duration*yoyo*(repeat+1) = 0.7*2*2 = 2.8s.
+  // Reveal lands ~1.6s; breathe runs 1.7s → 4.0s. Amplitudes bumped to clear
+  // the 2% near-static byte-diff threshold (was hitting 0.19-1.86%).
   tl.fromTo("#s1-mark",
     { scale: 1.0 },
-    { scale: 1.014, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    { scale: 1.05, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: 2 },
     1.7);
   // [CONTINUOUS] — kicker x-drift across full scene (after typed-in entrance).
   tl.fromTo("#s1-kicker",
-    { x: -3 },
-    { x: 3, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    { x: -10 },
+    { x: 10, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 1 },
     1.0);
   // [CONTINUOUS] — tag y-drift after stamp lands.
   tl.fromTo("#s1-tag",
     { y: 0 },
-    { y: -3, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    { y: -8, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 },
     2.7);
 
   // Soft outro for scene 1 — paperTear-style camera drift before scene 2.
@@ -624,9 +643,11 @@
     { x: 600, rotation: 8, opacity: 0 },
     { x: 0,   rotation: 2, opacity: 1, duration: 0.9, ease: "power3.out" },
     4.2);
-  // Persistent: hero-crop drifts gently upward across the 8s.
+  // Persistent: hero-crop drifts noticeably upward across the 8s. Amplitude
+  // bumped from -28→-56 + scale-breathe so adjacent-frame byte-diff clears
+  // the verifier's 2% near-static threshold.
   tl.to("#s2 .s2-hero-crop",
-    { y: -28, rotation: 1, duration: 7.0, ease: "power1.inOut" },
+    { y: -56, rotation: 0.5, scale: 1.04, duration: 7.0, ease: "power1.inOut" },
     4.5);
   // Number stamps in with shake — comboFx.glitchStamp gives a warm beat.
   comboFx.glitchStamp(tl, "#s2-num", {
@@ -661,26 +682,27 @@
     5.95);
 
   // [CONTINUOUS] — hero crop x-drift parallax (the y-drift above is single-pass,
-  // so x oscillates to keep the eye busy after the y settles).
+  // so x oscillates to keep the eye busy after the y settles). Amplitudes
+  // bumped 2x to clear the 2% near-static byte-diff threshold.
   tl.fromTo("#s2 .s2-hero-crop",
     { x: 0 },
-    { x: -10, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    { x: -22, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 2 },
     5.4);
   // [CONTINUOUS] — number scale-breathe after glitchStamp lands.
   tl.fromTo("#s2 .qa-num-row",
     { scale: 1.0 },
-    { scale: 1.025, duration: 0.75, ease: "sine.inOut", yoyo: true, repeat: 7 },
+    { scale: 1.06, duration: 0.75, ease: "sine.inOut", yoyo: true, repeat: 7 },
     5.6);
   // [CONTINUOUS] — headline parent y-drift (cascade animates child word spans;
   // parent drift compounds visually without colliding on the same elements).
   tl.fromTo("#s2-q",
     { y: 0 },
-    { y: -3, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    { y: -7, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: 3 },
     6.4);
   // [CONTINUOUS] — body x-drift after entrance.
   tl.fromTo("#s2-a",
     { x: 0 },
-    { x: 2, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    { x: 6, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 },
     6.7);
   // [CONTINUOUS] — rule width pulse (60→80→60-style breathing of the underline).
   // Triggers AFTER the initial draw at 5.85+0.5=6.35.
@@ -758,34 +780,35 @@
 
   // [CONTINUOUS] — corner hero x/y drift parallax (rotation already oscillates
   // via the existing tween above; add positional drift on different axes).
+  // Amplitudes bumped to clear the 2% near-static byte-diff threshold.
   tl.fromTo("#s3 .s3-hero-corner",
     { x: 0 },
-    { x: -10, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    { x: -22, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
     13.5);
   tl.fromTo("#s3 .s3-hero-corner",
     { y: 0 },
-    { y: 5, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    { y: 12, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: 2 },
     13.8);
   // [CONTINUOUS] — wireframe SVG decorline scale-breathe (rotation runs
   // 12.0 → 20.0 already; scale is a separate property — no conflict).
   tl.fromTo("#s3-decorline",
-    { scale: 0.96 },
-    { scale: 1.04, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    { scale: 0.92 },
+    { scale: 1.10, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
     12.0);
   // [CONTINUOUS] — number 02 micro-rotation (different from existing y-drift).
   tl.fromTo("#s3-num",
-    { rotation: -1.5 },
-    { rotation: 1.5, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    { rotation: -3 },
+    { rotation: 3, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 3 },
     13.5);
   // [CONTINUOUS] — headline parent y-drift after testimonialReveal lands.
   tl.fromTo("#s3-q",
     { y: 0 },
-    { y: -3, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    { y: -7, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
     14.7);
   // [CONTINUOUS] — body x-drift.
   tl.fromTo("#s3-a",
     { x: 0 },
-    { x: 2, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 },
+    { x: 6, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 3 },
     15.0);
   // [CONTINUOUS] — rule width pulse after initial draw.
   tl.fromTo("#s3-rule",
@@ -861,29 +884,30 @@
 
   // [CONTINUOUS] — full hero rotation (existing tween animates y+scale; rotation
   // is a separate property → no conflict, runs the full 7s window).
+  // Amplitudes bumped to clear the 2% near-static byte-diff threshold.
   tl.fromTo("#s4 .s4-hero-full",
-    { rotation: -0.5 },
-    { rotation: 0.5, duration: 4.0, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    { rotation: -1.5 },
+    { rotation: 1.5, duration: 4.0, ease: "sine.inOut", yoyo: true, repeat: 1 },
     20.5);
   // [CONTINUOUS] — number 03 y-drift + scale-breathe (substituting for the
   // requested chromatic shimmer — same persistent-motion goal).
   tl.fromTo("#s4-num",
     { y: 0 },
-    { y: -4, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 5 },
+    { y: -10, duration: 1.0, ease: "sine.inOut", yoyo: true, repeat: 5 },
     21.3);
   tl.fromTo("#s4-num",
     { scale: 1.0 },
-    { scale: 1.03, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 6 },
+    { scale: 1.07, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 6 },
     21.5);
   // [CONTINUOUS] — headline parent y-drift.
   tl.fromTo("#s4-q",
     { y: 0 },
-    { y: -3, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    { y: -7, duration: 1.5, ease: "sine.inOut", yoyo: true, repeat: 2 },
     22.2);
   // [CONTINUOUS] — body x-drift.
   tl.fromTo("#s4-a",
     { x: 0 },
-    { x: 2, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 2 },
+    { x: 6, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 2 },
     22.8);
   // [CONTINUOUS] — rule width pulse after initial draw.
   tl.fromTo("#s4-rule",
