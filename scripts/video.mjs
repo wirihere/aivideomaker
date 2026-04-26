@@ -916,6 +916,11 @@ function applyCopyToTemplate(html, copy, templateName) {
   html = replaceText(html, "s1-support", b(0, "body") || bodies[0] || "");
   html = replaceText(html, "s1-supporting", b(0, "body") || bodies[0] || "");
   html = replaceText(html, "s1-mark", brandName.toUpperCase());
+  // Decorative giant background typography (hero-promo s1, case-study s2):
+  // ship the brand name as the texture rather than the literal word
+  // "HEADLINE" / "SOLUTION", which reads as an unfilled placeholder.
+  if (brandName) html = replaceText(html, "s1-bg-text", brandName.toUpperCase());
+  if (brandName) html = replaceText(html, "s2-bg-text", brandName.toUpperCase());
 
   // --- scene 2 (punch / benefits / solution) ------------------------------
   html = replaceText(html, "s2-headline", b(1, "headline") || headlines[1] || "");
