@@ -629,22 +629,32 @@ try {
       const tail = (r.stdout || r.stderr || "").trim().split("\n").slice(-12).join("\n");
       throw new Error(`lint failed (exit ${r.status})\n----\n${tail}`);
     }
-    const r = runNpm("check", [], { quiet: true });
-    if (r.status === 0) {
-      // Try to extract smoke pass count from stdout (best-effort).
-      const out = r.stdout || "";
-      const m = out.match(/(\d+)\/(\d+)\s+(?:checks?|smoke|tests?)/i);
-      const tally = m ? `${m[1]}/${m[2]} pass` : "lint+smoke pass";
-      return tally;
-    }
+    // Run the gates the orchestrator actually needs: lint + lint:strict +
+    // check:heads + smoke:cli. We deliberately SKIP `npm run smoke` (the
+    // visual Playwright smoke) because (a) it requires a separate
+    // `hyperframes preview` server running on :3002, which is interactive
+    // workflow not automated-pipeline state, and (b) the render about to
+    // happen in Stage 7 already proves the comp loads in a browser. Use
+    // `npm run check` directly (interactive) when you want the visual
+    // signal too.
+    const gates = ["lint", "lint:strict", "check:heads", "smoke:cli"];
+    const runGates = () => {
+      for (const g of gates) {
+        const r = runNpm(g, [], { quiet: true });
+        if (r.status !== 0) return { ok: false, gate: g, r };
+      }
+      return { ok: true };
+    };
+    const result = runGates();
+    if (result.ok) return "lint + smoke:cli pass";
     if (autoFix) {
       console.log("\n    ⓘ quality gate failed — running fix:apply…");
       runNpm("fix:apply", [], { quiet: false });
-      const r2 = runNpm("check", [], { quiet: true });
-      if (r2.status === 0) return "lint+smoke pass (after auto-fix)";
+      const result2 = runGates();
+      if (result2.ok) return "lint + smoke:cli pass (after auto-fix)";
     }
-    const tail = (r.stdout || r.stderr || "").trim().split("\n").slice(-12).join("\n");
-    throw new Error(`quality gate failed (exit ${r.status})\n----\n${tail}`);
+    const tail = (result.r.stdout || result.r.stderr || "").trim().split("\n").slice(-12).join("\n");
+    throw new Error(`quality gate failed at \`npm run ${result.gate}\` (exit ${result.r.status})\n----\n${tail}`);
   });
 
   // ----- Stage 7: render --------------------------------------------------
