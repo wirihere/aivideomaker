@@ -122,6 +122,28 @@ The change is about how we sequence the *work of building templates* — not how
 
 ---
 
+## Forked skills — keep brand-iteration noise out of the main conversation
+
+A single brand iteration produces ~15-25k tokens of intermediate context that the main conversation never needs again after the render lands: verifier markdown reports, frame PNG metadata, per-stage console output, copy.json reads, scrape data. Run 5-10 brands back-to-back and that residue triggers auto-compaction mid-batch.
+
+Two project-local skills run the cycle inside a forked subagent. Tool responses + reads + reasoning all stay in the fork; only a synthesized summary returns:
+
+- **`/iterate-render <url-or-slug>`** — `.claude/skills/iterate-render/SKILL.md` — runs ONE silent-loop cycle (assemble + verify + frame-flipbook), Reads the verdict + critical frames, returns a 200-word synthesis. Use whenever you're iterating a template that isn't yet at `ship` verdict + frames-look-right.
+- **`/render-mp4 <slug> [--allow-watch] [--use-legacy] [--with-music]`** — `.claude/skills/render-mp4/SKILL.md` — runs the actual render in a fork. ~5-10k tokens of ffmpeg / x264 stats stay in the subagent; parent only sees the no-watermark MP4 path + duration + size. Honors the system gates (verify + template-status) just like the orchestrator.
+
+**When NOT to fork** (per skill-chaining doctrine):
+- Skills that need user input mid-run — `AskUserQuestion` is broken inside forks.
+- Reasoning that the parent needs to keep using — fork discards everything except the return value.
+- One-off explorations where you genuinely want the data in your main context.
+
+The pre-render review step (PROCESS cycle step 3 — surface frames + summary to user) intentionally returns to the parent because the user critique IS the point. After the user approves, kicking off `/render-mp4` puts the render in another fork.
+
+**Gotchas:**
+- Skill `!command` preprocessing runs at parse time. Output is baked into the prompt before the subagent reads. Use it to preload LEDGER tail / template status / memory rules instead of burning a turn on Read.
+- `agent: general-purpose` inherits the session model (Opus stays Opus). `agent: Explore` downgrades to Haiku — never use for creative work like DM writing or pre-render frame critique.
+
+---
+
 ## When to dispatch agents (vs do inline)
 
 **Dispatch an agent when:**
