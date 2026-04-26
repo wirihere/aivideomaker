@@ -24,6 +24,13 @@
 //   --with-music       actually wire the picked music into the composition
 //   --no-tts           skip narration synthesis (default: synthesize TTS from copy)
 //   --no-render        assemble + check, skip render (saves ~5min)
+//   --aspects=<list>   one of `9:16` (default), `1:1`, `16:9`, comma-list
+//                      (e.g. `9:16,1:1`), or `all` for every aspect. Render
+//                      runs once at the comp's canonical dims; per-aspect
+//                      variants are produced by an ffmpeg cover-crop pass.
+//                      Output: renders/<slug>_<ts>_<tag>-graded-wm.mp4 where
+//                      tag = 9x16 | 1x1 | 16x9. Default keeps existing
+//                      single-file output (byte-identical to pre-flag).
 //   --auto-fix         run `npm run fix:apply` if quality gate fails
 //   --keep-artifacts   don't restore index.html at end (for inspection)
 //   --dry-run          skip every child spawn, write synthetic outputs, lint
@@ -84,6 +91,35 @@ const keepArtifacts = !!flags["keep-artifacts"];
 // between assemble and quality-gate. ON by default; --no-verify opts out.
 // Always off in dry-run (synthetic copy doesn't pass meaningful checks).
 const skipVerify = !!flags["no-verify"] || dryRun;
+
+// --- aspects --------------------------------------------------------------
+// Multi-aspect rendering for ad placements (Meta, Google Ads, Scalify):
+//   --aspects=9:16            (default — current behaviour, byte-identical)
+//   --aspects=1:1             single square cut
+//   --aspects=9:16,1:1        comma-list
+//   --aspects=all             shorthand for 9:16,1:1,16:9
+//
+// Strategy: render once at the template's canonical dimensions, then
+// post-process via ffmpeg (cover-crop + center) into each requested aspect.
+// This keeps templates untouched and avoids triple-rendering. See render
+// stage 8 for the per-aspect ffmpeg invocation; see ASPECT_TARGETS below
+// for the canonical target dimensions of each aspect tag.
+const ASPECT_TARGETS = {
+  "9:16": { w: 1080, h: 1920, tag: "9x16" },
+  "1:1":  { w: 1080, h: 1080, tag: "1x1"  },
+  "16:9": { w: 1920, h: 1080, tag: "16x9" },
+};
+const aspectsExplicit = typeof flags.aspects === "string"; // user passed --aspects=...
+const aspectsRaw = aspectsExplicit ? flags.aspects : "9:16";
+const aspects = (aspectsRaw === "all"
+  ? ["9:16", "1:1", "16:9"]
+  : aspectsRaw.split(",").map(s => s.trim()).filter(Boolean));
+for (const a of aspects) {
+  if (!ASPECT_TARGETS[a]) {
+    console.error(`✗ unknown --aspects value "${a}". Valid: ${Object.keys(ASPECT_TARGETS).join(", ")} | all | comma-list`);
+    process.exit(2);
+  }
+}
 
 const host = new URL(url).hostname.replace(/^www\./, "").replace(/\.[a-z]+$/, "");
 // In dry-run, default the slug to "dryrun-test" so synthetic outputs are
@@ -485,6 +521,7 @@ function makeStageRunner(total) {
     const labelText = `${label}`.padEnd(20);
     process.stdout.write(`  [${i}/${total}] ${labelText}`);
     const t0 = Date.now();
+    traceBak(`stage-pre:${label}`);
     try {
       const result = await fn();
       const ms = Date.now() - t0;
@@ -493,12 +530,14 @@ function makeStageRunner(total) {
       const arrow = soft ? "→ " : "→ ";
       const out = output.padEnd(40);
       console.log(`${arrow}${out}(${fmtTime(ms)})`);
+      traceBak(`stage-post:${label}`);
       return { ms, ...((typeof result === "object" && result) || {}), output };
     } catch (err) {
       const ms = Date.now() - t0;
       console.log(`→ FAILED                                  (${fmtTime(ms)})`);
       err.stage = label;
       err.elapsedMs = ms;
+      traceBak(`stage-fail:${label}`);
       throw err;
     }
   };
@@ -623,12 +662,30 @@ let backupCreated = false;
 let backupContents = null; // in-memory fallback (string) — survives bak deletion
 let priorIndexLabel = "(none)";
 
+// Trace probe — opt-in via VIDEO_TRACE_BAK=1. Instruments backup/restore +
+// every stage transition with a timestamped line so we can see WHEN the .bak
+// disappears mid-pipeline. Writes to tmp/orchestrator-trace.log and is silent
+// when the env var is unset (production behaviour unchanged).
+const traceBakEnabled = process.env.VIDEO_TRACE_BAK === "1";
+const traceBakLog = path.join(projectRoot, "tmp", "orchestrator-trace.log");
+function traceBak(label) {
+  if (!traceBakEnabled) return;
+  try {
+    fs.mkdirSync(path.dirname(traceBakLog), { recursive: true });
+    const exists = fs.existsSync(backupPath);
+    const stat = exists ? fs.statSync(backupPath) : null;
+    const line = `${new Date().toISOString()} [${label}] bak=${exists ? `present(${stat.size}B)` : "MISSING"}\n`;
+    fs.appendFileSync(traceBakLog, line);
+  } catch {}
+}
+
 function backupIndex() {
   if (fs.existsSync(indexPath)) {
     const contents = fs.readFileSync(indexPath, "utf8");
     backupContents = contents;
     fs.writeFileSync(backupPath, contents);
     backupCreated = true;
+    traceBak("backupIndex:wrote-bak");
     // Try to derive a label from the <title> for the assemble-stage log line.
     try {
       const m = contents.slice(0, 2048).match(/<title>([^<]+)<\/title>/i);
@@ -638,6 +695,7 @@ function backupIndex() {
 }
 
 function restoreIndex() {
+  traceBak("restoreIndex:enter");
   if (!backupCreated) return;
   if (keepArtifacts) {
     console.log(`  ⓘ --keep-artifacts: index.html left as assembled. Restore with:`);
@@ -678,7 +736,7 @@ if (dryRun) {
 } else {
   console.log(`▶ video: ${url}`);
 }
-console.log(`  slug: ${slug} · target seconds: ${seconds} · render: ${skipRender ? "no" : "yes"}${withMusic ? " · music: on" : ""}${skipTts ? " · tts: off" : " · tts: on"}`);
+console.log(`  slug: ${slug} · target seconds: ${seconds} · render: ${skipRender ? "no" : "yes"}${withMusic ? " · music: on" : ""}${skipTts ? " · tts: off" : " · tts: on"}${aspectsExplicit ? ` · aspects: ${aspects.join(",")}` : ""}`);
 console.log("");
 
 // 9 stages when --verify is on (default), 8 when --no-verify is set.
@@ -1227,7 +1285,13 @@ try {
   });
 
   // ----- Stage 8: render --------------------------------------------------
-  await stage("render", () => {
+  // Renders the assembled index.html ONCE at the comp's canonical
+  // data-width/data-height. When `--aspects=` is explicitly passed (with a
+  // non-default value), an ffmpeg cover-crop pass produces per-aspect
+  // variants alongside the canonical render — cheap (~5s/aspect on a 30s
+  // clip) compared to re-rendering. The default (no --aspects flag) is
+  // byte-identical to pre-flag behaviour: one render, one MP4.
+  await stage("render", async () => {
     if (skipRender) {
       return { output: `skipped (--no-render)`, soft: true };
     }
@@ -1248,7 +1312,52 @@ try {
       || newFiles.find(f => f.includes("-graded"))
       || newFiles[newFiles.length - 1]
       || "(unknown)";
-    return `renders/${final}`;
+
+    // Default path (no --aspects flag): byte-identical to pre-flag behaviour.
+    if (!aspectsExplicit) return `renders/${final}`;
+
+    // Multi-aspect post-process. Source = the watermarked render we just
+    // produced. For each requested aspect, run ffmpeg cover-crop into a
+    // target W×H and write to renders/<slug>_<ts>_<tag>-graded-wm.mp4.
+    // The slug+timestamp keep variants from colliding when re-rendering.
+    const sourceRel = `renders/${final}`;
+    const sourceAbs = path.join(projectRoot, sourceRel);
+    if (!fs.existsSync(sourceAbs)) {
+      throw new Error(`render output missing: ${sourceRel}`);
+    }
+    const ts = (new Date()).toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    let ffmpeg;
+    try { ffmpeg = await getFfmpegPath(); }
+    catch (e) {
+      throw new Error(`aspect post-process needs ffmpeg: ${e.message}`);
+    }
+
+    const variantPaths = [];
+    for (const aspect of aspects) {
+      const target = ASPECT_TARGETS[aspect];
+      const outRel = `renders/${slug}_${ts}_${target.tag}-graded-wm.mp4`;
+      const outAbs = path.join(projectRoot, outRel);
+      const filter = buildAspectCoverFilter(target.w, target.h);
+      const args = [
+        "-y", "-loglevel", "error",
+        "-i", sourceAbs,
+        "-vf", filter,
+        "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+        "-c:a", "copy",
+        "-movflags", "+faststart",
+        outAbs,
+      ];
+      const t0 = Date.now();
+      const res = spawnSync(ffmpeg, args, { stdio: ["ignore", "pipe", "pipe"] });
+      if (res.status !== 0) {
+        const tail = ((res.stderr || res.stdout || Buffer.from("")).toString("utf8") || "").trim().slice(-400);
+        throw new Error(`aspect post-process failed for ${aspect} (exit ${res.status})\n${tail}`);
+      }
+      const ms = Date.now() - t0;
+      console.log(`    aspect ${aspect.padEnd(4)} → ${outRel} (${target.w}×${target.h}, ${fmtTime(ms)})`);
+      variantPaths.push(outRel);
+    }
+    return variantPaths.length === 1 ? variantPaths[0] : `${variantPaths.length} aspects → renders/`;
   });
 
   // ----- done -------------------------------------------------------------
@@ -1301,6 +1410,32 @@ function walkCount(dir) {
     else n += 1;
   }
   return n;
+}
+
+// Build the ffmpeg "cover-crop + center" filter graph that resizes a
+// source MP4 to a target W×H while preserving the source's center. The
+// scale factor is whichever dimension needs more upscaling (max of
+// w-ratio, h-ratio); the larger axis is then cropped to the target box.
+//
+// In english: "fill the target box, no letterbox, crop whatever spills".
+// This matches what most ad placements expect — content stays centred,
+// no black bars. The TRADEOFF is the extreme aspects (9:16 -> 1:1, or
+// 16:9 -> 9:16) cut a meaningful chunk of the source frame, so authors
+// must keep important content within the centre safe-zone (vertical
+// 540px above/below centre for a 1080-wide source — see report).
+//
+// Filter graph: scale=w=ceil2:h=ceil2,crop=W:H. We use force_original_
+// _aspect_ratio=increase so ffmpeg picks the right scale internally,
+// then crop fixes the edges.
+function buildAspectCoverFilter(targetW, targetH) {
+  return [
+    `scale=${targetW}:${targetH}:force_original_aspect_ratio=increase`,
+    `crop=${targetW}:${targetH}`,
+    // setsar=1 normalizes pixel-aspect-ratio (some encoders default to
+    // non-square). Without this, players show the right pixels but with
+    // a stretched display aspect.
+    `setsar=1`,
+  ].join(",");
 }
 
 // Synthesize a placeholder copy.json from what new-comp.mjs already scraped

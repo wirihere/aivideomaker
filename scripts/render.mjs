@@ -24,6 +24,17 @@
 //   --watermark-font=path/to/font.ttf # override the auto-detected text font
 //   --no-watermark                    # explicit disable (in case default flips later)
 //
+// Aspect flag (cover-crop post-process; off by default):
+//   --aspect=9:16 | 1:1 | 16:9        # crop the rendered (and graded /
+//                                       watermarked) MP4 into the target
+//                                       aspect via ffmpeg cover-crop +
+//                                       centre. Output sits next to the
+//                                       canonical render with `_<tag>` in
+//                                       the filename (9x16/1x1/16x9). The
+//                                       canonical render is left alone.
+//   --slug=<name>                     # used in the per-aspect output name;
+//                                       defaults to "aivideomaker".
+//
 // Text watermark on Windows: ffmpeg's drawtext requires a fontfile= when
 // fontconfig isn't shipped (the gyan winget build segfaults on font=Arial).
 // On first use we lazy-copy C:\Windows\Fonts\arial.ttf into
@@ -88,6 +99,23 @@ const wmOpacity   = clamp01(parseFloat(flags["watermark-opacity"] ?? "0.6"));
 const wmFontOverride = typeof flags["watermark-font"] === "string" ? flags["watermark-font"] : null;
 const printArgs   = flags["print-args"] === true;
 const inputOverride = typeof flags.input === "string" ? flags.input : null;
+
+// --- aspect flag ----------------------------------------------------------
+// `--aspect=9:16|1:1|16:9` triggers a single-aspect cover-crop pass after
+// grade+watermark. Off by default — the canonical render output is unchanged.
+const ASPECT_TARGETS = {
+  "9:16": { w: 1080, h: 1920, tag: "9x16" },
+  "1:1":  { w: 1080, h: 1080, tag: "1x1"  },
+  "16:9": { w: 1920, h: 1080, tag: "16x9" },
+};
+const aspectFlag = typeof flags.aspect === "string" ? flags.aspect : null;
+if (aspectFlag !== null && !ASPECT_TARGETS[aspectFlag]) {
+  console.error(`✗ invalid --aspect="${aspectFlag}". Valid: ${Object.keys(ASPECT_TARGETS).join(", ")}`);
+  process.exit(2);
+}
+const aspectSlug = (typeof flags.slug === "string" && flags.slug)
+  ? flags.slug.replace(/[^a-zA-Z0-9-_]/g, "-")
+  : "aivideomaker";
 
 const VALID_POSITIONS = new Set(["bottom-right", "bottom-left", "top-right", "top-left"]);
 if (wmEnabled && !VALID_POSITIONS.has(wmPos)) {
@@ -456,6 +484,52 @@ if (wmEnabled) {
   console.log(`✓ watermark: ${path.relative(projectRoot, watermarked)}`);
 }
 
+// --- aspect post-process --------------------------------------------------
+// Single-aspect crop. Mirrors the multi-aspect logic in scripts/video.mjs
+// (cover-crop + centre, no letterbox). Only fires when --aspect=9:16|1:1|16:9
+// is explicitly passed; default render leaves the canonical MP4 alone.
+let aspectVariant = null;
+if (aspectFlag) {
+  const target = ASPECT_TARGETS[aspectFlag];
+  // Use the latest top-of-stack file as the source: watermark > grade > raw.
+  const aspectSource = watermarked || gradedPath || rendered;
+  const sourceBase = path.basename(aspectSource);
+  // Try to lift the timestamp out of the canonical filename
+  // (`aivideomaker_<YYYY-MM-DD_HH-MM-SS>...`) so per-aspect names stay
+  // alignable across formats. Fall back to a fresh ISO if not found.
+  const tsMatch = sourceBase.match(/(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})/);
+  const ts = tsMatch ? tsMatch[1] : (new Date()).toISOString().slice(0, 19).replace(/[:T]/g, "-");
+  // Mark the aspect output with the same suffix tail as the source — graded /
+  // watermarked / both — so a glance at the filename tells you which passes
+  // it inherited.
+  const tail = watermarked ? "-graded-wm" : (gradedPath ? "-graded" : "");
+  const aspectOut = path.join(rendersDir, `${aspectSlug}_${ts}_${target.tag}${tail}.mp4`);
+
+  const filter = [
+    `scale=${target.w}:${target.h}:force_original_aspect_ratio=increase`,
+    `crop=${target.w}:${target.h}`,
+    `setsar=1`,
+  ].join(",");
+  const aspectArgs = [
+    "-y", "-loglevel", "error",
+    "-i", aspectSource,
+    "-vf", filter,
+    "-c:v", "libx264", "-preset", "medium", "-crf", "18",
+    "-c:a", "copy",
+    "-movflags", "+faststart",
+    aspectOut,
+  ];
+  console.log(`▶ aspect: ${aspectFlag} (${target.w}×${target.h})`);
+  console.log(`  ffmpeg ${aspectArgs.map(a => /\s/.test(a) ? `"${a}"` : a).join(" ")}`);
+  await run(ffmpegBin, aspectArgs, { cwd: projectRoot });
+  if (!fs.existsSync(aspectOut)) {
+    console.error(`✗ expected ${aspectOut} but not found`);
+    process.exit(1);
+  }
+  aspectVariant = aspectOut;
+  console.log(`✓ aspect: ${path.relative(projectRoot, aspectVariant)}`);
+}
+
 // --- finalisation ---------------------------------------------------------
 //
 // Replacement strategy:
@@ -481,6 +555,9 @@ if (replace) {
   }
   if (watermarked) {
     console.log(`✓ watermarked: ${path.relative(projectRoot, watermarked)}`);
+  }
+  if (aspectVariant) {
+    console.log(`✓ aspect:     ${path.relative(projectRoot, aspectVariant)}`);
   }
   console.log(`  raw:    ${path.relative(projectRoot, rendered)} (kept for A/B)`);
 }

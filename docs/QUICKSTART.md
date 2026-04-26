@@ -125,7 +125,14 @@ Stages, in order:
 [5/7] assemble                       → index.html
 [6/7] quality gate                   → npm run check
 [7/7] render                         → renders/example-<ts>-graded-wm.mp4
+                                       (+ aspect variants when --aspects= set)
 ```
+
+When `--aspects=` is explicitly passed, the render stage performs an
+ffmpeg cover-crop pass per requested aspect (5-10s each on a 30s clip)
+and writes `renders/<slug>_<ts>_<tag>-graded-wm.mp4` with tag = `9x16`,
+`1x1`, or `16x9`. The default (`--aspects=9:16` or no flag) is byte-
+identical to pre-flag behaviour.
 
 Stages 2-4 only depend on Stage 1's output (the tokens file), so they
 fan out via `Promise.allSettled` and run concurrently — the batch
@@ -144,6 +151,15 @@ Useful flags:
 - `--with-music` — wire the picked track into the comp (default: shortlists
   but doesn't insert).
 - `--no-render` — assemble + quality-gate only, skip the 5-minute render.
+- `--aspects=<list>` — produce per-aspect variants for ad placements.
+  Default `9:16` (byte-identical to pre-flag behaviour). Options: `9:16` |
+  `1:1` | `16:9` | comma-list (`9:16,1:1`) | `all` (renders all three).
+  Strategy: render once at the comp's canonical dims, then ffmpeg
+  cover-crop + center each variant. Output: `renders/<slug>_<ts>_<tag>-graded-wm.mp4`
+  with tag = `9x16`/`1x1`/`16x9`. **Safe-zone caveat:** the cover-crop
+  preserves the centre, so important content must stay within ±540px of
+  vertical centre on a 1080-wide source — anything below the bottom third
+  of a 9:16 master gets cut on the 1:1 crop.
 - `--auto-fix` — run `npm run fix:apply` automatically if quality gate fails.
 - `--keep-artifacts` — don't restore `index.html` at the end (for inspection).
 
