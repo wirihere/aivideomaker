@@ -52,6 +52,7 @@
     "backup:prune": "node scripts/backup.mjs prune",
     "verify": "node scripts/verify-render.mjs",
     "verify:assembled": "node scripts/verify-render.mjs --comp=index.html",
+    "health": "node scripts/health-check.mjs",
     "help": "node scripts/help.mjs"
   },
   "keywords": [],
