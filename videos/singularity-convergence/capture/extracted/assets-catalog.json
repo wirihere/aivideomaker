@@ -1,0 +1,46 @@
+[
+  {
+    "url": "https://singularityconvergence.org/img/logo.svg",
+    "type": "Image",
+    "contexts": [
+      "img[src]",
+      "link[rel=\"icon\"]"
+    ],
+    "notes": "Singularity Convergence",
+    "description": "Singularity Convergence",
+    "sectionClasses": "hero-logo",
+    "aboveFold": true,
+    "nearestHeading": "SingularityConvergence"
+  },
+  {
+    "url": "https://singularityconvergence.org/img/cross-circuit.svg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Cross made of circuits — where faith meets technology",
+    "description": "Cross made of circuits — where faith meets technology",
+    "nearestHeading": "SingularityConvergence",
+    "aboveFold": false
+  },
+  {
+    "url": "https://singularityconvergence.org/img/neural-tree.svg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Tree of Life as a neural network",
+    "description": "Tree of Life as a neural network",
+    "nearestHeading": "SingularityConvergence",
+    "aboveFold": false
+  },
+  {
+    "url": "https://singularityconvergence.org/img/og-image.svg",
+    "type": "Image",
+    "contexts": [
+      "meta[og:image]",
+      "meta[twitter:image]"
+    ],
+    "notes": null
+  }
+]
