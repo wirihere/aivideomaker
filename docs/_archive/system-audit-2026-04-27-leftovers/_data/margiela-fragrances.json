@@ -1,0 +1,63 @@
+{
+  "name": "margiela-fragrances",
+  "url": "https://maisonmargiela-fragrances.com",
+  "durationMs": 30695,
+  "scrape": {
+    "finalUrl": "https://www.maisonmargiela-fragrances.us/",
+    "title": "Just a moment...",
+    "titleLen": 16,
+    "metaDescription": "",
+    "metaDescriptionLen": 0,
+    "ogTagsCount": 0,
+    "ogTagsKeys": [],
+    "ogImage": null,
+    "jsonLdCount": 0,
+    "jsonLdTypes": [],
+    "h1Count": 1,
+    "h1Sample": [
+      "www.maisonmargiela-fragrances.us"
+    ],
+    "h2Count": 1,
+    "h2Sample": [
+      "Performing security verification"
+    ],
+    "h3Count": 0,
+    "paragraphsCount": 1,
+    "paragraphSample": [
+      "This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot."
+    ],
+    "listItemsCount": 0,
+    "listItemSample": [],
+    "ctaCount": 0,
+    "ctaSample": [],
+    "visibleTextLen": 278,
+    "visibleTextSample": "www.maisonmargiela-fragrances.us Performing security verification This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot. Ray ID: 9f2bbc52cefdd992 Performance and Security by Cloudflare Privacy",
+    "stats": {
+      "fetchedAt": "2026-04-27T06:23:18.671Z",
+      "durationMs": 27457,
+      "fellBack": false,
+      "partial": false,
+      "error": null,
+      "status": 403
+    }
+  },
+  "curl": {
+    "cssVarsCount": 0,
+    "cssVarsBrandKeys": [],
+    "topHexes": [
+      {
+        "hex": "#313131",
+        "count": 1
+      }
+    ],
+    "fontImports": [],
+    "fontFamiliesFound": 1,
+    "fontFamiliesSample": [
+      "system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji"
+    ],
+    "logoImgFound": false,
+    "ogImage": null,
+    "htmlLen": 5572
+  },
+  "errors": []
+}

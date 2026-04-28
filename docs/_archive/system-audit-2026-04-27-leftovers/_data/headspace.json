@@ -1,0 +1,138 @@
+{
+  "name": "headspace",
+  "url": "https://www.headspace.com",
+  "durationMs": 86580,
+  "scrape": {
+    "finalUrl": "https://www.headspace.com/",
+    "title": "Mental Health App for Meditation & Sleep - Headspace",
+    "titleLen": 52,
+    "metaDescription": "Live a healthier, happier, more well-rested life in just a few minutes a day. Get the science-backed mental health app for every moment. Try for free.",
+    "metaDescriptionLen": 150,
+    "ogTagsCount": 15,
+    "ogTagsKeys": [
+      "og:site_name",
+      "og:type",
+      "twitter:site",
+      "twitter:card",
+      "og:image",
+      "og:title",
+      "og:description",
+      "og:url"
+    ],
+    "ogImage": "https://images.ctfassets.net/v3n26e09qg2r/4NcF0eXixKLYQFKIQ0pXWV/802a953e11a4f70ef3c5aaf8df27dbfc/Headspace_Opengraph.png",
+    "jsonLdCount": 2,
+    "jsonLdTypes": [
+      "SoftwareApplication",
+      "FAQPage"
+    ],
+    "h1Count": 0,
+    "h1Sample": [],
+    "h2Count": 8,
+    "h2Sample": [
+      "all with Headspace",
+      "What kind of headspace are you looking for?",
+      "The mental health app for every moment"
+    ],
+    "h3Count": 5,
+    "paragraphsCount": 24,
+    "paragraphSample": [
+      "HSA/FSA eligible: save with pre-tax dollars",
+      "Mental health app with expert-led meditations and tools",
+      "Online therapy that accepts insurance"
+    ],
+    "listItemsCount": 54,
+    "listItemSample": [
+      "1,000+ meditations and Ebb, your AI companion",
+      "Affordable therapy that accepts insurance",
+      "Trusted mental health app with 105M+ downloads"
+    ],
+    "ctaCount": 16,
+    "ctaSample": [
+      {
+        "text": "Learn more",
+        "score": 5,
+        "href": "https://www.headspace.com/meditation"
+      },
+      {
+        "text": "Explore sleep resources",
+        "score": 5,
+        "href": "https://www.headspace.com/sleep"
+      },
+      {
+        "text": "Learn more",
+        "score": 5,
+        "href": "https://www.headspace.com/mental-health"
+      },
+      {
+        "text": "Get started",
+        "score": 5,
+        "href": "https://www.headspace.com/online-therapy"
+      },
+      {
+        "text": "View all",
+        "score": 5,
+        "href": "https://www.headspace.com/content?origin=homepage"
+      }
+    ],
+    "visibleTextLen": 4198,
+    "visibleTextSample": "HSA/FSA eligible: save with pre-tax dollars For You For Business For Providers Our Plans Resources About Log in Help Try for free Stress less all with Headspace 1,000+ meditations and Ebb, your AI companion Affordable therapy that accepts insurance Trusted mental health app with 105M+ downloads Mental health app with expert-led meditations and tools Try for $0 Online therapy that accepts insurance Check your coverage What kind of headspace are you looking for? Stress less Sleep soundly Manage anxiety Process thoughts Practice meditation Start therapy The mental health app for every moment AI g",
+    "stats": {
+      "fetchedAt": "2026-04-27T06:21:32.588Z",
+      "durationMs": 77330,
+      "fellBack": false,
+      "partial": false,
+      "error": null,
+      "status": 200
+    }
+  },
+  "curl": {
+    "cssVarsCount": 0,
+    "cssVarsBrandKeys": [],
+    "topHexes": [
+      {
+        "hex": "#44423F",
+        "count": 94
+      },
+      {
+        "hex": "#2D2C2B",
+        "count": 66
+      },
+      {
+        "hex": "#0040EA",
+        "count": 31
+      },
+      {
+        "hex": "#F9F4F2",
+        "count": 25
+      },
+      {
+        "hex": "#0061EF",
+        "count": 18
+      },
+      {
+        "hex": "#E5E7EC",
+        "count": 14
+      },
+      {
+        "hex": "#FFCE00",
+        "count": 11
+      },
+      {
+        "hex": "#141313",
+        "count": 10
+      }
+    ],
+    "fontImports": [],
+    "fontFamiliesFound": 8,
+    "fontFamiliesSample": [
+      "Headspace Apercu",
+      "Headspace Apercu",
+      "Headspace Apercu",
+      "Headspace Apercu"
+    ],
+    "logoImgFound": true,
+    "ogImage": "https://images.ctfassets.net/v3n26e09qg2r/4NcF0eXixKLYQFKIQ0pXWV/802a953e11a4f70ef3c5aaf8df27dbfc/Headspace_Opengraph.png",
+    "htmlLen": 565220
+  },
+  "errors": []
+}

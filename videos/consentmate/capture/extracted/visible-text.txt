@@ -1,0 +1,293 @@
+[span] Beta pilot · First 3 people get the full $1,500 pack free
+[span] Aotearoa / NZ · 22 councils live
+[span] mate
+[a] How it works
+[a] Coverage
+[a] Check my property
+[div] Resource consent paperwork · non-notified · Aotearoa NZ
+[h1] First 3 people get the full pack
+[em] free. $1,500 value.
+[p] We're brand new. We need 3 beta testers. You type your address, drag your building, answer ~8 questions. We draft your complete council application — Environmental Effects Report, cover letter, application form — checked by a human and ready to lodge in 2–3 days. In return: honest feedback, and a short testimonial if it goes well.
+[a] Check my property — free
+[a] See how it works
+[span] actions to check
+[span] questions total
+[b] 2–3
+[span] day turnaround
+[b] Pilot
+[span] · no card needed
+[h2] Three actions.
+[em] That's the whole check.
+[div] Type your address. Set the house type and size. Drag the green box where you want it. The map fills in the rest — site size, council zone, setbacks, coverage, sun-angle rule — so you don't have to measure a thing.
+[div] Live example · real NZ property · real screenshot, nothing faked
+[div] Action 01 · ~10 sec
+[h4] Type your address
+[p] Your property boundary loads from the NZ land map. Council, zone, site size and overlays fill in on their own.
+[span] Length
+[span] 7.5
+[span] Width
+[span] Height
+[span] 3.2
+[span] Building
+[span] Minor dwelling (habitable)
+[span] Earthworks
+[span] Auto-estimate
+[div] Action 02 · ~15 sec
+[h4] Set house type and size
+[p] Pick the building type (minor dwelling, sleepout, garage…), then punch in length, width and height. Earthworks auto-estimates as you go.
+[div] Action 03 · ~30 sec
+[h4] Move the green box
+[p] Drag and turn the green box where you want it. Every gap from the fence is measured live. Breaks a rule? It flags it — the
+[b] 3.7 m in red
+[p] is a front-boundary breach.
+[span] ⚠ Rule flagged live
+[span] Live example · Residential · 1,386 m² site · 7.5 × 5 m minor dwelling
+[span] ⚠ 1 rule flagged · consent likely required
+[a] Run this on my address — free
+[h2] What the map fills in for you —
+[em] and the 8 things you answer.
+[div] Old intake forms ask 30 questions. The map already knows most of the answers, so you only fill in the 8 things it can't.
+[span] What the map fills in · so you don't have to
+[span] 22 / 30 questions · auto
+[div] ■ Filled in by the map
+[span] Address & title info
+[span] ✓ land map
+[span] Lot & DP number
+[span] ✓ land map
+[span] Site size (m²)
+[span] ✓ land map
+[span] Council zone
+[span] ✓ council
+[span] Flood / heritage overlays
+[span] ✓ council
+[span] Buildings already on site
+[span] ✓ land map
+[span] Building size
+[span] ✓ drag
+[span] Floor area (m²)
+[span] ✓ drag
+[span] Where on the site it sits
+[span] ✓ drag
+[span] Gap from each boundary
+[span] ✓ measured
+[span] Site coverage (%)
+[span] ✓ measured
+[span] Sun-angle rule check
+[span] ✓ measured
+[div] □ What you answer · ~5 minutes
+[span] Your name, email, phone
+[span] you
+[span] What are you building?
+[span] you
+[span] What will it be used for?
+[span] you
+[span] How tall?
+[span] you
+[span] Any digging / ground moving?
+[span] you
+[span] Neighbour notes / sign-offs
+[span] you
+[span] Photos of your site
+[span] you · upload
+[span] Anything else we should know
+[span] you · optional
+[div] Old-school intake form:
+[b] 30 questions
+[div] . With the map:
+[b] ~8 questions
+[h2] What
+[em] actually lands in your inbox.
+[div] A full, council-ready application pack — not a template, not advice, not a starter kit. Just the paperwork, drafted and checked.
+[span] AEE · p. 1 of 22
+[span] QA ✓
+[span] Cover letter
+[span] QA ✓
+[span] Rule check
+[span] QA ✓
+[span] Application form
+[span] QA ✓
+[span] Site plan
+[span] QA ✓
+[span] Checklist
+[span] QA ✓
+[span] Your pack
+[span] QA ✓
+[h3] Seven documents.
+[em] Ready to lodge.
+[p] You get everything the council needs to accept the application — nothing missing, nothing padding. Every page is read by a real person before it leaves. No fully-automated drafts until we've hand-checked 50+.
+[b] Environmental Effects Report (AEE)
+[div] — the main document, written around your specific build and council.
+[b] Cover letter
+[div] to the council planner who'll process it.
+[b] Rule check
+[div] — every rule that applies, pass or breach, with the exact wording.
+[b] Filled-in application form
+[div] — the official one your council requires.
+[b] Site plan
+[div] built from your real property boundary, with all gaps marked.
+[b] Attachment checklist
+[div] — exactly what to send with it.
+[b] Editable Google Docs + clean PDFs
+[div] — you can still change anything before you lodge.
+[h2] Flat fee.
+[em] No hourly billing.
+[div] A planner's quote for the same scope starts at $3,500 and can hit $5,500+ if it gets messy. We quote once, flat, up front. Council fees are paid direct to council (they'll invoice you).
+[h3] Property Report
+[span] Pilot · 5 free
+[span] NZD
+[span] FREE
+[span] limited · pilot
+[div] 5 spots left · ends when filled
+[div] Know where you stand before you spend a cent on paperwork.
+[li] Instant rule check for your build
+[li] Title type and zone rules
+[li] Gap-from-boundary measurements
+[li] Wind zone and flood risk
+[li] Council fees + contacts
+[li] Straight answer: consent needed or not
+[a] Run my property →
+[h3] Self-lodge
+[span] Pilot · 3 free
+[span] NZD
+[span] 1,500
+[span] FREE
+[span] limited · pilot
+[div] 3 spots left · $1,500 value
+[div] Your full application pack, drafted. You sign and lodge it with council yourself.
+[li] Everything in Property Report, plus…
+[li] Full Environmental Effects Report (AEE)
+[li] Cover letter to your council planner
+[li] Filled-in council application form
+[li] A real person reads every page
+[li] 2–3 business day turnaround
+[li] Editable Google Docs + PDF pack
+[a] Apply — pilot free →
+[p] Property reports always free · 3 drafted packs free for pilot testers ($1,500 value each)
+[div] How is this different from a LIM?
+[div] A council LIM ($200–$300, 2 weeks) lists your site's history — old consents, drain lines, hazards. It's useful, but it won't tell you if your specific build fits. Our report (free, 40 seconds) does exactly that: checks your build against every rule for your site.
+[div] Council LIM
+[div] $200 – $300
+[div] ~2 weeks
+[div] History + hazards
+[div] Property Report
+[div] FREE
+[div] ~40 seconds
+[div] Rule check for your build
+[h2] Where we sit
+[em] in the rules lane.
+[div] We're a drafting service. We write your documents from info you give us. You stay the applicant — council gets it with your signature on it, not ours.
+[div] Our role
+[div] We draft.
+[em] You decide.
+[div] Not legal advice. Not planning advice. Not licensed builder design work. We prepare the paperwork — you review, sign and lodge it.
+[div] Quality check
+[div] 100%
+[em] human-read.
+[div] Nothing is sent to you auto-generated. Every page is read by Woody before it leaves — and that stays true for the first 50+ packs.
+[div] Data we use
+[div] Government +
+[em] council sources.
+[div] Property boundaries come from Land Information NZ (the national land map). Zone rules are wired live to 22 councils — not scraped from PDFs.
+[div] Your files
+[div] Stay
+[em] yours.
+[div] Your form answers and documents sit in your own Google Drive folder. We don't resell them, we don't train AI on them, we delete on request.
+[h2] 22 councils,
+[em] wired in live.
+[div] Zone rules, hazard overlays, setbacks and coverage limits pulled straight from each council's own data — not scraped from PDFs, not typed in by hand.
+[div] 22 councils live · +2 on deck
+[b] Hover a dot
+[div] — council name · zone rules live-wired via each council's own GIS
+[span] Live councils · Aotearoa New Zealand
+[span] 22 / 67 · +2 on deck
+[span] Auckland Council
+[span] AKL · ✓
+[span] Wellington City
+[span] WLG · ✓
+[span] Christchurch City
+[span] CHC · ✓
+[span] Hamilton City
+[span] HAM · ✓
+[span] Tauranga City
+[span] TGA · ✓
+[span] Dunedin City
+[span] DUD · ✓
+[span] Napier City
+[span] NPE · ✓
+[span] Hastings District
+[span] HST · ✓
+[span] Rotorua District
+[span] ROT · ✓
+[span] New Plymouth District
+[span] NPL · ✓
+[span] Palmerston North
+[span] PMR · ✓
+[span] Nelson City
+[span] NEL · ✓
+[span] Invercargill City
+[span] IVC · ✓
+[span] Queenstown Lakes
+[span] QTL · ✓
+[span] Whangārei District
+[span] WHG · ✓
+[span] Waikato District
+[span] WKD · ✓
+[span] Hutt City
+[span] HUT · ✓
+[span] Upper Hutt City
+[span] UHT · ✓
+[span] Porirua City
+[span] PRU · ✓
+[span] Kāpiti Coast District
+[span] KAP · ✓
+[span] Selwyn District
+[span] SLW · ✓
+[span] Waimakariri District
+[span] WMK · ✓
+[span] Don't see yours? We still cover you — sensible defaults apply, and a human fills any gaps.
+[span] Updated weekly · Last sync 04 / 2026
+[h2] Straight answers
+[em] to the usual questions.
+[summary] Is this legal or planning advice?
+[div] No. We're a drafting service. We prepare documents from info you give us. We're not lawyers, licensed planners or licensed builders. You're the applicant — you review and sign everything before it goes to council.
+[summary] Will council actually accept this?
+[div] Yes. We draft the same documents a planner would: the Environmental Effects Report, cover letter, rule check, and the council's own application form. Council processes it like any other application — it doesn't matter who prepared it, only that it's complete.
+[summary] Why is this so much cheaper than a planner?
+[div] Planners bill by the hour, plus meetings, plus scope fees. A small residential consent isn't worth their time at a fixed price. We use AI to do the typing and a real person to check every page — which cuts 15–20 hours of manual work. That's where the savings come from.
+[summary] How is this different from a LIM report?
+[div] A LIM ($200–$300, ~2 weeks) lists your site's history — old consents, drain lines, hazards — and can include stuff we can't see (covenants, easements). Useful, but it won't tell you if your build fits. Our Property Report (free, 40 seconds) checks your actual build against every rule that applies. Different jobs.
+[summary] What kinds of consent do you cover?
+[div] Small residential resource consents — the kind you don't need neighbour approval for. Sleepouts, decks, carports, minor additions, garages, small boundary-rule breaches. If you're not sure whether yours fits, do the free property check first.
+[summary] How long does it take?
+[div] The property check itself is about 40 seconds. Once you send your ~8 answers, the drafted pack lands in your inbox in 2–3 business days. Council then has 20 working days to decide.
+[summary] What if council asks for more info?
+[div] If council writes back asking for more info (they call it "s92"), we help you answer — small extra fee. The attachment checklist we send you is designed to head most of these off.
+[summary] What about the council fee?
+[div] Council charges a separate fee — usually $500–$1,500 for small residential work, paid straight to them. Our fee is just for the drafting. Your Property Report shows your council's estimate.
+[summary] What happens to my information?
+[div] Your answers and documents sit in your own Google Drive folder. We don't resell them, we don't train AI on them, and we'll delete them on request after you lodge.
+[div] Pilot · slots left ·
+[span] 03 of 03 full packs free · $1,500 value
+[h2] We need 3 beta testers.
+[em] You get $1,500 of paperwork, free.
+[a] Check my property — free
+[a] See pricing
+[p] No card to check your property — reports are always free. First-come, first-served on the free draft packs. Once the 3 pilot packs are claimed, the full draft goes to $1,500. If you're thinking of building in the next few months, this is the window.
+[p] Resource consent paperwork, drafted + human-QA'd. Aotearoa New Zealand.
+[a] Check my property
+[a] How it works
+[a] Council coverage
+[a] Sleepout consent
+[a] s92 responses
+[a] Glossary
+[a] Terms of service
+[a] Privacy policy
+[a] Disclaimer
+[a] hello@consentmate.co.nz
+[div] © 2026 ConsentMate · Auckland, Aotearoa New Zealand ·
+[a] Terms of service
+[span] Tweaks · Palette
+[button] Paper
+[button] Ordnance
+[button] Clay
+[button] Mono

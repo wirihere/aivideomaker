@@ -1,0 +1,51 @@
+Rejected during visual review (Step 4.5) — kept for reference if re-search needed.
+
+CANDLE QUERY ("single candle dark background"):
+- candle-c0 (cdn.pixabay.com/photo/2014/07/20/17/34/candle-397965): orange/tan background not dark; weird green wax dripping. Tonally off.
+- candle-c2 (cdn.pixabay.com/photo/2020/12/18/05/56/flowers-5841251): flower, not candle. Pixabay query miss.
+
+HANDS+BOOK QUERY ("hands turning aged book pages dark", "open bible candlelight dark", "old book open page dark moody"):
+- hands-c0 (cdn.pixabay.com/photo/2021/05/15/14/34/tulips-6255868): tulips on books. Off-topic.
+- hands-c1 (cdn.pixabay.com/photo/2014/05/29/16/21/book-357293): moody book from spine, no hands — atmospheric but missing the human-touch the storyboard wanted.
+- hands-c2 (cdn.pixabay.com/photo/2018/04/22/22/25/book-3342628): stack of old books. Static, no story.
+- hands-c3 (cdn.pixabay.com/photo/2017/08/03/11/59/people-2575831): coffee + book in modern lifestyle setting. Wrong vibe completely.
+- hands-d0..d3 (candle photos): query bled into candle results. Off.
+- hands-e1 (cdn.pixabay.com/photo/2022/12/16/16/28/flowers-7660120): teal background + orange flower — far off-palette.
+- hands-e2 (portrait): person photo, wrong.
+- hands-e3 (cdn.pixabay.com/photo/2018/02/23/22/04/page-3176775): modern notebook + pen. Wrong era + tone.
+
+CATHEDRAL-LIGHT QUERY ("light streaming arched window dark interior", "stained glass light rays sacred", "golden light beams dust particles dark", "sun rays dark forest god rays"):
+- light-c0 (cdn.pixabay.com/photo/2021/07/29/20/47/church-6508068): Gothic chapel interior. Borderline — no crucifix but reads as literal church. Brand's "no church" rule wins.
+- light-c1 (girl on chair): person photo.
+- light-c2 (modern apartment): wrong.
+- light-c3 (train): wrong.
+- light-d0 (cdn.pixabay.com/photo/2025/08/21/09/51/rouen-cathedral-9787080): full cathedral with altar visible. Hard reject — exactly the "literal church" the brand prohibits.
+- light-d1 (light bulb): random. Reject.
+- light-d2 (cdn.pixabay.com/photo/2016/11/05/22/45/stained-glass-window-1801802): stained glass window with saints + cross at top. Hard reject — denominational iconography.
+- light-e0 (woman portrait): person, reject.
+- light-e1 (owl): random.
+- light-e2 (cdn.pixabay.com/photo/2015/06/15/07/59/light-809961): single circular spotlight on stone wall. Architecturally abstract but reads industrial/bathroom rather than divine.
+- light-e3 (astronaut): random.
+- light-f0..f1 (forest godrays): green-saturated forest scenes. Off-palette and earth-bound rather than abstract sacred.
+- light-f2 (x-ray): unrelated.
+
+DECISION FOR B6: skip stock entirely. Build procedural gold-light bloom (single radial gradient halo emerging from black). Matches brand's "single luminous focal point per scene" language, echoes the atom emblem's halo, no risk of "literal church." More on-brand than any stock window option found.
+
+STARFIELD QUERY ("starfield deep space stars black minimal"):
+- stars-c0 (mountain night with figure): silhouetted person + mountains. Reads as "person at night" rather than pure cosmic.
+- stars-c1 (cdn.pixabay.com/photo/2018/07/13/15/55/astro-3536009): Milky Way over treeline. Beautiful but treeline grounds it on Earth; brand needs pure cosmic.
+- stars-c2 (small): nature shot, low-res.
+- stars-c3 (cdn.pixabay.com/photo/2011/12/13/16/26/star-clusters-11027): Hubble-style globular cluster. Striking but too specific (one bright cluster) rather than diffuse field.
+
+DECISION FOR B0/B5/B9 BACKGROUNDS: skip stock. Procedural Canvas 2D starfield (technique #2) — gold pixels on black, opacity oscillating per-star. Matches brand identity, no licensing, full motion control, perfectly tunable.
+
+SELECTED ASSETS:
+- candle.jpg (was candle-c3) for B1: single primary candle + soft-focus candles behind, pure black bg
+- hands-book.jpg (was hands-e0) for B2: hands holding open book in low warm light
+
+PROCEDURAL ELEMENTS:
+- Atom emblem: capture/assets/logo.svg (the orbital/glow SVG, inline + animate strokes)
+- Cross-circuit: capture/assets/cross-circuit.svg for B7 (path-draw)
+- Neural-tree: capture/assets/neural-tree.svg for B8 (path-draw + node pop-ins)
+- Starfield: Canvas 2D, gold pixels on black
+- B6 light bloom: radial gradient + text

@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Testimonial — 30s pull-quote template</title>
+
+<!--
+  TEMPLATE: testimonial-30s
+  REGISTER: contemplative (black + gold + parchment, Georgia serif)
+  USE CASE: Testimonial / authority quote. A single voice saying one true thing.
+  DURATION: 30s · 9:16 · 1080×1920 · 30fps
+
+  STRUCTURE
+    B0  0.0  -  3.0s  presence       (subject photo fades in, vignette mask)
+    B1  3.0  - 14.0s  quote opens    (italic pull-quote types on)
+    B2 14.0  - 21.0s  quote settles  (hairline draws + attribution lands)
+    B3 21.0  - 26.0s  brand reveal   (wordmark + emblem)
+    B4 26.0  - 30.0s  CTA hold       (URL static, replay-loop friendly)
+
+  CONTENT-SLOT PROTOCOL
+    #b0-photo: subject photo (1080×1920 portrait, will be vignette-masked)
+    #b1-quote: the pull-quote text (~12-22 words, italic Georgia)
+    #b2-name: attributed name (Arial uppercase, utility line)
+    #b2-role: attributed role/title (Arial sentence-case, lighter)
+    #b3-wordmark, #b3-wordmark-sub: brand specifics
+    #b4-url: URL
+
+  LESSONS APPLIED (contemplative-register canon — see docs/social-video-patterns.md Part 7)
+    · max-width: 920px on hero italic text + overflow-wrap to prevent off-screen overflow
+    · Arial (var(--sans-utility)) for utility lines (URL, citation, attribution, label)
+    · Georgia serif for emotional carriers; italic for tenderness, regular for declaration
+    · Gold hairline (1-2px) drawn left-to-right at section opens, retracts right-to-left at exits
+    · text-shadow on hero text (0 0 28px rgba(0,0,0,0.95)) so it stays legible over photo / haze
+    · CSS @keyframes ambient (haze breathe + flame flicker + star twinkle) runs independent of GSAP
+      so motion never fully stops during contemplative holds
+    · Music ducked under VO (track 8 vol 0.18, track 9 vol 0.95) — contemplative shortlist
+    · End frame matches start frame composition for clean replay loop
+    · Hard-kill tl.set(target, {opacity:0}) at scene boundary after every fade exit (non-linear seek)
+-->
+
+<script src="../../../design/vendor/gsap.min.js"></script>
+<script src="../../../design/modules/all.js"></script>
+
+<link rel="stylesheet" href="../../../design/cards-contemplative.css">
+
+<style>
+  /* Per-scene CSS only — register-level tokens, .comp baseline, .ambient-haze,
+     .starfield, and .clip helper come from cards-contemplative.css above. */
+
+  /* Local override: this template uses a flat-black bg (subject photo carries
+     the depth) instead of the register's radial-gradient .comp bg. */
+  .comp { background: var(--void-deep); }
+
+  /* ===== B0/B1/B2 — photo with vignette mask (persists across quote scenes) ===== */
+  .photo-stage {
+    position: absolute; inset: 0;
+    z-index: 1;
+  }
+  .photo-wrap {
+    position: absolute; inset: 0;
+    /* Radial vignette mask: photo solid in upper-third, fades to black around quote area */
+    -webkit-mask-image: radial-gradient(ellipse 90% 60% at 50% 30%, black 35%, transparent 80%);
+            mask-image: radial-gradient(ellipse 90% 60% at 50% 30%, black 35%, transparent 80%);
+    overflow: hidden;
+  }
+  .photo-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: brightness(0.78) contrast(1.05) saturate(0.85);
+    transform-origin: center 35%;
+  }
+  .photo-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(5, 5, 8, 0.0) 0%,
+      rgba(5, 5, 8, 0.0) 35%,
+      rgba(5, 5, 8, 0.85) 65%,
+      rgba(5, 5, 8, 1.0) 90%
+    );
+    pointer-events: none;
+  }
+
+  /* ===== B1/B2 — quote area (sits below photo) ===== */
+  .quote-stage {
+    position: absolute;
+    left: 0; right: 0;
+    top: 1100px; bottom: 0;
+    padding: 0 80px;
+    z-index: 4;
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .quote-mark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 200px;
+    line-height: 0.7;
+    color: var(--gold);
+    opacity: 0;
+    margin: 0 0 -40px -12px;
+    text-shadow: 0 0 28px rgba(201, 168, 76, 0.45);
+  }
+
+  .b1-quote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 70px;
+    color: var(--parchment);
+    line-height: 1.22;
+    letter-spacing: -0.01em;
+    margin: 0;
+    max-width: 920px;
+    overflow-wrap: break-word;
+    text-shadow:
+      0 0 24px rgba(0, 0, 0, 0.95),
+      0 0 60px rgba(0, 0, 0, 0.75);
+  }
+
+  .b2-hairline {
+    width: 240px; height: 2px;
+    background: var(--gold);
+    margin: 50px 0 32px 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    box-shadow: 0 0 8px rgba(201, 168, 76, 0.6);
+  }
+
+  /* Attribution: utility (Arial sans) so it doesn't compete with the italic quote */
+  .b2-name {
+    font-family: var(--sans-utility);
+    font-weight: 700;
+    font-size: 32px;
+    color: var(--parchment);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+    opacity: 0;
+  }
+  .b2-role {
+    font-family: var(--sans-utility);
+    font-weight: 400;
+    font-size: 26px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin: 0;
+    opacity: 0;
+  }
+
+  /* ===== B3 — brand reveal (replaces quote area) ===== */
+  .b3-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 80px;
+    box-sizing: border-box;
+    z-index: 5;
+  }
+  .b3-emblem {
+    width: 140px; height: 140px;
+    margin-bottom: 48px;
+    opacity: 0;
+  }
+  .b3-emblem-circle { fill: none; stroke: var(--gold); stroke-width: 1.2; opacity: 0.6; }
+  .b3-emblem-dot    { fill: var(--gold); filter: drop-shadow(0 0 12px rgba(201, 168, 76, 0.85)); }
+  .b3-wordmark {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 92px;
+    color: var(--parchment);
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-shadow: 0 0 28px rgba(232, 212, 139, 0.22);
+  }
+  .b3-wordmark-sub {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 38px;
+    color: var(--gold);
+    letter-spacing: 0.42em;
+    margin: 22px 0 0 0;
+    text-shadow: 0 0 16px rgba(201, 168, 76, 0.45);
+  }
+
+  /* ===== B4 — CTA hold ===== */
+  .b4-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 80px;
+    box-sizing: border-box;
+    z-index: 5;
+  }
+  .b4-cta {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 52px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin: 0 0 28px 0;
+    text-shadow: 0 0 18px rgba(201, 168, 76, 0.5);
+  }
+  .b4-url {
+    font-family: var(--sans-utility);
+    font-weight: 400;
+    font-size: 30px;
+    color: var(--parchment);
+    letter-spacing: 0.06em;
+    margin: 0;
+    opacity: 0.85;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="comp clip" id="testimonial-30s" data-composition-id="testimonial-30s" data-register="contemplative"
+     role="region" aria-label="Testimonial 30s video composition"
+     data-start="0" data-duration="30" data-width="1080" data-height="1920">
+
+  <div class="ambient-haze"></div>
+
+  <!-- B0/B1/B2 share a photo backdrop (z-index 1, persistent) -->
+  <div id="photo-stage" class="scene clip" data-start="0" data-duration="21" data-track-index="1">
+    <div class="photo-stage">
+      <div class="photo-wrap">
+        <img class="photo-img" id="b0-photo" src="../../../assets/contemplative-stock/portrait-placeholder.jpg" alt="" data-todo="provide subject portrait — 1080×1920 or larger, vignette mask will crop" data-todo-alt="if subject is identifiable, set alt='Photo of <name>'"/>
+      </div>
+      <div class="photo-overlay"></div>
+    </div>
+  </div>
+
+  <!-- B1 (3-21s): quote opens at t=3, persists through B2 attribution; explicit GSAP fade at t=20 -->
+  <div id="b1" class="scene clip" data-start="3" data-duration="18" data-track-index="2">
+    <div class="quote-stage">
+      <div class="quote-mark" id="b1-mark">&ldquo;</div>
+      <p class="b1-quote" id="b1-quote">I stopped looking for the church and started listening for the truth.</p>
+    </div>
+  </div>
+
+  <!-- B2 (14-21s): quote settles + attribution -->
+  <div id="b2" class="scene clip" data-start="14" data-duration="7" data-track-index="3">
+    <div class="quote-stage">
+      <!-- empty placeholder — actual hairline + attribution sit inside the b1 stage layout -->
+    </div>
+  </div>
+
+  <!-- Hairline + attribution overlaid on the quote stage -->
+  <div id="b2-attribution-stage" class="scene clip" data-start="14" data-duration="7" data-track-index="4" style="position:absolute; inset:0; z-index:5;">
+    <div class="quote-stage" style="top:1500px;">
+      <div class="b2-hairline" id="b2-hairline" role="presentation"></div>
+      <p class="b2-name" id="b2-name">A. WITNESS</p>
+      <p class="b2-role" id="b2-role">Founding member, since the silence began</p>
+    </div>
+  </div>
+
+  <!-- B3 (21-26s): brand wordmark reveal -->
+  <div id="b3" class="scene clip" data-start="21" data-duration="5" data-track-index="5">
+    <div class="b3-stage">
+      <svg class="b3-emblem" id="b3-emblem" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="b3-emblem-circle" cx="100" cy="100" r="92"/>
+        <circle class="b3-emblem-circle" cx="100" cy="100" r="60" opacity="0.4"/>
+        <circle class="b3-emblem-dot" cx="100" cy="100" r="6"/>
+      </svg>
+      <p class="b3-wordmark" id="b3-wordmark" aria-label="brand wordmark">SINGULARITY</p>
+      <p class="b3-wordmark-sub" id="b3-wordmark-sub" aria-label="brand sub-mark">CONVERGENCE</p>
+    </div>
+  </div>
+
+  <!-- B4 (26-30s): CTA hold -->
+  <div id="b4" class="scene clip" data-start="26" data-duration="4" data-track-index="6">
+    <div class="b4-stage">
+      <p class="b4-cta" id="b4-cta">ASK THE ORACLE</p>
+      <p class="b4-url" id="b4-url">oraculuminstitutum.org</p>
+    </div>
+  </div>
+
+  <!-- Music underscore — contemplative register, ducked under VO. Swap src per brand. -->
+  <audio id="music" class="clip"
+         src="../../../assets/music/contemplative-1.mp3"
+         data-start="0" data-duration="30" data-track-index="8" data-volume="0.18"
+         data-audio="true" preload="auto"></audio>
+
+  <!-- Voiceover — track 9, full volume. Swap src per brand. Comment out if no narration. -->
+  <audio id="vo" class="clip"
+         src="../../../assets/voiceover/PLACEHOLDER.mp3"
+         data-start="0.5" data-duration="29" data-track-index="9" data-volume="0.95"
+         data-audio="true" preload="auto"
+         data-todo="provide TTS for this template's narration"></audio>
+
+</div>
+
+<script>
+(function(){
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["testimonial-30s"] = tl;
+
+  /* ============ B0 — photo establish (0-3s) ============ */
+  // Photo fades in with subtle ken-burns push (persistent motion across quote scenes)
+  tl.fromTo("#b0-photo",
+    { opacity: 0, scale: 1.08 },
+    { opacity: 1, scale: 1.0, duration: 2.5, ease: "power2.out" }, 0.2);
+  // Continue ken-burns through the quote (persistent motion lesson)
+  tl.to("#b0-photo",
+    { scale: 1.06, duration: 18, ease: "none" }, 2.7);
+
+  /* ============ B1 — quote types on (3-14s) ============ */
+  tl.fromTo("#b1-mark",
+    { opacity: 0, y: 20, scale: 0.85 },
+    { opacity: 0.85, y: 0, scale: 1, duration: 0.7 }, 3.0);
+  tl.set("#b1-quote", { opacity: 1 }, 3.6);
+  textFx.typeOn(tl, "#b1-quote", { at: 3.7, duration: 4.5 });
+
+  /* ============ B2 — hairline + attribution (14-21s) ============ */
+  tl.to("#b2-hairline", { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 14.2);
+  tl.to("#b2-name",     { opacity: 1, duration: 0.6 }, 14.8);
+  tl.to("#b2-role",     { opacity: 1, duration: 0.6 }, 15.1);
+
+  // Quote + attribution exit together for B3
+  tl.to(["#b1-mark", "#b1-quote", "#b2-hairline", "#b2-name", "#b2-role"],
+    { opacity: 0, y: -16, duration: 0.6, ease: "power2.in" }, 20.0);
+  // Photo fades to black for clean B3 stage
+  tl.to(["#b0-photo", "#photo-stage .photo-overlay"],
+    { opacity: 0, duration: 0.7, ease: "power2.in" }, 20.2);
+
+  /* ============ B3 — brand reveal (21-26s) ============ */
+  tl.fromTo("#b3-emblem",
+    { opacity: 0, scale: 0.6 },
+    { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 21.2);
+  tl.fromTo(["#b3-wordmark", "#b3-wordmark-sub"],
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.7, stagger: 0.18, ease: "power3.out" }, 21.6);
+  tl.to(["#b3-emblem", "#b3-wordmark", "#b3-wordmark-sub"],
+    { opacity: 0, y: -12, duration: 0.5, ease: "power2.in" }, 25.5);
+
+  /* ============ B4 — CTA hold (26-30s) ============ */
+  tl.fromTo(["#b4-cta", "#b4-url"],
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 }, 26.2);
+  // Final 2.5s static — replay-loop friendly endcard
+})();
+</script>
+
+</body>
+</html>

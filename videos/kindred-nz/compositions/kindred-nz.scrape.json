@@ -1,0 +1,135 @@
+{
+  "url": "https://kindred-nz.org",
+  "finalUrl": "https://kindred-nz.org/",
+  "title": "Kindred — Share with neighbours. Find local help within 100km.",
+  "metaDescription": "",
+  "ogTags": {},
+  "jsonLd": [],
+  "h1": [
+    "Share with neighbours. Find local help."
+  ],
+  "h2": [
+    "Two things, really.",
+    "Three steps. That's the whole thing.",
+    "Built for real streets.",
+    "Back the mission, get a little extra.",
+    "Come and have a go."
+  ],
+  "h3": [
+    "Post a give or an ask.",
+    "A neighbour messages.",
+    "Drop it off or pick it up."
+  ],
+  "paragraphs": [
+    "One free app for your street — a place to give, ask, and find local help close to home.",
+    "One free app, two sides to it. Both running off the same map of where you are — sorted by how close help is, right now.",
+    "No money, no ads, no algorithm. Just local.",
+    "Post it. Nearby neighbours will see it first.",
+    "Ask — someone a few doors down probably has it.",
+    "Informal lending and the odd swap happen too — that's between neighbours.",
+    "Hundreds of trusted local services already on the map — and growing. No Googling, no phone calls.",
+    "No listing fees, no feed algorithm, no pressure. Just post, chat, drop off or pick up.",
+    "Snap a photo, tag it GIVE or NEED, and Kindred drops it on the map for neighbours within walking distance. You can even note \"open to swap for…\" if you're keen.",
+    "Someone nearby pings you in-app. Sort out a time, a pickup spot, or a community meetup point. All the chat happens inside Kindred.",
+    "Leave it on the porch for pickup, meet at a shared spot, or have a yarn while you hand it across — whatever suits you both. Mark it complete and you both earn Kindness Points.",
+    "Everything Kindred does, rooted in keeping your neighbourhood feed honest and your handovers safe.",
+    "Built-in directory of every free NZ helpline. Tap to call free from anywhere in Aotearoa, or tap \"More info\" to visit the organisation's website.",
+    "You're not alone. Open Profile, tap Free Support Lines — they're all right there.",
+    "Earn KP for listing, rating, verifying, and completing exchanges. Climb from Newcomer all the way to Kindred Spirit.",
+    "See who's most generous in your patch — weekly, monthly, or all-time.",
+    "Optional, earns extra KP, and helps build trust in your suburb.",
+    "Arrange handover without handing over your phone number.",
+    "Browse around your address or wherever you actually are. Address autocomplete makes setup quick.",
+    "Meet at shared local spots — parks, libraries, marae — surfaced in-app as safer handover locations. Share a live-location tracker link with a friend or whānau while you go; it auto-expires after 2 hours.",
+    "Old posts auto-expire so the feed stays fresh and honest. Nothing lingering from six months ago pretending to still be available.",
+    "Kindred Supporter is an optional paid tier for folks who want to go a bit further — extra perks for you, and a quiet thank-you for backing the app.",
+    "Prices GST-inclusive. Cancel anytime from Google Play, the App Store, or Stripe (web) — it keeps working until the end of the billing period. Kindred stays fully free without Supporter.",
+    "A few dollars a month doesn't feel like much on its own — but stacked across a few hundred neighbours, it keeps Kindred running and growing, and helps fund the other community-focused projects we're building to help more Kiwis.",
+    "You're not buying features. You're helping us build more kindness into the world — and that adds up to something real.",
+    "Open it in your browser right now — no install needed. Or grab the Android beta. iOS is next.",
+    "Built in Aotearoa. Community-funded. No ads. No algorithm."
+  ],
+  "listItems": [
+    "✨ Double Kindness Points 2× KP on every action — listings, verifications, ratings, completed exchanges.",
+    "🪄 Unlimited auto-matching Kindred suggests neighbours whose \"needs\" line up with your \"gives\". Free users see 1 match a day — Supporters see them all.",
+    "∞ No daily listing cap Post as much as you can give. Handy for big cleanouts and moves.",
+    "⭐ Supporter badge Shown on your profile, in messages, and beside your name on the suburb leaderboard."
+  ],
+  "ctaCandidates": [
+    {
+      "text": "Try Kindred free",
+      "href": "https://app.kindred-nz.org",
+      "score": 5,
+      "tag": "a"
+    },
+    {
+      "text": "Try Kindred ↗",
+      "href": "#download",
+      "score": 4,
+      "tag": "a"
+    },
+    {
+      "text": "See how it works →",
+      "href": "#how",
+      "score": 4,
+      "tag": "a"
+    },
+    {
+      "text": "Or open it in your browser →",
+      "href": "https://app.kindred-nz.org",
+      "score": 4,
+      "tag": "a"
+    },
+    {
+      "text": "🌐 Web · Instant, no install Try it in your browser Live now",
+      "href": "https://app.kindred-nz.org",
+      "score": 4,
+      "tag": "a"
+    },
+    {
+      "text": "Download",
+      "href": "#download",
+      "score": 4,
+      "tag": "a"
+    },
+    {
+      "text": "Facebook group",
+      "href": "https://www.facebook.com/groups/790413880545665",
+      "score": 4,
+      "tag": "a"
+    },
+    {
+      "text": "Already in the group? Tap here to opt in →",
+      "href": "https://play.google.com/apps/testing/nz.kindred.app",
+      "score": 3,
+      "tag": "a"
+    },
+    {
+      "text": "Privacy",
+      "href": "/privacy.html",
+      "score": 2,
+      "tag": "a"
+    },
+    {
+      "text": "Terms of use",
+      "href": "/privacy.html",
+      "score": 2,
+      "tag": "a"
+    },
+    {
+      "text": "Community rules",
+      "href": "/privacy.html",
+      "score": 2,
+      "tag": "a"
+    }
+  ],
+  "visibleText": "Kindred How it works Features Supporter Try Kindred ↗ Open beta · Made in Aotearoa 🇳🇿 Share with neighbours. Find local help. One free app for your street — a place to give, ask, and find local help close to home. Try Kindred free See how it works → Or open it in your browser → ✓ Free to use ✓ Resources within 100km ✓ No ads, no algorithm // WHAT IS KINDRED Two things, really. One free app, two sides to it. Both running off the same map of where you are — sorted by how close help is, right now. No money, no ads, no algorithm. Just local. 01 NEIGHBOUR-TO-NEIGHBOUR Give what you've got. Ask for what you need. GIVE 🍎 Got too much, too many, too old for you? Post it. Nearby neighbours will see it first. NEED 🔨 Looking for something? Ask — someone a few doors down probably has it. Informal lending and the odd swap happen too — that's between neighbours. 02 LOCAL SUPPORT, CLOSE BY Every kind of local help — on one map. 🧭 Browse Nearby · within 100km Sorted by closest to where you are 🍎 Taranaki Foodbank 1.2 km 🍽️ Community Meals New Plymouth 2.1 km 👕 Salvation Army Op Shop 2.8 km 💰 Budgeting Services NZ 4.6 km 🏠 Whānau Ora Housing Hub 5.5 km 🏥 Community Health Clinic 7.2 km 🍎 Food banks 🍽️ Meal services 👕 Clothing 🏠 Housing 💰 Financial 🏥 Health 👶 Family 📚 Learning 💬 Support groups 🪷 Marae-based Hundreds of trusted local services already on the map — and growing. No Googling, no phone calls. // HOW IT WORKS Three steps. That's the whole thing. No listing fees, no feed algorithm, no pressure. Just post, chat, drop off or pick up. STEP 01 📸 Post a give or an ask. Snap a photo, tag it GIVE or NEED, and Kindred drops it on the map for neighbours within walking distance. You can even note \"open to swap for…\" if you're keen. STEP 02 💬 A neighbour messages. Someone nearby pings you in-app. Sort out a time, a pickup spot, or a community meetup point. All the chat happens inside Kindred. STEP 03 🤝 Drop it off or pick it up. Leave it on the porch for pickup, meet at a shared spot, or have a yarn while you hand it across — whatever suits you both. Mark it complete and you both earn Kindness Points. // WHAT'S IN THE APP Built for real streets. Everything Kindred does, rooted in keeping your neighbourhood feed honest and your handovers safe. 📞 Free support lines — one tap to call Built-in directory of every free NZ helpline. Tap to call free from anywhere in Aotearoa, or tap \"More info\" to visit the organisation's website. 🚨 111 💬 1737 ☎️ Lifeline 🧑 Youthline 🌈 OUTLine 💙 Depression 🧠 Anxiety 🫗 Alcohol & Drug 🎲 Gambling 🏥 Healthline You're not alone. Open Profile, tap Free Support Lines — they're all right there. ✨ Kindness Points & tiers Earn KP for listing, rating, verifying, and completing exchanges. Climb from Newcomer all the way to Kindred Spirit. 🌱 Newcomer ❤️ Open 🔥 Connected 💎 Elevated 👑 Kindred Spirit COMING LATER Monthly giveaways for top contributors in each suburb. 🏆 Suburb leaderboard See who's most generous in your patch — weekly, monthly, or all-time. 01 Moana W. 2,840 KP 02 Dave T. 2,315 KP 14 You 245 KP 🛡️ ID & phone verification Optional, earns extra KP, and helps build trust in your suburb. 💬 Built-in messaging Arrange handover without handing over your phone number. 📍 Home & current-location modes Browse around your address or wherever you actually are. Address autocomplete makes setup quick. 🗺️ Community meetup points & safety tracker Meet at shared local spots — parks, libraries, marae — surfaced in-app as safer handover locations. Share a live-location tracker link with a friend or whānau while you go; it auto-expires after 2 hours. 🧹 Stale-listing cleanup Old posts auto-expire so the feed stays fresh and honest. Nothing lingering from six months ago pretending to still be available. // KINDRED SUPPORTER Back the mission, get a little extra. Kindred Supporter is an optional paid tier for folks who want to go a bit further — extra perks for you, and a quiet thank-you for backing the app. ✨ Double Kindness Points 2× KP on every action — listings, verifications, ratings, completed exchanges. 🪄 Unlimited auto-matching Kindred suggests neighbours whose \"needs\" line up with your \"gives\". Free users see 1 match a day — Supporters see them all. ∞ No daily listing cap Post as much as you can give. Handy for big cleanouts and moves. ⭐ Supporter badge Shown on your profile, in messages, and beside your name on the suburb leaderboard. $3.99 / month (first 100 supporters) · $4.99 / month · $49 / year (save 18%) · launches after open beta Prices GST-inclusive. Cancel anytime from Google Play, the App Store, or Stripe (web) — it keeps working until the end of the billing period. Kindred stays fully free without Supporter. 💛 WHY THIS MATTERS A few dollars a month doesn't feel like much on its own — but stacked across a few hundred neighbours, it keeps Kindred running and growing, and helps fund the other community-focused projects we're building to help more Kiwis. You're not buying features. You're helping us build more kindness into the world — and that adds up to something real. ⭐ Supporter Twice the points. Half the missed matches. ACTION FREE SUPPORTER Listing posted 5 KP 10 KP Phone verified 50 KP 100 KP ID verified 100 KP 200 KP Rating left 5 KP 10 KP Exchange completed 1× 2× Daily listing cap Limited Unlimited // GET THE APP Come and have a go. Open it in your browser right now — no install needed. Or grab the Android beta. iOS is next. 🌐 WEB · INSTANT, NO INSTALL Try it in your browser LIVE NOW 🤖 STEP 1: JOIN THE TESTERS GROUP Android beta — Join to install BETA Two quick steps on your Android: 1. Tap Android beta above and Join group. 2. Check email — tap the opt-in link in our welcome note, then Install from Play Store. Already in the group? Tap here to opt in → 🍎 APP STORE iOS — Coming soon SOON Free to use ✨ SCAN TO OPEN THE WEB APP Kindred Built in Aotearoa. Community-funded. No ads. No algorithm. APP How it works Features Supporter Download LEGAL Privacy Terms of use Community rules CONTACT nakiwreckremoval@gmail.com Facebook group Report an issue © 2026 Kindred · Made in Aotearoa 🇳🇿 Pre-launch · open beta",
+  "stats": {
+    "fetchedAt": "2026-04-26T06:52:17.161Z",
+    "durationMs": 2889,
+    "fellBack": false,
+    "partial": false,
+    "error": null,
+    "status": 200
+  }
+}

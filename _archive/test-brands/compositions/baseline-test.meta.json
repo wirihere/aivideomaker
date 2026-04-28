@@ -1,0 +1,39 @@
+{
+  "slug": "baseline-test",
+  "writtenAt": "2026-04-25T22:20:26.086Z",
+  "comp": {
+    "path": "compositions/baseline-test.html",
+    "sha256": "011f03c479589d513637bd164de5c1be4f6262198e1b577b09b598fdb0e9d2de"
+  },
+  "sharedResources": [
+    {
+      "path": "design/cards.css",
+      "sha256": "6de37c67e4d8c4a148233b831ee9bd9aa2e6da28ff92592c3079a30762900c3a"
+    },
+    {
+      "path": "design/effects-batch-08.css",
+      "sha256": "5cce277e8ce5658e1b63edfd3ac271d291cd41858093186a16fb24340c759ac3"
+    },
+    {
+      "path": "design/modules/all.css",
+      "sha256": "1148c992f6bad0bde14b691f0597a389ec305510de3c33f017cd0a80aeb370a5"
+    },
+    {
+      "path": "design/modules/all.js",
+      "sha256": "3ed9711b4b12caeb5ed24a5dd1910d07b5dcb921b16e657fa0d28b23ec2db6c5"
+    },
+    {
+      "path": "design/templates/warm-community.css",
+      "sha256": "db8dbc3d39725730e02a910490fc11742fb52240285aa32803e73446fc603700"
+    },
+    {
+      "path": "design/tokens-baseline-test.css",
+      "sha256": "0e77e65664cfdf30d42b837398809b1b398f5f09f182965ebe79dc02e767765d"
+    },
+    {
+      "path": "design/vendor/gsap.min.js",
+      "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+    }
+  ],
+  "renderedAt": null
+}

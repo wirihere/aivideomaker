@@ -1,0 +1,63 @@
+{
+  "name": "aesop",
+  "url": "https://www.aesop.com",
+  "durationMs": 23350,
+  "scrape": {
+    "finalUrl": "https://www.aesop.com/",
+    "title": "Just a moment...",
+    "titleLen": 16,
+    "metaDescription": "",
+    "metaDescriptionLen": 0,
+    "ogTagsCount": 0,
+    "ogTagsKeys": [],
+    "ogImage": null,
+    "jsonLdCount": 0,
+    "jsonLdTypes": [],
+    "h1Count": 1,
+    "h1Sample": [
+      "www.aesop.com"
+    ],
+    "h2Count": 1,
+    "h2Sample": [
+      "Performing security verification"
+    ],
+    "h3Count": 0,
+    "paragraphsCount": 1,
+    "paragraphSample": [
+      "This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot."
+    ],
+    "listItemsCount": 0,
+    "listItemSample": [],
+    "ctaCount": 0,
+    "ctaSample": [],
+    "visibleTextLen": 259,
+    "visibleTextSample": "www.aesop.com Performing security verification This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot. Ray ID: 9f2bbbbcae6450c2 Performance and Security by Cloudflare Privacy",
+    "stats": {
+      "fetchedAt": "2026-04-27T06:22:47.975Z",
+      "durationMs": 19501,
+      "fellBack": false,
+      "partial": false,
+      "error": null,
+      "status": 403
+    }
+  },
+  "curl": {
+    "cssVarsCount": 0,
+    "cssVarsBrandKeys": [],
+    "topHexes": [
+      {
+        "hex": "#313131",
+        "count": 1
+      }
+    ],
+    "fontImports": [],
+    "fontFamiliesFound": 1,
+    "fontFamiliesSample": [
+      "system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji"
+    ],
+    "logoImgFound": false,
+    "ogImage": null,
+    "htmlLen": 5510
+  },
+  "errors": []
+}

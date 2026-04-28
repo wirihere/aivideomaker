@@ -1,0 +1,2166 @@
+{
+  "slug": "resurgence-indigo",
+  "template": "kinetic-product",
+  "tone": null,
+  "durationS": 30,
+  "generatedAt": "2026-04-26T11:36:59.676Z",
+  "comp": "index.html",
+  "copy": "compositions/resurgence-indigo.copy.json",
+  "vtt": "assets/voiceover/resurgence-indigo.vtt",
+  "vttCueCount": 41,
+  "brandName": "Resurgence Heritage Stra",
+  "brandUrl": "https://www.resurgencegear.co.nz/product/mens-indigo-blue/",
+  "tokensPath": "design/tokens-resurgence-indigo.css",
+  "tokenHexes": [
+    "#1b3a6e",
+    "#1a1f2a",
+    "#0f1115",
+    "#f2efea",
+    "#e8e2d6",
+    "#3d4451",
+    "#d62828"
+  ],
+  "manifestPath": "assets/resurgence-indigo/manifest.json",
+  "manifestAssetCount": 1,
+  "sceneCensus": [
+    {
+      "id": "s1",
+      "sceneId": "s1",
+      "bgHex": "#0f1115",
+      "sceneBgIsBrand": true,
+      "imageCount": 1,
+      "decorativeCount": 0,
+      "textOnly": false
+    },
+    {
+      "id": "s2",
+      "sceneId": "s2",
+      "bgHex": "#0f1115",
+      "sceneBgIsBrand": true,
+      "imageCount": 1,
+      "decorativeCount": 1,
+      "textOnly": false
+    },
+    {
+      "id": "s3",
+      "sceneId": "s3",
+      "bgHex": "#0f1115",
+      "sceneBgIsBrand": true,
+      "imageCount": 0,
+      "decorativeCount": 0,
+      "textOnly": false
+    },
+    {
+      "id": "s4",
+      "sceneId": "s4",
+      "bgHex": "#0f1115",
+      "sceneBgIsBrand": true,
+      "imageCount": 1,
+      "decorativeCount": 2,
+      "textOnly": false
+    },
+    {
+      "id": "s5",
+      "sceneId": "s5",
+      "bgHex": "#0f1115",
+      "sceneBgIsBrand": true,
+      "imageCount": 62,
+      "decorativeCount": 0,
+      "textOnly": false
+    }
+  ],
+  "motionContinuity": {
+    "frameDir": "tmp/verify-frames/resurgence-indigo-20260426-233651",
+    "perScene": [
+      {
+        "sceneId": "s1",
+        "windowStart": 0,
+        "windowEnd": 4,
+        "samples": [
+          {
+            "t": 0.5,
+            "sha": "3037e531e5810e37605a5bfb18c2f80eac419137d03db707e9477fcc98eab411",
+            "bytes": 521195
+          },
+          {
+            "t": 1,
+            "sha": "f9236498b62cc6a08f55a6de8cfcd7b58d0147630c303edf237a7afec51db255",
+            "bytes": 517955
+          },
+          {
+            "t": 1.5,
+            "sha": "de4009370adcbae554560fde9ea5cb0094f3c05cfb7b0c1d2e442df2c047e6ad",
+            "bytes": 446269
+          },
+          {
+            "t": 2,
+            "sha": "295c3fb1ded7ac8f5ed99c75b5462135533cca0d6d98a1939f4d946c7c2a0fbc",
+            "bytes": 447474
+          },
+          {
+            "t": 2.5,
+            "sha": "7d527b4f4bde8c61ddb039c71e6daf8d8ee3282a81b69161379dce4c5d6c86bb",
+            "bytes": 449358
+          },
+          {
+            "t": 3,
+            "sha": "98f4df2c4239c999fea40f1b418c161ee3287f019fa56836a78519293fdb9daa",
+            "bytes": 451653
+          },
+          {
+            "t": 3.5,
+            "sha": "12cf97fa4d2572ef3745c637f59dd1a4aab193a14514a897f8602777f097cf93",
+            "bytes": 488991
+          },
+          {
+            "t": 4,
+            "sha": "0f7b3ae64fb703f38d5d7a0abd5a68fd42cefcf7ecedf7f5887c8b6f7bc782e7",
+            "bytes": 491891
+          },
+          {
+            "t": 4.5,
+            "sha": "30b0517c6b0f0ac3f0a289964b53d792cda7602420b458b8f35bbe36c7080287",
+            "bytes": 489655
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 0.5,
+            "bT": 1,
+            "kind": "near-static",
+            "diffPct": 0.006216483274014525
+          },
+          {
+            "aT": 1,
+            "bT": 1.5,
+            "kind": "moving",
+            "diffPct": 0.13840198472840304
+          },
+          {
+            "aT": 1.5,
+            "bT": 2,
+            "kind": "near-static",
+            "diffPct": 0.0026928938888069473
+          },
+          {
+            "aT": 2,
+            "bT": 2.5,
+            "kind": "near-static",
+            "diffPct": 0.004192648178067376
+          },
+          {
+            "aT": 2.5,
+            "bT": 3,
+            "kind": "near-static",
+            "diffPct": 0.0050813345643668925
+          },
+          {
+            "aT": 3,
+            "bT": 3.5,
+            "kind": "moving",
+            "diffPct": 0.07635723356871599
+          },
+          {
+            "aT": 3.5,
+            "bT": 4,
+            "kind": "near-static",
+            "diffPct": 0.005895615085455924
+          },
+          {
+            "aT": 4,
+            "bT": 4.5,
+            "kind": "near-static",
+            "diffPct": 0.00454572252795843
+          }
+        ]
+      },
+      {
+        "sceneId": "s2",
+        "windowStart": 5,
+        "windowEnd": 9,
+        "samples": [
+          {
+            "t": 5.5,
+            "sha": "d952efb6bf6aa1fdfd436a24a63f87f7444c69aec0a48438228fe1fa211ac76b",
+            "bytes": 220416
+          },
+          {
+            "t": 6,
+            "sha": "368027dd2c6c5ba0a620d60b19f3dde4bf618dfea5b0a77d93aa18955d19fbd2",
+            "bytes": 219417
+          },
+          {
+            "t": 6.5,
+            "sha": "db1553706a7271ea7ff95545097ddfb6cbac2de4eac51a3d31ea014dd0c6cd79",
+            "bytes": 239600
+          },
+          {
+            "t": 7,
+            "sha": "38c3eb2bdfb25c5c3c6ea6179f30054ca93c0f55110f6c17a02befb5cba89c85",
+            "bytes": 239383
+          },
+          {
+            "t": 7.5,
+            "sha": "07463434610e43c5a69c00d4a6a14e26e1497cc79699550188d5f4778d8d22cd",
+            "bytes": 238247
+          },
+          {
+            "t": 8,
+            "sha": "4ace609052be9f25fa80d0649cb8f242f7d1acdc3b572ea147874df0a727aea2",
+            "bytes": 239358
+          },
+          {
+            "t": 8.5,
+            "sha": "d9fd5672fec64eb9acfeed05a09d951b79861e4cda3ac12b3df5df3517988227",
+            "bytes": 237562
+          },
+          {
+            "t": 9,
+            "sha": "5ebc3d5945ae1d2a2693dad0290891630b274158f4390a3a3f3731d306981697",
+            "bytes": 239021
+          },
+          {
+            "t": 9.5,
+            "sha": "a4bb67a7985801e28d11d59d177305375ff7bcf3000a97d5585437973c52000c",
+            "bytes": 238749
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 5.5,
+            "bT": 6,
+            "kind": "near-static",
+            "diffPct": 0.004532338850174216
+          },
+          {
+            "aT": 6,
+            "bT": 6.5,
+            "kind": "moving",
+            "diffPct": 0.08423622704507512
+          },
+          {
+            "aT": 6.5,
+            "bT": 7,
+            "kind": "near-static",
+            "diffPct": 0.0009056761268781302
+          },
+          {
+            "aT": 7,
+            "bT": 7.5,
+            "kind": "near-static",
+            "diffPct": 0.0047455333085473905
+          },
+          {
+            "aT": 7.5,
+            "bT": 8,
+            "kind": "near-static",
+            "diffPct": 0.004641582900926646
+          },
+          {
+            "aT": 8,
+            "bT": 8.5,
+            "kind": "near-static",
+            "diffPct": 0.007503404941551985
+          },
+          {
+            "aT": 8.5,
+            "bT": 9,
+            "kind": "near-static",
+            "diffPct": 0.006104066169918125
+          },
+          {
+            "aT": 9,
+            "bT": 9.5,
+            "kind": "near-static",
+            "diffPct": 0.001137975324343886
+          }
+        ]
+      },
+      {
+        "sceneId": "s3",
+        "windowStart": 10,
+        "windowEnd": 14,
+        "samples": [
+          {
+            "t": 10.5,
+            "sha": "520bd15048691eb8c810744505a4d090bb47e652c0e8a988f7412489e71e0f0c",
+            "bytes": 254682
+          },
+          {
+            "t": 11,
+            "sha": "6a4d96d3b54506091de3ac59369e397bec62d1b0689a7e24e4346851fbddbf75",
+            "bytes": 252487
+          },
+          {
+            "t": 11.5,
+            "sha": "7d93f83c2b04ee4edf594793dfe25ce28da8d296e50e720001da28b57e6488ad",
+            "bytes": 244126
+          },
+          {
+            "t": 12,
+            "sha": "b1ee4f549e3acbb5af47c1e2a4064884bc76625f526fa914fb36830d0b78150e",
+            "bytes": 269819
+          },
+          {
+            "t": 12.5,
+            "sha": "7832bd623fdae1058a6dcb617559e1be5fc4c9c6245adaec64b6a240103e0bf7",
+            "bytes": 276746
+          },
+          {
+            "t": 13,
+            "sha": "b9fa315658adfcc393bfcbbafb69bbed7c151804ed58214d99451d03805a7837",
+            "bytes": 292524
+          },
+          {
+            "t": 13.5,
+            "sha": "528d37c517dc1209edec21e10cc22cf0eeb8672f2a67c34ba97dfc839e16623f",
+            "bytes": 283836
+          },
+          {
+            "t": 14,
+            "sha": "8d190c7a1886b04db0ea416346de371c5cb9ed3393318a0d168d360c623f4fb9",
+            "bytes": 285359
+          },
+          {
+            "t": 14.5,
+            "sha": "1ba2cdf25f75682bbe9b8a5b98cbff24296465b78470efe5c91f8325d86e95cb",
+            "bytes": 288499
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 10.5,
+            "bT": 11,
+            "kind": "near-static",
+            "diffPct": 0.008618591027241815
+          },
+          {
+            "aT": 11,
+            "bT": 11.5,
+            "kind": "moving",
+            "diffPct": 0.03311457619600217
+          },
+          {
+            "aT": 11.5,
+            "bT": 12,
+            "kind": "moving",
+            "diffPct": 0.09522309400005188
+          },
+          {
+            "aT": 12,
+            "bT": 12.5,
+            "kind": "moving",
+            "diffPct": 0.025030172071141048
+          },
+          {
+            "aT": 12.5,
+            "bT": 13,
+            "kind": "moving",
+            "diffPct": 0.05393745470457125
+          },
+          {
+            "aT": 13,
+            "bT": 13.5,
+            "kind": "moving",
+            "diffPct": 0.029700127169052796
+          },
+          {
+            "aT": 13.5,
+            "bT": 14,
+            "kind": "near-static",
+            "diffPct": 0.005337136729523162
+          },
+          {
+            "aT": 14,
+            "bT": 14.5,
+            "kind": "near-static",
+            "diffPct": 0.010883919874938908
+          }
+        ]
+      },
+      {
+        "sceneId": "s4",
+        "windowStart": 15,
+        "windowEnd": 19,
+        "samples": [
+          {
+            "t": 15.5,
+            "sha": "f41b6d00f5a7d590fcc6847fe1635ed83243e51753b4c1e45d51b2ecb1c1a88d",
+            "bytes": 378411
+          },
+          {
+            "t": 16,
+            "sha": "7eb9b2950db1970c3eafb2b85c984750479455a2363e9b88910e7bd3922e6c80",
+            "bytes": 387526
+          },
+          {
+            "t": 16.5,
+            "sha": "182be2440d515b2bb0945158d1c1b985b3b0e927075f5213610af2e46c67c77f",
+            "bytes": 387105
+          },
+          {
+            "t": 17,
+            "sha": "7e7eceee3d6ddef9a45b439cedd010f712dd89ebdebc2987e57b28e896a40896",
+            "bytes": 387006
+          },
+          {
+            "t": 17.5,
+            "sha": "1c25035cb98bba00ac87adcf96812170e7ed9e1d14f8d36584d7e2a98077799d",
+            "bytes": 384624
+          },
+          {
+            "t": 18,
+            "sha": "94e0211f0a282939bf7c964ac558b3736fe9c3715afd616f4bccfee7858aab2b",
+            "bytes": 26143
+          },
+          {
+            "t": 18.5,
+            "sha": "37953d67f46e0372a49e2a208babd57ca540a16f931139be174e167d330c478c",
+            "bytes": 35046
+          },
+          {
+            "t": 19,
+            "sha": "9bbd7d0b081e680b40adb46a84a7bf97f93007d6369a658625401ba9115be486",
+            "bytes": 33924
+          },
+          {
+            "t": 19.5,
+            "sha": "2a22820ff87317e25603fb0b78ba4863bba58fc65647498b59a081f182678fc9",
+            "bytes": 34566
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 15.5,
+            "bT": 16,
+            "kind": "moving",
+            "diffPct": 0.02352100246177031
+          },
+          {
+            "aT": 16,
+            "bT": 16.5,
+            "kind": "near-static",
+            "diffPct": 0.0010863787203955347
+          },
+          {
+            "aT": 16.5,
+            "bT": 17,
+            "kind": "near-static",
+            "diffPct": 0.0002557445654279847
+          },
+          {
+            "aT": 17,
+            "bT": 17.5,
+            "kind": "near-static",
+            "diffPct": 0.006154943334211873
+          },
+          {
+            "aT": 17.5,
+            "bT": 18,
+            "kind": "moving",
+            "diffPct": 0.9320297225342152
+          },
+          {
+            "aT": 18,
+            "bT": 18.5,
+            "kind": "moving",
+            "diffPct": 0.25403755064772016
+          },
+          {
+            "aT": 18.5,
+            "bT": 19,
+            "kind": "moving",
+            "diffPct": 0.032015065913371
+          },
+          {
+            "aT": 19,
+            "bT": 19.5,
+            "kind": "near-static",
+            "diffPct": 0.018573164381183824
+          }
+        ]
+      },
+      {
+        "sceneId": "s5",
+        "windowStart": 20,
+        "windowEnd": 30,
+        "samples": [
+          {
+            "t": 20.5,
+            "sha": "0589e3b3db1a8529e3277554136170fc3f5c78c87fc4191791359a1dda468287",
+            "bytes": 575251
+          },
+          {
+            "t": 21,
+            "sha": "8892dccbb058bcc4cf836ae22a37fe09ee79a4076db2ab1117240471d1233393",
+            "bytes": 593877
+          },
+          {
+            "t": 21.5,
+            "sha": "b872730535e5775275521156a87989a3ad5f0ba457cf7db429a4fe393e47e699",
+            "bytes": 580995
+          },
+          {
+            "t": 22,
+            "sha": "781f853753cac9200a5c726b6dfe999f166c544799a35d4e7ddc10181433863b",
+            "bytes": 581626
+          },
+          {
+            "t": 22.5,
+            "sha": "9994631f575d85928497ba7c793dd44b0d9c1820eccd827d48ccde308aa1a9a2",
+            "bytes": 580793
+          },
+          {
+            "t": 23,
+            "sha": "ed92ca9cbb179ce855f22370caded14fa70d672e564c6e5a0040a16ddc684624",
+            "bytes": 581301
+          },
+          {
+            "t": 25,
+            "sha": "72b610329162abb58a5da4e8cdd641bdaf5f620873091d29a1732e111a0861fe",
+            "bytes": 574638
+          },
+          {
+            "t": 27,
+            "sha": "bdff6a03699fe83418220c2de8042893b80d2979c4536a5f2e966698ca7eeddd",
+            "bytes": 439255
+          },
+          {
+            "t": 29,
+            "sha": "0a9f7758b6686f19fc673909fa597441177f8f7e1a33a99bb241d147c0884948",
+            "bytes": 417407
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 20.5,
+            "bT": 21,
+            "kind": "moving",
+            "diffPct": 0.03136339679765339
+          },
+          {
+            "aT": 21,
+            "bT": 21.5,
+            "kind": "moving",
+            "diffPct": 0.021691360332189998
+          },
+          {
+            "aT": 21.5,
+            "bT": 22,
+            "kind": "near-static",
+            "diffPct": 0.0010848896025968577
+          },
+          {
+            "aT": 22,
+            "bT": 22.5,
+            "kind": "near-static",
+            "diffPct": 0.001432191820860828
+          },
+          {
+            "aT": 22.5,
+            "bT": 23,
+            "kind": "near-static",
+            "diffPct": 0.0008739018167868281
+          },
+          {
+            "aT": 23,
+            "bT": 25,
+            "kind": "near-static",
+            "diffPct": 0.011462220089076056
+          },
+          {
+            "aT": 25,
+            "bT": 27,
+            "kind": "moving",
+            "diffPct": 0.235597019340872
+          },
+          {
+            "aT": 27,
+            "bT": 29,
+            "kind": "moving",
+            "diffPct": 0.04973876222239929
+          }
+        ]
+      }
+    ]
+  },
+  "scriptTiming": {
+    "sceneWindows": [
+      {
+        "id": "s1",
+        "start": 0,
+        "end": 5.5,
+        "duration": 5.5
+      },
+      {
+        "id": "s2",
+        "start": 5.5,
+        "end": 10,
+        "duration": 4.5
+      },
+      {
+        "id": "s3",
+        "start": 10,
+        "end": 15,
+        "duration": 5
+      },
+      {
+        "id": "s4",
+        "start": 15,
+        "end": 20,
+        "duration": 5
+      },
+      {
+        "id": "s5",
+        "start": 20,
+        "end": 30,
+        "duration": 10
+      }
+    ],
+    "emphasisEvents": [
+      {
+        "at": 25.8,
+        "type": "glitterFx.burst"
+      }
+    ]
+  },
+  "samples": [
+    {
+      "t": 0,
+      "activeSceneId": "s1",
+      "innerText": "THEY LOOK LIKE\nRESURGENCE HERITAGE STRA",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-prefix",
+          "text": "THEY LOOK LIKE",
+          "fontSize": 38,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 1,
+      "activeSceneId": "s1",
+      "innerText": "THEY LOOK LIKE\nRESURGENCE HERITAGE STRA",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-prefix",
+          "text": "THEY LOOK LIKE",
+          "fontSize": 38,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "h1",
+          "id": "s1-mark",
+          "text": "RESURGENCE HERITAGE STRA",
+          "fontSize": 360,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 2,
+      "activeSceneId": "s1",
+      "innerText": "THEY LOOK LIKE\nRESURGENCE HERITAGE STRA",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-prefix",
+          "text": "THEY LOOK LIKE",
+          "fontSize": 38,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "h1",
+          "id": "s1-mark",
+          "text": "RESURGENCE HERITAGE STRA",
+          "fontSize": 360,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 3,
+      "activeSceneId": "s1",
+      "innerText": "BUT PROTECT LIKE\nARMOR.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-prefix",
+          "text": "BUT PROTECT LIKE",
+          "fontSize": 38,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "h1",
+          "id": "s1-mark",
+          "text": "ARMOR.",
+          "fontSize": 360,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 4,
+      "activeSceneId": "s1",
+      "innerText": "BUT PROTECT LIKE\nARMOR.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-prefix",
+          "text": "BUT PROTECT LIKE",
+          "fontSize": 38,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "h1",
+          "id": "s1-mark",
+          "text": "ARMOR.",
+          "fontSize": 360,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 5,
+      "activeSceneId": "s2",
+      "innerText": "CE AAA\nEN 17092-1:2019\nThe top motorcycle-jeans rating.\nEN 17092-1:2019.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "CE AAA",
+          "fontSize": 220,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "EN 17092-1:2019",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 6,
+      "activeSceneId": "s2",
+      "innerText": "CE AAA\nEN 17092-1:2019\nThe top motorcycle-jeans rating.\nEN 17092-1:2019.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "CE AAA",
+          "fontSize": 220,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "EN 17092-1:2019",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 7,
+      "activeSceneId": "s2",
+      "innerText": "CE AAA\nEN 17092-1:2019\nThe top motorcycle-jeans rating.\nEN 17092-1:2019.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "CE AAA",
+          "fontSize": 220,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "EN 17092-1:2019",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "The top motorcycle-jeans rating.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s2-a",
+          "text": "EN 17092-1:2019.",
+          "fontSize": 32,
+          "fontWeight": 400,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 8,
+      "activeSceneId": "s2",
+      "innerText": "CE AAA\nEN 17092-1:2019\nThe top motorcycle-jeans rating.\nEN 17092-1:2019.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "CE AAA",
+          "fontSize": 220,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "EN 17092-1:2019",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "The top motorcycle-jeans rating.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s2-a",
+          "text": "EN 17092-1:2019.",
+          "fontSize": 32,
+          "fontWeight": 400,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 9,
+      "activeSceneId": "s2",
+      "innerText": "CE AAA\nEN 17092-1:2019\nThe top motorcycle-jeans rating.\nEN 17092-1:2019.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "CE AAA",
+          "fontSize": 220,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "EN 17092-1:2019",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "The top motorcycle-jeans rating.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s2-a",
+          "text": "EN 17092-1:2019.",
+          "fontSize": 32,
+          "fontWeight": 400,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 10,
+      "activeSceneId": "s3",
+      "innerText": "WORLD RECORD\n10\n.\n00\nSECONDS\nC.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "WORLD RECORD",
+          "fontSize": 44,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "10\n        .\n        00",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 11,
+      "activeSceneId": "s3",
+      "innerText": "WORLD RECORD\n10\n.\n00\nSECONDS\nC.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "WORLD RECORD",
+          "fontSize": 44,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "10\n        .\n        00",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-int",
+          "text": "10",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": ".",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-dec",
+          "text": "00",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 12,
+      "activeSceneId": "s3",
+      "innerText": "WORLD RECORD\n10\n.\n00\nSECONDS\nC.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "WORLD RECORD",
+          "fontSize": 44,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "10\n        .\n        00",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-int",
+          "text": "10",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": ".",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-dec",
+          "text": "00",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s3-units",
+          "text": "SECONDS",
+          "fontSize": 60,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s3-sub",
+          "text": "C.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+          "fontSize": 30,
+          "fontWeight": 600,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 13,
+      "activeSceneId": "s3",
+      "innerText": "WORLD RECORD\n10\n.\n00\nSECONDS\nC.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "WORLD RECORD",
+          "fontSize": 44,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "10\n        .\n        00",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-int",
+          "text": "10",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": ".",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-dec",
+          "text": "00",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s3-units",
+          "text": "SECONDS",
+          "fontSize": 60,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s3-sub",
+          "text": "C.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+          "fontSize": 30,
+          "fontWeight": 600,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 14,
+      "activeSceneId": "s3",
+      "innerText": "WORLD RECORD\n10\n.\n00\nSECONDS\nC.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "WORLD RECORD",
+          "fontSize": 44,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "10\n        .\n        00",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-int",
+          "text": "10",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": ".",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "span",
+          "id": "s3-number-dec",
+          "text": "00",
+          "fontSize": 540,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s3-units",
+          "text": "SECONDS",
+          "fontSize": 60,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s3-sub",
+          "text": "C.E.-CERTIFIED SLIDE TIME · PEKEV LINER",
+          "fontSize": 30,
+          "fontWeight": 600,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 15,
+      "activeSceneId": "s4",
+      "innerText": "D3O GHOST · HIP\nD3O GHOST · KNEE\nWASH SAFE.\nNO LOSS OF PROTECTION.",
+      "visible": [
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · HIP",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 16,
+      "activeSceneId": "s4",
+      "innerText": "D3O GHOST · HIP\nD3O GHOST · KNEE\nWASH SAFE.\nNO LOSS OF PROTECTION.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-callout-hip",
+          "text": "D3O GHOST · HIP",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · HIP",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s4-callout-knee",
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 17,
+      "activeSceneId": "s4",
+      "innerText": "D3O GHOST · HIP\nD3O GHOST · KNEE\nWASH SAFE.\nNO LOSS OF PROTECTION.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-callout-hip",
+          "text": "D3O GHOST · HIP",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · HIP",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s4-callout-knee",
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 18,
+      "activeSceneId": "s4",
+      "innerText": "D3O GHOST · HIP\nD3O GHOST · KNEE\nWASH SAFE.\nNO LOSS OF PROTECTION.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-callout-hip",
+          "text": "D3O GHOST · HIP",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · HIP",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s4-callout-knee",
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "h2",
+          "id": "s4-slate-h",
+          "text": "WASH SAFE.",
+          "fontSize": 220,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s4-slate-s",
+          "text": "No loss of protection.",
+          "fontSize": 44,
+          "fontWeight": 600,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 19,
+      "activeSceneId": "s4",
+      "innerText": "D3O GHOST · HIP\nD3O GHOST · KNEE\nWASH SAFE.\nNO LOSS OF PROTECTION.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-callout-hip",
+          "text": "D3O GHOST · HIP",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · HIP",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s4-callout-knee",
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 16,
+          "fontWeight": 400,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "D3O GHOST · KNEE",
+          "fontSize": 26,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "h2",
+          "id": "s4-slate-h",
+          "text": "WASH SAFE.",
+          "fontSize": 220,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": "s4-slate-s",
+          "text": "No loss of protection.",
+          "fontSize": 44,
+          "fontWeight": 600,
+          "contrast": 14.649889667017908
+        }
+      ]
+    },
+    {
+      "t": 20,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 21,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 22,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 23,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 24,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 25,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        }
+      ]
+    },
+    {
+      "t": 26,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "resurgencegear.co.nz",
+          "fontSize": 38,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 27,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "resurgencegear.co.nz",
+          "fontSize": 38,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 28,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "resurgencegear.co.nz",
+          "fontSize": 38,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 29,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "resurgencegear.co.nz",
+          "fontSize": 38,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    },
+    {
+      "t": 30,
+      "activeSceneId": "s5",
+      "innerText": "HERITAGE STRAIGHT\nIndigo Sport.\nFROM\n$379\nresurgencegear.co.nz",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s5-kicker",
+          "text": "HERITAGE STRAIGHT",
+          "fontSize": 28,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "h2",
+          "id": "s5-name",
+          "text": "Indigo Sport.",
+          "fontSize": 96,
+          "fontWeight": 800,
+          "contrast": 16.476043760599737
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "FROM",
+          "fontSize": 30,
+          "fontWeight": 700,
+          "contrast": 14.649889667017908
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "$379",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 3.7733382793386476
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "resurgencegear.co.nz",
+          "fontSize": 38,
+          "fontWeight": 600,
+          "contrast": 16.476043760599737
+        }
+      ]
+    }
+  ],
+  "findings": {
+    "composition": [
+      {
+        "kind": "ok",
+        "scene": "s1",
+        "message": "scene s1: 4 text elements (63 chars)",
+        "lines": [
+          "THEY LOOK LIKE",
+          "RESURGENCE HERITAGE STRA",
+          "BUT PROTECT LIKE",
+          "ARMOR."
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s2",
+        "message": "scene s2: 4 text elements (72 chars)",
+        "lines": [
+          "CE AAA",
+          "EN 17092-1:2019",
+          "The top motorcycle-jeans rating.",
+          "EN 17092-1:2019."
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s3",
+        "message": "scene s3: 7 text elements (92 chars)",
+        "lines": [
+          "WORLD RECORD",
+          "10\n        .\n        00",
+          "10",
+          ".",
+          "00",
+          "SECONDS",
+          "C.E.-CERTIFIED SLIDE TIME · PEKEV LINER"
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s4",
+        "message": "scene s4: 4 text elements (66 chars)",
+        "lines": [
+          "D3O GHOST · HIP",
+          "D3O GHOST · KNEE",
+          "WASH SAFE.",
+          "No loss of protection."
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s5",
+        "message": "scene s5: 5 text elements (62 chars)",
+        "lines": [
+          "FROM",
+          "$379",
+          "HERITAGE STRAIGHT",
+          "Indigo Sport.",
+          "resurgencegear.co.nz"
+        ]
+      }
+    ],
+    "brandFidelity": [
+      {
+        "kind": "brand-name-present",
+        "message": "brand name \"Resurgence Heritage Stra\" present in visible text"
+      },
+      {
+        "kind": "url-present",
+        "message": "URL host \"resurgencegear.co.nz\" present in visible text"
+      },
+      {
+        "kind": "beat-headline-missing",
+        "beat": 2,
+        "message": "beat #2 headline (\"D3O Ghost. Hip and knee.\") not detected in any scene"
+      }
+    ],
+    "placeholderLeakage": [],
+    "pacing": [],
+    "audioCoverage": [
+      {
+        "kind": "trailing-silence",
+        "message": "narration ends at 26.7s but comp runs to 30s — 3.3s of silence at end"
+      }
+    ],
+    "accessibility": [
+      {
+        "kind": "small-text",
+        "scene": "s3",
+        "text": "10\n        .\n        00",
+        "fontSize": 16,
+        "message": "scene s3: \"10\n        .\n        00\" at 16.0px — hard to read at 1080p"
+      }
+    ],
+    "brandPaletteUse": [
+      {
+        "kind": "var-refs-present",
+        "count": 49,
+        "message": "49 var(--card-) references in assembled <style> — brand tokens consumed"
+      }
+    ],
+    "brandAssetUse": [
+      {
+        "kind": "asset-unused",
+        "assetKind": "favicon",
+        "assetPath": "assets/resurgence-indigo/favicon.ico",
+        "message": "asset favicon (assets/resurgence-indigo/favicon.ico) was pulled but never shown in the comp"
+      }
+    ],
+    "sceneVisualDensity": [],
+    "motionContinuity": [
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 0.5,
+        "atEnd": 1,
+        "diffPct": 0.006216483274014525,
+        "message": "scene s1 at t=0.5s–1s: near-static (0.62% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 1.5,
+        "atEnd": 2,
+        "diffPct": 0.0026928938888069473,
+        "message": "scene s1 at t=1.5s–2s: near-static (0.27% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 2,
+        "atEnd": 2.5,
+        "diffPct": 0.004192648178067376,
+        "message": "scene s1 at t=2s–2.5s: near-static (0.42% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 2.5,
+        "atEnd": 3,
+        "diffPct": 0.0050813345643668925,
+        "message": "scene s1 at t=2.5s–3s: near-static (0.51% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 3.5,
+        "atEnd": 4,
+        "diffPct": 0.005895615085455924,
+        "message": "scene s1 at t=3.5s–4s: near-static (0.59% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 4,
+        "atEnd": 4.5,
+        "diffPct": 0.00454572252795843,
+        "message": "scene s1 at t=4s–4.5s: near-static (0.45% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 5.5,
+        "atEnd": 6,
+        "diffPct": 0.004532338850174216,
+        "message": "scene s2 at t=5.5s–6s: near-static (0.45% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 6.5,
+        "atEnd": 7,
+        "diffPct": 0.0009056761268781302,
+        "message": "scene s2 at t=6.5s–7s: near-static (0.09% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 7,
+        "atEnd": 7.5,
+        "diffPct": 0.0047455333085473905,
+        "message": "scene s2 at t=7s–7.5s: near-static (0.47% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 7.5,
+        "atEnd": 8,
+        "diffPct": 0.004641582900926646,
+        "message": "scene s2 at t=7.5s–8s: near-static (0.46% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 8,
+        "atEnd": 8.5,
+        "diffPct": 0.007503404941551985,
+        "message": "scene s2 at t=8s–8.5s: near-static (0.75% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 8.5,
+        "atEnd": 9,
+        "diffPct": 0.006104066169918125,
+        "message": "scene s2 at t=8.5s–9s: near-static (0.61% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 9,
+        "atEnd": 9.5,
+        "diffPct": 0.001137975324343886,
+        "message": "scene s2 at t=9s–9.5s: near-static (0.11% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s3",
+        "atStart": 10.5,
+        "atEnd": 11,
+        "diffPct": 0.008618591027241815,
+        "message": "scene s3 at t=10.5s–11s: near-static (0.86% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s3",
+        "atStart": 13.5,
+        "atEnd": 14,
+        "diffPct": 0.005337136729523162,
+        "message": "scene s3 at t=13.5s–14s: near-static (0.53% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s3",
+        "atStart": 14,
+        "atEnd": 14.5,
+        "diffPct": 0.010883919874938908,
+        "message": "scene s3 at t=14s–14.5s: near-static (1.09% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s4",
+        "atStart": 16,
+        "atEnd": 16.5,
+        "diffPct": 0.0010863787203955347,
+        "message": "scene s4 at t=16s–16.5s: near-static (0.11% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s4",
+        "atStart": 16.5,
+        "atEnd": 17,
+        "diffPct": 0.0002557445654279847,
+        "message": "scene s4 at t=16.5s–17s: near-static (0.03% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s4",
+        "atStart": 17,
+        "atEnd": 17.5,
+        "diffPct": 0.006154943334211873,
+        "message": "scene s4 at t=17s–17.5s: near-static (0.62% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s4",
+        "atStart": 19,
+        "atEnd": 19.5,
+        "diffPct": 0.018573164381183824,
+        "message": "scene s4 at t=19s–19.5s: near-static (1.86% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 21.5,
+        "atEnd": 22,
+        "diffPct": 0.0010848896025968577,
+        "message": "scene s5 at t=21.5s–22s: near-static (0.11% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 22,
+        "atEnd": 22.5,
+        "diffPct": 0.001432191820860828,
+        "message": "scene s5 at t=22s–22.5s: near-static (0.14% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 22.5,
+        "atEnd": 23,
+        "diffPct": 0.0008739018167868281,
+        "message": "scene s5 at t=22.5s–23s: near-static (0.09% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 23,
+        "atEnd": 25,
+        "diffPct": 0.011462220089076056,
+        "message": "scene s5 at t=23s–25s: near-static (1.15% byte change)"
+      }
+    ],
+    "scriptTiming": [
+      {
+        "kind": "narration-overrun-into-cta",
+        "scene": "s5",
+        "narrationEnd": 26.71,
+        "ctaStart": 20,
+        "overrunS": 6.71,
+        "message": "narration ends at 26.71s but CTA scene s5 starts at 20.00s — narration overruns into CTA by 6.71s (acceptable when narration speaks the CTA tagline)"
+      },
+      {
+        "kind": "word-emphasis-orphan",
+        "scene": "s2",
+        "atSec": 7.13,
+        "token": "motorcycle",
+        "message": "identity word \"motorcycle-jeans\" spoken at 7.13s in scene s2 lands in mid-scene quiet (no entrance/stamp event within 0.3s)"
+      },
+      {
+        "kind": "word-emphasis-orphan",
+        "scene": "s2",
+        "atSec": 7.83,
+        "token": "rating",
+        "message": "identity word \"rating\" spoken at 7.83s in scene s2 lands in mid-scene quiet (no entrance/stamp event within 0.3s)"
+      },
+      {
+        "kind": "word-emphasis-orphan",
+        "scene": "s5",
+        "atSec": 26.27,
+        "token": "resurgence",
+        "message": "identity word \"Resurgence\" spoken at 26.27s in scene s5 lands in mid-scene quiet (no entrance/stamp event within 0.3s)"
+      },
+      {
+        "kind": "script-fits-budget",
+        "narrationS": 26.71,
+        "compS": 30,
+        "slackS": 3.29,
+        "message": "narration runs 26.71s of 30s comp — 3.29s slack"
+      }
+    ]
+  },
+  "verdict": "watch"
+}

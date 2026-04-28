@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Claim Mate — v3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; background: #0d1826; overflow: hidden; }
+
+    [data-composition-id="claim-mate-v3"] {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #0d1826;
+      font-family: "Inter", system-ui, sans-serif;
+      color: #eef1f5;
+    }
+
+    /* ---------- Backgrounds (track 0) ---------- */
+    .bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #0d1826;
+    }
+    .bg-media {
+      position: absolute;
+      inset: -6%;
+      width: 112%;
+      height: 112%;
+      object-fit: cover;
+      transform-origin: center;
+      will-change: transform;
+      /* v3.2 MODERN CINEMATIC grade — no sepia, no heavy grayscale.
+         Kills wild colour casts (saturate 0.92), adds punch (contrast 1.18),
+         keeps photos a touch dimmer than text (brightness 0.95). */
+      filter: saturate(0.92) contrast(1.18) brightness(0.95);
+    }
+
+    /* ---------- Global FX (above media, below text) ---------- */
+    /* v3.2: cooler, cleaner gradient. Removed the navy push at the top
+       (was adding a washed-out feel) and the heavy bottom darkening.
+       Lets the media's own colour breathe while still unifying scenes. */
+    .global-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 900;
+      mix-blend-mode: multiply;
+      background: linear-gradient(180deg, rgba(220,232,246,0.00) 0%, rgba(220,232,246,0.00) 55%, rgba(13,24,38,0.18) 100%);
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 901;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 62%, rgba(0,0,0,0.28) 100%);
+    }
+
+    /* ---------- Overlays (track 1, z-index 1000+) ---------- */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    /* Persistent brand mark — top-LEFT corner (v4). Tick ✓ replaces the slash. */
+    .brand-mark {
+      position: absolute;
+      top: 56px;
+      left: 56px;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 22px;
+      background: rgba(13, 24, 38, 0.55);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(238, 241, 245, 0.20);
+      border-radius: 14px;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 60px;
+      line-height: 1;
+      letter-spacing: -0.015em;
+      color: #eef1f5;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity, transform;
+    }
+    .brand-mark .bm-tick {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      margin: 0 2px;
+    }
+    .brand-mark .bm-tick path {
+      stroke: #7aa0d4;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+    }
+    .brand-mark .bm-claim,
+    .brand-mark .bm-mate { display: inline-block; opacity: 0; will-change: opacity, transform; }
+
+    /* Opening text-hook scene — full-page typographic card (v4).
+       Dark navy canvas, stacked type, "ACC" is the hero word so the
+       DECLINED stamp lands centered on it. */
+    .bg-hook {
+      background: #0b1522;
+      background-image: radial-gradient(ellipse at 50% 45%, rgba(30,54,90,0.55) 0%, rgba(11,21,34,1) 72%);
+    }
+    .hook-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .hook-line {
+      font-family: "Inter", sans-serif;
+      color: #eef1f5;
+      line-height: 1;
+      will-change: transform, opacity;
+      text-shadow: 0 6px 22px rgba(0,0,0,0.35);
+    }
+    .hook-line-1 { font-size: 110px; font-weight: 500; color: rgba(238,241,245,0.70); letter-spacing: -0.01em; margin-bottom: 14px; }
+    .hook-line-2 { font-size: 280px; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; line-height: 0.95; margin: 4px 0 28px; }
+    .hook-line-3 { font-size: 92px; font-weight: 500; color: rgba(238,241,245,0.82); letter-spacing: -0.01em; margin-bottom: 10px; }
+    .hook-line-4 { font-size: 92px; font-weight: 600; color: #eef1f5; letter-spacing: -0.01em; }
+
+    /* DECLINED stamp — BIGGER, with subtle dark backing for legibility */
+    .declined-stage {
+      position: relative;
+      padding: 48px 96px;
+      background: rgba(13, 24, 38, 0.28);
+      border-radius: 22px;
+      backdrop-filter: blur(6px);
+    }
+    .declined-rule {
+      position: absolute;
+      inset: 0;
+      border: 8px solid #b84a4a;
+      border-radius: 22px;
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+    .declined-word {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 180px;
+      letter-spacing: 0.08em;
+      color: #d85656;
+      text-shadow: 0 5px 18px rgba(0,0,0,0.55);
+      will-change: transform, opacity;
+    }
+    .declined-strike {
+      position: absolute;
+      left: 70px;
+      right: 70px;
+      top: 50%;
+      height: 10px;
+      background: #d85656;
+      transform-origin: left center;
+      transform: scaleX(0);
+      will-change: transform;
+    }
+
+    /* Step badge — BIGGER with stronger dark backing */
+    .step-stage {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      padding: 48px 68px;
+      background: rgba(13, 24, 38, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(238, 241, 245, 0.25);
+      border-radius: 26px;
+      max-width: 920px;
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .step-num {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 150px;
+      line-height: 1;
+      color: #eef1f5;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      will-change: transform, opacity;
+    }
+    .step-text { display: flex; flex-direction: column; gap: 12px; }
+    .step-kicker {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: 26px;
+      letter-spacing: 0.32em;
+      color: #7a93b8;
+      will-change: transform, opacity;
+    }
+    .step-label {
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 54px;
+      color: #eef1f5;
+      letter-spacing: -0.015em;
+      max-width: 640px;
+      line-height: 1.14;
+      will-change: transform, opacity;
+    }
+
+    /* Ledger card — BIGGER */
+    .ledger-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+      padding: 72px 96px;
+      min-width: 620px;
+      background: rgba(238, 241, 245, 0.96);
+      border-radius: 28px;
+      box-shadow: 0 36px 110px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .ledger-fig {
+      font-family: "Inter", sans-serif;
+      font-weight: 800;
+      font-size: 260px;
+      line-height: 1;
+      color: #0d1826;
+      letter-spacing: -0.045em;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .ledger-currency {
+      font-size: 130px;
+      line-height: 1.1;
+      padding-top: 26px;
+      color: #1f3a68;
+      font-weight: 700;
+    }
+    .ledger-rule {
+      width: 160px;
+      height: 4px;
+      background: #1f3a68;
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+    .ledger-label {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: 36px;
+      letter-spacing: 0.22em;
+      color: #4b5a6d;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* Wordmark CTA — BIGGER, with a soft dark panel behind for legibility */
+    .wm-panel {
+      position: relative;
+      padding: 72px 60px;
+      background: rgba(13, 24, 38, 0.58);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(238, 241, 245, 0.18);
+      border-radius: 32px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .wm-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 34px;
+    }
+    .wm-mark {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 190px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #eef1f5;
+      display: flex;
+      align-items: center;
+      text-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    /* Big ✓ tick replaces the slash in the CTA wordmark */
+    .wm-tick {
+      width: 160px;
+      height: 160px;
+      margin: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      will-change: opacity, transform;
+    }
+    .wm-tick svg { width: 100%; height: 100%; overflow: visible; }
+    .wm-tick path {
+      stroke: #7aa0d4;
+      stroke-width: 16;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 340;
+      stroke-dashoffset: 340;
+      filter: drop-shadow(0 6px 20px rgba(0,0,0,0.4));
+    }
+    .wm-rule {
+      width: 140px;
+      height: 4px;
+      background: #7aa0d4;
+      transform-origin: center;
+      will-change: transform;
+    }
+    .wm-url {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: 50px;
+      color: #eef1f5;
+      letter-spacing: 0.06em;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .wm-fine {
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 30px;
+      color: #cbd4e0;
+      letter-spacing: 0.01em;
+      max-width: 780px;
+      text-align: center;
+      line-height: 1.4;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+  </style>
+</head>
+<body>
+<div id="root" data-composition-id="claim-mate-v3" data-width="1080" data-height="1920" data-start="0" data-duration="25.5">
+
+  <!-- ========================================================= -->
+  <!-- BACKGROUND TRACK (track 0) — continuous 0.0 → 25.5         -->
+  <!-- v4 retimed for en-AU-WilliamNeural @ -12% (24.94s vo)      -->
+  <!-- New scene 0: full-page text hook ("Did ACC decline your    -->
+  <!-- injury treatment?") — DECLINED stamp slams over ACC        -->
+  <!-- and persists through the cut to the real letter photo.    -->
+  <!-- ========================================================= -->
+
+  <!-- 0.0–3.4  TEXT HOOK. Dark canvas, stacked type. Scroll-stopper. -->
+  <!-- "Did A.C.C. decline your injury treatment?" (VTT 0.05–3.02).   -->
+  <!-- DECLINED stamp slams over "ACC" at t=1.15 (right after A.C.C.) -->
+  <!-- and persists through cut to bg-1 at 3.4, exits at 4.4.         -->
+  <div id="bg-0" class="clip bg bg-hook" data-start="0" data-duration="3.4" data-track-index="0">
+    <div class="hook-stage">
+      <div class="hook-line hook-line-1">Did</div>
+      <div class="hook-line hook-line-2">ACC</div>
+      <div class="hook-line hook-line-3">decline your</div>
+      <div class="hook-line hook-line-4">injury treatment?</div>
+    </div>
+  </div>
+
+  <!-- 3.4–5.5  The letter. Cut from text hook to physical denied letter.
+       Voice: "You don't have to accept it." (VTT 3.40–5.14).
+       DECLINED stamp still visible over the letter for first ~1s of this scene. -->
+  <div id="bg-1" class="clip bg" data-start="3.4" data-duration="2.1" data-track-index="0">
+    <img id="bg-1-img" class="bg-media" src="assets/photos/denied-letter.jpg" alt="" />
+  </div>
+
+  <!-- 5.5–9.6  Workspace. Upload moment.
+       Voice: "Upload your decision letter. It takes two minutes." (VTT 5.52–9.23). -->
+  <div id="bg-2" class="clip bg" data-start="5.5" data-duration="4.1" data-track-index="0">
+    <img id="bg-2-img" class="bg-media" src="assets/photos/workspace.jpg" alt="" />
+  </div>
+
+  <!-- 9.6–17.5  Working video. Steps 2 & 3.
+       Voice: "We check your case, and find what A.C.C. missed." (9.61–13.15)
+              "We draft your review, and lodge it within five days." (13.53–17.14)
+       NOTE: inline opacity:0 required — without it the video bleeds through
+       earlier scenes (v2/v3 bug). GSAP flips opacity 1 at 9.6, back to 0 at 17.5. -->
+  <div id="bg-3" class="clip bg" data-start="9.6" data-duration="7.9" data-track-index="0">
+    <video id="bg-3-vid" class="bg-media" src="assets/videos/working-encoded.mp4"
+           muted playsinline preload="metadata" style="opacity:0;"></video>
+  </div>
+
+  <!-- 17.5–25.5  Phone on document. Ledger + CTA wordmark.
+       Voice: "You pay nothing. A.C.C. pays our fee." (17.52–21.07)
+              "Claim Mate. Start your appeal today." (21.46–24.54) -->
+  <div id="bg-4" class="clip bg" data-start="17.5" data-duration="8.0" data-track-index="0">
+    <img id="bg-4-img" class="bg-media" src="assets/photos/phone-doc.jpg" alt="" />
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- OVERLAYS (track 1) — VTT-anchored (v4 William)             -->
+  <!-- ========================================================= -->
+
+  <!-- 1.05–4.55  DECLINED stamp. Slams on "ACC" at t=1.15 (end of A.C.C. in VTT),
+       persists through the bg-0 → bg-1 cut, crumples away at 4.25 as the letter
+       photo speaks for itself. -->
+  <div id="ov-declined" class="clip overlay" data-start="1.05" data-duration="3.5" data-track-index="1">
+    <div class="declined-stage">
+      <div class="declined-rule"></div>
+      <div class="declined-word">DECLINED</div>
+      <div class="declined-strike"></div>
+    </div>
+  </div>
+
+  <!-- 5.65–9.25  Step 01 UPLOAD
+       Voice: "Upload your decision letter. It takes two minutes." (VTT 5.52–9.23) -->
+  <div id="ov-step1" class="clip overlay" data-start="5.65" data-duration="3.6" data-track-index="1">
+    <div class="step-stage">
+      <div class="step-num">01</div>
+      <div class="step-text">
+        <div class="step-kicker">STEP</div>
+        <div class="step-label">Upload your letter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9.70–13.35  Step 02 CHECK
+       Voice: "We check your case, and find what A.C.C. missed." (VTT 9.61–13.15) -->
+  <div id="ov-step2" class="clip overlay" data-start="9.7" data-duration="3.65" data-track-index="1">
+    <div class="step-stage">
+      <div class="step-num">02</div>
+      <div class="step-text">
+        <div class="step-kicker">STEP</div>
+        <div class="step-label">Check what ACC missed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13.55–17.35  Step 03 DRAFT + LODGE
+       Voice: "We draft your review, and lodge it within five days." (VTT 13.53–17.14) -->
+  <div id="ov-step3" class="clip overlay" data-start="13.55" data-duration="3.8" data-track-index="1">
+    <div class="step-stage">
+      <div class="step-num">03</div>
+      <div class="step-text">
+        <div class="step-kicker">STEP</div>
+        <div class="step-label">Draft + lodge — 5 days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 17.60–21.30  Ledger card · $0
+       Voice: "You pay nothing. A.C.C. pays our fee." (VTT 17.52–21.07) -->
+  <div id="ov-ledger" class="clip overlay" data-start="17.6" data-duration="3.7" data-track-index="1">
+    <div class="ledger-stage">
+      <div class="ledger-fig">
+        <span class="ledger-currency">$</span><span>0</span>
+      </div>
+      <div class="ledger-rule"></div>
+      <div class="ledger-label">YOU PAY · ACC PAYS OUR FEE</div>
+    </div>
+  </div>
+
+  <!-- 21.40–25.50  Wordmark CTA with animated tick
+       Voice: "Claim Mate. Start your appeal today." (VTT 21.46–24.54) -->
+  <div id="ov-wordmark" class="clip overlay" data-start="21.4" data-duration="4.1" data-track-index="1">
+    <div class="wm-panel">
+      <div class="wm-stack">
+        <div class="wm-mark">
+          <span class="wm-a">CLAIM</span>
+          <span class="wm-tick">
+            <svg viewBox="0 0 160 160" aria-hidden="true">
+              <!-- Q-curved checkmark, 340u stroke length (matches stroke-dasharray) -->
+              <path d="M 30 90 Q 50 120 66 110 Q 98 58 130 26" />
+            </svg>
+          </span>
+          <span class="wm-b">MATE</span>
+        </div>
+        <div class="wm-rule"></div>
+        <div class="wm-url">claim-mate.co.nz</div>
+        <div class="wm-fine">3 months from your ACC decision letter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- AUDIO — v4 William narration (-12%) + existing music bed    -->
+  <!-- ========================================================= -->
+  <audio id="aud-narration" class="clip"
+         src="assets/voiceover/claim-mate-v4.mp3"
+         data-start="0" data-duration="24.94" data-track-index="9"
+         data-volume="1.0"></audio>
+  <audio id="aud-music" class="clip"
+         src="assets/music/claim-mate-v2-bed.mp3"
+         data-start="0" data-duration="25.5" data-track-index="8"
+         data-volume="0.32"></audio>
+
+  <!-- ========================================================= -->
+  <!-- GLOBAL FX                                                  -->
+  <!-- ========================================================= -->
+  <div class="global-overlay"></div>
+  <div class="vignette"></div>
+
+  <!-- Persistent brand mark — top-left. Each cycle: CLAIM fades in, tick draws,
+       MATE fades in, hold, all fade out, repeat. Subtle pulse throughout. -->
+  <div class="brand-mark">
+    <span class="bm-claim">CLAIM</span>
+    <svg class="bm-tick" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M 10 26 Q 16 34 20 32 Q 28 20 38 10" />
+    </svg>
+    <span class="bm-mate">MATE</span>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(function () {
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+
+  // ============================================================
+  // v4 timeline — William @ -12% VTT anchors
+  //   Hook:     0.00–3.40  bg-0 (text)
+  //   Letter:   3.40–5.50  bg-1
+  //   Upload:   5.50–9.60  bg-2
+  //   Work:     9.60–17.50 bg-3 (video)
+  //   CTA:      17.50–25.50 bg-4
+  // ============================================================
+
+  // ---------- Hook scene — staggered stack, ACC is the hero word ----------
+  tl.from(".hook-line-1", { y: 38, opacity: 0, duration: 0.50, ease: "power3.out" },     0.12);
+  tl.from(".hook-line-2", { y: 60, scale: 0.90, opacity: 0, duration: 0.60, ease: "back.out(1.5)" }, 0.26);
+  tl.from(".hook-line-3", { y: 28, opacity: 0, duration: 0.42, ease: "power3.out" },     0.48);
+  tl.from(".hook-line-4", { y: 28, opacity: 0, duration: 0.42, ease: "power3.out" },     0.62);
+  // Subtle hold-state pulse on ACC just before the stamp lands
+  tl.to(".hook-line-2", { scale: 1.03, duration: 0.22, ease: "power2.inOut", yoyo: true, repeat: 1 }, 0.95);
+  // Hook lines fade on cut to bg-1 (3.4) — transition lead-out
+  tl.to([".hook-line-1", ".hook-line-3", ".hook-line-4"],
+    { opacity: 0, duration: 0.30, ease: "power2.in" }, 3.05);
+  tl.to(".hook-line-2", { opacity: 0, scale: 1.08, duration: 0.30, ease: "power2.in" }, 3.05);
+
+  // ---------- Backgrounds — Ken-Burns push per scene ----------
+  // bg-1: 3.4-5.5  (letter, slow downward drift, 2.1s)
+  tl.fromTo("#bg-1-img", { scale: 1.0,  yPercent: 0   },
+                         { scale: 1.06, yPercent: -1.2, duration: 2.1, ease: "none" }, 3.4);
+  // bg-2: 5.5-9.6  (workspace, slow leftward pan, 4.1s)
+  tl.fromTo("#bg-2-img", { scale: 1.0,  xPercent: 0   },
+                         { scale: 1.08, xPercent: -1.8, duration: 4.1, ease: "none" }, 5.5);
+  // bg-3: 9.6-17.5  (working video, 7.9s)
+  // Force-hide video before/after its scene — prevents autoplay bleed-through.
+  tl.set("#bg-3-vid", { opacity: 1 }, 9.6);
+  tl.fromTo("#bg-3-vid", { scale: 1.0,  xPercent: 0   },
+                         { scale: 1.06, xPercent: 1.4,  duration: 7.9, ease: "none" }, 9.6);
+  tl.set("#bg-3-vid", { opacity: 0 }, 17.5);
+  // bg-4: 17.5-25.5  (phone-doc ledger + CTA, 8.0s)
+  tl.fromTo("#bg-4-img", { scale: 1.0,  yPercent: 0   },
+                         { scale: 1.10, yPercent: -1.0, duration: 8.0, ease: "none" }, 17.5);
+
+  // ---------- Persistent brand mark — corner anchor with cycling pulse ----------
+  // Container fades in when bg-1 appears, fades out before the big CTA lands.
+  tl.fromTo(".brand-mark",
+    { x: -16, opacity: 0 },
+    { x: 0,   opacity: 0.92, duration: 0.45, ease: "power3.out" }, 3.55);
+  tl.to(".brand-mark",
+    { x: -16, opacity: 0, duration: 0.35, ease: "power3.in" }, 19.90);
+
+  // Cycling pulse inside the brand mark: CLAIM → tick draws → MATE → hold → all fade out → repeat.
+  // Cycle length 1.80s. 9 plays × 1.80 = 16.2s → runs 3.55 → 19.75, fading out with container.
+  const brandCycle = gsap.timeline({ repeat: 8 });
+  brandCycle
+    .fromTo(".bm-claim",
+      { x: -10, opacity: 0 },
+      { x: 0,   opacity: 1, duration: 0.22, ease: "power3.out" }, 0.00)
+    .fromTo(".bm-tick path",
+      { strokeDashoffset: 60 },
+      { strokeDashoffset: 0, duration: 0.38, ease: "power2.inOut" }, 0.22)
+    .fromTo(".bm-mate",
+      { x: 10, opacity: 0 },
+      { x: 0,  opacity: 1, duration: 0.22, ease: "power3.out" }, 0.60)
+    // Hold, then all clear for the next cycle
+    .to([".bm-claim", ".bm-mate"],
+      { opacity: 0, duration: 0.25, ease: "power2.in" }, 1.55)
+    .to(".bm-tick path",
+      { strokeDashoffset: 60, duration: 0.25, ease: "power2.in" }, 1.55);
+  tl.add(brandCycle, 3.55);
+
+  // ---------- Overlay: DECLINED stamp ----------
+  // Slams in at 1.15 (right after William finishes saying "A.C.C."), holds across the
+  // bg-0 → bg-1 cut (3.4), crumples away at 4.25 over the physical letter.
+  tl.fromTo("#ov-declined .declined-stage",
+    { scale: 1.6, rotation: -10, opacity: 0 },
+    { scale: 1.0, rotation: -4,  opacity: 1, duration: 0.28, ease: "expo.out" }, 1.15);
+  tl.fromTo("#ov-declined .declined-rule",
+    { scale: 1.5, rotation: -8, opacity: 0 },
+    { scale: 1.0, rotation: -4, opacity: 0.95, duration: 0.28, ease: "expo.out" }, 1.15);
+  tl.fromTo("#ov-declined .declined-word",
+    { scale: 1.5, rotation: -8, opacity: 0 },
+    { scale: 1.0, rotation: -4, opacity: 1, duration: 0.28, ease: "expo.out" }, 1.15);
+  tl.to("#ov-declined .declined-rule, #ov-declined .declined-word",
+    { rotation: -3, duration: 0.35, ease: "elastic.out(1, 0.5)" }, 1.43);
+  tl.to("#ov-declined .declined-strike",
+    { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, 1.70);
+  // Exit: crumple down-right + rotate away (after holding over the letter photo)
+  tl.to("#ov-declined .declined-stage",
+    { y: 60, x: 40, scale: 0.7, rotation: -18, opacity: 0, duration: 0.35, ease: "power3.in" }, 4.20);
+
+  // ---------- Overlay: step badges — snappy entrance + varied 3-direction exits ----------
+  function stepEntrance(hostSel, at) {
+    tl.fromTo(`${hostSel} .step-stage`,
+      { y: 50, scale: 0.88, opacity: 0 },
+      { y: 0,  scale: 1,    opacity: 1, duration: 0.38, ease: "back.out(1.6)" }, at);
+    tl.fromTo(`${hostSel} .step-num`,
+      { scale: 1.5, opacity: 0 },
+      { scale: 1,   opacity: 1, duration: 0.30, ease: "expo.out" }, at + 0.08);
+    tl.fromTo(`${hostSel} .step-kicker`,
+      { x: -18, opacity: 0 },
+      { x: 0,   opacity: 1, duration: 0.25, ease: "power4.out" }, at + 0.18);
+    tl.fromTo(`${hostSel} .step-label`,
+      { x: -18, opacity: 0 },
+      { x: 0,   opacity: 1, duration: 0.30, ease: "power4.out" }, at + 0.24);
+  }
+  function stepExit(hostSel, at, dx, dy, rot) {
+    tl.to(`${hostSel} .step-stage`,
+      { x: dx, y: dy, rotation: rot || 0, opacity: 0, duration: 0.32, ease: "power3.in" }, at);
+  }
+  stepEntrance("#ov-step1",  5.65);
+  stepExit(    "#ov-step1",  8.95,  140,   0,   4);   // exits right  ("Upload your letter")
+  stepEntrance("#ov-step2",  9.70);
+  stepExit(    "#ov-step2", 13.05,   0, -140,  -3);   // exits up     ("Check what ACC missed")
+  stepEntrance("#ov-step3", 13.55);
+  stepExit(    "#ov-step3", 17.05, -140,   0,  -4);   // exits left   ("Draft + lodge")
+
+  // ---------- Overlay: ledger card (17.6 → 21.3) — snappy + collapse exit ----------
+  tl.fromTo("#ov-ledger .ledger-stage",
+    { y: 40, scale: 0.85, opacity: 0 },
+    { y: 0,  scale: 1,    opacity: 1, duration: 0.40, ease: "back.out(1.8)" }, 17.6);
+  tl.fromTo("#ov-ledger .ledger-fig",
+    { scale: 1.4, opacity: 0 },
+    { scale: 1,   opacity: 1, duration: 0.30, ease: "expo.out" }, 17.70);
+  tl.fromTo("#ov-ledger .ledger-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.38, ease: "power2.out" }, 17.95);
+  tl.fromTo("#ov-ledger .ledger-label",
+    { y: 10, opacity: 0 },
+    { y: 0,  opacity: 1, duration: 0.32, ease: "power2.out" }, 18.05);
+  // Exit: collapse inward + lift
+  tl.to("#ov-ledger .ledger-stage",
+    { scale: 0.72, y: -30, opacity: 0, duration: 0.32, ease: "power3.in" }, 20.95);
+
+  // ---------- Overlay: wordmark CTA (21.4 → 25.5) — stack + animated tick draw-in ----------
+  tl.fromTo("#ov-wordmark .wm-panel",
+    { scale: 0.82, opacity: 0 },
+    { scale: 1,    opacity: 1, duration: 0.42, ease: "back.out(1.5)" }, 21.4);
+  tl.fromTo("#ov-wordmark .wm-a",
+    { x: -34, opacity: 0 },
+    { x: 0,   opacity: 1, duration: 0.38, ease: "power4.out" }, 21.55);
+  // Tick wrapper scales in, then the stroke draws in (satisfying the brand's promise)
+  tl.fromTo("#ov-wordmark .wm-tick",
+    { scale: 0.4, opacity: 0 },
+    { scale: 1,   opacity: 1, duration: 0.35, ease: "back.out(2.4)" }, 21.65);
+  tl.fromTo("#ov-wordmark .wm-tick path",
+    { strokeDashoffset: 340 },
+    { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 21.78);
+  tl.fromTo("#ov-wordmark .wm-b",
+    { x: 34, opacity: 0 },
+    { x: 0,  opacity: 1, duration: 0.38, ease: "power4.out" }, 21.80);
+  tl.fromTo("#ov-wordmark .wm-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.35, ease: "power2.out" }, 22.15);
+  tl.fromTo("#ov-wordmark .wm-url",
+    { y: 14, opacity: 0 },
+    { y: 0,  opacity: 1, duration: 0.32, ease: "power3.out" }, 22.28);
+  tl.fromTo("#ov-wordmark .wm-fine",
+    { y: 8, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.32, ease: "power2.out" }, 22.48);
+
+  // ---------- Tail: deepen vignette + overlay into silence ----------
+  tl.to(".vignette",       { opacity: 1.15, duration: 1.1, ease: "power1.out" }, 24.3);
+  tl.to(".global-overlay", { opacity: 0.85, duration: 1.1, ease: "power1.out" }, 24.3);
+
+  window.__timelines["claim-mate-v3"] = tl;
+})();
+</script>
+</body>
+</html>

@@ -37,7 +37,7 @@
 //                      single-file output (byte-identical to pre-flag).
 //   --auto-fix         run `npm run fix:apply` if quality gate fails
 //   --allow-watch      allow render even when the verifier verdict is `watch`.
-//                      Default: BLOCKED. Per docs/PROCESS.md (wave-Q lesson),
+//                      Default: BLOCKED. Per docs/skills/how-a-video-gets-made.md (wave-Q lesson),
 //                      only `ship` verdicts pass — `watch` triggers another
 //                      iteration of the silent loop. Pass --allow-watch to
 //                      override (e.g., when intentionally rendering for
@@ -108,7 +108,7 @@ const keepArtifacts = !!flags["keep-artifacts"];
 // between assemble and quality-gate. ON by default; --no-verify opts out.
 // Always off in dry-run (synthetic copy doesn't pass meaningful checks).
 const skipVerify = !!flags["no-verify"] || dryRun;
-// Per docs/PROCESS.md: only `ship` verdicts pass the render gate. `watch`
+// Per docs/skills/how-a-video-gets-made.md: only `ship` verdicts pass the render gate. `watch`
 // blocks render by default, forcing another silent-loop iteration. Pass
 // --allow-watch to override (e.g. when the user wants to render-and-critique).
 const allowWatch = !!flags["allow-watch"] || dryRun;
@@ -169,7 +169,7 @@ const TEMPLATE_REGISTRY = {
   "social-reel":     { file: "social-reel-15s.html",   seconds: 15, dims: [1080, 1920], vibe: "kinetic-pop"    },
   "hero-promo":      { file: "hero-promo-30s.html",    seconds: 30, dims: [1920, 1080], vibe: "kinetic-pop"    },
   "product-launch":  { file: "product-launch-30s.html",seconds: 30, dims: [1920, 1080], vibe: "kinetic-pop"    },
-  "before-after":    { file: "before-after-30s.html",  seconds: 30, dims: [1920, 1080], vibe: "kinetic-pop"    },
+  "before-after":    { file: "before-after-20s.html",  seconds: 20, dims: [1920, 1080], vibe: "kinetic-pop"    },
   "faq-quick":       { file: "faq-quick-30s.html",     seconds: 30, dims: [1920, 1080], vibe: "warm-community" },
   "community-app-tour": { file: "community-app-tour-30s.html", seconds: 30, dims: [1080, 1920], vibe: "warm-community" },
   "kinetic-product":    { file: "kinetic-product-30s.html",    seconds: 30, dims: [1080, 1920], vibe: "kinetic-pop"   },
@@ -1438,7 +1438,7 @@ try {
       }
       const reportNote = report ? ` · report: ${report}` : "";
       if (verdict === "watch") {
-        // Per docs/PROCESS.md (wave-Q lesson): only `ship` verdicts pass the
+        // Per docs/skills/how-a-video-gets-made.md (wave-Q lesson): only `ship` verdicts pass the
         // render gate. `watch` triggers another iteration of the silent loop.
         // Block only when render would actually run — --no-render iterations
         // continue (the whole point is to loop without burning render time).
@@ -1449,7 +1449,7 @@ try {
           return { output: `verdict: watch (--no-render, iteration mode)${reportNote}`, soft: true };
         }
         throw new Error(
-          `verdict: watch — render BLOCKED by default (PROCESS.md gate)${reportNote}\n` +
+          `verdict: watch — render BLOCKED by default (founding doc render gate)${reportNote}\n` +
           `  Loop the silent cycle (fix findings → re-verify) until verdict=ship.\n` +
           `  Override: pass --allow-watch to render anyway.`
         );
@@ -1507,7 +1507,7 @@ try {
   // clip) compared to re-rendering. The default (no --aspects flag) is
   // byte-identical to pre-flag behaviour: one render, one MP4.
   // ----- Stage 8.5: frame flipbook ----------------------------------------
-  // Per docs/PROCESS.md cycle step 2 + memory rule
+  // Per docs/skills/how-a-video-gets-made.md cycle step 2 + memory rule
   // `feedback_silent_loop_not_skipped`: the verifier scrub is not enough on
   // its own. Extract frames the agent + human can READ before render.
   // Skipped on --no-verify and --no-render (both imply not gating render).

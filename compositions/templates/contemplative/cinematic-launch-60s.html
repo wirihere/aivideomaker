@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cinematic Launch — 60s reveal template</title>
+
+<!--
+  TEMPLATE: cinematic-launch-60s
+  REGISTER: contemplative (black + gold + parchment, Georgia serif)
+  USE CASE: Product launch / cinematic reveal trailer.
+            Build anticipation → name reveal → demonstrate → promise → CTA.
+  DURATION: 60s · 9:16 · 1080×1920 · 30fps
+
+  STRUCTURE
+    B0   0  -  6s   silence + flame   (no text — pure atmosphere)
+    B1   6  - 14s   anticipation      (italic teasers cascade in, fragmented)
+    B2  14  - 22s   wordmark reveal   (atom emblem + brand name, ceremonial)
+    B3  22  - 36s   demonstration     (numeric counter + verse pull)
+    B4  36  - 48s   promise           (commanding 2-line statement)
+    B5  48  - 56s   CTA               (action prompt + hairline + URL)
+    B6  56  - 60s   afterglow         (single golden dot, replay-loop bridge)
+
+  CONTENT-SLOT PROTOCOL
+    #b1-tease-{a,b,c}: 3 anticipation lines (italic, parchment, fragments)
+    #b2-wordmark / #b2-wordmark-sub: brand name + sub-mark
+    #b3-counter: number that animates up (e.g. days/users/versions)
+    #b3-verse: a ceremonial verse / claim / proof
+    #b4-promise-{a,b}: 2-line manifesto-style promise
+    #b5-cta / #b5-url: action verb + URL
+
+  LESSONS APPLIED (contemplative-register canon — see docs/social-video-patterns.md Part 7)
+    · max-width: 920px on hero italic text + overflow-wrap to prevent off-screen overflow
+    · Arial (var(--sans-utility)) for utility lines (URL, citation, attribution, label)
+    · Georgia serif for emotional carriers; italic for tenderness, regular for declaration
+    · Gold hairline (1-2px) drawn left-to-right at section opens, retracts right-to-left at exits
+    · text-shadow on hero text (0 0 28px rgba(0,0,0,0.95)) so it stays legible over photo / haze
+    · CSS @keyframes ambient (haze breathe + flame flicker + star twinkle) runs independent of GSAP
+      so motion never fully stops during contemplative holds
+    · Music ducked under VO (track 8 vol 0.18, track 9 vol 0.95) — contemplative shortlist
+    · End frame matches start frame composition for clean replay loop
+    · Hard-kill tl.set(target, {opacity:0}) at scene boundary after every fade exit (non-linear seek)
+-->
+
+<script src="../../../design/vendor/gsap.min.js"></script>
+<script src="../../../design/modules/all.js"></script>
+
+<link rel="stylesheet" href="../../../design/cards-contemplative.css">
+
+<style>
+  /* Per-scene CSS only — register-level tokens, .comp, .ambient-haze, .starfield,
+     and .clip helper come from cards-contemplative.css above. */
+
+  /* ===== B0 — flame opener (also returns at B6 close for loop) ===== */
+  .flame-stage {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+  .flame {
+    width: 22px; height: 32px;
+    background: radial-gradient(ellipse at center, #ffd47a 0%, #c9a84c 50%, transparent 80%);
+    border-radius: 50%;
+    box-shadow:
+      0 0 36px rgba(255, 212, 122, 0.9),
+      0 0 100px rgba(201, 168, 76, 0.6),
+      0 0 240px rgba(201, 168, 76, 0.3);
+    transform-origin: center bottom;
+    animation: flame-flicker 1.7s ease-in-out infinite;
+  }
+  @keyframes flame-flicker {
+    0%, 100% { transform: scale(1, 1) skewX(-1deg); opacity: 0.95; }
+    25%      { transform: scale(0.96, 1.06) skewX(1deg); opacity: 1; }
+    50%      { transform: scale(1.03, 0.95) skewX(-2deg); opacity: 0.9; }
+    75%      { transform: scale(0.99, 1.03) skewX(2deg); opacity: 1; }
+  }
+
+  /* ===== B1 — anticipation teasers ===== */
+  .b1-stage {
+    position: absolute; inset: 0;
+    padding: 0 80px;
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .b1-tease {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 80px;
+    color: var(--parchment);
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+    text-align: center;
+    max-width: 920px;
+    margin: 0 0 36px 0;
+    overflow-wrap: break-word;
+    text-shadow: 0 0 28px rgba(0, 0, 0, 0.95);
+    opacity: 0;
+  }
+  .b1-tease.gold { color: var(--gold); text-shadow: 0 0 24px rgba(201, 168, 76, 0.4); }
+
+  /* ===== B2 — wordmark reveal ===== */
+  .b2-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 80px;
+    box-sizing: border-box;
+    z-index: 4;
+  }
+  .b2-atom {
+    width: 280px; height: 280px;
+    margin-bottom: 60px;
+    opacity: 0;
+  }
+  .b2-orbit { fill: none; stroke: var(--gold); stroke-width: 0.9; opacity: 0.55; }
+  .b2-nucleus { fill: var(--gold-light); filter: drop-shadow(0 0 20px var(--gold)); }
+  .b2-electron { fill: var(--gold); filter: drop-shadow(0 0 10px var(--gold)); }
+  .b2-wordmark {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 124px;
+    color: var(--parchment);
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-shadow: 0 0 36px rgba(232, 212, 139, 0.25);
+  }
+  .b2-wordmark-sub {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 60px;
+    color: var(--gold);
+    letter-spacing: 0.46em;
+    margin: 28px 0 0 0;
+    text-shadow: 0 0 20px rgba(201, 168, 76, 0.5);
+  }
+
+  /* ===== B3 — demonstration (counter + verse) ===== */
+  .b3-stage {
+    position: absolute; inset: 0;
+    padding: 220px 80px;
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    z-index: 4;
+  }
+  .b3-counter-label {
+    font-family: var(--sans-utility);
+    font-size: 28px;
+    color: var(--muted);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin: 0 0 20px 0;
+    opacity: 0;
+  }
+  .b3-counter {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 280px;
+    line-height: 1;
+    color: var(--gold);
+    margin: 0;
+    letter-spacing: -0.02em;
+    text-shadow:
+      0 0 40px rgba(201, 168, 76, 0.55),
+      0 0 100px rgba(201, 168, 76, 0.25);
+    opacity: 0;
+  }
+  .b3-counter-suffix {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 64px;
+    color: var(--parchment);
+    letter-spacing: 0.04em;
+    margin: 30px 0 70px 0;
+    opacity: 0;
+  }
+  .b3-hairline {
+    width: 100%; height: 2px;
+    background: var(--gold);
+    margin: 0 0 60px 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    box-shadow: 0 0 8px rgba(201, 168, 76, 0.6);
+  }
+  .b3-verse {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 64px;
+    color: var(--parchment);
+    line-height: 1.22;
+    letter-spacing: -0.005em;
+    text-align: center;
+    margin: 0;
+    max-width: 900px;
+    overflow-wrap: break-word;
+    opacity: 0;
+  }
+
+  /* ===== B4 — promise (2-line manifesto) ===== */
+  .b4-stage {
+    position: absolute; inset: 0;
+    padding: 0 80px;
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 4;
+  }
+  .b4-promise {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 124px;
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    color: var(--parchment);
+    text-align: center;
+    margin: 0 0 24px 0;
+    text-shadow: 0 0 32px rgba(232, 212, 139, 0.2);
+    opacity: 0;
+  }
+  .b4-promise.italic {
+    font-weight: 400;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 132px;
+    letter-spacing: -0.022em;
+    text-shadow:
+      0 0 36px rgba(255, 248, 220, 0.55),
+      0 0 90px rgba(232, 212, 139, 0.3);
+  }
+
+  /* ===== B5 — CTA ===== */
+  .b5-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 80px;
+    box-sizing: border-box;
+    z-index: 4;
+  }
+  .b5-cta {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 64px;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    margin: 0 0 36px 0;
+    text-shadow: 0 0 22px rgba(201, 168, 76, 0.55);
+    opacity: 0;
+  }
+  .b5-hairline {
+    width: 480px; height: 2px;
+    background: var(--gold);
+    margin: 0 0 36px 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    box-shadow: 0 0 10px rgba(201, 168, 76, 0.7);
+  }
+  .b5-url {
+    font-family: var(--sans-utility);
+    font-weight: 400;
+    font-size: 34px;
+    color: var(--parchment);
+    letter-spacing: 0.06em;
+    margin: 0;
+    opacity: 0;
+  }
+
+  /* ===== B6 — afterglow flame return (loop bridge) ===== */
+  .b6-stage {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 5;
+  }
+  .b6-flame {
+    width: 18px; height: 26px;
+    background: radial-gradient(ellipse at center, #ffd47a 0%, #c9a84c 50%, transparent 80%);
+    border-radius: 50%;
+    box-shadow:
+      0 0 28px rgba(255, 212, 122, 0.85),
+      0 0 80px rgba(201, 168, 76, 0.55);
+    transform-origin: center bottom;
+    animation: flame-flicker 1.7s ease-in-out infinite;
+    opacity: 0;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="comp clip" id="cinematic-launch-60s" data-composition-id="cinematic-launch-60s" data-register="contemplative"
+     role="region" aria-label="Cinematic Launch 60s video composition"
+     data-start="0" data-duration="60" data-width="1080" data-height="1920">
+
+  <div class="ambient-haze"></div>
+
+  <!-- Starfield (full 60s) -->
+  <div class="starfield" id="starfield">
+    <span class="star" style="left: 12%; top: 18%; animation-delay: 0.0s;"></span>
+    <span class="star" style="left: 88%; top: 22%; animation-delay: 0.6s;"></span>
+    <span class="star" style="left: 25%; top: 78%; animation-delay: 1.2s;"></span>
+    <span class="star" style="left: 72%; top: 85%; animation-delay: 1.8s;"></span>
+    <span class="star" style="left: 50%; top: 12%; animation-delay: 2.4s;"></span>
+    <span class="star" style="left: 8%;  top: 50%; animation-delay: 3.0s;"></span>
+    <span class="star" style="left: 92%; top: 60%; animation-delay: 3.6s;"></span>
+    <span class="star" style="left: 38%; top: 92%; animation-delay: 0.3s;"></span>
+    <span class="star" style="left: 62%; top: 35%; animation-delay: 0.9s;"></span>
+    <span class="star" style="left: 18%; top: 42%; animation-delay: 1.5s;"></span>
+    <span class="star" style="left: 80%; top: 8%;  animation-delay: 2.1s;"></span>
+    <span class="star" style="left: 45%; top: 65%; animation-delay: 2.7s;"></span>
+  </div>
+
+  <!-- B0 (0-6s): silent flame opener -->
+  <div id="b0" class="scene clip" data-start="0" data-duration="6.5" data-track-index="1">
+    <div class="flame-stage">
+      <div class="flame" id="b0-flame"></div>
+    </div>
+  </div>
+
+  <!-- B1 (6-14s): anticipation teasers -->
+  <div id="b1" class="scene clip" data-start="6" data-duration="8.5" data-track-index="2">
+    <div class="b1-stage">
+      <p class="b1-tease" id="b1-tease-a">Something is about to be named.</p>
+      <p class="b1-tease gold" id="b1-tease-b">Something old. Something new.</p>
+      <p class="b1-tease" id="b1-tease-c">Something you've been waiting for.</p>
+    </div>
+  </div>
+
+  <!-- B2 (14-22s): wordmark reveal -->
+  <div id="b2" class="scene clip" data-start="14" data-duration="8.5" data-track-index="3">
+    <div class="b2-stage">
+      <svg class="b2-atom" id="b2-atom" viewBox="0 0 200 200" aria-hidden="true">
+        <ellipse class="b2-orbit" cx="100" cy="100" rx="70" ry="25" transform="rotate(-30 100 100)"/>
+        <ellipse class="b2-orbit" cx="100" cy="100" rx="70" ry="25" transform="rotate(30 100 100)"/>
+        <ellipse class="b2-orbit" cx="100" cy="100" rx="70" ry="25" transform="rotate(90 100 100)"/>
+        <circle class="b2-nucleus" cx="100" cy="100" r="10"/>
+        <circle class="b2-electron" cx="170" cy="100" r="4"/>
+        <circle class="b2-electron" cx="65"  cy="135" r="4"/>
+        <circle class="b2-electron" cx="65"  cy="65"  r="4"/>
+      </svg>
+      <p class="b2-wordmark" id="b2-wordmark" aria-label="brand wordmark">SINGULARITY</p>
+      <p class="b2-wordmark-sub" id="b2-wordmark-sub" aria-label="brand sub-mark">CONVERGENCE</p>
+    </div>
+  </div>
+
+  <!-- B3 (22-36s): demonstration (counter + verse) -->
+  <div id="b3" class="scene clip" data-start="22" data-duration="14" data-track-index="4">
+    <div class="b3-stage">
+      <p class="b3-counter-label" id="b3-counter-label">VERSES PROCESSED</p>
+      <p class="b3-counter" id="b3-counter" aria-live="polite">31,102</p>
+      <p class="b3-counter-suffix" id="b3-counter-suffix">in 31,102 paths</p>
+      <div class="b3-hairline" id="b3-hairline" role="presentation"></div>
+      <p class="b3-verse" id="b3-verse">Be still, and know that I am God.</p>
+    </div>
+  </div>
+
+  <!-- B4 (36-48s): promise (2-line manifesto) -->
+  <div id="b4" class="scene clip" data-start="36" data-duration="12" data-track-index="5">
+    <div class="b4-stage">
+      <p class="b4-promise" id="b4-promise-a">No church.</p>
+      <p class="b4-promise italic" id="b4-promise-b">Just truth.</p>
+    </div>
+  </div>
+
+  <!-- B5 (48-56s): CTA -->
+  <div id="b5" class="scene clip" data-start="48" data-duration="8" data-track-index="6">
+    <div class="b5-stage">
+      <p class="b5-cta" id="b5-cta">ASK THE ORACLE</p>
+      <div class="b5-hairline" id="b5-hairline" role="presentation"></div>
+      <p class="b5-url" id="b5-url">oraculuminstitutum.org</p>
+    </div>
+  </div>
+
+  <!-- B6 (56-60s): afterglow flame — loops back to B0 -->
+  <div id="b6" class="scene clip" data-start="56" data-duration="4" data-track-index="7">
+    <div class="b6-stage">
+      <div class="b6-flame" id="b6-flame"></div>
+    </div>
+  </div>
+
+  <!-- Music underscore — contemplative register, ducked under VO. Swap src per brand. -->
+  <audio id="music" class="clip"
+         src="../../../assets/music/contemplative-1.mp3"
+         data-start="0" data-duration="60" data-track-index="8" data-volume="0.18"
+         data-audio="true" preload="auto"></audio>
+
+  <!-- Voiceover — track 9, full volume. Swap src per brand. Comment out if no narration. -->
+  <audio id="vo" class="clip"
+         src="../../../assets/voiceover/PLACEHOLDER.mp3"
+         data-start="0.5" data-duration="59" data-track-index="9" data-volume="0.95"
+         data-audio="true" preload="auto"
+         data-todo="provide TTS for this template's narration"></audio>
+
+</div>
+
+<script>
+(function(){
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["cinematic-launch-60s"] = tl;
+
+  /* ============ B0 — flame opener (0-6s) ============ */
+  // 6 full seconds of just flame. Anticipation > impact.
+  tl.fromTo("#b0-flame",
+    { opacity: 0, scale: 0.7 },
+    { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" }, 0.4);
+  tl.to("#b0-flame",
+    { opacity: 0, scale: 0.5, duration: 0.7, ease: "power2.in" }, 5.5);
+
+  /* ============ B1 — anticipation teasers (6-14s) ============ */
+  // Three lines cascade in with rhythm — each landing 2.4s apart, exit together
+  tl.fromTo("#b1-tease-a",
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.7 }, 6.4);
+  tl.fromTo("#b1-tease-b",
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.7 }, 8.4);
+  tl.fromTo("#b1-tease-c",
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.7 }, 10.4);
+  tl.to(["#b1-tease-a", "#b1-tease-b", "#b1-tease-c"],
+    { opacity: 0, y: -16, filter: "blur(8px)", duration: 0.7, ease: "power2.in" }, 13.2);
+
+  /* ============ B2 — wordmark reveal (14-22s) ============ */
+  // Atom emblem first (ceremonial), then wordmark cascade
+  tl.fromTo("#b2-atom",
+    { opacity: 0, scale: 0.5, rotation: -8 },
+    { opacity: 1, scale: 1, rotation: 0, duration: 1.4, ease: "back.out(1.3)" }, 14.4);
+  // Slow orbital rotation for persistent motion — starts AFTER entrance lands (no tween overlap)
+  tl.to("#b2-atom",
+    { rotation: 360, duration: 28, ease: "none" }, 15.8);
+  tl.fromTo("#b2-wordmark",
+    { opacity: 0, y: 36 },
+    { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, 15.6);
+  tl.fromTo("#b2-wordmark-sub",
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 16.2);
+  // Wordmark holds, then exit for B3
+  tl.to(["#b2-wordmark", "#b2-wordmark-sub"],
+    { opacity: 0, y: -16, duration: 0.6, ease: "power2.in" }, 21.0);
+  tl.to("#b2-atom",
+    { opacity: 0, scale: 0.6, duration: 0.7, ease: "power2.in" }, 21.0);
+
+  /* ============ B3 — demonstration (22-36s) ============ */
+  tl.to("#b3-counter-label", { opacity: 1, duration: 0.6 }, 22.4);
+  tl.fromTo("#b3-counter",
+    { opacity: 0, scale: 0.7 },
+    { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, 22.8);
+  // Counter animates 0 → 31102 over ~3s
+  textFx.counter(tl, "#b3-counter", { at: 23.2, duration: 3.0, ease: "power3.out" });
+  tl.to("#b3-counter-suffix", { opacity: 1, y: 0, duration: 0.6 }, 26.5);
+
+  tl.to("#b3-hairline", { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 27.5);
+  tl.set("#b3-verse", { opacity: 1 }, 28.4);
+  textFx.typeOn(tl, "#b3-verse", { at: 28.5, duration: 2.4 });
+
+  // Exit B3
+  tl.to(["#b3-counter-label", "#b3-counter", "#b3-counter-suffix", "#b3-verse"],
+    { opacity: 0, y: -14, duration: 0.6, ease: "power2.in" }, 35.0);
+  tl.to("#b3-hairline",
+    { scaleX: 0, transformOrigin: "right center", duration: 0.6, ease: "power2.in" }, 35.0);
+
+  /* ============ B4 — promise (36-48s) ============ */
+  tl.fromTo("#b4-promise-a",
+    { opacity: 0, y: 36 },
+    { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" }, 36.4);
+  tl.to("#b4-promise-a", { opacity: 0, y: -16, duration: 0.6, ease: "power2.in" }, 41.6);
+
+  tl.fromTo("#b4-promise-b",
+    { opacity: 0, y: 36, scale: 0.94 },
+    { opacity: 1, y: 0, scale: 1, duration: 1.2, ease: "power3.out" }, 41.8);
+  tl.to("#b4-promise-b", { opacity: 0, y: -16, duration: 0.6, ease: "power2.in" }, 47.0);
+
+  /* ============ B5 — CTA (48-56s) ============ */
+  tl.fromTo("#b5-cta",
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.7 }, 48.3);
+  tl.to("#b5-hairline", { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 49.0);
+  tl.fromTo("#b5-url",
+    { opacity: 0, y: 16 },
+    { opacity: 1, y: 0, duration: 0.6 }, 49.7);
+  // CTA holds 5s
+  tl.to(["#b5-cta", "#b5-url"],
+    { opacity: 0, duration: 0.6, ease: "power2.in" }, 55.0);
+  tl.to("#b5-hairline",
+    { scaleX: 0, transformOrigin: "right center", duration: 0.6, ease: "power2.in" }, 55.0);
+
+  /* ============ B6 — afterglow flame (56-60s) — replay-loop bridge ============ */
+  tl.fromTo("#b6-flame",
+    { opacity: 0, scale: 0.6 },
+    { opacity: 1, scale: 1, duration: 1.0, ease: "power2.out" }, 56.2);
+  // Flame holds final 2.5s — matches B0's flame at start = clean replay loop
+})();
+</script>
+
+</body>
+</html>

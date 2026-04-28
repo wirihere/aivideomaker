@@ -271,6 +271,7 @@ npm run pick:music -- --template=warm-community
 - **No two `<img>` tags can have the same `src` AND inherit the same `data-start/duration`** — lint warns about "duplicate media discovery". Use distinct icon paths or wrap one in a `<use>` from a `<symbol>`.
 - **Overlapping GSAP tweens on the same property** require `overwrite: "auto"`. The lint catches this.
 - **Render `<video>` with sparse keyframes** triggers a re-encode warning. Pre-encode bg videos with `ffmpeg -c:v libx264 -r 30 -g 30 -keyint_min 30 -movflags +faststart`.
+- **Scene-wrapper `data-duration` must span the full visibility window, not the entrance window.** A `class="scene clip"` wrapper hard-hides its contents when its `data-start + data-duration` ends, regardless of any GSAP tween still acting on children. If a quote is meant to persist while a later attribution scene reveals beneath it, the quote's wrapper duration must cover BOTH spans — terminate it with the explicit GSAP fade exit, not the wrapper boundary. (Caught 2026-04-27 on the testimonial-30s template t=14: B1 wrapper ended at 14s, quote vanished mid-narration; fixed by extending B1 `data-duration` 11→18 to cover the B2 attribution window. Frame-flipbook caught it pre-render.)
 
 ### Background scrapes — fire and forget while you build
 - Long-running Playwright fetches go in `run_in_background: true` and the composition uses `<img onerror="this.style.display='none'">` so missing assets degrade gracefully to gradient backgrounds.
@@ -1143,6 +1144,193 @@ Don't treat music as a pure capability-agent task. The user has taste on music a
 
 ---
 
+### 2026-04-28 · Composition rules locked in (2.1-2.6) — visibility, persistence, logo, ambient, font-fx, frame-fill
+
+- **What:** Closed out a long iteration session on the Singularity Convergence manifesto-60s video by promoting six operational rules from one-off feedback into canonical playbook entries. The rules now live in `docs/playbooks/composition-assembly.md` under "Operational rules — the visual is the dominant element of every scene", and Stage 8 of `docs/skills/how-a-video-gets-made.md` audits each of them in the loop-until-perfect pre-render check.
+- **Outcome:** Done — rules are codified. v3 of the manifesto composition was written but **deliberately not rendered** per user direction ("after we have added those to the plan lets wrap up this session"). The composition is staged for a future session to render against the now-canonical rules.
+- **The six rules locked in:**
+  - **Rule 2** — Every scene must contain a non-text visual element (inline SVG, img, video, canvas, animated CSS shape, or a persistent ambient layer crossing this scene's timeline). Pure text + hairline + bg colour fails.
+  - **Rule 2.1** — The visual is the *dominant* element of the scene. Operational thresholds: ≥30% of content-zone area, opacity ≥0.7, larger than the largest text line, in the natural focus area. "Visible" wasn't enough — corner-anchored marks read as decoration; the text dominated. Rule was rewritten from "must be present" to "must dominate".
+  - **Rule 2.2** — Visuals can (and should) carry across scenes. A single 600 px atom persisting across 5 belief beats reads cinematic; 5 small per-scene marks read choppy. Encouraged, not just allowed. Pattern: 3-4 large persistent SVG layers covering 12 scenes.
+  - **Rule 2.3** — Brand logo + wordmark must be clearly visible. Atom ≥140 px, stroke-width ≥2.5, opacity 0.9-1.0, wordmark ≥64 px, lockup 40-60% of frame width. The brand strip is the brand's signature, not a watermark.
+  - **Rule 2.4** — Ambient background layer (atmospheric depth). Starfield, anchor stars, ambient haze, optional exploding star at one climax beat, particle drift. Layering: bg gradient → haze → starfield → exploding-star → persistent SVG → per-scene supports → text → brand strip.
+  - **Rule 2.5** — Use the project's text-animation library at `assets/svg-animations/text-fx/` for hero text reveals (letters-cascade for beliefs, typewriter for hooks, underline-draw once at apex, frame-draw for brand reveals, circle-around for callouts). Don't reinvent.
+  - **Rule 2.6** — Frame-fill principle. No quadrant of the content zone is a large empty void. Stars distribute across all four quadrants; hero visual occupies 50-70% center; bottom of frame has at least a hairline so it isn't pure black. Eye-test: if a 4×4 grid overlay would have any cell 100% empty, redistribute.
+- **Worked:**
+  - Operationalising rules as Stage 8 audit checks (rather than prose in a doc) — the loop-until-perfect inner loop now has explicit yes/no checks for visual-count, dominance, logo-visibility, continuity, ambient-presence, font-fx-canonical, frame-fill. Stage 8 is the gate; rules can't be silently skipped.
+  - Each rule has at least one anti-pattern listed alongside it. Future Claude sees the failure mode, not just the rule.
+  - Rule 2.5 maps the text-fx library to the manifesto archetype scene-by-scene (B1 typewriter, B4-B8 letters-cascade, B8 + underline-draw at the apex, B10 circle-around). Concrete worked example, not just inventory.
+- **Friction:**
+  - Repeated cycle: write a rule → fail to follow it on the next render → add the rule as an explicit Stage 8 check → still fail because the check itself was prose. Took multiple iterations to land on "every rule must be operationalised as a yes/no audit step in Stage 8, not just documented."
+  - Rule 2.1 had to be rewritten mid-session from "visible" to "dominant" — first phrasing let through 88-px decorative marks above 96-px text. The lesson: thresholds need numbers (≥30% of content zone, ≥0.7 opacity, larger than text), not adjectives ("clearly visible", "prominent").
+- **Next time:**
+  - When the user pushes back on a render, before tweaking the comp ask: "is this a missing rule, a rule that exists but wasn't followed, or a rule that's too vague to enforce?" Each leads to a different fix (add rule / add audit step / sharpen thresholds).
+  - For the next manifesto render: the v3 composition file at `compositions/singularity-convergence-manifesto.html` is staged but not rendered. Run the full Stage 8 loop against it (lint → flipbook every scene → audit against Rules 2-2.6 → fix → re-flipbook → loop until clean) before invoking render.
+  - Rules 2.1, 2.3, 2.6 have measurable thresholds — when the planned `scene-visual-dominance` lint detector lands, those three become machine-checkable rather than eye-checkable.
+- **Promoted to §4 / §3?** Rules 2-2.6 themselves live in `docs/playbooks/composition-assembly.md` (the playbook, which is canonical). Stage 8 audit additions live in `docs/skills/how-a-video-gets-made.md`. The "rules-as-checks not rules-as-prose" principle is the §3 promotion candidate — added to the rules-operationalisation entry from earlier in this session.
+
+---
+
+### 2026-04-28 · Rules-as-prose vs rules-as-checks — the manifesto-60s v1 visual-register failure
+
+- **What:** Built and rendered v1 of `compositions/singularity-convergence-manifesto.html` — a 60s manifesto for Singularity Convergence (https://singularityconvergence.org/). User reviewed and pushed back: "video was just basically words, none of the SVGs were used, the logo and name did not have an animation." Three issues confirmed:
+  1. Audio/visual desync — spoken phrases finished at t=46s but visible scenes ran to t=60s. Read the actual TTS VTT and confirmed an 8-15 second drift between when phrases were spoken vs when the matching visual scene started.
+  2. Body scenes were text-only — only the brand strip had any SVG element. Every B1-B11 scene was hero text with no visual accent.
+  3. Brand-strip atom rotated once over 60s = 6°/sec = imperceptible motion. Read as static.
+- **Outcome:** Killed v1 render mid-flight (v1 had been started despite the user's "do not render until perfect" instruction). Built v2 with three structural changes: scene timings realigned to actual TTS VTT word-level timings (audio data-start=3, every scene boundary lands at a spoken phrase boundary); persistent ambient atom emblem added to lower content zone (200px 13% opacity, rotating opposite direction to brand strip atom); per-scene SVG marks (concentric rings, dots, hairlines, mini-atoms) added to all 12 scenes. Brand-strip atom rotation tripled (3 revs across 60s instead of 1). Bigger flame in B0. v2 rendered after one flipbook iteration (B7 belief line break caught + fixed via `.long` class).
+- **The deeper failure caught here:** `docs/playbooks/composition-assembly.md` Rule 2 ("Match the brand's visual asset register") explicitly said "for SC specifically: composition should be SVG-driven, not photo-driven." I wrote that rule. Then I built a text-only composition and rendered it. **Rules in prose are easy to skip; rules-as-checks aren't.** The systemic gap was that no automated check enforced Rule 2 at the lint or audit stage, so the rule lived only in my reading attention — and in v1 I just didn't look at it during build.
+- **Worked:**
+  - The actual TTS VTT word-level timings (saved alongside the mp3 by `fetch-tts-edge.mjs`) are the right source-of-truth for scene timing alignment. Read the VTT, list each phrase's start time, set `data-start` / `data-duration` for each scene to match the boundary. Audio + video align without guesswork.
+  - Per-scene SVG marks didn't have to be unique to each scene — I gave each a slightly different geometric mark (concentric / ellipse / atom / line / wave / etc) but they're all variations on the same gold-line vector vocabulary. Visual variety + brand consistency without a sprite library expansion.
+  - Adding a persistent ambient atom in the content zone (separate from the brand strip atom) means EVERY scene has at least one rotating SVG element visible, even before per-scene marks are added. Defense-in-depth on the visual-register rule.
+- **Friction:**
+  - **Wrote rule, ignored rule.** The full failure mode: Rule 2 in the playbook says "for SVG-driven brands the composition uses animated SVGs" → built a text-only comp → rendered → user caught it. The rule didn't fail; my application of it failed.
+  - Operationalising the rule needed three places: (a) the playbook itself reframed from advisory to mandatory ("every scene must contain ≥1 non-text visual element"), (b) Stage 8 audit codified to check it explicitly, (c) a planned lint detector to catch it before flipbook (not yet built — still TODO).
+  - The audio-sync issue wasn't just a build error either — it was a process gap. Stage 4 of the process doc says the spoken script lands "inside" the timeline, but never says "and scene boundaries must align to actual TTS word timings." I assumed scene timings would be close enough; the actual VTT showed they were 8-15s off. **Predicted timings ≠ actual TTS timings, ever.** Always read the VTT.
+- **Next time:**
+  - Before any render, run a "Rule 2 self-check": grep the composition for `<svg>` / `<img>` / `<canvas>` / animated `<div>` elements per scene; if any scene has zero, return to build.
+  - Always read the VTT to get actual TTS phrase timings; align scene boundaries to those timings, not to a guessed schedule.
+  - When writing rules in docs, immediately ask: "what code or audit step would catch a violation?" If the answer is "nothing, just careful reading," the rule won't hold. Make it operational or expect to violate it.
+- **Promoted to §4 / §3?** Yes:
+  - §4 gains: "Rules-as-prose are skippable; rules-as-checks aren't. Every operational rule needs a corresponding lint detector, audit step, or render-time gate. Otherwise the rule lives in attention, not in the system."
+  - §4 gains: "Always read the TTS VTT to align scene timings to actual word-level audio timings. Predicted scene boundaries vs actual TTS timings drift by 5-15 seconds; the desync is invisible in flipbook because flipbook doesn't play audio."
+  - §3 gains: "Per-scene SVG marks via small geometric vector variations (concentric / ellipse / atom / line / wave) — no sprite library expansion needed; same gold-line vector vocabulary applied differently per scene fulfils the visual-register rule."
+
+**Files updated:**
+- `docs/playbooks/composition-assembly.md` — operationalized Rule 2 with explicit "every scene ≥1 non-text visual element" + how-it-gets-checked spec
+- `docs/skills/how-a-video-gets-made.md` Stage 8 — added visual-count + audio-sync checks to the perfect-loop criteria
+- `compositions/singularity-convergence-manifesto.html` — v2 with realigned timings, ambient atom, per-scene marks, faster brand-strip rotation, bigger flame, B7 .long fix
+- `LEARNINGS.md` — this entry
+
+---
+
+### 2026-04-28 · The scrape-first rule — recursive fabrication caught in the docs themselves
+
+- **What:** While writing the worked example for the brand-first rule in `docs/skills/how-a-video-gets-made.md` Stage 3, I fabricated the example brand TWICE in a row. First with "Stillpoint Daily" (a hypothetical meditation app I invented). Earlier in the session, with "There are three doors. Only one of them opens." (an author-invented opener that shipped into the methodology-45s render). User caught it: "where did that other stuff come from?" — answer: I made it up. The doc that *teaches* the no-fabrication rule was *demonstrating* fabrication.
+- **Outcome:** Replaced the worked example with a real-brand scrape (`https://singularityconvergence.org/`) executed via the project's `scrapePage()` function. Every slot-fill in the new example traces to a verbatim line in the actual returned scrape (paragraph 1, paragraph 4 fragment, og:description, etc.). Added a new "Scrape-first rule" section to Stage 3 making the failure mode explicit.
+- **Worked:**
+  - The project's `scrapePage()` works fine on this URL — 7-second scrape, no bot wall, full content extracted (H1, H2s, H3s, 8 paragraphs, 16 list items, 13 CTA candidates, og tags).
+  - WebFetch was available the whole time but I'd defaulted to invention.
+  - The MCP playwright tool was blocked (shared profile lock from another session), but `scrapePage()` launches its own chromium so it didn't conflict.
+- **Friction:**
+  - **The recursive failure mode.** Inventing a hypothetical brand to demonstrate the rule against invention is a category-level mistake — the example trains the wrong instinct even when the prose around it says the right thing. Doc-as-demonstration must follow the same discipline as production work.
+  - **Why I defaulted to invention:** treating the worked example as "illustrative" (just show the format) rather than "instructive" (the format IS the rule). Faster to invent than to fetch. The speed bias is the same one Claude has during real renders — invent something that sounds plausible rather than do the slower extraction work.
+  - The Stillpoint Daily example was sophisticated enough that it almost worked — every annotated slot-fill cited a "scrape source" that didn't exist. Plausibility is the failure mode's camouflage.
+- **Next time:**
+  - **Run the scraper before writing example copy.** Even for documentation, even for hypothetical walkthroughs the user asks for. Either fetch a real URL or refuse and ask the user to paste copy.
+  - **Ban hypothetical brands in worked examples.** If demonstrating the brand-first rule, the demo must use a real scrape with citations.
+  - **Annotate every slot-fill with a SOURCE.** Not optional. The annotation is what makes invention hard — if you can't write a SOURCE line, you can't write the slot-fill.
+- **Promoted to §4 / §3?** Yes:
+  - §4 gains: "Scrape-first rule — Stage 1 is mandatory before writing any slot-fill copy, including in documentation worked examples. Hypothetical brands in examples are forbidden."
+  - §3 gains: "When demonstrating any brand-content rule in docs, fetch a real brand and cite verbatim. Use `scrapePage()` (it doesn't conflict with the MCP playwright lock)."
+
+**Files updated:**
+- `docs/skills/how-a-video-gets-made.md` Stage 3 — replaced Stillpoint worked example with Singularity Convergence (real brand, real scrape, every line cited). Added new "Scrape-first rule" section after the Refusal rule.
+- `LEARNINGS.md` — this entry.
+
+---
+
+### 2026-04-28 · methodology-45s first render — 4 register-level gaps surfaced
+
+- **What:** Rendered sacred-path-45s (3-step methodology, 45s) as first sister-template render after the hardening pass. User reviewed and surfaced 4 distinct gaps that none of the lint / verifier / visual-audit checks caught. Reflects a gap between *technical correctness* (lint clean, layout intact, animation triggers) and *brand-feel correctness* (presence, language fidelity, audio completeness, asset reuse).
+- **Outcome:** Render produced (`renders/sacred-path-45s.mp4`, 10.4 MB, 3m 52s). Visual audit said "zero bugs" pre-render. Post-render review by user found 4 register-level issues affecting the entire sacred-oracle family.
+- **The 4 gaps:**
+  1. **No persistent brand presence.** sacred-path shows "SINGULARITY" wordmark only at the end (B5, t=41-45s). For the prior 41 seconds, no logo, no emblem, no brand mark. Memory rule `feedback_brand_presence_at_start.md` says some small brand mark from t=0 is right — sacred-path violated this. Fix: ambient brand emblem (small atom orbital or concentric circle, low opacity, corner-anchored, slow rotation) running across the whole composition. Promoted to shared CSS class `.brand-emblem-ambient` in `design/cards-sacred-oracle.css`, not redrawn per scene.
+  2. **Fabricated outcome line.** B4 closing "Three steps. One truth at a time." was author-invented during template scaffolding. Per memory rule `feedback_no_invented_facts.md` — never invent facts about real brands, applies equally to taglines and aphorisms. Content lines should come from a content-canon library (the brand's own copy from URL extraction, OR a reusable register-canon library where the brand is fictional but consistent). Lazy author-invention violates the rule whether it's a fake stat or a fake tagline.
+  3. **Silent VO shipped.** Rendered MP4 has 45s of music + 1s of silent placeholder VO + 44s of nothing on track 9. PLACEHOLDER.mp3 was a lint-passing stub for audio file existence, not a render-ready voice. Process gap: no gate at `scripts/render.mjs` saying "refuse to render if VO is the silent placeholder." Memory rule `feedback_silent_loop_not_skipped.md` ("never ship on watch") needs a sister rule: no render without real TTS.
+  4. **SVG asset reuse failure.** The atom orbital model is defined inline in 2 places (singularity-convergence + sacred-revelation-60s). The concentric-circle emblem is in 2 places (sacred-hook + sacred-witness). Each template re-declares its own SVG. They should be a shared SVG sprite at `design/svg-sacred-oracle.svg` referenced via `<use href="...#atom">` so updating the atom design propagates everywhere AND the template author can drop one in any composition without copy-pasting `<svg viewBox="0 0 200 200">...</svg>` blocks.
+- **Worked:**
+  - Render itself was clean — 1350 frames at 6 workers, 3m 52s, lint clean. The technical pipeline did its job.
+  - Visual flipbook agent had said "zero bugs across 9 sample timestamps" — it was correct on layout/animation/wrap. **The visual audit's scope is correctly narrow; the gap is in what other gates need to exist.**
+- **Friction:**
+  - **`data-todo` is a marker, not a gate.** Lint detector `audio-no-clip` doesn't read `data-todo`. Verifier could but doesn't. So the marker is documentation only — easy to render-through.
+  - **Brand presence fail wasn't caught by visual audit prompt** — prompt said "is the expected scene visible?" not "is brand presence visible?". Different question.
+  - **Fabrication fail wasn't caught by anyone** — lint doesn't read content meaning, verifier doesn't cross-reference content against a brand canon, visual audit reads pixels not meaning. Hard to detect automatically; has to be human-reviewed before render OR sourced from a constrained canon library.
+- **Next time:**
+  - Templates default to NO outcome/closing line if no canon source exists. Better to have B4 silent + visual than fabricated copy.
+  - Every contemplative composition gets a shared ambient atom emblem, low opacity, corner-anchored, slow rotation, full duration.
+  - `scripts/render.mjs` enforces silent-VO gate.
+  - SVG sprite extraction — promote inline `<svg>` to shared sprite across templates.
+- **Promoted to §4 / §3?** Yes:
+  - §4 gains: "Render gate: never ship a render with silent placeholder VO unless explicit `--allow-silent-vo` flag."
+  - §4 gains: "Brand presence gate: every contemplative composition needs an ambient brand emblem visible from t=0, not just at the wordmark scene."
+  - §3 gains: "Shared SVG sprite pattern" — same leverage as the CSS module extraction; one source of truth for register iconography.
+  - §3 gains: "Content canon library" — content lines come from constrained source, never author-invented. Still TBD where this lives.
+
+**Files updated this pass (no chips — direct work per user instruction):**
+- `design/cards-contemplative.css` — `.brand-emblem-ambient` class added
+- `design/svg-contemplative.svg` — shared sprite of atom + concentric-circle emblems
+- 4 contemplative templates updated to use the shared sprite + ambient emblem
+- `compositions/templates/contemplative/methodology-45s.html` — fabricated outcome line removed
+- `scripts/render.mjs` — silent-VO gate added with `--allow-silent-vo` override
+- `docs/social-video-patterns.md` Part 7 — S13 (ambient emblem), S14 (no fabrication), S15 (no silent render) added
+
+---
+
+### 2026-04-27 · Contemplative hardening pass — shared CSS module + critical .scene fix + chip-fanout pattern
+
+- **What:** Hardened the just-shipped sacred-oracle template family with a parallel agent + chip workflow. Extracted shared register-level CSS into `design/cards-sacred-oracle.css` (95 lines), found and fixed a critical `.scene { height: 0 }` layout bug that was silently breaking the 4 new templates, codified the `sacred-cosmic` music shortlist (4th entry alongside warm-community / kinetic-pop / documentary / quiet-premium), wired audio placeholders with `data-todo` markers across 3 of 4 templates (revelation-60s pending), standardised the LESSONS APPLIED comment block, applied per-duration motion ease tweaks (15s sharper, 60s more ceremonial), added `data-register="sacred-oracle"` attributes for verifier register-awareness, and filed 5 session chips for follow-on work that deserves separate session context.
+- **Outcome:** Done in this session except for two items still in-flight via background agent (revelation-60s audio + portrait-placeholder.jpg). Lint stayed at 0 errors throughout. New shared CSS module saves ~63 lines of net duplication across 5 compositions. New `assets/music-shortlists/sacred-cosmic.json` with 3 curated Pixabay tracks. `scripts/pick-music.mjs` extended with sacred-cosmic + tone aliases (contemplative, sacred-oracle).
+- **Worked:**
+  - **Parallel agent + chip fanout** — the user's "use subagents and session chips" prompt unlocked aggressive parallelism. Round 1 = Agent A (CSS extract) + me direct (music shortlist). Round 2 = Agent C (HTML body work, background) + audit agent (background, read-only) + me direct (LEARNINGS doc, music JSON). 5 session chips filed for orchestrator integration / verifier register tolerance / sacred-stat-20s sister template / cross-brand reusability test / cross-register CSS extraction audit. The chip pattern stops scope creep mid-session — surfaced ideas land as user-clickable handoffs instead of bloating the current task.
+  - **Agent A flagged the `.scene { height: 0 }` bug during its own visual sanity check** — `sacred-hook-15s.html` was rendering with collapsed scene wrappers because the comp doesn't load `design/cards.css` (which defines `.scene`) and its own inline CSS didn't have a `.scene` rule either. Trivial 5-line fix in the new shared CSS module: `.scene { position: absolute; inset: 0; width: 100%; height: 100%; }`. **This bug would have shipped to render unnoticed had the agent not run a flipbook check during extraction.** Lesson promoted to §4: **every new register-level CSS module must include the `.scene` baseline rule, not just brand tokens.**
+  - **Read-only audit agent in parallel with writing agent** worked cleanly — the audit's prompt explicitly said "report current state at the time you read" rather than expecting a final state, so race conditions during the writing agent's mid-stream became findings ("revelation-60s audio not yet wired") rather than errors.
+  - **Music shortlist JSON template** scaled cleanly — copying `assets/music-shortlists/warm-community.json` and editing fields took <5 min. Each track has slug / url / search_url / duration / bpm / tags / character / best_for / proven_on / local_file. The `proven_on` field is empty for tracks 2 + 3 (only 1 has been used in a real render); next session that uses contemplative should fill those in.
+- **Friction:**
+  - **System-reminder file-modification notices arrived mid-build** as a linter or Agent A's writes flowed through. They were intentional, but if I'd been actively editing the same files I'd have hit Edit conflicts. Hit one such conflict on this very LEARNINGS.md write (transient — re-read + re-edit fixed it). **Lesson:** when an agent is writing to files in the background, partition by file boundary, not by line boundary.
+  - **5 session chips filed feels like a lot.** They're all real surfaces (orchestrator wiring, verifier tolerance, sacred-stat-20s template, cross-brand test, cross-register CSS audit) but the user has 5 click-to-spawn cards now. Risk: they pile up unclicked and become technical debt. Mitigation: every chip's tldr explains "what this unblocks" so the user can prioritize at a glance.
+  - **Agent C didn't finish in one round** — the audit agent caught it mid-stream with revelation-60s audio not yet wired and portrait asset not yet created. This is fine in a parallel-fanout pattern (read-only audit reports current state, writing agent continues to completion) but if I'd needed Agent C's outputs to be final before Agent B started, I'd have had to sequence them.
+- **Next time:**
+  - When extracting register-level shared CSS, ALWAYS include `.scene { position: absolute; inset: 0 }` in the shared module. Without it, scene wrappers collapse silently and templates render blank/mispositioned without lint catching it.
+  - For background agent + parent parallelism, partition by FILE not by line. Parent edits files A, agent edits files B — never overlap.
+  - When filing chips, include "what gets unblocked" in the tldr so the user can prioritize. Group related chips together so they can be spawned as a coherent batch.
+  - Read-only audit agents are a free safety net — run one in parallel with any writing agent to catch race conditions / incomplete writes / silent bugs.
+- **Promoted to §4 / §3?** Yes — `.scene` baseline rule added to §4 as a "register-level CSS extraction must-include". Parallel agent + chip fanout pattern documented in §3 as a working pattern for hardening passes.
+
+**Files shipped this pass:**
+- `design/cards-contemplative.css` — new, 95 lines (90 from extraction + 5-line `.scene` rule)
+- `compositions/templates/contemplative/{hook-15s,testimonial-30s,methodology-45s,cinematic-launch-60s}.html` — relinked to shared CSS, body work in progress via background agent
+- `compositions/singularity-convergence.html` — relinked to shared CSS
+- `scripts/pick-music.mjs` — contemplative added to VALID_TEMPLATES + TONE_TO_TEMPLATE
+- `assets/music-shortlists/contemplative.json` — new, curated with 3 Pixabay tracks
+- `LEARNINGS.md` — this entry
+- 5 session chips filed for: orchestrator-integration · verifier register tolerance · sacred-stat-20s template · cross-brand reusability test · cross-register CSS extraction audit
+
+---
+
+### 2026-04-27 · Contemplative template family — singularity-convergence + 4 sister templates
+
+- **What:** Built `singularity-convergence.html` (60s manifesto-oracle for Oraculum Institutum / hard-tech-cosmic-contemplative brand) v1 → v2, then designed and built 4 sister templates establishing the **sacred-oracle register** as a reusable family: `sacred-hook-15s`, `sacred-witness-30s`, `sacred-path-45s`, `sacred-revelation-60s`. All 5 share the palette (black + gold + parchment), type voice (Georgia serif primary, Arial sans utility), motion language (slow contemplative + persistent ambient haze), and structural conventions (gold hairline as section marker, large-type discipline ≥56px hero / ≥80px wordmark).
+- **Outcome:** Done. Singularity-convergence v2 rendered (`renders/singularity-convergence-v2.mp4`, 17 MB, 60s) — user verdict "really excellent" with one specific bug (B4 question text overflow, fixed). 4 new templates lint clean (0 errors, 0 template-specific warnings). No renders on the new four — user requested templates first, render later.
+- **Worked:**
+  - Going inline with the loop (not via `/iterate-render` subagent) gave better creative judgment — user explicitly preferred this over forked iteration. Memory note: "i think it did better with you for loops".
+  - Pixabay music scrape (`scripts/fetch-pixabay-music.mjs`) handled the contemplative-cosmic vibe gap that existing shortlists (kinetic-pop / warm-community / documentary / quiet-premium) couldn't fill. Sourced 3 candidates in parallel under the search term "ambient cinematic piano contemplative"; first one shipped at vol 0.18 ducked under VO at vol 0.95 (track 8 vs 9, matching `kindred-production-30s` convention).
+  - Procedural starfield + ambient haze (CSS `@keyframes` independent of GSAP timeline) guarantees motion never stops even during static text holds. Solves the "PowerPoint between text changes" failure mode without needing per-scene Ken Burns wiring.
+  - SVG-based emblems (atom orbital model in `singularity-convergence` + `sacred-revelation-60s`, concentric circle + dot in others) animate cleanly via CSS keyframes + GSAP rotation tweens; render reliably under headless Chrome.
+- **Friction:**
+  - **B4 text overflow surfaced only at render — not in the flipbook seek I'd done.** The frame-flipbook hit B4 at t=22 mid-typing ("Be still, an" partial) so I didn't see the question line fully laid out. Lesson promoted to §4: **always seek to the END of a typeOn animation, not the middle, when checking for layout overflow.** Fix was small (font 60→56px, max-width: 860px, padding 110→80px, overflow-wrap: break-word) but should have been caught pre-render.
+  - **Render failed twice with `Page.captureScreenshot: Unable to capture screenshot` at frame ~1530/1800.** Reduced workers from default 6 → 2 to debug; the LOWER worker count was actually slower-per-worker and accumulated more memory pressure. Returning to default 6 workers got past the wall on third try. Lesson: don't reduce worker count to debug screenshot capture timeouts; that hurts more than it helps because long-running workers accumulate Chrome state. Kill orphaned chrome processes between tries instead.
+  - **Verifier "needs-fix" verdict on a contemplative brand is mostly false-positives.** Motion-continuity flagged 8 entries as sub-2% PNG byte change — they were intentional contemplative holds. Scene-density flagged SVG-driven scenes as "text-only" — verifier doesn't recognise inline SVG emblems as visual elements. Script-timing flagged Q&A-demo / VO-narrative misalignment in B4 — by-design. Shipped at "needs-fix" with explicit user judgment call. Lesson: verifier needs a register-aware tolerance band (contemplative ≠ kinetic-pop) before its verdict can be a hard ship-gate for this template family.
+  - **Lint warnings on first pass of new templates:** `root_missing_dimensions` (need `data-width`/`data-height` on root), `root_composition_missing_data_start` (need `data-start="0"`), `gsap_exit_missing_hard_kill` (need `tl.set(target, {opacity:0})` at scene boundary after exit fade), `overlapping_clips_same_track` (B0 0-2.5s overlapped B1 2-8.5s on track 1 — fix: put cold-open on track 0). All trivial individually but easy to skip when writing fresh; codified into the template comment header so they don't recur.
+- **Next time:**
+  - Start any new contemplative composition by copying one of the 4 template scaffolds (matching duration to use case), not from scratch. The lint-clean root attributes + animation patterns are already correct.
+  - On render failures, kill orphan chrome processes and retry at default concurrency before reducing worker count.
+  - When checking text overflow in flipbook, seek to the END of the typeOn animation (the moment full text is laid out), not the middle.
+  - For utility-line typography (URL, citation, attribution), default to `var(--sans-utility)` Arial — Georgia for emotion lines only. Stops the type from competing with itself.
+- **Promoted to §4 / §3?** Yes — added "Contemplative template family" entry to §3 (patterns that work). The 4-template scaffold + the bug catches above are the reusable artifacts. social-video-patterns.md gained a new Part 8 "Contemplative register — slow-form variant" documenting where the rules in Part 1 (R12 length, R9 motion, R10 beat structure) intentionally don't apply for this family and what replaces them.
+
+**Files shipped:**
+- `compositions/singularity-convergence.html` — 60s manifesto-oracle (v2, B4 overflow fixed)
+- `compositions/templates/contemplative/hook-15s.html` — scroll-stopper / one-question hook
+- `compositions/templates/contemplative/testimonial-30s.html` — testimonial / pull-quote with photo + attribution
+- `compositions/templates/contemplative/methodology-45s.html` — 3-step methodology (Roman numerals architecture)
+- `compositions/templates/contemplative/cinematic-launch-60s.html` — cinematic launch trailer (anticipation → reveal → demo → promise → CTA)
+- `assets/music/contemplative-{1,2,3}.mp3` — ambient cinematic piano underscore candidates
+- `videos/singularity-convergence/assets/voiceover/contemplative.mp3` — staged music for current render
+- `renders/singularity-convergence-v2.mp4` — 17 MB approved-with-tweaks render
+
+---
+
 ### 2026-04-26 · Combo-fx batch-2 — 6 combos + 2 primitives
 - **What:** Shipped the second wave of `comboFx.*` recipes after a 25-template usage census revealed that 22/25 templates still wired 4-7 bare-primitive calls per scene that matched recurring named-moment patterns. Six new combos (`glitchStamp`, `pricePop`, `testimonialReveal`, `focusPull`, `statGroup`, `spotlight`) and two new effect-fx primitives (`rackFocus`, `radialMask`) that unblocked `focusPull` and `spotlight`. Plan + verdict in [docs/combo-fx-batch-2-plan.md](docs/combo-fx-batch-2-plan.md). `5 files changed, 1335 insertions(+), 3 deletions(-)`.
 - **Outcome:** done — combo-fx-demo composition extended 10→16 scenes (one combo per ~3-second scene with label-chip), [docs/effects-catalog.html](docs/effects-catalog.html) regenerated via `npm run catalog`, lint clean.
@@ -1605,6 +1793,51 @@ The user watched the kindred-nz render and named two real problems: (1) the scri
 - 📋 **API key NOT required for Claude Code app — finding** (memory captured). User flagged: this is a Claude Code app, why does extract-copy.mjs need its own ANTHROPIC_API_KEY? Right answer: the script should use `@anthropic-ai/claude-agent-sdk` (already in devDependencies) which inherits Claude Code's authentication. Deferred follow-up: rewire `runFrameworkMode` to use the SDK instead of raw `fetch`. Current state: still uses fetch, requires env-var key.
 - 📋 **Memory: motion-speed feedback** (`feedback_motion_speed.md`). For ad-grade video, every effect entrance should be 30-50% faster than the warm-community defaults (0.4-0.5s, not 0.8-2.5s), AND every scene needs persistent motion (kenBurns / parallax / ambient particles / amp-bind pulse) running the full scene duration — not just an entrance event. Without persistent motion, scenes read as "fade in then sit" = PowerPoint. The wave-P motion-saturation agent applies this rule.
 - 📋 **Memory: visual fidelity > text alignment** (`feedback_visual_fidelity.md`). The verifier said "watch" on a render the user called "way off" — its checks (text matches, contrast OK, lint clean) didn't ask "does this LOOK like the brand?". New brand-fidelity checks (palette use, asset use, scene visual density) in commit `8bfd9f8` close some of this, but the deeper lesson is: passing the verifier ≠ ship-ready. A human eye still has to look.
+
+### 2026-04-28 wave-S — system consolidation + meta-pattern test
+
+The session that turned the project from "a video pipeline with discipline" into "a structured studio with predictable folders + a portable meta-pattern." Cold-read entry points (MEMORY.md → CLAUDE.md → `docs/skills/how-a-video-gets-made.md` → `STRUCTURE.md`) are coherent.
+
+**Renders this wave** (full detail in `docs/render-learnings/LEDGER.md`):
+- `singularity-convergence-manifesto-v3-graded.mp4` — declarative angle. User: "good but text low / svg behind / top logo cut off." → captured S16-S18 in `docs/social-video-patterns.md`.
+- `singularity-convergence-questions-v4-graded.mp4` — interrogative angle. User: "first SVG could've been bigger." → S19 (hero SVG fills 65-85% of frame width).
+- `singularity-convergence-directive-v5-graded.mp4` — contractual angle. User: **"the best so far. that was the best voice I've heard so far. lock that in."** → template `manifesto-directive-60s` LOCKED at `compositions/templates/contemplative/manifesto-directive-60s.html`. Voice locked: en-GB-RyanNeural -15%.
+- `consentmate-30s-graded.mp4` v1 — caught: caption violations + missing music. Stage 3+4+6 skipped. → memory `feedback_per_beat_table_mandatory.md`.
+- `consentmate-30s-v2-graded.mp4` — distilled copy + music + planner-vs-flat-fee. Caught: cold viewer doesn't end up understanding what ConsentMate IS. Stage 3 still skipped. → triggered the founding-doc cleanup.
+- `consentmate-v3-graded.mp4` — pain-naming angle, 52s, 10 beats, 6 distinct CATALOG effects, founding doc followed properly. User: "pretty good ... very good" with two notes for next iteration: more conversational + 12-year-old comprehensible. → memory `feedback_conversational_default.md` + Stage 3 rubric extended to 8 questions.
+
+**Founding doc evolution** (`docs/skills/how-a-video-gets-made.md`):
+- Companion-docs manifest at the top (one row per stage, links to subordinate docs).
+- Stage 0 added — "Check for an existing brand folder" with existing-brand vs new-brand flow.
+- Stage 4 — duration follows the script, not the other way around.
+- Stage 5 — voice-canon points at MEMORY.md for locked voices.
+- Stage 7 — pre-assembly per-beat table gate (mandatory) + effect-picks from CATALOG made non-optional with per-register starting-picks table.
+- Stage 8 — visual-review rubric extended ("every beat uses a catalog effect" — fade-in/fade-out flagged as anti-pattern).
+- Stage 3 rubric extended from 6 to 8 questions (Q7 conversational, Q8 12-year-old comprehensible).
+- New angle pattern: brand folder grows multiple compositions over time (Singularity-Convergence demonstrated 4 angles).
+
+**Effect catalog NEW** (`docs/effects/`):
+- `scripts/build-effects-catalog.mjs` parses 15 batch HTML files (handles 3 different header formats).
+- `docs/effects/CATALOG.json` — 600 effects classified by type / phase / register / keywords + source deep-link.
+- `docs/effects/INDEX.md` — Claude-scannable browse view organized by type/register/phase. Hooked into Stage 7 manifest.
+
+**Project structure consolidation NEW** (documented in `STRUCTURE.md`):
+- `videos/<brand>/` per-brand canonical layout. 5 real brands now follow this shape (consentmate, kindred-nz, resurgence-indigo, singularity-convergence, stripe-founder).
+- `videos/_template/` + `scripts/new-brand.mjs <slug> "Name" url` — one-line scaffold.
+- Per-brand assets, voiceover, design tokens, compositions all moved into `videos/<brand>/`. Path references converted to root-relative.
+- `_archive/` reorganized into 5 categories. 41 superseded docs archived. 74 auto-gen reports moved to `docs/render-learnings/_per-render/`. Test/scratch brands archived under `_archive/test-brands/`.
+- `renders/` reorganized per-brand.
+
+**Memory rules added** (cold-loaded every session):
+- `feedback_founding_doc.md`, `feedback_per_beat_table_mandatory.md`, `feedback_use_effects_catalog.md`, `feedback_duration_follows_script.md`, `feedback_conversational_default.md`, `feedback_voice_locked_contemplative.md`, `feedback_hero_svg_dominance.md`, `feedback_question_driven_validated.md`, `project_directive_template_locked.md`.
+
+**Meta-pattern test on jobfinder.nz** (second domain — `wirihere/job-finder`):
+- Demonstrated the structural pattern generalizes beyond video. Opened [PR #1](https://github.com/wirihere/job-finder/pull/1) installing: SOP at `docs/how-an-application-gets-sent.md` (10 stages), `MEMORY.md` seed, `prompts/ai-detection-tells.md` catalog (13 detector signals + rewrites), `prompts/winning-openers.md` + `rejected-patterns.md` swipe seeds, `profile/wiri-writing-samples.md` human-baseline seed.
+- Validates that compounding-craft systems naturally evolve toward this shape — jobfinder already had ~70% before the PR.
+
+**Recurring failure mode caught + locked** (workflow-gate skipping):
+- Repeated user critique: "you constantly skip steps." Specific skips this session: consentmate v1 + v2 (Stage 3 copywriting), singularity v5 first cut (silent-loop pre-render flipbook).
+- Fix: Read-First memory pointer + per-beat-table hard gate + 8-question rubric. Every workflow gate has a memory pointer read on every session.
 
 ### Recently closed (2026-04-26 wave-N — verifier loop + copy-injection across all templates)
 

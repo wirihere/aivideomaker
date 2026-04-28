@@ -1,7 +1,7 @@
 // frame-flipbook.mjs — extract frames from the assembled index.html at
 // per-scene timestamps for human/agent review BEFORE render.
 //
-// Per docs/PROCESS.md cycle step 2: "Frame-flipbook check (Playwright scrub
+// Per docs/skills/how-a-video-gets-made.md cycle step 2: "Frame-flipbook check (Playwright scrub
 // 0.5s intervals, every adjacent pair must show visible motion)". This is
 // the gate that ran post-hoc on kinetic-product-30s and caught the
 // s5-name-block selector bug. Promoting it to a first-class orchestrator
@@ -51,7 +51,7 @@ const stamp = (new Date()).toISOString().slice(0, 19).replace(/[:T]/g, "-");
 const outDir = path.join(projectRoot, "tmp", `${slug}-frames-${stamp}`);
 fs.mkdirSync(outDir, { recursive: true });
 
-// Default times: 7 spread samples — per `docs/playbooks/cinematic-vertical-promo.md`
+// Default times: 7 spread samples — per `docs/skills/how-a-video-gets-made.md`
 // frame-verification list. Caller can override via --times=...
 const defaultTimes = [2.5, 7.5, 11, 16, 21, 25.5, 28.5];
 const times = flags.times
@@ -111,4 +111,4 @@ for (const f of fps) {
   console.log(`         ${f.fp}`);
 }
 console.log("");
-console.log("Per docs/PROCESS.md, READ each frame before approving the render.");
+console.log("Per docs/skills/how-a-video-gets-made.md, READ each frame before approving the render.");

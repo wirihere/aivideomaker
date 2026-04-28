@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px; height: 1920px; overflow: hidden;
+    background: #050816;
+    font-family: "Inter", "Segoe UI", -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #f8fafc;
+  }
+
+  [data-composition-id="promo"] {
+    position: relative; width: 1080px; height: 1920px; overflow: hidden;
+    background: radial-gradient(ellipse at 50% 30%, #1e1b4b 0%, #050816 70%);
+  }
+
+  /* Subtle film grain via repeating noise dots */
+  .grain {
+    position: absolute; inset: 0; pointer-events: none;
+    opacity: 0.05; mix-blend-mode: screen;
+    background-image:
+      radial-gradient(circle at 20% 30%, #ffffff 0.5px, transparent 1px),
+      radial-gradient(circle at 70% 60%, #ffffff 0.5px, transparent 1px),
+      radial-gradient(circle at 40% 80%, #ffffff 0.5px, transparent 1px);
+    background-size: 4px 4px, 6px 6px, 8px 8px;
+  }
+
+  .progress {
+    position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: rgba(248, 250, 252, 0.08);
+    z-index: 100;
+  }
+  .progress .fill {
+    width: 100%; height: 100%; background: #fbbf24;
+    transform-origin: left center; transform: scaleX(0);
+  }
+
+  /* Watermark — visible across entire video */
+  .watermark {
+    position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+    font-size: 18px; font-weight: 700; letter-spacing: 6px;
+    color: rgba(248, 250, 252, 0.35);
+    z-index: 50;
+  }
+
+  /* Scene wrapper — sized to full canvas */
+  .scene {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 120px 80px;
+    box-sizing: border-box;
+  }
+
+  /* ============== Scene 1: AI VIDEO MAKER ============== */
+  .s1-eyebrow {
+    font-size: 28px; font-weight: 700; letter-spacing: 14px;
+    color: #fbbf24; margin-bottom: 60px;
+  }
+  .s1-title {
+    font-size: 180px; font-weight: 900; line-height: 0.95;
+    letter-spacing: -4px; text-align: center;
+  }
+  .s1-title .row { display: block; }
+  .s1-title .accent { color: #fbbf24; }
+  .s1-underline {
+    width: 700px; height: 8px; background: #fbbf24;
+    margin-top: 60px; transform-origin: center; border-radius: 4px;
+  }
+
+  /* ============== Scene 2: BUILT FROM FREE APIs ============== */
+  .s2-eyebrow {
+    font-size: 32px; font-weight: 700; letter-spacing: 8px;
+    color: #cbd5e1; margin-bottom: 40px;
+  }
+  .s2-headline {
+    font-size: 220px; font-weight: 900; line-height: 0.9;
+    letter-spacing: -8px; text-align: center;
+    background: linear-gradient(135deg, #fbbf24 0%, #ec4899 50%, #06b6d4 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+  .s2-tagline {
+    font-size: 36px; font-weight: 600; color: #94a3b8;
+    margin-top: 50px; letter-spacing: 1px;
+  }
+
+  /* ============== Scene 3: STOCK PHOTOS / VIDEO ============== */
+  .s3-bg {
+    position: absolute; inset: 0; overflow: hidden;
+    z-index: -1;
+  }
+  .s3-bg::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg,
+      rgba(5,8,22,0.35) 0%,
+      rgba(5,8,22,0.55) 100%);
+    z-index: 1;
+  }
+  .s3-bg-fallback {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 20%, #1e3a8a 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 70%, #7c3aed 0%, transparent 50%),
+      #0c1849;
+  }
+  .s3-bg-photo {
+    position: absolute; inset: 0; width: 1080px; height: 1920px;
+    object-fit: cover; z-index: 0;
+  }
+  .s3-bg-video {
+    position: absolute; inset: 0; width: 1080px; height: 1920px;
+    object-fit: cover; z-index: 0;
+  }
+
+  .s3-headline {
+    font-size: 96px; font-weight: 900; letter-spacing: -2px;
+    text-align: center; line-height: 1.0;
+  }
+  .s3-headline .pop {
+    color: #fbbf24;
+  }
+  .s3-pill {
+    display: inline-flex; align-items: center; gap: 20px;
+    background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(10px);
+    border: 2px solid rgba(251, 191, 36, 0.5);
+    border-radius: 80px;
+    padding: 24px 44px;
+    margin-top: 40px;
+  }
+  .s3-pill img { width: 48px; height: 48px; }
+  .s3-pill span {
+    font-size: 28px; font-weight: 700; letter-spacing: 4px; color: #fbbf24;
+  }
+
+  /* ============== Scene 4: NEURAL VOICE / ICONS ============== */
+  .s4-headline {
+    font-size: 110px; font-weight: 900; line-height: 0.95;
+    letter-spacing: -3px; text-align: center;
+    color: #f8fafc;
+  }
+  .s4-headline .gradient {
+    background: linear-gradient(90deg, #06b6d4, #ec4899);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+
+  .s4-icon-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 80px;
+    width: 720px;
+  }
+  .s4-icon-cell {
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px solid rgba(248, 250, 252, 0.08);
+    border-radius: 24px;
+    padding: 40px;
+    display: flex; align-items: center; justify-content: center;
+    aspect-ratio: 1 / 1;
+  }
+  .s4-icon-cell img { width: 100%; height: 100%; }
+  .s4-icon-cell.accent { background: rgba(251, 191, 36, 0.15); border-color: #fbbf24; }
+  .s4-icon-cell.accent2 { background: rgba(6, 182, 212, 0.15); border-color: #06b6d4; }
+  .s4-icon-cell.accent3 { background: rgba(236, 72, 153, 0.15); border-color: #ec4899; }
+
+  /* Neural voice waveform inline */
+  .s4-waveform {
+    display: flex; align-items: center; gap: 10px;
+    height: 100px; margin-top: 40px;
+  }
+  .s4-waveform .bar {
+    width: 12px; background: #06b6d4; border-radius: 6px;
+    height: 30px;
+  }
+
+  /* ============== Scene 5: OUTRO ============== */
+  .s5-glow {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(251,191,36,0.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .s5-logo {
+    width: 300px; height: 300px;
+    background: linear-gradient(135deg, #fbbf24, #ec4899);
+    border-radius: 70px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 60px;
+    box-shadow: 0 30px 80px rgba(251, 191, 36, 0.35);
+  }
+  .s5-logo svg { width: 160px; height: 160px; }
+  .s5-title {
+    font-size: 120px; font-weight: 900; letter-spacing: -3px;
+    text-align: center; line-height: 1.0;
+    color: #f8fafc;
+  }
+  .s5-tagline {
+    font-size: 32px; font-weight: 700; letter-spacing: 8px;
+    color: #fbbf24;
+    margin-top: 50px;
+    border-top: 2px solid rgba(251, 191, 36, 0.4);
+    border-bottom: 2px solid rgba(251, 191, 36, 0.4);
+    padding: 20px 40px;
+  }
+  .s5-url {
+    margin-top: 40px;
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    font-size: 28px; color: #94a3b8; letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+  <div data-composition-id="promo" data-start="0" data-duration="17.5" data-width="1080" data-height="1920">
+
+    <div class="grain"></div>
+
+    <!-- Progress bar (visible whole video) -->
+    <div class="progress"><div class="fill" id="progress-fill"></div></div>
+
+    <!-- Watermark (visible across entire video, after scene 1) -->
+    <div class="watermark" id="watermark">A I  ·  V I D E O  ·  M A K E R</div>
+
+    <!-- Audio (separate from video) -->
+    <audio id="el-audio"
+           data-start="0" data-duration="17.5" data-track-index="9"
+           src="assets/voiceover/promo.mp3"></audio>
+
+    <!-- ===== Scene 1: 0–2.5s ===== -->
+    <div id="scene-1" class="scene clip"
+         data-start="0" data-duration="2.5" data-track-index="1">
+      <div class="s1-eyebrow" id="s1-eyebrow">VIDEO MADE FROM CODE</div>
+      <div class="s1-title">
+        <span class="row" id="s1-row1">AI</span>
+        <span class="row" id="s1-row2">VIDEO</span>
+        <span class="row accent" id="s1-row3">MAKER</span>
+      </div>
+      <div class="s1-underline" id="s1-underline"></div>
+    </div>
+
+    <!-- ===== Scene 2: 2.5–5.0s ===== -->
+    <div id="scene-2" class="scene clip"
+         data-start="2.5" data-duration="2.5" data-track-index="1">
+      <div class="s2-eyebrow" id="s2-eyebrow">BUILT FROM</div>
+      <div class="s2-headline" id="s2-headline">FREE<br/>APIs</div>
+      <div class="s2-tagline" id="s2-tagline">no keys · no cost · no limits</div>
+    </div>
+
+    <!-- ===== Scene 3: 5.0–8.5s ===== -->
+    <div id="scene-3" class="scene clip"
+         data-start="5.0" data-duration="3.5" data-track-index="1">
+      <div class="s3-bg">
+        <!-- Fallback gradient is always present; photo/video stack on top if available -->
+        <div class="s3-bg-fallback"></div>
+        <!-- Photo: visible 0-1.6s of scene -->
+        <img class="s3-bg-photo" id="s3-photo" src="assets/photos/workspace.jpg"
+             onerror="this.style.display='none'"/>
+        <!-- Video: visible 1.6-3.5s of scene -->
+        <video class="s3-bg-video" id="s3-video"
+               src="assets/videos/bg-motion.mp4"
+               muted playsinline
+               onerror="this.style.display='none'"></video>
+      </div>
+
+      <div class="s3-headline">
+        <span id="s3-line1">STOCK <span class="pop">PHOTOS</span></span>
+      </div>
+      <div class="s3-headline" style="margin-top: 60px;">
+        <span id="s3-line2">STOCK <span class="pop">VIDEO</span></span>
+      </div>
+      <div class="s3-pill" id="s3-pill">
+        <img src="assets/icons/lucide/image.svg" alt=""/>
+        <span>PIXABAY · PEXELS · UNSPLASH</span>
+      </div>
+    </div>
+
+    <!-- ===== Scene 4: 8.5–12.7s ===== -->
+    <div id="scene-4" class="scene clip"
+         data-start="8.5" data-duration="4.2" data-track-index="1">
+      <div class="s4-headline">
+        <span id="s4-row1"><span class="gradient">NEURAL</span> VOICE</span>
+      </div>
+
+      <div class="s4-waveform" id="s4-waveform">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
+
+      <div class="s4-headline" id="s4-row2" style="margin-top: 40px;">
+        <span class="gradient">ANIMATED</span> ICONS
+      </div>
+
+      <div class="s4-icon-grid" id="s4-icon-grid">
+        <div class="s4-icon-cell" id="s4-cell-1"><img src="assets/icons/lucide/camera.svg"/></div>
+        <div class="s4-icon-cell accent" id="s4-cell-2"><img src="assets/icons/lucide/video.svg"/></div>
+        <div class="s4-icon-cell" id="s4-cell-3"><img src="assets/icons/lucide/mic.svg"/></div>
+        <div class="s4-icon-cell accent2" id="s4-cell-4"><img src="assets/icons/lucide/sparkles.svg"/></div>
+        <div class="s4-icon-cell" id="s4-cell-5"><img src="assets/icons/lucide/palette.svg"/></div>
+        <div class="s4-icon-cell accent3" id="s4-cell-6"><img src="assets/icons/lucide/zap.svg"/></div>
+        <div class="s4-icon-cell" id="s4-cell-7"><img src="assets/icons/lucide/wand-2.svg"/></div>
+        <div class="s4-icon-cell" id="s4-cell-8"><img src="assets/icons/lucide/music.svg"/></div>
+        <div class="s4-icon-cell accent" id="s4-cell-9"><img src="assets/icons/lucide/film.svg"/></div>
+      </div>
+    </div>
+
+    <!-- ===== Scene 5: 12.7–17.5s ===== -->
+    <div id="scene-5" class="scene clip"
+         data-start="12.7" data-duration="4.8" data-track-index="1">
+      <div class="s5-glow" id="s5-glow"></div>
+      <div class="s5-logo" id="s5-logo">
+        <!-- Inline rocket icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+          <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/>
+          <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/>
+          <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+        </svg>
+      </div>
+      <div class="s5-title" id="s5-title">OPEN<br/>SOURCE</div>
+      <div class="s5-tagline" id="s5-tagline">FREE  ·  FOREVER</div>
+      <div class="s5-url" id="s5-url">npx hyperframes init</div>
+    </div>
+
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+
+    // ===== Progress bar (full video) =====
+    tl.to("#progress-fill", { scaleX: 1, duration: 17.5, ease: "none" }, 0);
+
+    // ===== Watermark (fade in after scene 1) =====
+    tl.set("#watermark", { opacity: 0 }, 0);
+    tl.to("#watermark", { opacity: 0.35, duration: 0.6, ease: "power2.out" }, 2.6);
+
+    // ============================================================
+    // Scene 1: 0–2.5s — AI VIDEO MAKER
+    // ============================================================
+    tl.from("#s1-eyebrow", { y: 30, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.15);
+    tl.from("#s1-row1", { y: 80, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.35);
+    tl.from("#s1-row2", { y: 80, opacity: 0, duration: 0.5, ease: "power3.out" }, 0.45);
+    tl.from("#s1-row3", { y: 80, opacity: 0, duration: 0.5, ease: "back.out(1.4)" }, 0.55);
+    tl.from("#s1-underline", { scaleX: 0, duration: 0.5, ease: "power2.out" }, 0.95);
+
+    // ============================================================
+    // Scene 2: 2.5–5.0s — FREE APIs (gradient slam)
+    // ============================================================
+    tl.from("#s2-eyebrow", { y: 30, opacity: 0, duration: 0.4, ease: "power2.out" }, 2.6);
+    tl.from("#s2-headline", { scale: 0.6, opacity: 0, duration: 0.7, ease: "back.out(1.5)" }, 2.75);
+    tl.from("#s2-tagline", { y: 30, opacity: 0, duration: 0.5, ease: "power2.out" }, 3.4);
+
+    // ============================================================
+    // Scene 3: 5.0–8.5s — STOCK PHOTOS / VIDEO
+    // ============================================================
+    // Photo visible during "stock photos" (5.3-6.5s)
+    tl.set("#s3-photo", { opacity: 0 }, 5.0);
+    tl.to("#s3-photo", { opacity: 1, duration: 0.4, ease: "power2.out" }, 5.05);
+    tl.to("#s3-photo", { opacity: 0, duration: 0.3, ease: "power2.in" }, 7.2);
+    // Video visible during "stock video" (7.3-8.5s)
+    tl.set("#s3-video", { opacity: 0 }, 5.0);
+    tl.to("#s3-video", { opacity: 1, duration: 0.4, ease: "power2.out" }, 7.3);
+
+    // Stock photos line (1st)
+    tl.from("#s3-line1", { x: -80, opacity: 0, duration: 0.5, ease: "expo.out" }, 5.15);
+    tl.to("#s3-line1", { opacity: 0.25, duration: 0.4, ease: "power2.out" }, 7.3);
+    // Stock video line (2nd)
+    tl.from("#s3-line2", { x: 80, opacity: 0, duration: 0.5, ease: "expo.out" }, 7.4);
+    // Pill at bottom
+    tl.from("#s3-pill", { y: 60, opacity: 0, duration: 0.6, ease: "back.out(1.4)" }, 5.6);
+
+    // ============================================================
+    // Scene 4: 8.5–12.7s — NEURAL VOICE + ANIMATED ICONS
+    // ============================================================
+    // First half: NEURAL VOICE + waveform (8.5-10.6s)
+    tl.from("#s4-row1", { y: 60, opacity: 0, duration: 0.6, ease: "back.out(1.4)" }, 8.65);
+    // Waveform bars pop in
+    tl.from("#s4-waveform .bar", {
+      scaleY: 0, opacity: 0, duration: 0.4,
+      stagger: 0.04, ease: "back.out(1.6)",
+      transformOrigin: "center"
+    }, 9.0);
+    // Continuous waveform pulsing — overwrite earlier scaleY tween to avoid conflict
+    tl.to("#s4-waveform .bar", {
+      scaleY: 3, duration: 0.4, ease: "sine.inOut",
+      stagger: { each: 0.06, repeat: 4, yoyo: true },
+      transformOrigin: "center",
+      overwrite: "auto"
+    }, 9.5);
+
+    // Fade waveform stuff out
+    tl.to(["#s4-row1", "#s4-waveform"], { opacity: 0, y: -30, duration: 0.4, ease: "power2.in" }, 10.5);
+
+    // Second half: ANIMATED ICONS + grid (10.7-12.7s)
+    tl.from("#s4-row2", { y: 60, opacity: 0, duration: 0.5, ease: "back.out(1.4)" }, 10.85);
+    tl.from(".s4-icon-cell", {
+      scale: 0, opacity: 0, duration: 0.45,
+      stagger: { each: 0.05, from: "random" },
+      ease: "back.out(1.7)",
+      transformOrigin: "center"
+    }, 11.05);
+
+    // ============================================================
+    // Scene 5: 12.7–17.5s — OUTRO (open source / free forever)
+    // ============================================================
+    tl.from("#s5-glow", { scale: 0, opacity: 0, duration: 0.8, ease: "power2.out", transformOrigin: "center" }, 12.8);
+    tl.from("#s5-logo", {
+      scale: 0, rotation: -180, opacity: 0,
+      duration: 0.8, ease: "back.out(1.6)",
+      transformOrigin: "center"
+    }, 12.85);
+    tl.from("#s5-title", { y: 60, opacity: 0, duration: 0.6, ease: "power3.out" }, 13.4);
+    tl.from("#s5-tagline", { scaleX: 0, opacity: 0, duration: 0.6, ease: "power2.out", transformOrigin: "center" }, 15.45);
+    tl.from("#s5-url", { y: 30, opacity: 0, duration: 0.5, ease: "power2.out" }, 15.9);
+
+    // Final breathe — logo bobs gently
+    tl.to("#s5-logo", { y: -10, duration: 0.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 14.2);
+
+    window.__timelines["promo"] = tl;
+  </script>
+</body>
+</html>

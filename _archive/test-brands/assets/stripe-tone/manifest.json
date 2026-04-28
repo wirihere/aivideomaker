@@ -1,0 +1,44 @@
+{
+  "slug": "stripe-tone",
+  "url": "https://stripe.com",
+  "finalUrl": "https://stripe.com/nz",
+  "extractedAt": "2026-04-26T02:34:32.205Z",
+  "assets": [
+    {
+      "kind": "logo",
+      "path": "assets/stripe-tone/logo.png",
+      "src": "https://images.stripeassets.com/fzn2n1nzq965/24BNV3GGtvCprFLrYovyaa/b2eac20a1d5ec75e4bff3888b998d163/enterprise-accordion-hertz.png?w=296&q=90",
+      "width": 296,
+      "height": 128,
+      "bytes": 62311,
+      "format": "png"
+    },
+    {
+      "kind": "favicon",
+      "path": "assets/stripe-tone/favicon.png",
+      "src": "https://images.stripeassets.com/fzn2n1nzq965/4vVgZi0ZMoEzOhkcv7EVwK/8cce6fdcf2733b2ec8e99548908847ed/favicon.png?w=180&h=180",
+      "width": 180,
+      "height": 180,
+      "bytes": 3143,
+      "format": "png"
+    },
+    {
+      "kind": "hero",
+      "path": "assets/stripe-tone/hero.jpg",
+      "src": "https://images.stripeassets.com/fzn2n1nzq965/XtX984S1GJVsVOXFC7kMu/01988281e867728dfb09aa7793a6e3b9/Stripe.jpg?q=80",
+      "width": 2048,
+      "height": 1024,
+      "bytes": 312818,
+      "format": "jpeg"
+    },
+    {
+      "kind": "product",
+      "path": "assets/stripe-tone/product.jpg",
+      "src": "https://images.stripeassets.com/fzn2n1nzq965/XtX984S1GJVsVOXFC7kMu/01988281e867728dfb09aa7793a6e3b9/Stripe.jpg?q=80",
+      "width": 2048,
+      "height": 1024,
+      "bytes": 312818,
+      "format": "jpeg"
+    }
+  ]
+}

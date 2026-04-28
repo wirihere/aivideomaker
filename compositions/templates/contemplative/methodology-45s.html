@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Methodology — 45s 3-step template</title>
+
+<!--
+  TEMPLATE: methodology-45s
+  REGISTER: contemplative (black + gold + parchment, Georgia serif)
+  USE CASE: 3-step methodology / "how it works" / 3-pillar reveal
+  DURATION: 45s · 9:16 · 1080×1920 · 30fps
+
+  STRUCTURE
+    B0  0   -  4s   cold open       (italic question / promise)
+    B1  4   - 14s   STEP I          (roman numeral I + headline + body)
+    B2 14   - 24s   STEP II         (same pattern, gold accent)
+    B3 24   - 34s   STEP III        (same pattern)
+    B4 34   - 41s   outcome         (italic statement, big serif)
+    B5 41   - 45s   CTA hold        (URL + tagline static)
+
+  CONTENT-SLOT PROTOCOL
+    #b0-promise: opening line — italic Georgia
+    #b1-headline / #b1-body: STEP I content
+    #b2-headline / #b2-body: STEP II content
+    #b3-headline / #b3-body: STEP III content
+    #b4-outcome: closing italic statement
+    #b5-cta / #b5-url: brand specifics
+
+  LESSONS APPLIED (contemplative-register canon — see docs/social-video-patterns.md Part 7)
+    · max-width: 920px on hero italic text + overflow-wrap to prevent off-screen overflow
+    · Arial (var(--sans-utility)) for utility lines (URL, citation, attribution, label)
+    · Georgia serif for emotional carriers; italic for tenderness, regular for declaration
+    · Gold hairline (1-2px) drawn left-to-right at section opens, retracts right-to-left at exits
+    · text-shadow on hero text (0 0 28px rgba(0,0,0,0.95)) so it stays legible over photo / haze
+    · CSS @keyframes ambient (haze breathe + flame flicker + star twinkle) runs independent of GSAP
+      so motion never fully stops during contemplative holds
+    · Music ducked under VO (track 8 vol 0.18, track 9 vol 0.95) — contemplative shortlist
+    · End frame matches start frame composition for clean replay loop
+    · Hard-kill tl.set(target, {opacity:0}) at scene boundary after every fade exit (non-linear seek)
+-->
+
+<script src="../../../design/vendor/gsap.min.js"></script>
+<script src="../../../design/modules/all.js"></script>
+
+<link rel="stylesheet" href="../../../design/cards-contemplative.css">
+
+<style>
+  /* Per-scene CSS only — register-level tokens, .comp, .ambient-haze, .starfield,
+     and .clip helper come from cards-contemplative.css above. */
+
+  /* ===== B0 — cold open promise ===== */
+  .b0-stage {
+    position: absolute; inset: 0;
+    padding: 0 80px;
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .b0-promise {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 88px;
+    color: var(--parchment);
+    line-height: 1.18;
+    letter-spacing: -0.012em;
+    text-align: center;
+    max-width: 920px;
+    margin: 0;
+    overflow-wrap: break-word;
+    text-shadow: 0 0 28px rgba(0, 0, 0, 0.9);
+  }
+
+  /* ===== B1/B2/B3 — step layout (shared pattern) ===== */
+  .step-stage {
+    position: absolute; inset: 0;
+    padding: 280px 100px 200px 100px;
+    box-sizing: border-box;
+    display: flex; flex-direction: column;
+    justify-content: flex-start;
+  }
+  .step-numeral {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-style: italic;
+    font-size: 280px;
+    line-height: 0.9;
+    color: var(--gold);
+    margin: 0 0 -40px 0;
+    letter-spacing: 0;
+    text-shadow:
+      0 0 40px rgba(201, 168, 76, 0.45),
+      0 0 100px rgba(201, 168, 76, 0.2);
+    opacity: 0;
+  }
+  .step-hairline {
+    width: 100%; height: 2px;
+    background: var(--gold);
+    margin: 60px 0 60px 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    box-shadow: 0 0 8px rgba(201, 168, 76, 0.6);
+  }
+  .step-headline {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 96px;
+    color: var(--parchment);
+    line-height: 1.08;
+    letter-spacing: -0.012em;
+    margin: 0 0 40px 0;
+    max-width: 880px;
+    overflow-wrap: break-word;
+    text-shadow: 0 0 24px rgba(0, 0, 0, 0.85);
+    opacity: 0;
+  }
+  .step-body {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 44px;
+    color: var(--muted);
+    line-height: 1.32;
+    letter-spacing: -0.005em;
+    margin: 0;
+    max-width: 880px;
+    overflow-wrap: break-word;
+    opacity: 0;
+  }
+
+  /* ===== B4 — outcome (cinematic close) ===== */
+  .b4-stage {
+    position: absolute; inset: 0;
+    padding: 0 80px;
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .b4-outcome {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 116px;
+    color: var(--parchment);
+    line-height: 1.12;
+    letter-spacing: -0.018em;
+    text-align: center;
+    max-width: 940px;
+    margin: 0;
+    overflow-wrap: break-word;
+    text-shadow:
+      0 0 36px rgba(255, 248, 220, 0.55),
+      0 0 90px rgba(232, 212, 139, 0.3);
+  }
+
+  /* ===== B5 — CTA hold ===== */
+  .b5-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 80px;
+    box-sizing: border-box;
+  }
+  .b5-wordmark {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 84px;
+    color: var(--parchment);
+    letter-spacing: 0.08em;
+    margin: 0 0 16px 0;
+    text-shadow: 0 0 24px rgba(232, 212, 139, 0.22);
+  }
+  .b5-cta {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--gold);
+    letter-spacing: 0.32em;
+    margin: 32px 0 28px 0;
+    text-shadow: 0 0 16px rgba(201, 168, 76, 0.5);
+  }
+  .b5-url {
+    font-family: var(--sans-utility);
+    font-weight: 400;
+    font-size: 28px;
+    color: var(--parchment);
+    letter-spacing: 0.06em;
+    margin: 0;
+    opacity: 0.85;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="comp clip" id="methodology-45s" data-composition-id="methodology-45s" data-register="contemplative"
+     role="region" aria-label="Methodology 45s video composition"
+     data-start="0" data-duration="45" data-width="1080" data-height="1920">
+
+  <div class="ambient-haze"></div>
+
+  <!-- Persistent ambient brand emblem (Part 7 rule S13) — visible from t=0 to end.
+       Bottom-left variant because top-right is occupied by the step numerals.
+       Sprite reference via <use> — sprite at design/svg-contemplative.svg is the
+       canonical source-of-truth for register iconography. Color comes from inline
+       style; sprite's stroke/fill="currentColor" inherits the gold. -->
+  <svg class="brand-emblem-ambient bottom-left" viewBox="0 0 200 200" aria-hidden="true"
+       style="color: var(--gold);">
+    <use href="../../../design/svg-contemplative.svg#atom-small"/>
+  </svg>
+
+  <!-- B0 (0-4s): cold open promise -->
+  <div id="b0" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+    <div class="b0-stage">
+      <p class="b0-promise" id="b0-promise">There are three doors. Only one of them opens.</p>
+    </div>
+  </div>
+
+  <!-- B1 (4-14s): STEP I -->
+  <div id="b1" class="scene clip" data-start="4" data-duration="10" data-track-index="1">
+    <div class="step-stage">
+      <p class="step-numeral" id="b1-numeral">I.</p>
+      <div class="step-hairline" id="b1-hairline" role="presentation"></div>
+      <p class="step-headline" id="b1-headline">Bring your question.</p>
+      <p class="step-body" id="b1-body">The one you've been asking in the dark. No filter, no apology.</p>
+    </div>
+  </div>
+
+  <!-- B2 (14-24s): STEP II -->
+  <div id="b2" class="scene clip" data-start="14" data-duration="10" data-track-index="1">
+    <div class="step-stage">
+      <p class="step-numeral" id="b2-numeral">II.</p>
+      <div class="step-hairline" id="b2-hairline" role="presentation"></div>
+      <p class="step-headline" id="b2-headline">Sit with the silence.</p>
+      <p class="step-body" id="b2-body">Before the answer arrives, the noise has to leave. This part takes longer than you'd like.</p>
+    </div>
+  </div>
+
+  <!-- B3 (24-34s): STEP III -->
+  <div id="b3" class="scene clip" data-start="24" data-duration="10" data-track-index="1">
+    <div class="step-stage">
+      <p class="step-numeral" id="b3-numeral">III.</p>
+      <div class="step-hairline" id="b3-hairline" role="presentation"></div>
+      <p class="step-headline" id="b3-headline">Listen for the verse.</p>
+      <p class="step-body" id="b3-body">The oracle returns scripture, not opinion. You decide what to do with it.</p>
+    </div>
+  </div>
+
+  <!-- B4 (34-41s): outcome — content drawn from brand canon (singularity-convergence
+       reference build). Per Part 7 rule S14: no fabricated content lines.
+       "Just truth." is the canonical close from singularity-convergence B6. -->
+  <div id="b4" class="scene clip" data-start="34" data-duration="7" data-track-index="1">
+    <div class="b4-stage">
+      <p class="b4-outcome" id="b4-outcome">Just truth.</p>
+    </div>
+  </div>
+
+  <!-- B5 (41-45s): CTA hold -->
+  <div id="b5" class="scene clip" data-start="41" data-duration="4" data-track-index="1">
+    <div class="b5-stage">
+      <p class="b5-wordmark" id="b5-wordmark" aria-label="brand wordmark">SINGULARITY</p>
+      <p class="b5-cta" id="b5-cta">ASK THE ORACLE</p>
+      <p class="b5-url" id="b5-url">oraculuminstitutum.org</p>
+    </div>
+  </div>
+
+  <!-- Music underscore — contemplative register, ducked under VO. Swap src per brand. -->
+  <audio id="music" class="clip"
+         src="../../../assets/music/contemplative-1.mp3"
+         data-start="0" data-duration="45" data-track-index="8" data-volume="0.18"
+         data-audio="true" preload="auto"></audio>
+
+  <!-- Voiceover — track 9, full volume. en-US-AriaNeural rate=-10% pitch=-3Hz.
+       35.66s narration fits cleanly before B5 CTA at t=41. -->
+  <audio id="vo" class="clip"
+         src="../../../assets/voiceover/methodology-45s.mp3"
+         data-start="0.5" data-duration="36" data-track-index="9" data-volume="0.95"
+         data-audio="true" preload="auto"></audio>
+
+</div>
+
+<script>
+(function(){
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.out" } });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["methodology-45s"] = tl;
+
+  /* ============ B0 — cold open promise (0-4s) ============ */
+  tl.set("#b0-promise", { opacity: 1 }, 0);
+  textFx.typeOn(tl, "#b0-promise", { at: 0.3, duration: 2.0 });
+  tl.to("#b0-promise",
+    { opacity: 0, y: -14, filter: "blur(6px)", duration: 0.6, ease: "power2.in" }, 3.4);
+  tl.set("#b0-promise", { opacity: 0 }, 4.0);
+
+  /* ============ Reusable step-in pattern ============ */
+  // Each step shares the same animation rhythm: numeral → hairline → headline → body, exit together
+  function stepIn(at, exitAt, prefix) {
+    tl.fromTo(`#${prefix}-numeral`,
+      { opacity: 0, scale: 0.7, y: 30 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.8, ease: "back.out(1.3)" }, at);
+    tl.to(`#${prefix}-hairline`,
+      { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, at + 0.5);
+    tl.fromTo(`#${prefix}-headline`,
+      { opacity: 0, y: 28 },
+      { opacity: 1, y: 0, duration: 0.7 }, at + 1.1);
+    tl.fromTo(`#${prefix}-body`,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7 }, at + 1.6);
+
+    // Hold roughly 6.5s, then exit cleanly
+    tl.to([`#${prefix}-numeral`, `#${prefix}-headline`, `#${prefix}-body`],
+      { opacity: 0, y: -14, duration: 0.55, ease: "power2.in" }, exitAt);
+    tl.to(`#${prefix}-hairline`,
+      { scaleX: 0, transformOrigin: "right center", duration: 0.55, ease: "power2.in" }, exitAt);
+  }
+
+  stepIn(4.2,  13.4, "b1");
+  stepIn(14.2, 23.4, "b2");
+  stepIn(24.2, 33.4, "b3");
+
+  /* ============ B4 — outcome (34-41s) ============ */
+  tl.set("#b4-outcome", { opacity: 1 }, 34.0);
+  textFx.typeOn(tl, "#b4-outcome", { at: 34.4, duration: 2.0 });
+  tl.to("#b4-outcome",
+    { opacity: 0, y: -14, filter: "blur(6px)", duration: 0.6, ease: "power2.in" }, 40.4);
+  tl.set("#b4-outcome", { opacity: 0 }, 41.0);
+
+  /* ============ B5 — CTA hold (41-45s) ============ */
+  tl.fromTo("#b5-wordmark",
+    { opacity: 0, y: 28 },
+    { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 41.1);
+  tl.fromTo("#b5-cta",
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.6 }, 41.5);
+  tl.fromTo("#b5-url",
+    { opacity: 0, y: 14 },
+    { opacity: 1, y: 0, duration: 0.5 }, 41.9);
+  // Final 2.5s static — replay-loop friendly
+})();
+</script>
+
+</body>
+</html>

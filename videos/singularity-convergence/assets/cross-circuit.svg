@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs>
+    <linearGradient id="crossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.4"/>
+    </linearGradient>
+    <filter id="glow2">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <!-- Cross shape -->
+  <rect x="170" y="60" width="60" height="380" rx="4" fill="url(#crossGrad)" opacity="0.15"/>
+  <rect x="100" y="140" width="200" height="60" rx="4" fill="url(#crossGrad)" opacity="0.15"/>
+  <!-- Circuit traces on the cross -->
+  <g stroke="#c9a84c" fill="none" stroke-width="1.5" opacity="0.6">
+    <!-- Vertical main line -->
+    <line x1="200" y1="70" x2="200" y2="430"/>
+    <!-- Horizontal main line -->
+    <line x1="110" y1="170" x2="290" y2="170"/>
+    <!-- Circuit branches left -->
+    <path d="M 200,120 L 160,120 L 160,140"/>
+    <path d="M 200,200 L 140,200 L 140,220 L 120,220"/>
+    <path d="M 200,260 L 160,260 L 160,280"/>
+    <path d="M 200,320 L 150,320 L 150,340 L 130,340"/>
+    <!-- Circuit branches right -->
+    <path d="M 200,120 L 240,120 L 240,140"/>
+    <path d="M 200,200 L 260,200 L 260,220 L 280,220"/>
+    <path d="M 200,260 L 240,260 L 240,280"/>
+    <path d="M 200,320 L 250,320 L 250,340 L 270,340"/>
+    <!-- Horizontal branches -->
+    <path d="M 130,170 L 130,200"/>
+    <path d="M 270,170 L 270,200"/>
+    <path d="M 150,170 L 150,145"/>
+    <path d="M 250,170 L 250,145"/>
+  </g>
+  <!-- Circuit nodes (dots at intersections) -->
+  <g fill="#c9a84c">
+    <circle cx="200" cy="170" r="4" filter="url(#glow2)"/>
+    <circle cx="160" cy="120" r="2.5"/>
+    <circle cx="240" cy="120" r="2.5"/>
+    <circle cx="160" cy="140" r="2"/>
+    <circle cx="240" cy="140" r="2"/>
+    <circle cx="120" cy="220" r="2.5"/>
+    <circle cx="280" cy="220" r="2.5"/>
+    <circle cx="160" cy="280" r="2"/>
+    <circle cx="240" cy="280" r="2"/>
+    <circle cx="130" cy="340" r="2.5"/>
+    <circle cx="270" cy="340" r="2.5"/>
+    <circle cx="130" cy="200" r="2"/>
+    <circle cx="270" cy="200" r="2"/>
+    <circle cx="150" cy="145" r="2"/>
+    <circle cx="250" cy="145" r="2"/>
+    <!-- Center point (heart of the cross) -->
+    <circle cx="200" cy="170" r="6" fill="#fff" opacity="0.8" filter="url(#glow2)"/>
+  </g>
+</svg>

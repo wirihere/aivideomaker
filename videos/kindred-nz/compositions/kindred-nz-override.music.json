@@ -1,0 +1,92 @@
+{
+  "template": "warm-community",
+  "vibe": "organic, soft, mid-tempo, no lyrics",
+  "bpm_range": [
+    80,
+    100
+  ],
+  "default_volume": 0.18,
+  "seconds_filter": 30,
+  "tracks": [
+    {
+      "slug": "kindred-bed",
+      "title": "Acoustic Community (Kindred bed)",
+      "url": "https://cdn.pixabay.com/audio/2026/03/11/audio_ec7df85a4e.mp3",
+      "search_url": "https://pixabay.com/music/search/gentle%20acoustic%20guitar%20community%20warm/",
+      "duration": 213,
+      "bpm": 88,
+      "tags": [
+        "acoustic",
+        "guitar",
+        "warm",
+        "fingerstyle",
+        "pad"
+      ],
+      "character": "Gentle acoustic guitar fingerstyle, soft pad underneath, mid-tempo",
+      "best_for": "Default Warm Community bed; community apps, charities, NGOs",
+      "proven_on": "Kindred 2026-04-25",
+      "local_file": "assets/music/kindred-bed.mp3"
+    },
+    {
+      "slug": "warm-02-folk",
+      "title": "Warm Folk (warm-02 audition)",
+      "url": "https://pixabay.com/music/search/warm%20acoustic%20folk%20inspirational/",
+      "duration": 137,
+      "bpm": 84,
+      "tags": [
+        "folk",
+        "acoustic",
+        "warm",
+        "inspirational"
+      ],
+      "character": "Warm acoustic folk with inspirational lift",
+      "best_for": "Mid-tempo features section",
+      "local_file": "assets/music/warm-02-folk.mp3"
+    },
+    {
+      "slug": "warm-and-soft-guitar",
+      "title": "Warm And Soft Guitar",
+      "url": "https://pixabay.com/music/acoustic-group-warm-and-soft-guitar-144450/",
+      "duration": 130,
+      "bpm": 90,
+      "tags": [
+        "acoustic",
+        "guitar",
+        "warm",
+        "soft"
+      ],
+      "character": "Warm acoustic group, soft strumming, neighbourly",
+      "best_for": "Community brand intros, neighbourhood reveals"
+    },
+    {
+      "slug": "warm-acoustic-melody",
+      "title": "Warm Acoustic Melody",
+      "url": "https://pixabay.com/music/acoustic-group-warm-acoustic-melody-232912/",
+      "duration": 145,
+      "bpm": 86,
+      "tags": [
+        "acoustic",
+        "warm",
+        "melody",
+        "uplifting"
+      ],
+      "character": "Acoustic guitar melody with gentle inspiration arc",
+      "best_for": "Mid-scene narration beds, uplifting CTA swells"
+    },
+    {
+      "slug": "acoustic-guitar-music",
+      "title": "Acoustic Guitar Music",
+      "url": "https://pixabay.com/music/acoustic-group-acoustic-guitar-music-459424/",
+      "duration": 120,
+      "bpm": 92,
+      "tags": [
+        "acoustic",
+        "guitar",
+        "uplifting",
+        "folk"
+      ],
+      "character": "Bright acoustic guitar with light percussion, folk feel",
+      "best_for": "Brand-introduce scenes; uplifting community stories"
+    }
+  ]
+}

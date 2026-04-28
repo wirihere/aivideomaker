@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How a video gets made — preview</title>
+
+<!-- marked.js for markdown rendering, mermaid.js for flow charts -->
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+
+<style>
+  :root {
+    --bg: #fafaf7;
+    --fg: #1a1a1f;
+    --muted: #5a5a5f;
+    --border: #e0ddd5;
+    --accent: #b89530;
+    --code-bg: #f0ede5;
+    --content-w: 880px;
+  }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+  body {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    line-height: 1.65;
+    padding: 60px 40px;
+  }
+  .wrap { max-width: var(--content-w); margin: 0 auto; }
+  .toolbar {
+    position: sticky;
+    top: 0;
+    background: rgba(250, 250, 247, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    margin: -60px -40px 32px -40px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .toolbar a {
+    color: var(--accent);
+    text-decoration: none;
+    margin: 0 12px;
+  }
+  .toolbar a:hover { text-decoration: underline; }
+  h1, h2, h3, h4 { font-family: Georgia, serif; line-height: 1.25; }
+  h1 { font-size: 36px; margin: 0 0 24px; }
+  h2 {
+    font-size: 26px; margin: 60px 0 16px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    color: var(--accent);
+  }
+  h3 { font-size: 21px; margin: 36px 0 12px; }
+  h4 { font-size: 17px; margin: 24px 0 8px; font-weight: 700; }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px 24px; padding: 0; }
+  li { margin: 0 0 8px; }
+  blockquote {
+    border-left: 3px solid var(--accent);
+    margin: 0 0 16px;
+    padding: 4px 0 4px 18px;
+    color: var(--muted);
+    font-style: italic;
+  }
+  code {
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg);
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+  }
+  pre code { background: none; padding: 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 24px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th { background: var(--code-bg); font-weight: 700; }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+  .mermaid {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin: 24px 0;
+    text-align: center;
+  }
+  a { color: var(--accent); }
+  strong { color: var(--fg); font-weight: 700; }
+  em { color: var(--muted); }
+  #content { opacity: 0; transition: opacity 0.3s; }
+  #content.ready { opacity: 1; }
+  #loading {
+    text-align: center;
+    color: var(--muted);
+    padding: 80px 0;
+  }
+  .toc {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin: 24px 0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+  }
+  .toc-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--accent);
+  }
+  .toc ul { margin: 0; padding-left: 20px; }
+  .toc li { margin: 2px 0; }
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="toolbar">
+    Preview: docs/skills/how-a-video-gets-made.md
+    &nbsp;·&nbsp;
+    <a href="javascript:location.reload()">↻ refresh</a>
+    &nbsp;·&nbsp;
+    <a href="javascript:window.scrollTo({top:0,behavior:'smooth'})">↑ top</a>
+  </div>
+
+  <div id="loading">Loading…</div>
+  <div id="content"></div>
+</div>
+
+<script>
+  mermaid.initialize({ startOnLoad: false, theme: 'neutral', themeVariables: { fontSize: '14px' } });
+
+  const MD_PATH = 'docs/skills/how-a-video-gets-made.md';
+
+  async function render() {
+    const loading = document.getElementById('loading');
+    const content = document.getElementById('content');
+    try {
+      const res = await fetch(MD_PATH + '?t=' + Date.now());
+      if (!res.ok) throw new Error(`Could not load ${MD_PATH} (${res.status})`);
+      const md = await res.text();
+
+      // Configure marked: GFM tables + sanitize off (we trust the input)
+      marked.setOptions({ gfm: true, breaks: false });
+
+      // Pull mermaid blocks out before marked, replace with placeholders
+      const mermaidBlocks = [];
+      const mdWithPlaceholders = md.replace(/```mermaid\n([\s\S]*?)```/g, (_, code) => {
+        mermaidBlocks.push(code);
+        return `<div class="mermaid-placeholder" data-idx="${mermaidBlocks.length - 1}"></div>`;
+      });
+
+      // Render markdown
+      let html = marked.parse(mdWithPlaceholders);
+
+      // Re-insert mermaid blocks as <div class="mermaid"> elements
+      html = html.replace(/<div class="mermaid-placeholder" data-idx="(\d+)"><\/div>/g, (_, idx) => {
+        return `<div class="mermaid">${mermaidBlocks[+idx]}</div>`;
+      });
+
+      // Build a TOC from h2 + h3
+      const tocHtml = buildToc(md);
+
+      content.innerHTML = tocHtml + html;
+
+      // Render all mermaid charts now that the DOM is in place
+      await mermaid.run({ querySelector: '.mermaid' });
+
+      // Slugify h2/h3 for in-page links
+      content.querySelectorAll('h2, h3').forEach(h => {
+        h.id = h.textContent.toLowerCase()
+          .replace(/[^a-z0-9 ]/g, '')
+          .replace(/\s+/g, '-')
+          .substring(0, 60);
+      });
+
+      loading.style.display = 'none';
+      content.classList.add('ready');
+    } catch (e) {
+      loading.innerHTML = `<strong>Failed to load:</strong><br>${e.message}<br><br>
+        Make sure you opened this file via a local web server (e.g. <code>npx hyperframes preview</code>),
+        not directly via file:// — fetch needs HTTP.`;
+    }
+  }
+
+  function buildToc(md) {
+    const lines = md.split('\n');
+    const items = [];
+    for (const line of lines) {
+      const m2 = /^## (.+)$/.exec(line);
+      const m3 = /^### (.+)$/.exec(line);
+      if (m2) items.push({ depth: 2, text: m2[1] });
+      else if (m3) items.push({ depth: 3, text: m3[1] });
+    }
+    if (!items.length) return '';
+    const slug = t => t.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, '-').substring(0, 60);
+    let html = '<div class="toc"><div class="toc-title">In this doc</div><ul>';
+    let inSub = false;
+    for (const it of items) {
+      if (it.depth === 2) {
+        if (inSub) { html += '</ul></li>'; inSub = false; }
+        html += `<li><a href="#${slug(it.text)}">${it.text}</a>`;
+      } else {
+        if (!inSub) { html += '<ul>'; inSub = true; }
+        html += `<li><a href="#${slug(it.text)}">${it.text}</a></li>`;
+      }
+    }
+    if (inSub) html += '</ul></li>';
+    html += '</ul></div>';
+    return html;
+  }
+
+  render();
+</script>
+
+</body>
+</html>

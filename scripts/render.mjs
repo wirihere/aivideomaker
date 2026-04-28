@@ -375,6 +375,52 @@ if (printArgs) {
   process.exit(0);
 }
 
+// ============================================================================
+// SILENT-VO RENDER GATE (Part 7 rule S15) — refuse to render if VO is unwired.
+// ============================================================================
+// Checks for two telltale markers in index.html:
+//   (1) `data-todo` attribute on any element — placeholder marker left by
+//       templates whose VO hasn't been generated yet.
+//   (2) `PLACEHOLDER.mp3` substring — the 1s silent stub that lints clean
+//       but produces a silent video.
+//
+// Bypass with `--allow-silent-vo` for proof-renders / template-validation.
+// Bypass also auto-applied for `--dry-run` (where no real audio is expected).
+const allowSilentVo = ourArgs.includes("--allow-silent-vo")
+  || passThrough.includes("--allow-silent-vo")
+  || ourArgs.includes("--dry-run");
+{
+  const indexHtmlPath = path.join(projectRoot, "index.html");
+  if (fs.existsSync(indexHtmlPath)) {
+    const html = fs.readFileSync(indexHtmlPath, "utf8");
+    const hasTodo = /\bdata-todo=/.test(html);
+    const hasPlaceholderMp3 = /PLACEHOLDER\.mp3/i.test(html);
+    if ((hasTodo || hasPlaceholderMp3) && !allowSilentVo) {
+      console.error("");
+      console.error("✗ Render refused: silent-VO gate (Part 7 rule S15)");
+      console.error("");
+      if (hasTodo) {
+        console.error("  index.html contains a `data-todo` attribute — a template");
+        console.error("  marker indicating the VO hasn't been wired yet.");
+      }
+      if (hasPlaceholderMp3) {
+        console.error("  index.html references PLACEHOLDER.mp3 — the silent stub.");
+      }
+      console.error("");
+      console.error("  Fix one of:");
+      console.error("    • Generate real TTS:");
+      console.error("        node scripts/fetch-tts-edge.mjs --file=<script.txt> \\");
+      console.error("              --voice=en-US-AriaNeural <slug>.mp3");
+      console.error("      then update <audio id=\"vo\"> src + remove data-todo.");
+      console.error("    • Or pass --allow-silent-vo for a proof-render.");
+      console.error("");
+      console.error("  Canon: docs/social-video-patterns.md Part 7 rule S15.");
+      console.error("");
+      process.exit(1);
+    }
+  }
+}
+
 const t0 = Date.now();
 console.log("▶ render: hyperframes render", passThrough.join(" "));
 

@@ -1,0 +1,39 @@
+{
+  "slug": "kindred-nz-tone",
+  "writtenAt": "2026-04-26T02:36:29.817Z",
+  "comp": {
+    "path": "compositions/kindred-nz-tone.html",
+    "sha256": "de2934ad70dcf13bdf1962bc812b37049e7fa7dc5355a8caccc5749048d8fe8b"
+  },
+  "sharedResources": [
+    {
+      "path": "design/cards.css",
+      "sha256": "50aebf66fa341a01ee2d6d38b65d75358aa3fce456fee8a581fbcef48aedb31a"
+    },
+    {
+      "path": "design/effects-batch-08.css",
+      "sha256": "5cce277e8ce5658e1b63edfd3ac271d291cd41858093186a16fb24340c759ac3"
+    },
+    {
+      "path": "design/modules/all.css",
+      "sha256": "1148c992f6bad0bde14b691f0597a389ec305510de3c33f017cd0a80aeb370a5"
+    },
+    {
+      "path": "design/modules/all.js",
+      "sha256": "3ed9711b4b12caeb5ed24a5dd1910d07b5dcb921b16e657fa0d28b23ec2db6c5"
+    },
+    {
+      "path": "design/templates/warm-community.css",
+      "sha256": "bc00dcbcb9bbe5599f9c7a7a69fde53dbe25488bd1ff3f0351094be47b49656c"
+    },
+    {
+      "path": "design/tokens-kindred-nz-tone.css",
+      "sha256": "585a0be7947732de6240acac53f81fd8a981462b17f171bf5f985227044d1fde"
+    },
+    {
+      "path": "design/vendor/gsap.min.js",
+      "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+    }
+  ],
+  "renderedAt": null
+}

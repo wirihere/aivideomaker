@@ -1,0 +1,25 @@
+/* <BRAND> design tokens
+ * Filled during Stage 2 from capture/extracted/tokens.json.
+ * Per founding doc Stage 5: composition references this via root-relative path
+ * `videos/<brand-slug>/tokens.css` so it works in-place AND after promotion to index.html.
+ */
+
+:root {
+  /* Palette — fill from capture's top 5-7 colors with role labels */
+  --brand-bg:       #FFFFFF;  /* primary background */
+  --brand-ink:      #000000;  /* primary text / ink */
+  --brand-ink-2:    #333333;  /* secondary text */
+  --brand-mute:     #999999;  /* utility / muted text */
+  --brand-accent:   #0066CC;  /* primary accent */
+  --brand-accent-2: #FFAA00;  /* secondary accent */
+  --brand-warn:     #CC3333;  /* warning / strike */
+
+  /* Type — fill from capture's font families */
+  --brand-serif:    Georgia, "Times New Roman", serif;
+  --brand-sans:     Inter, system-ui, sans-serif;
+  --brand-mono:     "JetBrains Mono", ui-monospace, monospace;
+
+  /* Rules / dividers */
+  --brand-rule:        rgba(0, 0, 0, 0.14);
+  --brand-rule-strong: rgba(0, 0, 0, 0.38);
+}

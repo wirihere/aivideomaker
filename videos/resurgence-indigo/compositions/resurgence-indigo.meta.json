@@ -1,0 +1,39 @@
+{
+  "slug": "resurgence-indigo",
+  "writtenAt": "2026-04-26T12:58:56.262Z",
+  "comp": {
+    "path": "compositions/resurgence-indigo.html",
+    "sha256": "472ecc6896c0a9c6724962063092956bf2a3599f0b8ef646193d2456039e1e00"
+  },
+  "sharedResources": [
+    {
+      "path": "design/cards.css",
+      "sha256": "50aebf66fa341a01ee2d6d38b65d75358aa3fce456fee8a581fbcef48aedb31a"
+    },
+    {
+      "path": "design/effects-batch-08.css",
+      "sha256": "63f462a5009284b8b9989f275ef552d600fd1611ef6c9acf570a5cd594d2f74f"
+    },
+    {
+      "path": "design/modules/all.css",
+      "sha256": "1148c992f6bad0bde14b691f0597a389ec305510de3c33f017cd0a80aeb370a5"
+    },
+    {
+      "path": "design/modules/all.js",
+      "sha256": "3ed9711b4b12caeb5ed24a5dd1910d07b5dcb921b16e657fa0d28b23ec2db6c5"
+    },
+    {
+      "path": "design/templates/warm-community.css",
+      "sha256": "bc00dcbcb9bbe5599f9c7a7a69fde53dbe25488bd1ff3f0351094be47b49656c"
+    },
+    {
+      "path": "design/tokens-resurgence-indigo.css",
+      "sha256": "3c583f07a91de2d6db1a7083e9ddbf2c1c537cd5ce8d045f1174c73d7bce81d5"
+    },
+    {
+      "path": "design/vendor/gsap.min.js",
+      "sha256": "92bb9a96476f983d212a2bc4f54c889039c1696dd4461d40a736860938570fbb"
+    }
+  ],
+  "renderedAt": null
+}

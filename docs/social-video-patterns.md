@@ -7,7 +7,7 @@ Canonical reference for what makes a 9:16 short-form video work as a Reel / TikT
 
 This is the doc the orchestrator + verifier read when assembling and grading social-shape templates. Templates that violate the rules below should fail to ship.
 
-> Last updated: 2026-04-26. Cross-references existing internal playbooks under `docs/playbooks/` (cinematic-vertical-promo, copy-and-script) and copy-research notes — those carry the deeper craft rules; this doc is the **platform-current shape** layer.
+> Last updated: 2026-04-28. Subordinate to the founding doc (`docs/skills/how-a-video-gets-made.md`) — this doc is the **Stage 8 reference** (platform-mechanical layout rules + register-specific shape rules + anti-patterns). For copy craft (Stage 3), see the founding doc + `docs/copy-research/`. For composition assembly (Stage 7), see `docs/playbooks/composition-assembly.md`.
 
 ---
 
@@ -77,7 +77,7 @@ Distinct from B2B-explainer or hero-cinematic. Sourced from Olio (UK), Nextdoor 
 
 ## Part 3 — Cross-reference with internal playbooks
 
-### Existing 5-beat structure (from `docs/playbooks/copy-and-script.md`)
+### Existing 5-beat structure (now superseded — see Stage 3 of `docs/skills/how-a-video-gets-made.md`)
 
 | Beat | Time | Slot | Maps to rules |
 |---|---|---|---|
@@ -87,13 +87,13 @@ Distinct from B2B-explainer or hero-cinematic. Sourced from Olio (UK), Nextdoor 
 | 4. Proof | 16-24s | Real-world visual + tone-bite | Pattern 2, 7 |
 | 5. CTA | 24-29s | Wordmark + URL + verb | R5, R14, R15 |
 
-### Hybrid composition rule (from `docs/playbooks/copy-and-script.md`)
+### Hybrid composition rule (now lives in Stage 7 of `docs/skills/how-a-video-gets-made.md` + `docs/playbooks/composition-assembly.md`)
 
 > Every scene has at least one real-world visual grounded in stock AND at least one HTML overlay carrying information or brand cue.
 
 This is the same rule as Pattern 2. Re-affirmed.
 
-### Shot count budget (from `docs/playbooks/cinematic-vertical-promo.md`)
+### Shot count budget (originally from cinematic-vertical-promo playbook — now archived; rule preserved here)
 
 > 14-17 shots for 27s. Under 12 = slideshow. 2-3 shots per narrated beat is the sweet spot.
 
@@ -180,7 +180,94 @@ Add the 9 TODO checks from Part 1's table to `scripts/verify-render.mjs`. Most c
 
 ---
 
-## Part 7 — Glossary / abbreviations
+## Part 7 — The contemplative register (slow-form contemplative variant)
+
+> Added 2026-04-27 after singularity-convergence + 4-template family ship. Documents where Part 1's rules intentionally don't apply, and what the alternative discipline looks like.
+
+The rules in Part 1 (R1-R15) are calibrated for **kinetic-feed-native** content — TikTok / Reels / Shorts where attention is a 3-second contract. They produce PowerPoint-with-motion when applied to brands whose value proposition is contemplation, mystery, premium quiet, or sacred-tech (oracle / spiritual-AI / luxury-stillness / liturgical-product). For those briefs, a different register applies — call it **contemplative** — and the rules below replace R1, R9, R10, R11, R12 *for this register only*.
+
+### When this register is right
+
+The brand is selling silence, depth, or revelation. Examples: an AI oracle for spiritual seekers, a meditation app, a high-end perfume launch, a tarot service, a religious-tech platform, a luxury watch. The brand voice is liturgical, not transactional. The audience self-selects for stillness, not for a hook.
+
+If you're not sure: read the brand's homepage. If the H1 is a question or a promise (not a benefit + verb), it's probably contemplative register. If the H1 says "Save time on X" it's not — use Part 1 rules.
+
+### Replacement rules for this register
+
+| Standard rule | Contemplative replacement |
+|---|---|
+| **R1** Hook ≤3s, no logo card before it | **S1** First 2-6s is atmosphere only — a flame, a breath, a held silence. Brand wordmark appears at 8-15s minimum. The hook is what's *withheld*, not what's shown. |
+| **R9** No static holds >2.5s | **S9** Static holds are fine if the *ambient layer* (haze breathe, starfield twinkle, slow rotation) is animating in CSS independent of the timeline. Persistent ambient motion replaces cut cadence as the rhythm-guarantor. |
+| **R10** Beat structure 0-3s hook → 3-8s promise → 8-24s proof → 24-30s CTA | **S10** Contemplative beat structure: atmosphere (0-6s) → tease (6-14s) → reveal (14-22s) → demonstration / step-pattern (22-36s or 22-48s) → promise (36-48s) → CTA (48-56s) → afterglow loop bridge (56-60s). |
+| **R11** Faces or motion fill ≥60% of frame seconds 0-3 | **S11** ≤10% of frame is filled in seconds 0-3. The void is the hero. Negative space is the value proposition. |
+| **R12** 21-34s sweet spot | **S12** 15-60s range. Duration matches use case: 15s = scroll-stopper, 30s = testimonial, 45s = methodology, 60s = manifesto/launch. Shorter than 15s loses the contemplative pace; longer than 60s loses retention even from self-selecting audiences. |
+
+### Contemplative additions (no kinetic-feed equivalent)
+
+These rules are unique to the contemplative register — not replacements for Part 1, but new requirements that don't exist in kinetic-feed content.
+
+- **S13** **Persistent ambient brand emblem.** Every contemplative composition must show a small brand emblem (atom orbital, concentric circle, or candle flame) at low opacity, corner-anchored, slowly rotating, from t=0 through to the end. Required because: (a) contemplative's "void as hero" (S11) means the brand can be absent for 30-50s if not anchored; (b) the contemplative pace gives viewers time to *look for* brand presence — its absence reads as missing, not minimal. Implementation: shared CSS class `.brand-emblem-ambient` in `design/cards-contemplative.css`. Top-right or bottom-left corner. 60-80px. opacity 0.18. Rotation 360° over 60-90s. Not a logo; not a wordmark. An emblem.
+- **S14** **No fabricated content lines.** Outcome lines, taglines, manifesto statements, quotes, attributions — all must come from a constrained source: (a) the brand's own copy from URL extraction, OR (b) the canonical content library for the register where the brand is fictional but consistent (e.g. `compositions/templates/contemplative/canon-content.json`). Author-invented "Three steps. One truth at a time."-style aphorisms are forbidden — same rule as `feedback_no_invented_facts.md` extended from facts to taglines. If no canon source exists, the scene gets visual-only treatment (emblem + hairline + silence). Better to have nothing than to have invented copy.
+- **S15** **No render without real TTS** (unless explicit `--allow-silent-vo` flag). Templates ship with a `data-todo="provide TTS for this template's narration"` placeholder marker. The `scripts/render.mjs` gate must refuse to render if any `<audio>` tag has `data-todo` AND points at the silent placeholder file. Operator override: `--allow-silent-vo` for proof-renders / template-validation runs. Memory rule `feedback_silent_loop_not_skipped.md` ("never ship on watch") + this gate together close the silent-shipping loophole.
+- **S16** **Hero text and hero SVG must not occupy the same vertical band.** When an SVG is sized to dominate (≥500px), reserve the centre 40% of the frame for the SVG and push hero text into the lower 25-35% (or upper 20% for a brand strip). Text overlaid on a dominant SVG reads as "decoration behind text" — the SVG stops being the hero and becomes wallpaper. Layout pattern: brand-strip top (atom 150px + wordmark 72px) → hero SVG centre (700px @ opacity 0.55) → narration text lower-third (Georgia italic 100-140px on parchment) → utility footer. The SVG and text get separate vertical zones; they never overlap. Found 2026-04-28 on `singularity-convergence-manifesto v3` — single 700px atom sat behind every line of narration, making the visual element invisible.
+- **S17** **Rotate brand SVGs across scenes — don't lean on one persistent emblem for the whole video.** Contemplative brands typically ship 2-4 distinct SVGs (atom orbital + cross-of-circuits + neural-tree + logo, in singularity-convergence's case). Pick a different SVG per beat or per pair of beats so the visual register evolves. The S13 ambient emblem (small, corner-anchored, opacity 0.18) stays constant — that's the brand anchor. The hero SVG (large, centre-stage, opacity 0.45-0.7) cycles. Pattern: B0-B1 atom (origin), B2-B4 cross-of-circuits (synthesis), B5-B7 neural-tree (revelation), B8-B9 atom-return (closure). One scene = one hero SVG; cross-fade between SVGs at scene boundaries (0.6-0.9s) for contemplative pacing. Found 2026-04-28 on `singularity-convergence-manifesto v3` — single atom across all 12 scenes flattened the visual narrative.
+- **S18** **Brand strip must fit the 920px safe zone, not just the 1080px frame.** Atom (150px) + gap (32px) + wordmark width must total ≤ 920px (frame 1080 - 80px safe-zone margin each side). For long brand names (≥18 chars Georgia bold), 72px is too large: reduce wordmark to 54-60px, OR shrink atom to 96-110px, OR drop the atom from the brand strip entirely (atom appears elsewhere in the frame), OR wrap the wordmark to two lines (atom left, two-line wordmark right). Math: at 72px Georgia bold, char width ≈ 0.575em → "Singularity Convergence" (22 chars) ≈ 911px. Total = 1093px → 13px clipped on right edge. Found 2026-04-28 on `singularity-convergence-manifesto v3` — final "e" of "Convergence" sliced off in every frame. Verifier should add a `brand-strip-fit` check: compute atom+gap+measureText(wordmark, font, weight, size) ≤ 920 before declaring layout safe.
+- **S19** **Hero SVG must FILL its zone, not just sit in it. Size by width-first, not height-first.** Reserving the SVG zone (S16) is necessary but not sufficient — within that zone, the SVG must occupy 65-85% of the available WIDTH so it reads as the dominant visual, not as a small icon adrift in dark space. Tall-aspect SVGs (cross / pillar / portrait, e.g. cross-of-circuits at 4:5) are the trap: sized to fit the zone HEIGHT, they end up narrow horizontally — visually weaker than a wide-aspect SVG (neural-tree at 3:2) sized the same way. Fix: pick width first (target 700-900px in a 1080px frame, i.e. 65-85% of frame width), then derive height from aspect ratio, then expand the SVG zone vertically if needed (or accept the SVG running close to the zone edges). Found 2026-04-28 on `singularity-convergence-questions v4` — cross-of-circuits at 480×600 (45% frame width) felt small next to neural-tree at 640×460 (59% frame width) and atom at 560×560 (52% frame width) in the same zone. User noted: "first SVG could have been bigger." Target widths for contemplative hero SVGs: 700-820px (65-76% frame width). For tall-aspect SVGs that exceed the standard 680px-tall zone at that width, expand the SVG zone vertically to 800-900px (e.g. y=480-1340 instead of y=560-1240) — the brand strip can compress slightly and the text band shifts down 40-80px to accommodate.
+- **S20** **One-visible-at-a-time flex children must be `position: absolute` + centered — not relying on parent flex centering.** When a parent flex container holds N siblings and only ONE is visible at any given time (animated reveal pattern, e.g. ordinal labels "FIRST" / "SECOND" / ... / "FIFTH" or beat-specific captions), centering the parent with `justify-content: center` will FAIL: the visible child drifts to wherever its sibling-index puts it in the flex layout. First-child = left edge, middle-child = centered (coincidence), last-child = right edge. The `opacity: 0` on hidden siblings doesn't release their flex slot. Fix: each child gets `position: absolute; left: 50%; transform: translateX(-50%);` so it self-centers on the parent's centerline regardless of how many siblings exist. Also `white-space: nowrap` to prevent line wrapping. Found 2026-04-28 on `singularity-convergence-directive v5 first-render` — "FIRST" label hugged left edge, "FIFTH" hugged right edge; only "THIRD" (3rd of 5) appeared centered. Re-render after fix took 5 minutes; would have been 0 minutes if S20 had been applied first. Add to verifier as a `flex-singleton-position` check: any flex child with `opacity: 0` initial state on a `justify-content: center` parent must be `position: absolute`.
+
+### Rules that still apply
+
+- **R3** Caption pills — but in contemplative, the "pill" is implied by the dark void; text on parchment over black IS the pill equivalent. No literal pill background needed.
+- **R4** Safe zone — same. Inset 80-100px from edges.
+- **R5** CTA position — same. Upper-center to mid; never bottom-25%.
+- **R6** Audio: no percussive stinger; instead an ambient cinematic piano underscore (contemplative vibe) at vol 0.18 ducked under VO at vol 0.95.
+- **R7** 1080×1920 9:16, 30fps — same.
+- **R13** Caption ≥80px — INTENSIFIED. Hero text ≥80px, wordmarks ≥110px (124px+ on heavy-weight register), promise lines 120-168px italic. Large-type discipline is non-negotiable.
+- **R14** End card ≥2s static — same. 2.5-4s end card hold.
+- **R15** Replay-loop end frame matches start — INTENSIFIED. Cinematic-launch-60s closes with a flame matching the opener's flame for a perfect loop.
+
+### Type voice for this register
+
+- **Primary serif:** Georgia (or Times New Roman / Cambria fallbacks) — emotional carrier, italic for tenderness/uncertainty, regular for declaration, 700 weight for ceremony.
+- **Utility sans:** Arial (or Helvetica / Inter fallbacks) — for URLs, citations, attribution, dates. Sans creates utility/footer hierarchy without competing with the serif.
+- **One font, two weights, one role each.** Don't mix Georgia regular and italic on the same line for hierarchy — use size + weight instead.
+- **Tracking:** italic Georgia at -0.012em (tighter for poetic flow); roman wordmarks at +0.08em; small-caps sub-marks at +0.46em (ceremonial spacing).
+
+### Color voice
+
+- `--void: #0A0A0F` (canvas)
+- `--void-deep: #050508` (gradient bottom)
+- `--gold: #C9A84C` (accent — hairlines, emphasis, CTA)
+- `--gold-light: #E8D48B` (glow color)
+- `--parchment: #E0DDD5` (primary text)
+- `--muted: #A89F8F` (secondary / utility text)
+
+### Motion language
+
+- **Persistent ambient (full duration):** CSS `@keyframes` haze breathe + starfield twinkle running independent of GSAP timeline. Sub-5% transform / opacity range. Never visible as motion, always felt.
+- **Entrance pattern:** `power3.out` for text (0.7-0.9s), `back.out(1.3-1.4)` for emblems (0.8-1.4s). 30-50% faster than warm-community defaults.
+- **Exit pattern:** `power2.in` for text + slight upward drift `y: -14` + optional `filter: blur(6-8px)`. Always followed by `tl.set(target, {opacity:0})` at scene boundary for non-linear seek robustness.
+- **Section markers:** gold hairline 1-2px, drawn `scaleX: 0 → 1` over 0.9s with `power2.inOut` ease, `transform-origin: left center` for entrance + `right center` for exit.
+
+### Template family (compositions/templates/contemplative/*.html)
+
+| Template | Duration | Use case | Hero element |
+|---|---|---|---|
+| `compositions/templates/contemplative/hook-15s.html` | 15s | Scroll-stopper / TOFU | Single italic question → wordmark reveal |
+| `compositions/templates/contemplative/testimonial-30s.html` | 30s | Testimonial / authority | Subject photo + pull-quote + attribution |
+| `compositions/templates/contemplative/methodology-45s.html` | 45s | Methodology / explainer | Roman numerals (I. II. III.) architecture |
+| `compositions/templates/contemplative/cinematic-launch-60s.html` | 60s | Launch trailer / cinematic | Anticipation → reveal → demo → promise |
+| `compositions/singularity-convergence.html` | 60s | Reference build (not a template) | 10-beat manifesto for Oraculum Institutum |
+
+Each template is self-contained (single .html), uses the same brand-tokens block, and has content-slot IDs (`#b1-question`, `#b3-counter`, `#b5-cta`, etc.) ready for `applyCopyToTemplate()` integration once the orchestrator schema is extended.
+
+### When NOT to use this register
+
+If the brief is community / SaaS / DTC / news / fitness / food — use Part 1 rules and the existing kinetic / warm-community / documentary template families. Contemplative on a community brand reads as cold and aloof; kinetic-pop on a contemplative brand reads as cheap. Pick by brand voice, not by aesthetic preference.
+
+---
+
+## Part 8 — Glossary / abbreviations
 
 - **Sticker pill** — text on a high-contrast rounded-rectangle background; positioned anywhere except bottom-subtitle-bar location. Standard on TikTok / Reels native posts.
 - **Bottom subtitle bar** — full-width black/white auto-captions glued to bottom edge. Reads as news/explainer brand, not feed-native.
@@ -206,8 +293,9 @@ Add the 9 TODO checks from Part 1's table to `scripts/verify-render.mjs`. Most c
 - Olio "Wonderful World" hero film (Hell Yeah! 2021): https://www.thedrum.com/news/2021/11/02/ad-the-day-hard-hitting-olio-ad-highlights-grim-reality-household-waste
 
 **Internal playbooks:**
-- `docs/playbooks/cinematic-vertical-promo.md` — production playbook (cuts/shots/grade)
-- `docs/playbooks/copy-and-script.md` — 5-beat structure + tone-bite library
+- `docs/skills/how-a-video-gets-made.md` — **founding doc** (10-stage flow). This patterns doc is its Stage 8 reference.
+- `docs/playbooks/composition-assembly.md` — Stage 7 layout specs per archetype × register
+- `docs/copy-research/` — Stage 3 reference shelf (Schwartz, Caples, Halbert, Bencivenga, Ogilvy, Hopkins, Sugarman, Collier)
 - `docs/copy-research/short-form-microcopy.md` — word-level craft
 - `docs/copy-research/video-screen.md` — pacing-per-second budget
 - `docs/copy-research/direct-response.md` — AIDA / scroll-stopping hooks

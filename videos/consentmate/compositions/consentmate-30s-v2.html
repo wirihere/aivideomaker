@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ConsentMate — 30s product video (v2)</title>
+
+<!--
+  COMPOSITION: consentmate-30s-v2.html
+  BRAND:       ConsentMate (https://consentmate.co.nz)
+  ARCHETYPE:   product-demo-30s (editorial paper-and-ink, NZ utility)
+  REGISTER:    editorial-utility (paper + ink, mono+serif, NZ professional)
+  DURATION:    30s · 9:16 · 1080×1920 · 30fps
+
+  v2 CHANGES vs v1:
+    1. Removed "First 3 free / $1,500 value" offer beat (per user direction).
+       Replaced with planner-cost-vs-flat-fee value frame.
+    2. Distilled on-screen text — no longer caption-equivalent of spoken VO
+       (per memory rule feedback_text_main_points_not_captions.md +
+       feedback_per_beat_table_mandatory.md).
+    3. ADDED MUSIC TRACK — documentary-top.mp3 vol 0.22.
+       v1 shipped with no music = process violation. Captured as memory
+       rule (per-beat planning table is mandatory before composition).
+
+  PER-BEAT TABLE (proven before writing this HTML):
+    | beat | spoken VO                                              | on-screen (DISTILLED)        | hero                          |
+    | B1   | Resource consent paperwork. Done for you.              | "Done for you."              | doc-icon + LODGEMENT stamp    |
+    | B2   | Type your address.                                     | "Type."                      | address card + typewriter     |
+    | B3   | Drag the green box. We flag the rule live.             | "Live rule check."           | z-building.jpg + pulsing flag |
+    | B4   | Seven documents. Lodgement-ready in two days.          | "7 docs. 2 days."            | doc-pack.jpg + Human QA stamp |
+    | B5   | A planner quotes three to five thousand. Flat fee.     | "$3,500–5,500 → flat fee."   | price comparison card         |
+    | B6   | Check your property at consentmate.co.nz               | "consentmate.co.nz"          | wordmark + URL                |
+
+  BEAT TIMING (audio data-start=1.5):
+    B0  atmosphere                  0.0  - 1.5s
+    B1  "Resource consent paper"    1.5  - 6.0s
+    B2  "Type your address."        6.0  - 8.0s
+    B3  "Drag the green box…"       8.0  - 12.7s
+    B4  "Seven documents…"          12.7 - 17.5s
+    B5  "A planner quotes…"         17.5 - 22.8s
+    B6  "Check your property…"      22.8 - 30.0s
+    audio ends                      27.5s
+-->
+
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body, html { margin: 0; padding: 0; background: #c8d0da; overflow: hidden; }
+
+  :root {
+    --paper:      #EEF1F5;
+    --paper-deep: #E2E7ED;
+    --paper-line: #C8D0DA;
+    --ink:        #0D1826;
+    --ink-2:      #1A2A3D;
+    --ink-3:      #4B5A6D;
+    --ink-mute:   #7D8A9A;
+    --accent:     #1F3A68;
+    --accent-ink: #122649;
+    --accent-wash:#D5DEEC;
+    --warn:       #9A3A3A;
+    --rule:       rgba(13,24,38,.14);
+    --rule-strong:rgba(13,24,38,.38);
+
+    --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --sans:  Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono:  "JetBrains Mono", "Source Code Pro", Menlo, Consolas, monospace;
+  }
+
+  .frame {
+    position: relative;
+    width: 1080px; height: 1920px;
+    background: var(--paper);
+    overflow: hidden;
+  }
+
+  .paper-grain {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(to bottom, transparent 0, transparent 39px, var(--paper-line) 39px, var(--paper-line) 40px);
+    background-size: 100% 40px;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  /* Brand strip */
+  .brand-strip {
+    position: absolute;
+    left: 80px; right: 80px;
+    top: 140px; height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+  }
+  .brand-mark { display: flex; align-items: center; gap: 14px; }
+  .brand-mark-icon {
+    width: 44px; height: 44px;
+    border: 2px solid var(--ink);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--paper);
+  }
+  .brand-mark-icon svg { width: 26px; height: 26px; color: var(--ink); }
+  .brand-wordmark {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 38px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .brand-wordmark .slash { color: var(--ink-mute); }
+  .brand-meta {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--ink-mute);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .brand-rule {
+    position: absolute;
+    left: 80px; right: 80px;
+    top: 240px; height: 1px;
+    background: var(--rule-strong);
+    z-index: 19;
+  }
+
+  /* Eyebrow */
+  .eyebrow {
+    position: absolute;
+    left: 80px; right: 80px;
+    top: 280px; height: 40px;
+    z-index: 25;
+  }
+  .eyebrow .scene {
+    position: absolute; left: 0; right: 0; top: 0;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 22px;
+    color: var(--accent);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    opacity: 0;
+  }
+
+  /* Hero zone */
+  .hero-zone {
+    position: absolute;
+    left: 60px; right: 60px;
+    top: 380px; height: 900px;
+    z-index: 10;
+  }
+  .hero-zone > * {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+  }
+
+  /* B1 hero: blueprint stack — bigger per S19 */
+  .hero-blueprint {
+    flex-direction: column;
+    text-align: center;
+    gap: 44px;
+  }
+  .hero-blueprint .stamp {
+    display: inline-block;
+    padding: 18px 36px;
+    border: 3px solid var(--warn);
+    color: var(--warn);
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transform: rotate(-3deg);
+    background: rgba(154, 58, 58, 0.04);
+  }
+  .hero-blueprint .doc-icon {
+    width: 460px; height: 600px;
+    border: 4px solid var(--ink);
+    background: var(--paper-deep);
+    position: relative;
+    box-shadow: 24px 24px 0 var(--paper-line);
+  }
+  .hero-blueprint .doc-icon::before {
+    content: "RESOURCE\A CONSENT\A APPLICATION";
+    white-space: pre;
+    position: absolute;
+    inset: 36px 36px auto 36px;
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.15em;
+    line-height: 1.4;
+  }
+  .hero-blueprint .doc-icon::after {
+    content: "";
+    position: absolute;
+    left: 36px; right: 36px; bottom: 60px; height: 200px;
+    background:
+      linear-gradient(var(--rule-strong), var(--rule-strong)) 0 0/100% 1.5px no-repeat,
+      linear-gradient(var(--rule-strong), var(--rule-strong)) 0 30px/100% 1.5px no-repeat,
+      linear-gradient(var(--rule-strong), var(--rule-strong)) 0 60px/100% 1.5px no-repeat,
+      linear-gradient(var(--rule-strong), var(--rule-strong)) 0 90px/100% 1.5px no-repeat,
+      linear-gradient(var(--rule-strong), var(--rule-strong)) 0 120px/100% 1.5px no-repeat,
+      linear-gradient(var(--rule-strong), var(--rule-strong)) 0 150px/100% 1.5px no-repeat,
+      linear-gradient(var(--rule-strong), var(--rule-strong)) 0 180px/100% 1.5px no-repeat;
+  }
+
+  /* B2 hero: address card */
+  .hero-address {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .hero-address .card {
+    width: 720px;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 36px 40px;
+    box-shadow: 16px 16px 0 var(--accent-wash);
+  }
+  .hero-address .card-label {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink-mute);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero-address .card-input {
+    width: 100%;
+    border: 1.5px solid var(--rule-strong);
+    background: var(--paper);
+    border-radius: 8px;
+    padding: 22px 24px;
+    font-family: var(--mono);
+    font-size: 28px;
+    color: var(--ink);
+    box-sizing: border-box;
+    margin-bottom: 22px;
+    min-height: 36px;
+    text-align: left;
+  }
+  .hero-address .card-input .typed { color: var(--ink); }
+  .hero-address .card-input .caret {
+    display: inline-block;
+    width: 2px; height: 32px;
+    background: var(--ink);
+    vertical-align: middle;
+    margin-left: 2px;
+    animation: caret-blink 0.8s steps(1) infinite;
+  }
+  @keyframes caret-blink { 50% { opacity: 0; } }
+  .hero-address .card-button {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 8px;
+    padding: 22px 32px;
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* B3 hero: green-box screenshot */
+  .hero-greenbox {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .hero-greenbox img {
+    width: 820px;
+    border: 3px solid var(--ink);
+    box-shadow: 18px 18px 0 var(--paper-line);
+  }
+  .hero-greenbox .flag-row {
+    display: flex; align-items: center; gap: 18px;
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--warn);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+  .hero-greenbox .flag-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--warn);
+    box-shadow: 0 0 0 0 rgba(154, 58, 58, 0.45);
+    animation: pulse-warn 1.4s ease-out infinite;
+  }
+  @keyframes pulse-warn {
+    0%   { box-shadow: 0 0 0 0 rgba(154, 58, 58, 0.55); }
+    100% { box-shadow: 0 0 0 22px rgba(154, 58, 58, 0); }
+  }
+
+  /* B4 hero: document pack screenshot */
+  .hero-pack {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .hero-pack img {
+    width: 640px;
+    border: 3px solid var(--ink);
+    box-shadow: 18px 18px 0 var(--paper-line);
+  }
+  .hero-pack .stamp-qa {
+    position: absolute;
+    top: 60px; right: 100px;
+    padding: 8px 18px;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    background: var(--paper);
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    transform: rotate(8deg);
+  }
+
+  /* B5 hero: planner-vs-flat-fee comparison card */
+  .hero-compare {
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+  }
+  .hero-compare .compare-card {
+    width: 760px;
+    background: var(--paper);
+    border: 3px solid var(--ink);
+    border-radius: 14px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 18px 18px 0 var(--accent-wash);
+  }
+  .hero-compare .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 36px;
+    font-family: var(--mono);
+  }
+  .hero-compare .row + .row {
+    border-top: 2px solid var(--ink);
+  }
+  .hero-compare .row.planner {
+    background: var(--paper-deep);
+  }
+  .hero-compare .row.us {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .hero-compare .label {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .hero-compare .row.planner .label { color: var(--ink-mute); }
+  .hero-compare .row.us .label { color: var(--accent-wash); }
+  .hero-compare .price {
+    font-family: var(--serif);
+    font-size: 76px;
+    line-height: 0.95;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .hero-compare .row.planner .price {
+    color: var(--ink-3);
+    text-decoration: line-through;
+    text-decoration-color: var(--warn);
+    text-decoration-thickness: 3px;
+  }
+  .hero-compare .row.us .price {
+    color: var(--paper);
+  }
+  .hero-compare .footnote {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--ink-mute);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* B6 hero: URL hold */
+  .hero-url {
+    flex-direction: column;
+    gap: 36px;
+    text-align: center;
+  }
+  .hero-url .big-mark {
+    display: flex; align-items: center; gap: 22px;
+    justify-content: center;
+  }
+  .hero-url .big-mark-icon {
+    width: 100px; height: 100px;
+    border: 3px solid var(--ink);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--paper);
+  }
+  .hero-url .big-mark-icon svg { width: 60px; height: 60px; color: var(--ink); }
+  .hero-url .big-wordmark {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 80px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .hero-url .big-wordmark .slash { color: var(--ink-mute); }
+  .hero-url .url-line {
+    font-family: var(--mono);
+    font-size: 38px;
+    color: var(--ink);
+    letter-spacing: 0.12em;
+    border-top: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+    padding: 18px 32px;
+  }
+  .hero-url .url-line .accent { color: var(--accent); font-weight: 600; }
+
+  /* Text zone — DISTILLED on-screen text per memory rule */
+  .text-zone {
+    position: absolute;
+    left: 80px; right: 80px;
+    top: 1340px; height: 280px;
+    z-index: 30;
+  }
+  .text-zone .scene {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    opacity: 0;
+  }
+  .headline {
+    font-family: var(--serif);
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.0;
+    margin: 0;
+    letter-spacing: -0.015em;
+  }
+  .headline.size-xl { font-size: 156px; }
+  .headline.size-l  { font-size: 130px; }
+  .headline.size-m  { font-size: 100px; }
+  .headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .headline .data {
+    font-family: var(--mono);
+    font-size: 0.78em;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+
+  /* Footer */
+  .footer-rule {
+    position: absolute;
+    left: 80px; right: 80px;
+    top: 1740px; height: 1px;
+    background: var(--rule-strong);
+    z-index: 19;
+  }
+  .footer-meta {
+    position: absolute;
+    left: 80px; right: 80px;
+    top: 1760px; height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 25;
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--ink-mute);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .footer-meta .right { color: var(--ink-3); }
+</style>
+</head>
+<body>
+
+<div class="frame composition" id="comp"
+     data-composition-id="consentmate-30s-v2"
+     data-start="0" data-duration="30" data-width="1080" data-height="1920">
+
+  <div class="paper-grain"></div>
+
+  <!-- Brand strip -->
+  <div class="brand-strip" id="brand-strip">
+    <div class="brand-mark">
+      <div class="brand-mark-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <p class="brand-wordmark">consent<span class="slash">/</span>mate</p>
+    </div>
+    <div class="brand-meta">Aotearoa NZ</div>
+  </div>
+
+  <div class="brand-rule" id="brand-rule"></div>
+
+  <!-- Eyebrow -->
+  <div class="eyebrow">
+    <span id="eyebrow-1" class="scene">Resource Consent · NZ</span>
+    <span id="eyebrow-2" class="scene">01 · Address</span>
+    <span id="eyebrow-3" class="scene">02 · Place &amp; Check</span>
+    <span id="eyebrow-4" class="scene">03 · Your Pack</span>
+    <span id="eyebrow-5" class="scene">Pricing · Flat Fee</span>
+    <span id="eyebrow-6" class="scene">consentmate.co.nz</span>
+  </div>
+
+  <!-- Hero zone -->
+  <div class="hero-zone">
+
+    <!-- B1: blueprint -->
+    <div id="hero-1" class="hero-blueprint">
+      <div class="stamp">Lodgement Required</div>
+      <div class="doc-icon"></div>
+    </div>
+
+    <!-- B2: address card -->
+    <div id="hero-2" class="hero-address">
+      <div class="card">
+        <div class="card-label">Locate Parcel</div>
+        <div class="card-input"><span class="typed" id="addr-typed"></span><span class="caret"></span></div>
+        <div class="card-button">Find Property</div>
+      </div>
+    </div>
+
+    <!-- B3: green-box screenshot -->
+    <div id="hero-3" class="hero-greenbox">
+      <img src="videos/consentmate/capture/assets/z-building.jpg" alt="">
+      <div class="flag-row">
+        <span class="flag-dot"></span>
+        <span>3.7 m boundary breach · flagged live</span>
+      </div>
+    </div>
+
+    <!-- B4: document pack -->
+    <div id="hero-4" class="hero-pack">
+      <img src="videos/consentmate/capture/assets/doc-pack.jpg" alt="">
+      <div class="stamp-qa">Human QA</div>
+    </div>
+
+    <!-- B5: price comparison (planner vs flat fee) -->
+    <div id="hero-5" class="hero-compare">
+      <div class="compare-card">
+        <div class="row planner">
+          <span class="label">Planner</span>
+          <span class="price">$3.5–5.5k</span>
+        </div>
+        <div class="row us">
+          <span class="label">Us</span>
+          <span class="price">Flat fee</span>
+        </div>
+      </div>
+      <div class="footnote">Quoted once · No hourly billing</div>
+    </div>
+
+    <!-- B6: URL hero -->
+    <div id="hero-6" class="hero-url">
+      <div class="big-mark">
+        <div class="big-mark-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <p class="big-wordmark">consent<span class="slash">/</span>mate</p>
+      </div>
+      <div class="url-line"><span class="accent">consentmate</span>.co.nz</div>
+    </div>
+  </div>
+
+  <!-- Text zone — DISTILLED, NOT captions -->
+  <div class="text-zone">
+    <div id="b1" class="scene clip" data-start="1.5" data-duration="4.5" data-track-index="1">
+      <p class="headline size-xl"><em>Done for you.</em></p>
+    </div>
+
+    <div id="b2" class="scene clip" data-start="6.0" data-duration="2" data-track-index="1">
+      <p class="headline size-xl"><em>Type.</em></p>
+    </div>
+
+    <div id="b3" class="scene clip" data-start="8.0" data-duration="4.7" data-track-index="1">
+      <p class="headline size-l">Live <em>rule check.</em></p>
+    </div>
+
+    <div id="b4" class="scene clip" data-start="12.7" data-duration="4.8" data-track-index="1">
+      <p class="headline size-l"><span class="data">7 docs · 2 days.</span></p>
+    </div>
+
+    <div id="b5" class="scene clip" data-start="17.5" data-duration="5.3" data-track-index="1">
+      <p class="headline size-l">No hourly billing.<br><em>Just one fee.</em></p>
+    </div>
+
+    <div id="b6" class="scene clip" data-start="22.8" data-duration="7.2" data-track-index="1">
+      <p class="headline size-l"><em>Check your property.</em></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-rule"></div>
+  <div class="footer-meta">
+    <span class="left">22 Councils · Live</span>
+    <span class="right">REF · CM-D / 002</span>
+  </div>
+
+  <!-- Audio: MUSIC + VO (per per-beat-table rule, every video has music) -->
+  <audio id="music" class="clip"
+         src="assets/music/documentary-top.mp3"
+         data-start="0" data-duration="30" data-track-index="8" data-volume="0.22"
+         data-audio="true" preload="auto"></audio>
+
+  <audio id="vo" class="clip"
+         src="videos/consentmate/voiceover/consentmate-30s-v2.mp3"
+         data-start="1.5" data-duration="28" data-track-index="9" data-volume="0.97"
+         data-audio="true" preload="auto"></audio>
+
+</div>
+
+<script>
+(function(){
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["consentmate-30s-v2"] = tl;
+
+  // Brand strip + footer fade-in
+  tl.fromTo(["#brand-strip", "#brand-rule"],
+    { opacity: 0 },
+    { opacity: 1, duration: 0.8, ease: "power2.out", stagger: 0.1 }, 0.2);
+  tl.fromTo([".footer-rule", ".footer-meta"],
+    { opacity: 0 },
+    { opacity: 1, duration: 0.8, ease: "power2.out", stagger: 0.05 }, 0.5);
+
+  // ===== B1 (1.5-6.0s) =====
+  tl.fromTo("#eyebrow-1", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }, 1.4);
+  tl.fromTo("#hero-1",
+    { opacity: 0, y: 40, scale: 0.96 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: "back.out(1.2)" }, 1.7);
+  tl.fromTo("#hero-1 .stamp",
+    { rotation: 12, scale: 0.6, opacity: 0 },
+    { rotation: -3, scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.6)" }, 2.4);
+  tl.fromTo("#b1",
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.85, ease: "power3.out" }, 2.0);
+  tl.to("#b1", { opacity: 0, y: -16, duration: 0.5, ease: "power2.in" }, 5.4);
+  tl.to(["#hero-1", "#eyebrow-1"], { opacity: 0, duration: 0.45, ease: "power2.in" }, 5.5);
+  tl.set(["#b1", "#hero-1", "#eyebrow-1"], { opacity: 0 }, 6.0);
+
+  // ===== B2 (6.0-8.0s) =====
+  tl.fromTo("#eyebrow-2", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 5.9);
+  tl.fromTo("#hero-2",
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 6.0);
+  const addr = "20 Manchester St, Pātea";
+  for (let i = 0; i <= addr.length; i++) {
+    tl.set("#addr-typed", { textContent: addr.slice(0, i) }, 6.3 + i * 0.04);
+  }
+  tl.fromTo("#b2",
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 6.2);
+  tl.to("#b2", { opacity: 0, y: -16, duration: 0.4, ease: "power2.in" }, 7.5);
+  tl.to(["#hero-2", "#eyebrow-2"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.6);
+  tl.set(["#b2", "#hero-2", "#eyebrow-2"], { opacity: 0 }, 8.0);
+
+  // ===== B3 (8.0-12.7s) =====
+  tl.fromTo("#eyebrow-3", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 7.9);
+  tl.fromTo("#hero-3",
+    { opacity: 0, y: 40, scale: 0.96 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "power2.out" }, 8.0);
+  tl.fromTo("#hero-3 img",
+    { x: -20 },
+    { x: 12, duration: 3.5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 8.5);
+  tl.fromTo("#b3",
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.85, ease: "power3.out" }, 8.4);
+  tl.to("#b3", { opacity: 0, y: -16, duration: 0.5, ease: "power2.in" }, 12.0);
+  tl.to(["#hero-3", "#eyebrow-3"], { opacity: 0, duration: 0.5, ease: "power2.in" }, 12.2);
+  tl.set(["#b3", "#hero-3", "#eyebrow-3"], { opacity: 0 }, 12.7);
+
+  // ===== B4 (12.7-17.5s) =====
+  tl.fromTo("#eyebrow-4", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 12.6);
+  tl.fromTo("#hero-4",
+    { opacity: 0, y: 40, scale: 0.96 },
+    { opacity: 1, y: 0, scale: 1, duration: 0.9, ease: "back.out(1.2)" }, 12.7);
+  tl.fromTo("#hero-4 .stamp-qa",
+    { rotation: 24, scale: 0.5, opacity: 0 },
+    { rotation: 8, scale: 1, opacity: 1, duration: 0.7, ease: "back.out(1.7)" }, 13.3);
+  tl.fromTo("#b4",
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.85, ease: "power3.out" }, 13.0);
+  tl.to("#b4", { opacity: 0, y: -16, duration: 0.5, ease: "power2.in" }, 16.8);
+  tl.to(["#hero-4", "#eyebrow-4"], { opacity: 0, duration: 0.5, ease: "power2.in" }, 17.0);
+  tl.set(["#b4", "#hero-4", "#eyebrow-4"], { opacity: 0 }, 17.5);
+
+  // ===== B5 (17.5-22.8s) =====
+  tl.fromTo("#eyebrow-5", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 17.4);
+  tl.fromTo("#hero-5",
+    { opacity: 0, y: 40, scale: 0.94 },
+    { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: "back.out(1.3)" }, 17.5);
+  // Animate planner row first, then us row reveals
+  tl.fromTo("#hero-5 .row.planner",
+    { opacity: 0, x: -30 },
+    { opacity: 1, x: 0, duration: 0.7, ease: "power2.out" }, 17.7);
+  tl.fromTo("#hero-5 .row.us",
+    { opacity: 0, x: 30 },
+    { opacity: 1, x: 0, duration: 0.7, ease: "power2.out" }, 18.5);
+  tl.fromTo("#b5",
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.85, ease: "power3.out" }, 18.0);
+  tl.to("#b5", { opacity: 0, y: -16, duration: 0.5, ease: "power2.in" }, 22.0);
+  tl.to(["#hero-5", "#eyebrow-5"], { opacity: 0, duration: 0.5, ease: "power2.in" }, 22.2);
+  tl.set(["#b5", "#hero-5", "#eyebrow-5"], { opacity: 0 }, 22.8);
+
+  // ===== B6 (22.8-30.0s) URL hold =====
+  tl.fromTo("#eyebrow-6", { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 22.7);
+  tl.fromTo("#hero-6",
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 22.8);
+  tl.fromTo("#b6",
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.85, ease: "power3.out" }, 23.0);
+
+})();
+</script>
+
+</body>
+</html>

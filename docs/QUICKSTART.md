@@ -174,7 +174,7 @@ Useful flags:
 - **Framework mode** (default when `ANTHROPIC_API_KEY` is set in the env):
   scrapes the live landing page via Playwright (h1/h2/h3, paragraphs, list
   items, CTA, og tags, JSON-LD), threads the brand context into a strict
-  Claude prompt that obeys `docs/copy-playbook.md`, and returns a
+  Claude prompt that obeys Stage 3 of `docs/skills/how-a-video-gets-made.md` (the founding doc), and returns a
   framework-shaped copy doc grounded in the brand's actual voice. The raw
   scrape is persisted to `compositions/<slug>.scrape.json`.
 - **URL mode** (fallback when the API key isn't set): the legacy

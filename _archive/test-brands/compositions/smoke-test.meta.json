@@ -1,0 +1,6 @@
+{
+  "slug": "smoke-test",
+  "url": "https://example.com",
+  "dryRun": true,
+  "_synthesized": true
+}

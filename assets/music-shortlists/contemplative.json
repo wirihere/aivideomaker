@@ -1,0 +1,56 @@
+{
+  "template": "contemplative",
+  "vibe": "ambient cinematic piano, contemplative, low drone, sparse",
+  "vibe_long": "Slow contemplative underscore for the contemplative register (oracle / spiritual-tech / luxury-quiet / liturgical-product brands). Sustained piano, low drone bed, sparse harp or arco strings. NO drum kit, NO synth lead, NO acoustic guitar (that's warm-community). NO percussive transient. Slow tempo (50-70 BPM, often unmetered). Tracks should feel like candlelight breathing — never hurried, never busy. Pairs with a TTS voiceover at vol 0.95 above the music at vol 0.18 (memory rule from singularity-convergence v2 build 2026-04-27).",
+  "bpm_range": [50, 70],
+  "default_volume": 0.18,
+  "search_keywords": [
+    "ambient cinematic piano contemplative",
+    "ethereal piano ambient meditation drone",
+    "reflective piano sparse harp cinematic",
+    "ambient choir pad slow",
+    "dark cinematic piano low drone",
+    "spiritual ambient slow piano stillness"
+  ],
+  "tracks": [
+    {
+      "slug": "contemplative-1",
+      "title": "Ambient Cinematic Piano (Contemplative)",
+      "url": "https://cdn.pixabay.com/audio/2026/04/01/audio_13da40a535.mp3",
+      "search_url": "https://pixabay.com/music/search/ambient%20cinematic%20piano%20contemplative/",
+      "duration": 136,
+      "bpm": 60,
+      "tags": ["ambient", "cinematic", "piano", "contemplative", "drone"],
+      "character": "Sustained piano over low drone, sparse phrasing, candlelit feel",
+      "best_for": "Default contemplative bed for 60s manifesto / launch templates",
+      "proven_on": "Singularity Convergence (Oraculum Institutum) 2026-04-27",
+      "local_file": "assets/music/contemplative-1.mp3"
+    },
+    {
+      "slug": "contemplative-2",
+      "title": "Ethereal Piano Ambient Meditation Drone",
+      "url": "https://cdn.pixabay.com/audio/2022/04/27/audio_f3057bc7fd.mp3",
+      "search_url": "https://pixabay.com/music/search/ethereal%20piano%20ambient%20meditation%20drone/",
+      "duration": 444,
+      "bpm": 55,
+      "tags": ["ambient", "piano", "ethereal", "meditation", "drone", "long-form"],
+      "character": "Long-form (7+ min), softer piano, deeper drone bed; loopable",
+      "best_for": "30s+ templates where the underscore needs to extend without an obvious loop point",
+      "proven_on": null,
+      "local_file": "assets/music/contemplative-2.mp3"
+    },
+    {
+      "slug": "contemplative-3",
+      "title": "Reflective Piano Sparse Harp Cinematic",
+      "url": "https://cdn.pixabay.com/audio/2026/04/01/audio_7be5255395.mp3",
+      "search_url": "https://pixabay.com/music/search/reflective%20piano%20sparse%20harp%20cinematic/",
+      "duration": 112,
+      "bpm": 62,
+      "tags": ["reflective", "piano", "harp", "cinematic", "sparse"],
+      "character": "Piano with sparse harp accents, more melodic than 1 or 2",
+      "best_for": "15s hook / 30s testimonial templates where a melodic figure can land emotionally",
+      "proven_on": null,
+      "local_file": "assets/music/contemplative-3.mp3"
+    }
+  ]
+}

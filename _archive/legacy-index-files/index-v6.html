@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #0b1f3f;
+        font-family: "Inter", "Segoe UI", -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: #f5f1e8;
+      }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+
+      .bg-grain {
+        position: absolute; inset: 0;
+        background-image:
+          radial-gradient(circle at 30% 25%, rgba(255,184,77,0.06) 0%, transparent 45%),
+          radial-gradient(circle at 70% 75%, rgba(255,184,77,0.04) 0%, transparent 45%);
+      }
+
+      .progress-bar {
+        position: absolute; top: 0; left: 0; height: 6px;
+        width: 100%; background: rgba(245,241,232,0.08);
+        z-index: 100;
+      }
+      .progress-bar .fill {
+        height: 100%; width: 100%;
+        background: #ffb84d;
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      .scene {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        padding: 80px;
+      }
+      .scene-inner {
+        width: 100%;
+        max-width: 920px;
+        text-align: center;
+      }
+
+      /* ================ The logo lockup ================ */
+      /* Reusable. Used in scene 2 (reveal) and scene 5 (CTA). */
+      .logo-lockup {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      .logo-claim {
+        font-weight: 900;
+        font-size: 170px;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        color: #f5f1e8;
+      }
+      .logo-mate-box {
+        position: relative;
+        padding: 22px 70px 28px 70px;
+        background: #ffb84d;
+        border-radius: 28px;
+        transform: rotate(2deg);
+      }
+      .logo-mate {
+        font-weight: 900;
+        font-size: 160px;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+        color: #f5f1e8;
+      }
+      .logo-tick {
+        position: absolute;
+        bottom: -18px; right: -18px;
+        width: 72px; height: 72px;
+        background: #0b1f3f;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo-tick svg { width: 44px; height: 44px; }
+      .logo-tick path {
+        stroke: #f5f1e8;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        fill: none;
+      }
+
+      /* Smaller logo (used in CTA Scene 5) */
+      .logo-lockup.small .logo-claim { font-size: 130px; }
+      .logo-lockup.small .logo-mate { font-size: 120px; }
+      .logo-lockup.small .logo-mate-box { padding: 16px 54px 20px 54px; border-radius: 22px; }
+      .logo-lockup.small .logo-tick { width: 56px; height: 56px; bottom: -14px; right: -14px; }
+      .logo-lockup.small .logo-tick svg { width: 34px; height: 34px; }
+
+      /* ================ Scene 1: ACC envelope + DECLINED ================ */
+      .envelope {
+        position: relative;
+        width: 720px; height: 480px;
+        margin: 0 auto;
+        background: #f5f1e8;
+        border-radius: 8px;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+        text-align: left;
+      }
+      .envelope .letterhead {
+        padding: 60px 60px 24px 60px;
+        font-size: 24px;
+        font-weight: 900;
+        letter-spacing: 0.15em;
+        color: #0b1f3f;
+        text-transform: uppercase;
+        border-bottom: 2px solid #0b1f3f;
+        margin: 0 60px;
+        padding-left: 0; padding-right: 0;
+      }
+      .envelope .body {
+        padding: 30px 60px;
+        font-size: 22px;
+        font-weight: 500;
+        color: #0b1f3f;
+        opacity: 0.7;
+        line-height: 1.4;
+      }
+      .envelope .decline-stamp {
+        position: absolute;
+        top: 160px; left: 50%;
+        transform: translateX(-50%) rotate(-10deg);
+        padding: 20px 56px;
+        border: 8px solid #e23a2e;
+        color: #e23a2e;
+        font-weight: 900;
+        font-size: 96px;
+        letter-spacing: 0.08em;
+        background: rgba(245,241,232,0.85);
+        text-shadow: 0 0 20px rgba(226,58,46,0.2);
+      }
+      .s1-caption {
+        margin-top: 70px;
+        font-size: 56px;
+        font-weight: 700;
+        color: #f5f1e8;
+      }
+
+      /* ================ Scene 3: Tagline after logo reveal ================ */
+      .tagline-hero {
+        font-size: 86px;
+        font-weight: 900;
+        line-height: 1.05;
+        color: #f5f1e8;
+        letter-spacing: -0.02em;
+      }
+      .tagline-hero .accent {
+        color: #ffb84d;
+        display: inline-block;
+      }
+      .tagline-sub {
+        margin-top: 40px;
+        font-size: 40px;
+        font-weight: 600;
+        color: #f5f1e8;
+        opacity: 0.75;
+      }
+
+      /* ================ Scene 4: Three pillars ================ */
+      .pillars-title {
+        font-size: 52px;
+        font-weight: 800;
+        color: #ffb84d;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 50px;
+      }
+      .pillars {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+      .pillar {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+        padding: 32px 40px;
+        background: rgba(245,241,232,0.05);
+        border-left: 6px solid #ffb84d;
+        border-radius: 0 18px 18px 0;
+        text-align: left;
+      }
+      .pillar .mark {
+        flex-shrink: 0;
+        font-size: 72px;
+        font-weight: 900;
+        color: #ffb84d;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        min-width: 200px;
+      }
+      .pillar .text {
+        flex: 1;
+      }
+      .pillar .title {
+        font-size: 38px;
+        font-weight: 900;
+        color: #f5f1e8;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .pillar .sub {
+        margin-top: 6px;
+        font-size: 30px;
+        font-weight: 500;
+        color: #f5f1e8;
+        opacity: 0.7;
+      }
+
+      /* ================ Scene 5: Three steps ================ */
+      .steps-title {
+        font-size: 52px;
+        font-weight: 800;
+        color: #ffb84d;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 50px;
+      }
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        padding: 28px 36px;
+        background: rgba(245,241,232,0.06);
+        border: 2px solid rgba(255,184,77,0.25);
+        border-radius: 18px;
+        text-align: left;
+      }
+      .step .num {
+        flex-shrink: 0;
+        width: 90px; height: 90px;
+        background: #ffb84d;
+        color: #0b1f3f;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 58px;
+        font-weight: 900;
+      }
+      .step .txt {
+        font-size: 40px;
+        font-weight: 800;
+        color: #f5f1e8;
+        line-height: 1.1;
+      }
+      .step .sub {
+        margin-top: 4px;
+        font-size: 26px;
+        font-weight: 500;
+        color: #f5f1e8;
+        opacity: 0.65;
+      }
+
+      /* ================ Scene 6: CTA outro ================ */
+      .cta-url {
+        margin-top: 60px;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 62px;
+        font-weight: 700;
+        color: #ffb84d;
+      }
+      .cta-motto {
+        margin-top: 50px;
+        font-size: 42px;
+        font-weight: 700;
+        color: #f5f1e8;
+        opacity: 0.85;
+        font-style: italic;
+        letter-spacing: 0.02em;
+      }
+
+      /* ================ Watermark ================ */
+      .watermark {
+        position: absolute;
+        bottom: 50px; left: 0; right: 0;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.4em;
+        opacity: 0.4;
+        color: #f5f1e8;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Ambient -->
+      <div id="bg" class="clip" data-start="0" data-duration="30" data-track-index="0">
+        <div class="bg-grain"></div>
+      </div>
+
+      <!-- Music (pre-faded 30s) -->
+      <audio
+        id="bg-music"
+        class="clip bg-music"
+        src="assets/music/track-faded.mp3"
+        data-start="0"
+        data-duration="30"
+        data-track-index="8"
+      ></audio>
+
+      <!-- Progress bar -->
+      <div id="progress" class="clip" data-start="0" data-duration="30" data-track-index="7">
+        <div class="progress-bar"><div class="fill"></div></div>
+      </div>
+
+      <!-- Scene 1: ACC envelope with DECLINED stamp (0-3.5s) -->
+      <div id="s1" class="scene clip" data-start="0" data-duration="3.5" data-track-index="1">
+        <div class="scene-inner">
+          <div class="envelope">
+            <div class="letterhead">Accident Compensation<br/>Corporation</div>
+            <div class="body">Dear applicant, after careful review of the evidence provided...</div>
+            <div class="decline-stamp" id="s1-stamp">DECLINED</div>
+          </div>
+          <div class="s1-caption">Another NO from ACC?</div>
+        </div>
+      </div>
+
+      <!-- Scene 2: Logo stamps down (3.5-8s) -->
+      <div id="s2" class="scene clip" data-start="3.5" data-duration="4.5" data-track-index="1">
+        <div class="scene-inner">
+          <div class="logo-lockup" id="logo-hero">
+            <div class="logo-claim">CLAIM</div>
+            <div class="logo-mate-box">
+              <div class="logo-mate">MATE</div>
+              <div class="logo-tick">
+                <svg viewBox="0 0 44 44"><path d="M 10 22 L 20 32 L 34 12"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 3: Tagline (8-12s) -->
+      <div id="s3" class="scene clip" data-start="8" data-duration="4" data-track-index="1">
+        <div class="scene-inner">
+          <div class="tagline-hero">
+            Never take <span class="accent">NO</span><br/>for an answer.
+          </div>
+          <div class="tagline-sub">We fight ACC decisions. You pay $0.</div>
+        </div>
+      </div>
+
+      <!-- Scene 4: Three pillars (12-19s) -->
+      <div id="s4" class="scene clip" data-start="12" data-duration="7" data-track-index="1">
+        <div class="scene-inner">
+          <div class="pillars-title">The Promise</div>
+          <div class="pillars">
+            <div class="pillar p1">
+              <div class="mark">$0</div>
+              <div class="text">
+                <div class="title">Free to you</div>
+                <div class="sub">ACC pays our fee. Win or lose.</div>
+              </div>
+            </div>
+            <div class="pillar p2">
+              <div class="mark">100%</div>
+              <div class="text">
+                <div class="title">We Fight</div>
+                <div class="sub">Every decline letter gets challenged.</div>
+              </div>
+            </div>
+            <div class="pillar p3">
+              <div class="mark">3 mo</div>
+              <div class="text">
+                <div class="title">The Window</div>
+                <div class="sub">Then it's gone. Don't wait.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 5: Three steps (19-24s) -->
+      <div id="s5" class="scene clip" data-start="19" data-duration="5" data-track-index="1">
+        <div class="scene-inner">
+          <div class="steps-title">How it Works</div>
+          <div class="steps">
+            <div class="step st1">
+              <div class="num">1</div>
+              <div>
+                <div class="txt">Send us the letter</div>
+                <div class="sub">Takes 2 minutes.</div>
+              </div>
+            </div>
+            <div class="step st2">
+              <div class="num">2</div>
+              <div>
+                <div class="txt">We write the review</div>
+                <div class="sub">You read. You sign.</div>
+              </div>
+            </div>
+            <div class="step st3">
+              <div class="num">3</div>
+              <div>
+                <div class="txt">ACC decides &mdash; you pay nothing</div>
+                <div class="sub">Either way.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 6: CTA outro (24-30s) -->
+      <div id="s6" class="scene clip" data-start="24" data-duration="6" data-track-index="1">
+        <div class="scene-inner">
+          <div class="logo-lockup small" id="logo-outro">
+            <div class="logo-claim">CLAIM</div>
+            <div class="logo-mate-box">
+              <div class="logo-mate">MATE</div>
+              <div class="logo-tick">
+                <svg viewBox="0 0 44 44"><path d="M 10 22 L 20 32 L 34 12"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="cta-url">claimmate.co.nz</div>
+          <div class="cta-motto">&ldquo;Never take NO for an answer.&rdquo;</div>
+        </div>
+      </div>
+
+      <!-- Watermark -->
+      <div id="wm" class="clip" data-start="3.5" data-duration="26.5" data-track-index="5">
+        <div class="watermark">NZ &middot; LAY ADVOCATE &middot; CLAIMMATE.CO.NZ</div>
+      </div>
+    </div>
+
+    <script>
+      const __music = document.querySelector("audio.bg-music");
+      if (__music) __music.volume = 0.5;
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Progress bar across 30s
+      tl.to(".progress-bar .fill", { scaleX: 1, duration: 30, ease: "none" }, 0);
+
+      // ========== Scene 1: Envelope + DECLINED (0-3.5s) ==========
+      tl.from(".envelope",
+        { y: 400, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.1);
+      tl.from(".envelope .letterhead",
+        { opacity: 0, duration: 0.4 }, 0.5);
+      tl.from(".envelope .body",
+        { opacity: 0, duration: 0.3 }, 0.7);
+      // DECLINED slams down
+      tl.from("#s1-stamp",
+        { scale: 3, opacity: 0, rotate: -30, duration: 0.3, ease: "back.out(2)" }, 1.3);
+      tl.to("#s1-stamp",
+        { scale: 1.04, duration: 0.08, yoyo: true, repeat: 1 }, 1.65);
+      tl.from(".s1-caption",
+        { opacity: 0, y: 20, duration: 0.5 }, 2.0);
+      // Shake the whole scene slightly as DECLINED lands
+      tl.fromTo("#s1",
+        { x: 0 },
+        { x: 15, duration: 0.06, yoyo: true, repeat: 5, ease: "power1.inOut" }, 1.3);
+      tl.to("#s1", { opacity: 0, duration: 0.3 }, 3.2);
+
+      // ========== Scene 2: Logo stamps down (3.5-8s) ==========
+      // CLAIM drops from above
+      tl.from("#logo-hero .logo-claim",
+        { y: -400, opacity: 0, duration: 0.45, ease: "power3.in" }, 3.6);
+      // Then the MATE stamp SLAMS in with bounce
+      tl.from("#logo-hero .logo-mate-box",
+        { scale: 3.5, opacity: 0, rotate: -20, duration: 0.4, ease: "back.out(2.2)" }, 4.1);
+      // MATE text reveals inside
+      tl.from("#logo-hero .logo-mate",
+        { opacity: 0, duration: 0.3 }, 4.35);
+      // Impact micro-shake on the whole lockup
+      tl.fromTo("#logo-hero",
+        { x: 0 },
+        { x: 20, duration: 0.05, yoyo: true, repeat: 7, ease: "power1.inOut" }, 4.1);
+      // Tick pops last
+      tl.from("#logo-hero .logo-tick",
+        { scale: 0, rotate: 180, opacity: 0, duration: 0.4, ease: "back.out(2.5)" }, 4.9);
+      // Held beat + subtle breathe
+      tl.to("#logo-hero",
+        { scale: 1.02, duration: 0.8, yoyo: true, repeat: 1, ease: "sine.inOut" }, 5.6);
+      tl.to("#s2", { opacity: 0, duration: 0.3 }, 7.7);
+
+      // ========== Scene 3: Tagline (8-12s) ==========
+      tl.from(".tagline-hero",
+        { opacity: 0, y: 40, duration: 0.6, ease: "power3.out" }, 8.1);
+      tl.from(".tagline-hero .accent",
+        { scale: 1.6, color: "#f5f1e8", duration: 0.3, ease: "back.out(2)" }, 8.6);
+      tl.from(".tagline-sub",
+        { opacity: 0, y: 20, duration: 0.5 }, 9.1);
+      tl.to("#s3", { opacity: 0, duration: 0.3 }, 11.7);
+
+      // ========== Scene 4: Three pillars (12-19s) ==========
+      tl.from(".pillars-title",
+        { opacity: 0, y: -20, duration: 0.5 }, 12.1);
+      tl.from(".p1",
+        { opacity: 0, x: -400, duration: 0.5, ease: "power3.out" }, 12.5);
+      tl.from(".p1 .mark",
+        { scale: 0, duration: 0.4, ease: "back.out(2)" }, 12.8);
+      tl.from(".p2",
+        { opacity: 0, x: -400, duration: 0.5, ease: "power3.out" }, 13.6);
+      tl.from(".p2 .mark",
+        { scale: 0, duration: 0.4, ease: "back.out(2)" }, 13.9);
+      tl.from(".p3",
+        { opacity: 0, x: -400, duration: 0.5, ease: "power3.out" }, 14.7);
+      tl.from(".p3 .mark",
+        { scale: 0, duration: 0.4, ease: "back.out(2)" }, 15.0);
+      // Pulse each pillar mark once as emphasis
+      tl.to(".p3 .mark",
+        { scale: 1.15, duration: 0.3, yoyo: true, repeat: 1, ease: "sine.inOut" }, 16.5);
+      tl.to("#s4", { opacity: 0, duration: 0.3 }, 18.7);
+
+      // ========== Scene 5: Three steps (19-24s) ==========
+      tl.from(".steps-title",
+        { opacity: 0, y: -20, duration: 0.4 }, 19.1);
+      tl.from(".st1",
+        { opacity: 0, x: 400, duration: 0.4, ease: "power3.out" }, 19.4);
+      tl.from(".st1 .num",
+        { scale: 0, rotate: 180, duration: 0.3, ease: "back.out(2)" }, 19.6);
+      tl.from(".st2",
+        { opacity: 0, x: 400, duration: 0.4, ease: "power3.out" }, 20.3);
+      tl.from(".st2 .num",
+        { scale: 0, rotate: 180, duration: 0.3, ease: "back.out(2)" }, 20.5);
+      tl.from(".st3",
+        { opacity: 0, x: 400, duration: 0.4, ease: "power3.out" }, 21.2);
+      tl.from(".st3 .num",
+        { scale: 0, rotate: 180, duration: 0.3, ease: "back.out(2)" }, 21.4);
+      tl.to(".st3",
+        { scale: 1.03, duration: 0.3, yoyo: true, repeat: 1 }, 22.4);
+      tl.to("#s5", { opacity: 0, duration: 0.3 }, 23.7);
+
+      // ========== Scene 6: CTA outro (24-30s) ==========
+      tl.from("#logo-outro",
+        { scale: 0.4, opacity: 0, duration: 0.6, ease: "back.out(1.8)" }, 24.1);
+      tl.from("#logo-outro .logo-tick",
+        { scale: 0, rotate: 180, duration: 0.4, ease: "back.out(2.5)" }, 24.7);
+      tl.from(".cta-url",
+        { opacity: 0, y: 20, duration: 0.5 }, 25.2);
+      tl.from(".cta-motto",
+        { opacity: 0, y: 20, duration: 0.5 }, 26.0);
+      tl.to(".cta-motto",
+        { scale: 1.04, duration: 0.4, yoyo: true, repeat: 2, ease: "sine.inOut" }, 27.0);
+
+      // Watermark fade in
+      tl.from(".watermark", { opacity: 0, duration: 0.4 }, 3.7);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

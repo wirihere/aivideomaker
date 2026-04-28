@@ -1,0 +1,53 @@
+{
+  "slug": "resurgence-indigo",
+  "url": "https://www.resurgencegear.co.nz/product/mens-indigo-blue/",
+  "title": "Resurgence — CE AAA motorcycle jeans",
+  "template": "kinetic-product",
+  "seconds": 30,
+  "narration": "They look like denim. They protect like armor. C E Triple A. The top motorcycle-jeans rating. World-record Pekev liner. Ten-point-eight-three seconds slide-time. D-three-O Ghost armor — hip and knee. Wash safe. No loss of protection. Heritage Straight Indigo Sport. From three-seventy-nine. Resurgence.",
+  "beats": [
+    {
+      "kicker": "CE AAA",
+      "headline": "The top motorcycle-jeans rating.",
+      "body": "EN 17092-1:2019."
+    },
+    {
+      "kicker": "WORLD RECORD",
+      "headline": "10.83 seconds.",
+      "body": "C.E.-certified slide-time."
+    },
+    {
+      "kicker": "ARMOR + CARE",
+      "headline": "D3O Ghost. Hip and knee.",
+      "body": "Wash safe. No loss of protection."
+    },
+    {
+      "kicker": "HERITAGE STRAIGHT",
+      "headline": "Indigo Sport.",
+      "body": "Stretch denim. Removable armor."
+    }
+  ],
+  "cta": {
+    "verb": "Shop",
+    "url": "resurgencegear.co.nz",
+    "tagline": "From $379."
+  },
+  "meta": {
+    "generatedAt": "2026-04-26",
+    "wordCount": 50,
+    "beatCount": 4,
+    "structuralTemplate": "kinetic-product",
+    "sourcedFrom": {
+      "metaDescription": false,
+      "h1Count": 1,
+      "paragraphCount": 14,
+      "verbatimSources": [
+        "World record / Pekev® / 10.83s — resurgencegear.co.nz brand pages",
+        "CE AAA / EN 17092-1:2019 — product spec sheet",
+        "D3O Ghost hip and knee — product features list",
+        "Wash safe with no loss of protection — product page",
+        "$379 — current product price"
+      ]
+    }
+  }
+}

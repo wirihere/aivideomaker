@@ -1,0 +1,35 @@
+{
+  "slug": "kindred-nz-override",
+  "url": "https://kindred-nz.org",
+  "finalUrl": "https://kindred-nz.org/",
+  "extractedAt": "2026-04-26T02:35:19.663Z",
+  "assets": [
+    {
+      "kind": "logo",
+      "path": "assets/kindred-nz-override/logo.png",
+      "src": "https://kindred-nz.org/icon.png",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 84929,
+      "format": "png"
+    },
+    {
+      "kind": "favicon",
+      "path": "assets/kindred-nz-override/favicon.png",
+      "src": "https://kindred-nz.org/icon.png",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 84929,
+      "format": "png"
+    },
+    {
+      "kind": "hero",
+      "path": "assets/kindred-nz-override/hero.png",
+      "src": "https://kindred-nz.org/app-activity.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 36945,
+      "format": "png"
+    }
+  ]
+}

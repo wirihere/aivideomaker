@@ -1,0 +1,46 @@
+{
+  "slug": "trace-fix-test",
+  "url": "https://example.com",
+  "title": "Example Domain",
+  "template": "kinetic-pop",
+  "seconds": 30,
+  "narration": "Example Domain. Avoid use in operations. This domain is for use in documentation examples without needing permission.",
+  "beats": [
+    {
+      "kicker": "INTRO",
+      "headline": "Example Domain.",
+      "body": ""
+    },
+    {
+      "kicker": "PROOF",
+      "headline": "Avoid use in operations.",
+      "body": ""
+    },
+    {
+      "kicker": "PUNCH",
+      "headline": "This domain is for use in documentation examples without.",
+      "body": ""
+    },
+    {
+      "kicker": "PAYOFF",
+      "headline": "Example Domain.",
+      "body": ""
+    }
+  ],
+  "cta": {
+    "verb": "Learn more",
+    "url": "https://example.com",
+    "tagline": "Example Domain"
+  },
+  "meta": {
+    "generatedAt": "2026-04-26",
+    "wordCount": 17,
+    "beatCount": 4,
+    "structuralTemplate": "hero-promo",
+    "sourcedFrom": {
+      "metaDescription": false,
+      "h1Count": 1,
+      "paragraphCount": 1
+    }
+  }
+}

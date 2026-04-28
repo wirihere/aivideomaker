@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #0b1f3f;
+        font-family: "Inter", -apple-system, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 80px;
+        text-align: center;
+      }
+      .scene h1 {
+        color: #f5f1e8;
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+      .scene .sub {
+        color: #f5f1e8;
+        opacity: 0.75;
+        font-weight: 500;
+        margin-top: 40px;
+        line-height: 1.2;
+      }
+      .hook h1 { font-size: 180px; }
+      .hook .sub { font-size: 56px; }
+      .core h1 { font-size: 140px; color: #ffb84d; }
+      .core .sub { font-size: 64px; color: #f5f1e8; opacity: 0.9; margin-top: 60px; }
+      .cta h1 { font-size: 160px; }
+      .cta .url {
+        color: #ffb84d;
+        font-weight: 900;
+        font-size: 72px;
+        margin-top: 60px;
+        letter-spacing: 0.02em;
+      }
+      .watermark {
+        position: absolute;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #f5f1e8;
+        opacity: 0.5;
+        font-size: 36px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="hook" class="scene clip hook"
+           data-start="0" data-duration="5" data-track-index="1">
+        <div>
+          <h1>ACC said<br/>NO?</h1>
+          <div class="sub">You can fight it.</div>
+        </div>
+      </div>
+
+      <div id="core" class="scene clip core"
+           data-start="5" data-duration="15" data-track-index="1">
+        <div>
+          <h1>3 MONTHS</h1>
+          <div class="sub">to apply for a review.<br/>That's the whole window.</div>
+        </div>
+      </div>
+
+      <div id="cta" class="scene clip cta"
+           data-start="20" data-duration="10" data-track-index="1">
+        <div>
+          <h1>Claim Mate<br/>fights it.</h1>
+          <div class="url">claimmate.co.nz</div>
+        </div>
+      </div>
+
+      <div id="watermark" class="clip"
+           data-start="0" data-duration="30" data-track-index="2">
+        <div class="watermark">Claim Mate &middot; $0 to you</div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Scene 1 — Hook (0-5s)
+      tl.from("#hook h1", { opacity: 0, scale: 0.7, duration: 0.6, ease: "back.out(1.7)" }, 0.1);
+      tl.from("#hook .sub", { opacity: 0, y: 30, duration: 0.5 }, 0.8);
+
+      // Scene 2 — Core (5-20s)
+      tl.from("#core h1", { opacity: 0, scale: 0.6, duration: 0.7, ease: "back.out(2)" }, 5.1);
+      tl.from("#core .sub", { opacity: 0, y: 40, duration: 0.6 }, 5.9);
+
+      // Scene 3 — CTA (20-30s)
+      tl.from("#cta h1", { opacity: 0, y: 60, duration: 0.6 }, 20.1);
+      tl.from("#cta .url", { opacity: 0, scale: 0.8, duration: 0.6, ease: "back.out(1.7)" }, 20.8);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

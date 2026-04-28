@@ -60,7 +60,7 @@ import { spawnSync } from "child_process";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
 
-const VALID_TEMPLATES = ["warm-community", "kinetic-pop", "documentary", "quiet-premium"];
+const VALID_TEMPLATES = ["warm-community", "kinetic-pop", "documentary", "quiet-premium", "contemplative"];
 
 // Tone -> vibe-shortlist mapping. Mirrors TONE_TO_VIBE in scripts/video.mjs.
 // Kept here too so pick-music.mjs can be invoked standalone with just a tone.
@@ -68,6 +68,7 @@ const TONE_TO_TEMPLATE = {
   warm: "warm-community",
   energetic: "kinetic-pop",
   documentary: "documentary",
+  contemplative: "contemplative",
   neutral: null, // signals "use --template instead"
 };
 const VALID_TONES = Object.keys(TONE_TO_TEMPLATE);

@@ -1,0 +1,1858 @@
+{
+  "slug": "kindred-nz-override",
+  "template": "warm-community",
+  "tone": null,
+  "durationS": 30,
+  "generatedAt": "2026-04-26T09:38:10.230Z",
+  "comp": "index.html",
+  "copy": "compositions/kindred-nz.copy.json",
+  "vtt": "assets/voiceover/kindred-nz.vtt",
+  "vttCueCount": 42,
+  "brandName": "Kindred",
+  "brandUrl": "https://kindred-nz.org",
+  "tokensPath": "design/tokens-kindred-nz-override.css",
+  "tokenHexes": [
+    "#1b2a3d",
+    "#f4c96b",
+    "#fbf9f6",
+    "#e98b6a"
+  ],
+  "manifestPath": "assets/kindred-nz-override/manifest.json",
+  "manifestAssetCount": 3,
+  "sceneCensus": [
+    {
+      "id": "s1",
+      "sceneId": "s1",
+      "bgHex": "#f4c96b",
+      "sceneBgIsBrand": true,
+      "imageCount": 1,
+      "decorativeCount": 0,
+      "textOnly": false
+    },
+    {
+      "id": "s2",
+      "sceneId": "s2",
+      "bgHex": "#f4c96b",
+      "sceneBgIsBrand": true,
+      "imageCount": 1,
+      "decorativeCount": 1,
+      "textOnly": false
+    },
+    {
+      "id": "s3",
+      "sceneId": "s3",
+      "bgHex": "#f4c96b",
+      "sceneBgIsBrand": true,
+      "imageCount": 1,
+      "decorativeCount": 1,
+      "textOnly": false
+    },
+    {
+      "id": "s4",
+      "sceneId": "s4",
+      "bgHex": "#f4c96b",
+      "sceneBgIsBrand": true,
+      "imageCount": 1,
+      "decorativeCount": 1,
+      "textOnly": false
+    },
+    {
+      "id": "s5",
+      "sceneId": "s5",
+      "bgHex": "#1b2a3d",
+      "sceneBgIsBrand": true,
+      "imageCount": 9,
+      "decorativeCount": 0,
+      "textOnly": false
+    }
+  ],
+  "motionContinuity": {
+    "frameDir": "tmp/verify-frames/kindred-nz-override-20260426-213803",
+    "perScene": [
+      {
+        "sceneId": "s1",
+        "windowStart": 0,
+        "windowEnd": 2,
+        "samples": [
+          {
+            "t": 0.5,
+            "sha": "ae744166d2dfa2a8db8aecd490647a06befcc865b876b5d4476988debdd696c6",
+            "bytes": 11798
+          },
+          {
+            "t": 1,
+            "sha": "c233b143a638925c19d24b631809b99adc78a10612d2103c963e5aed24cf460e",
+            "bytes": 72210
+          },
+          {
+            "t": 1.5,
+            "sha": "f9cc2f11e7cc66073d880b3ec2a02506938665192e5e004b6a17e49ceb54c26a",
+            "bytes": 78099
+          },
+          {
+            "t": 2,
+            "sha": "f9cc2f11e7cc66073d880b3ec2a02506938665192e5e004b6a17e49ceb54c26a",
+            "bytes": 78099
+          },
+          {
+            "t": 2.5,
+            "sha": "c6f4e84a87ed456e2c31c88415435c0894cfffbc65a884962fb66023f1ec23e6",
+            "bytes": 78858
+          },
+          {
+            "t": 2.95,
+            "sha": "80572c71578d78864de79c80f3fc7ebda315270f3d294e2fc61fcd462002ef4d",
+            "bytes": 78633
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 0.5,
+            "bT": 1,
+            "kind": "moving",
+            "diffPct": 0.836615427226146
+          },
+          {
+            "aT": 1,
+            "bT": 1.5,
+            "kind": "moving",
+            "diffPct": 0.07540429454922598
+          },
+          {
+            "aT": 1.5,
+            "bT": 2,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 2,
+            "bT": 2.5,
+            "kind": "near-static",
+            "diffPct": 0.009624895381571939
+          },
+          {
+            "aT": 2.5,
+            "bT": 2.95,
+            "kind": "near-static",
+            "diffPct": 0.0028532298561972152
+          }
+        ]
+      },
+      {
+        "sceneId": "s2",
+        "windowStart": 3,
+        "windowEnd": 11,
+        "samples": [
+          {
+            "t": 3.5,
+            "sha": "a31b128d846c39ff5c3287444e49fa0070877df8179016da7f0bce0f441b5a86",
+            "bytes": 466075
+          },
+          {
+            "t": 4,
+            "sha": "cf9d8fef098d227ee28deebbd5379cd843ffeff8dc2fe5d604e6e003121c0634",
+            "bytes": 25025
+          },
+          {
+            "t": 4.5,
+            "sha": "1b4f85b0a8b20a3aac81a0ce76f0b7ac4f7e17e6490d1cc39115ac5bc2a9262a",
+            "bytes": 44536
+          },
+          {
+            "t": 5,
+            "sha": "fd73cc161158b28b9e9ba6bd82e8fd50f434f777e7a87e1826a0c53956465ef0",
+            "bytes": 119032
+          },
+          {
+            "t": 5.5,
+            "sha": "98618b16fa9f84fd44e272e4fb732538fb11b63fc3408cdc001f5333fe1cf53a",
+            "bytes": 115522
+          },
+          {
+            "t": 6,
+            "sha": "5ff636790b1c372bdade19eab6d85663198d2d891070d003119959cb2b75224f",
+            "bytes": 139925
+          },
+          {
+            "t": 7.5,
+            "sha": "042c7eebfe14fc275b153f8e56426a4dd7b1e565848ca7687f3a4aafd2c511c3",
+            "bytes": 150971
+          },
+          {
+            "t": 9,
+            "sha": "2231c993f5eab7a2133640f4c39ec8514bc41b3fb7d2601b91028a098632cf14",
+            "bytes": 149292
+          },
+          {
+            "t": 10.5,
+            "sha": "4cfd696aca0914f3ae33dfe06fc6d7d7aa1a669603c91754ccf2933c9fe4ac28",
+            "bytes": 145583
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 3.5,
+            "bT": 4,
+            "kind": "moving",
+            "diffPct": 0.9463069248511505
+          },
+          {
+            "aT": 4,
+            "bT": 4.5,
+            "kind": "moving",
+            "diffPct": 0.43809502425004493
+          },
+          {
+            "aT": 4.5,
+            "bT": 5,
+            "kind": "moving",
+            "diffPct": 0.6258485113246858
+          },
+          {
+            "aT": 5,
+            "bT": 5.5,
+            "kind": "moving",
+            "diffPct": 0.02948786880838766
+          },
+          {
+            "aT": 5.5,
+            "bT": 6,
+            "kind": "moving",
+            "diffPct": 0.17440057173485796
+          },
+          {
+            "aT": 6,
+            "bT": 7.5,
+            "kind": "moving",
+            "diffPct": 0.07316636970014109
+          },
+          {
+            "aT": 7.5,
+            "bT": 9,
+            "kind": "near-static",
+            "diffPct": 0.011121341184730842
+          },
+          {
+            "aT": 9,
+            "bT": 10.5,
+            "kind": "moving",
+            "diffPct": 0.02484393001634381
+          }
+        ]
+      },
+      {
+        "sceneId": "s3",
+        "windowStart": 12,
+        "windowEnd": 18,
+        "samples": [
+          {
+            "t": 12.5,
+            "sha": "f62f496c109e9ec87845ea954ff8c81c23361bd009eeb4f264000c07ee06ebe5",
+            "bytes": 35066
+          },
+          {
+            "t": 13,
+            "sha": "3a8caf7ff51b6fd6f790685605c882ff0794f09fbee7563f1facc736f3eaa3c8",
+            "bytes": 58933
+          },
+          {
+            "t": 13.5,
+            "sha": "5a06fd80810958cae3012238bb9a073336d42405b6783ea165eb00e5d54f19cb",
+            "bytes": 133895
+          },
+          {
+            "t": 14,
+            "sha": "2543d1f83434dfd093697c3911b4358bbf28c1d295fe36fdcf05f33c80a3dee3",
+            "bytes": 129120
+          },
+          {
+            "t": 14.5,
+            "sha": "eabfba10540c6fc495a4153774b9b50c663a512ba084b122dc57b691703c65d0",
+            "bytes": 135974
+          },
+          {
+            "t": 15,
+            "sha": "48d6104f140b8bfd7e338ed0c6aa7f65540f66ac8c56808eb79282f565c93cfc",
+            "bytes": 143864
+          },
+          {
+            "t": 16,
+            "sha": "efe8fe626609b070b649f88a9656fbf50d0be2b2cf1ede9691f9d7dcc51bcd05",
+            "bytes": 141404
+          },
+          {
+            "t": 17,
+            "sha": "86b6bf7fc5eaa762e7faf54d0435818124045bc9e06ea5a8c7638491a770ab84",
+            "bytes": 144601
+          },
+          {
+            "t": 18,
+            "sha": "b8ac8d34e85cd32939828560060393af9faf96fb30e5e36985923749778694f6",
+            "bytes": 140045
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 12.5,
+            "bT": 13,
+            "kind": "moving",
+            "diffPct": 0.4049853223151715
+          },
+          {
+            "aT": 13,
+            "bT": 13.5,
+            "kind": "moving",
+            "diffPct": 0.5598566040554166
+          },
+          {
+            "aT": 13.5,
+            "bT": 14,
+            "kind": "moving",
+            "diffPct": 0.03566227267635087
+          },
+          {
+            "aT": 14,
+            "bT": 14.5,
+            "kind": "moving",
+            "diffPct": 0.050406695397649554
+          },
+          {
+            "aT": 14.5,
+            "bT": 15,
+            "kind": "moving",
+            "diffPct": 0.05484346327086693
+          },
+          {
+            "aT": 15,
+            "bT": 16,
+            "kind": "near-static",
+            "diffPct": 0.01709948284490908
+          },
+          {
+            "aT": 16,
+            "bT": 17,
+            "kind": "moving",
+            "diffPct": 0.022109114044854463
+          },
+          {
+            "aT": 17,
+            "bT": 18,
+            "kind": "moving",
+            "diffPct": 0.031507389298829194
+          }
+        ]
+      },
+      {
+        "sceneId": "s4",
+        "windowStart": 19,
+        "windowEnd": 25,
+        "samples": [
+          {
+            "t": 19.5,
+            "sha": "bbf65b6e4ab46e2a78b2371c6960d86395532be37662d45ed74658fd9b169070",
+            "bytes": 32697
+          },
+          {
+            "t": 20,
+            "sha": "a8744e5fd2027c97f6d26072e4961a20593b999df316dd70143b0e501882234e",
+            "bytes": 51032
+          },
+          {
+            "t": 20.5,
+            "sha": "b1f8c8b1d6fcfecfe3630e82cc54a693c24f3416a16ea74468463dec310a19c1",
+            "bytes": 125784
+          },
+          {
+            "t": 21,
+            "sha": "0fa673ed3138ae8573bc3aafe086a7620e00de5b490fc85abdc7ababec90245f",
+            "bytes": 121039
+          },
+          {
+            "t": 21.5,
+            "sha": "0fa673ed3138ae8573bc3aafe086a7620e00de5b490fc85abdc7ababec90245f",
+            "bytes": 121039
+          },
+          {
+            "t": 22,
+            "sha": "57f23f17fc51b4c9244031224f88745e709db09a2775570888f091f2cb735d6e",
+            "bytes": 126249
+          },
+          {
+            "t": 23,
+            "sha": "a2e0b3e61153b086f850055b6c6eb744a03a0e5a04b223173c8b9ee01918d8bb",
+            "bytes": 127150
+          },
+          {
+            "t": 24,
+            "sha": "4b13d9085f31e22944b79e181c013f91259faacc2a99bc2f7cbe1479fe1a69a6",
+            "bytes": 126065
+          },
+          {
+            "t": 25,
+            "sha": "7363f1bba69cf7fa0c756a528ede459c5062911091fbb69e2ba8cd2f24bb3a8d",
+            "bytes": 126958
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 19.5,
+            "bT": 20,
+            "kind": "moving",
+            "diffPct": 0.3592843705910017
+          },
+          {
+            "aT": 20,
+            "bT": 20.5,
+            "kind": "moving",
+            "diffPct": 0.5942886217642943
+          },
+          {
+            "aT": 20.5,
+            "bT": 21,
+            "kind": "moving",
+            "diffPct": 0.03772339884246009
+          },
+          {
+            "aT": 21,
+            "bT": 21.5,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 21.5,
+            "bT": 22,
+            "kind": "moving",
+            "diffPct": 0.04126765360517707
+          },
+          {
+            "aT": 22,
+            "bT": 23,
+            "kind": "near-static",
+            "diffPct": 0.007086118757373181
+          },
+          {
+            "aT": 23,
+            "bT": 24,
+            "kind": "near-static",
+            "diffPct": 0.008533228470310657
+          },
+          {
+            "aT": 24,
+            "bT": 25,
+            "kind": "near-static",
+            "diffPct": 0.007033822208919485
+          }
+        ]
+      },
+      {
+        "sceneId": "s5",
+        "windowStart": 26,
+        "windowEnd": 30,
+        "samples": [
+          {
+            "t": 26.5,
+            "sha": "345ad0f870e26648dfcfd23bdeacd2294c40e1f4dbfc914e3a88f7846849763f",
+            "bytes": 517708
+          },
+          {
+            "t": 27,
+            "sha": "9c102e6fc8343463b65fc494053a59f87d89f9a15afe167eb35ae06b21b97e10",
+            "bytes": 517962
+          },
+          {
+            "t": 27.5,
+            "sha": "94e8c0bc9f8fccefc41a286c7fadd1d667ec78a2cfd95c2297a00ea9c5ac1e22",
+            "bytes": 539559
+          },
+          {
+            "t": 28,
+            "sha": "b74443e70c9e3f8fffe28026f68c6a7f9d71cd4067d02fd6aac016c93a541bd4",
+            "bytes": 539967
+          },
+          {
+            "t": 28.5,
+            "sha": "035d793b7c1997ad4ad6f3f55ddf8403a5d541d257d1e1047735f696983f758d",
+            "bytes": 520542
+          },
+          {
+            "t": 29,
+            "sha": "c0d2e36a062d2ca43dff33943066820adf2185ccecf5931c751fe38ff14cdb5d",
+            "bytes": 518186
+          },
+          {
+            "t": 29.5,
+            "sha": "54b6dddd2a51feb3c8e72ecc671468d6edf8e9703dad8189310699bccc2b8f42",
+            "bytes": 518338
+          },
+          {
+            "t": 29.95,
+            "sha": "85d7bc62d47eaefb4251cacb40c24f696c466f42fd3936edf2d18743a8b8fecb",
+            "bytes": 518756
+          },
+          {
+            "t": 29.95,
+            "sha": "85d7bc62d47eaefb4251cacb40c24f696c466f42fd3936edf2d18743a8b8fecb",
+            "bytes": 518756
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 26.5,
+            "bT": 27,
+            "kind": "near-static",
+            "diffPct": 0.0004903834644240311
+          },
+          {
+            "aT": 27,
+            "bT": 27.5,
+            "kind": "moving",
+            "diffPct": 0.04002713326994824
+          },
+          {
+            "aT": 27.5,
+            "bT": 28,
+            "kind": "near-static",
+            "diffPct": 0.0007556017312169077
+          },
+          {
+            "aT": 28,
+            "bT": 28.5,
+            "kind": "moving",
+            "diffPct": 0.035974420659040274
+          },
+          {
+            "aT": 28.5,
+            "bT": 29,
+            "kind": "near-static",
+            "diffPct": 0.004526051692274591
+          },
+          {
+            "aT": 29,
+            "bT": 29.5,
+            "kind": "near-static",
+            "diffPct": 0.000293244948276993
+          },
+          {
+            "aT": 29.5,
+            "bT": 29.95,
+            "kind": "near-static",
+            "diffPct": 0.0008057738127366237
+          },
+          {
+            "aT": 29.95,
+            "bT": 29.95,
+            "kind": "static",
+            "diffPct": 0
+          }
+        ]
+      }
+    ]
+  },
+  "scriptTiming": {
+    "sceneWindows": [
+      {
+        "id": "s1",
+        "start": 0,
+        "end": 3.5,
+        "duration": 3.5
+      },
+      {
+        "id": "s2",
+        "start": 3.5,
+        "end": 12,
+        "duration": 8.5
+      },
+      {
+        "id": "s3",
+        "start": 12,
+        "end": 19,
+        "duration": 7
+      },
+      {
+        "id": "s4",
+        "start": 19,
+        "end": 26,
+        "duration": 7
+      },
+      {
+        "id": "s5",
+        "start": 26,
+        "end": 30,
+        "duration": 4
+      }
+    ],
+    "emphasisEvents": [
+      {
+        "at": 27,
+        "type": "glitterFx.burst"
+      }
+    ]
+  },
+  "samples": [
+    {
+      "t": 0,
+      "activeSceneId": "s1",
+      "innerText": "INTRODUCING\nKINDRED",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-intro",
+          "text": "INTRODUCING",
+          "fontSize": 56,
+          "fontWeight": 700,
+          "contrast": 1.6033648170303427
+        }
+      ]
+    },
+    {
+      "t": 1,
+      "activeSceneId": "s1",
+      "innerText": "INTRODUCING\nKINDRED",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-intro",
+          "text": "INTRODUCING",
+          "fontSize": 56,
+          "fontWeight": 700,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "h1",
+          "id": "s1-mark",
+          "text": "KINDRED",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 2,
+      "activeSceneId": "s1",
+      "innerText": "INTRODUCING\nKINDRED",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s1-intro",
+          "text": "INTRODUCING",
+          "fontSize": 56,
+          "fontWeight": 700,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "h1",
+          "id": "s1-mark",
+          "text": "KINDRED",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 3,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": []
+    },
+    {
+      "t": 4,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 5,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s2-a",
+          "text": "Snap a photo. Tag it GIVE or NEED.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 6,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s2-a",
+          "text": "Snap a photo. Tag it GIVE or NEED.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 7,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s2-a",
+          "text": "Snap a photo. Tag it GIVE or NEED.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 8,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s2-a",
+          "text": "Snap a photo. Tag it GIVE or NEED.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 9,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s2-a",
+          "text": "Snap a photo. Tag it GIVE or NEED.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 10,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s2-a",
+          "text": "Snap a photo. Tag it GIVE or NEED.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 11,
+      "activeSceneId": "s2",
+      "innerText": "STEP 01\n01\nPost a give or an ask.\n\nSnap a photo. Tag it GIVE or NEED.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-kicker",
+          "text": "STEP 01",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s2-num",
+          "text": "01",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s2-q",
+          "text": "Post a give or an ask.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s2-a",
+          "text": "Snap a photo. Tag it GIVE or NEED.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 12,
+      "activeSceneId": "s3",
+      "innerText": "STEP 02\n02\nA neighbour messages.\n\nSort a time and a pickup spot.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "STEP 02",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s3-num",
+          "text": "02",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 13,
+      "activeSceneId": "s3",
+      "innerText": "STEP 02\n02\nA neighbour messages.\n\nSort a time and a pickup spot.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "STEP 02",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s3-num",
+          "text": "02",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s3-q",
+          "text": "A neighbour messages.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 14,
+      "activeSceneId": "s3",
+      "innerText": "STEP 02\n02\nA neighbour messages.\n\nSort a time and a pickup spot.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "STEP 02",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s3-num",
+          "text": "02",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s3-q",
+          "text": "A neighbour messages.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s3-a",
+          "text": "Sort a time and a pickup spot.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 15,
+      "activeSceneId": "s3",
+      "innerText": "STEP 02\n02\nA neighbour messages.\n\nSort a time and a pickup spot.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "STEP 02",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s3-num",
+          "text": "02",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s3-q",
+          "text": "A neighbour messages.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s3-a",
+          "text": "Sort a time and a pickup spot.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 16,
+      "activeSceneId": "s3",
+      "innerText": "STEP 02\n02\nA neighbour messages.\n\nSort a time and a pickup spot.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "STEP 02",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s3-num",
+          "text": "02",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s3-q",
+          "text": "A neighbour messages.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s3-a",
+          "text": "Sort a time and a pickup spot.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 17,
+      "activeSceneId": "s3",
+      "innerText": "STEP 02\n02\nA neighbour messages.\n\nSort a time and a pickup spot.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "STEP 02",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s3-num",
+          "text": "02",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s3-q",
+          "text": "A neighbour messages.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s3-a",
+          "text": "Sort a time and a pickup spot.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 18,
+      "activeSceneId": "s3",
+      "innerText": "STEP 02\n02\nA neighbour messages.\n\nSort a time and a pickup spot.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-kicker",
+          "text": "STEP 02",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s3-num",
+          "text": "02",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s3-q",
+          "text": "A neighbour messages.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s3-a",
+          "text": "Sort a time and a pickup spot.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 19,
+      "activeSceneId": "s4",
+      "innerText": "STEP 03\n03\nDrop it off or pick it up.\n\nOr have a yarn while you hand it across.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-kicker",
+          "text": "STEP 03",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s4-num",
+          "text": "03",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 20,
+      "activeSceneId": "s4",
+      "innerText": "STEP 03\n03\nDrop it off or pick it up.\n\nOr have a yarn while you hand it across.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-kicker",
+          "text": "STEP 03",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s4-num",
+          "text": "03",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s4-q",
+          "text": "Drop it off or pick it up.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 21,
+      "activeSceneId": "s4",
+      "innerText": "STEP 03\n03\nDrop it off or pick it up.\n\nOr have a yarn while you hand it across.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-kicker",
+          "text": "STEP 03",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s4-num",
+          "text": "03",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s4-q",
+          "text": "Drop it off or pick it up.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s4-a",
+          "text": "Or have a yarn while you hand it across.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 22,
+      "activeSceneId": "s4",
+      "innerText": "STEP 03\n03\nDrop it off or pick it up.\n\nOr have a yarn while you hand it across.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-kicker",
+          "text": "STEP 03",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s4-num",
+          "text": "03",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s4-q",
+          "text": "Drop it off or pick it up.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s4-a",
+          "text": "Or have a yarn while you hand it across.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 23,
+      "activeSceneId": "s4",
+      "innerText": "STEP 03\n03\nDrop it off or pick it up.\n\nOr have a yarn while you hand it across.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-kicker",
+          "text": "STEP 03",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s4-num",
+          "text": "03",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s4-q",
+          "text": "Drop it off or pick it up.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s4-a",
+          "text": "Or have a yarn while you hand it across.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 24,
+      "activeSceneId": "s4",
+      "innerText": "STEP 03\n03\nDrop it off or pick it up.\n\nOr have a yarn while you hand it across.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-kicker",
+          "text": "STEP 03",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s4-num",
+          "text": "03",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s4-q",
+          "text": "Drop it off or pick it up.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s4-a",
+          "text": "Or have a yarn while you hand it across.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 25,
+      "activeSceneId": "s4",
+      "innerText": "STEP 03\n03\nDrop it off or pick it up.\n\nOr have a yarn while you hand it across.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s4-kicker",
+          "text": "STEP 03",
+          "fontSize": 40,
+          "fontWeight": 800,
+          "contrast": 1.6033648170303427
+        },
+        {
+          "tag": "div",
+          "id": "s4-num",
+          "text": "03",
+          "fontSize": 200,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "h2",
+          "id": "s4-q",
+          "text": "Drop it off or pick it up.",
+          "fontSize": 92,
+          "fontWeight": 700,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "p",
+          "id": "s4-a",
+          "text": "Or have a yarn while you hand it across.",
+          "fontSize": 48,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 26,
+      "activeSceneId": "s5",
+      "innerText": "Be kind. Use Kindred.\nhttps://kindred-nz.org",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s5-cta",
+          "text": "Be kind. Use Kindred.",
+          "fontSize": 156,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 27,
+      "activeSceneId": "s5",
+      "innerText": "Be kind. Use Kindred.\nhttps://kindred-nz.org",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s5-cta",
+          "text": "Be kind. Use Kindred.",
+          "fontSize": 156,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "https://kindred-nz.org",
+          "fontSize": 44,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 28,
+      "activeSceneId": "s5",
+      "innerText": "Be kind. Use Kindred.\nhttps://kindred-nz.org",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s5-cta",
+          "text": "Be kind. Use Kindred.",
+          "fontSize": 156,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "https://kindred-nz.org",
+          "fontSize": 44,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 29,
+      "activeSceneId": "s5",
+      "innerText": "Be kind. Use Kindred.\nhttps://kindred-nz.org",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s5-cta",
+          "text": "Be kind. Use Kindred.",
+          "fontSize": 156,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "https://kindred-nz.org",
+          "fontSize": 44,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    },
+    {
+      "t": 30,
+      "activeSceneId": "s5",
+      "innerText": "Be kind. Use Kindred.\nhttps://kindred-nz.org",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s5-cta",
+          "text": "Be kind. Use Kindred.",
+          "fontSize": 156,
+          "fontWeight": 800,
+          "contrast": 9.281649630732309
+        },
+        {
+          "tag": "div",
+          "id": "s5-url",
+          "text": "https://kindred-nz.org",
+          "fontSize": 44,
+          "fontWeight": 500,
+          "contrast": 9.281649630732309
+        }
+      ]
+    }
+  ],
+  "findings": {
+    "composition": [
+      {
+        "kind": "ok",
+        "scene": "s1",
+        "message": "scene s1: 2 text elements (19 chars)",
+        "lines": [
+          "INTRODUCING",
+          "KINDRED"
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s2",
+        "message": "scene s2: 4 text elements (68 chars)",
+        "lines": [
+          "STEP 01",
+          "01",
+          "Post a give or an ask.",
+          "Snap a photo. Tag it GIVE or NEED."
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s3",
+        "message": "scene s3: 4 text elements (63 chars)",
+        "lines": [
+          "STEP 02",
+          "02",
+          "A neighbour messages.",
+          "Sort a time and a pickup spot."
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s4",
+        "message": "scene s4: 4 text elements (78 chars)",
+        "lines": [
+          "STEP 03",
+          "03",
+          "Drop it off or pick it up.",
+          "Or have a yarn while you hand it across."
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s5",
+        "message": "scene s5: 2 text elements (44 chars)",
+        "lines": [
+          "Be kind. Use Kindred.",
+          "https://kindred-nz.org"
+        ]
+      }
+    ],
+    "brandFidelity": [
+      {
+        "kind": "brand-name-present",
+        "message": "brand name \"Kindred\" present in visible text"
+      },
+      {
+        "kind": "url-present",
+        "message": "URL host \"kindred-nz.org\" present in visible text"
+      },
+      {
+        "kind": "beat-headline-missing",
+        "beat": 3,
+        "message": "beat #3 headline (\"Made for locals.\") not detected in any scene"
+      }
+    ],
+    "placeholderLeakage": [],
+    "pacing": [
+      {
+        "kind": "scene-short",
+        "scene": "s1",
+        "message": "scene s1 is ~3s, less than half the ideal 7.5s/beat slot"
+      }
+    ],
+    "audioCoverage": [
+      {
+        "kind": "trailing-silence",
+        "message": "narration ends at 24.5s but comp runs to 30s — 5.5s of silence at end"
+      }
+    ],
+    "accessibility": [
+      {
+        "kind": "contrast",
+        "scene": "s1",
+        "text": "INTRODUCING",
+        "ratio": 1.6033648170303427,
+        "threshold": 3,
+        "message": "scene s1: \"INTRODUCING\" contrast 1.60:1 < 3:1"
+      },
+      {
+        "kind": "contrast",
+        "scene": "s2",
+        "text": "STEP 01",
+        "ratio": 1.6033648170303427,
+        "threshold": 3,
+        "message": "scene s2: \"STEP 01\" contrast 1.60:1 < 3:1"
+      },
+      {
+        "kind": "contrast",
+        "scene": "s3",
+        "text": "STEP 02",
+        "ratio": 1.6033648170303427,
+        "threshold": 3,
+        "message": "scene s3: \"STEP 02\" contrast 1.60:1 < 3:1"
+      },
+      {
+        "kind": "contrast",
+        "scene": "s4",
+        "text": "STEP 03",
+        "ratio": 1.6033648170303427,
+        "threshold": 3,
+        "message": "scene s4: \"STEP 03\" contrast 1.60:1 < 3:1"
+      }
+    ],
+    "brandPaletteUse": [
+      {
+        "kind": "var-refs-present",
+        "count": 40,
+        "message": "40 var(--card-) references in assembled <style> — brand tokens consumed"
+      }
+    ],
+    "brandAssetUse": [
+      {
+        "kind": "asset-unused",
+        "assetKind": "favicon",
+        "assetPath": "assets/kindred-nz-override/favicon.png",
+        "message": "asset favicon (assets/kindred-nz-override/favicon.png) was pulled but never shown in the comp"
+      },
+      {
+        "kind": "visual-identity-absent",
+        "severity": "error",
+        "message": "brand visual identity completely absent: neither hero nor logo appears in any scene"
+      }
+    ],
+    "sceneVisualDensity": [],
+    "motionContinuity": [
+      {
+        "kind": "static-moment",
+        "scene": "s1",
+        "atStart": 1.5,
+        "atEnd": 2,
+        "message": "scene s1 at t=1.5s–2s: identical frames, no visible motion"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 2,
+        "atEnd": 2.5,
+        "diffPct": 0.009624895381571939,
+        "message": "scene s1 at t=2s–2.5s: near-static (0.96% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 2.5,
+        "atEnd": 2.95,
+        "diffPct": 0.0028532298561972152,
+        "message": "scene s1 at t=2.5s–2.95s: near-static (0.29% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 7.5,
+        "atEnd": 9,
+        "diffPct": 0.011121341184730842,
+        "message": "scene s2 at t=7.5s–9s: near-static (1.11% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s3",
+        "atStart": 15,
+        "atEnd": 16,
+        "diffPct": 0.01709948284490908,
+        "message": "scene s3 at t=15s–16s: near-static (1.71% byte change)"
+      },
+      {
+        "kind": "static-moment",
+        "scene": "s4",
+        "atStart": 21,
+        "atEnd": 21.5,
+        "message": "scene s4 at t=21s–21.5s: identical frames, no visible motion"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s4",
+        "atStart": 22,
+        "atEnd": 23,
+        "diffPct": 0.007086118757373181,
+        "message": "scene s4 at t=22s–23s: near-static (0.71% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s4",
+        "atStart": 23,
+        "atEnd": 24,
+        "diffPct": 0.008533228470310657,
+        "message": "scene s4 at t=23s–24s: near-static (0.85% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s4",
+        "atStart": 24,
+        "atEnd": 25,
+        "diffPct": 0.007033822208919485,
+        "message": "scene s4 at t=24s–25s: near-static (0.70% byte change)"
+      },
+      {
+        "kind": "static-moment",
+        "scene": "s5",
+        "atStart": 29.95,
+        "atEnd": 29.95,
+        "message": "scene s5 at t=29.95s–29.95s: identical frames, no visible motion"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 26.5,
+        "atEnd": 27,
+        "diffPct": 0.0004903834644240311,
+        "message": "scene s5 at t=26.5s–27s: near-static (0.05% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 27.5,
+        "atEnd": 28,
+        "diffPct": 0.0007556017312169077,
+        "message": "scene s5 at t=27.5s–28s: near-static (0.08% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 28.5,
+        "atEnd": 29,
+        "diffPct": 0.004526051692274591,
+        "message": "scene s5 at t=28.5s–29s: near-static (0.45% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 29,
+        "atEnd": 29.5,
+        "diffPct": 0.000293244948276993,
+        "message": "scene s5 at t=29s–29.5s: near-static (0.03% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s5",
+        "atStart": 29.5,
+        "atEnd": 29.95,
+        "diffPct": 0.0008057738127366237,
+        "message": "scene s5 at t=29.5s–29.95s: near-static (0.08% byte change)"
+      }
+    ],
+    "scriptTiming": [
+      {
+        "kind": "word-emphasis-orphan",
+        "scene": "s3",
+        "atSec": 13.77,
+        "token": "post",
+        "message": "identity word \"Post\" spoken at 13.77s in scene s3 lands in mid-scene quiet (no entrance/stamp event within 0.3s)"
+      },
+      {
+        "kind": "word-emphasis-orphan",
+        "scene": "s3",
+        "atSec": 14.11,
+        "token": "give",
+        "message": "identity word \"give\" spoken at 14.11s in scene s3 lands in mid-scene quiet (no entrance/stamp event within 0.3s)"
+      },
+      {
+        "kind": "word-emphasis-orphan",
+        "scene": "s4",
+        "atSec": 24.22,
+        "token": "kindred",
+        "message": "identity word \"Kindred\" spoken at 24.22s in scene s4 lands in mid-scene quiet (no entrance/stamp event within 0.3s)"
+      },
+      {
+        "kind": "script-fits-budget",
+        "narrationS": 24.49,
+        "compS": 30,
+        "slackS": 5.51,
+        "message": "narration runs 24.49s of 30s comp — 5.51s slack"
+      }
+    ]
+  },
+  "verdict": "needs-fix"
+}

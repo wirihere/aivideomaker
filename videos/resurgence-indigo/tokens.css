@@ -1,0 +1,43 @@
+/* =========================================================================
+   TOKENS — RESURGENCE-INDIGO  [HAND-TUNED 2026-04-26]
+   =========================================================================
+   Hand-tuned from product photography + brand identity. Auto-extracted
+   tokens were wrong (pink "navy", light-grey "paper") because the page's
+   CSS color detection hit accent strings on sale tags and form fields,
+   not the brand identity. Hand-tuning to match the actual brand feel:
+   indigo denim product + black/charcoal + red logo star.
+
+   The HAND-TUNED sentinel above prevents scripts/new-comp.mjs from
+   overwriting this file on subsequent orchestrator runs. Remove the
+   sentinel only if you intentionally want the auto-extractor to clobber.
+
+   Loaded LAST in the template's link order so :root overrides win.
+   ========================================================================= */
+
+:root {
+  /* Palette — hand-tuned for motorcycle/industrial register. */
+  --card-accent:      #1B3A6E;   /* Indigo — matches the jean's denim wash */
+  --card-navy:        #1A1F2A;   /* Dark slate */
+  --card-navy-deep:   #0F1115;   /* True black/charcoal — backdrop default */
+  --card-paper:       #F2EFEA;   /* Off-white for type on dark */
+  --card-paper-soft:  #E8E2D6;   /* Cream-grey for secondary type */
+  --card-slate:       #3D4451;   /* Mid-grey for surfaces */
+  --card-slate-ink:   #1A1F2A;
+  --card-warn:        #D62828;   /* Punch red — matches the RG-shield star */
+  --card-ok:          #1B3A6E;
+
+  /* Type — condensed sans for hard-tech / motorsport register. Default
+     cards.css uses Fraunces (serif) which is wrong for this brand. */
+  --card-font-display: "Bebas Neue", "Oswald", "Impact", "Arial Narrow", sans-serif;
+  --card-font-ui: "Inter", "Helvetica Neue", "Arial", sans-serif;
+  --card-font-mono: "JetBrains Mono", "Menlo", monospace;
+
+  --card-kicker-size: 32px;
+  --card-kicker-track: 0.42em;
+}
+
+/* Brand-on-dark card variant — applies the new accent + paper. */
+.card--brand-navy {
+  background: var(--card-navy-deep);
+  color: var(--card-paper);
+}

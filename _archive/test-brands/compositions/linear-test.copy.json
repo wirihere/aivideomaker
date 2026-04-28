@@ -1,0 +1,45 @@
+{
+  "slug": "linear-test",
+  "url": "https://linear.app",
+  "title": "Linear – The system for product development",
+  "template": "kinetic-pop",
+  "seconds": 30,
+  "narration": "Purpose-built for planning and building products with AI agents. The productdevelopmentsystem for teamsand agentsThe product developmentsystem for teams and agentsThe product development system for teams and agents. Designed for the AI era. From drafting PRDs to pushing PRs. Purpose-built for planning and building products. Designed for workflows shared by humans and agents. Linear is shaped by the practices and principles of world-class product teams.",
+  "beats": [
+    {
+      "kicker": "INTRO",
+      "headline": "Purpose-built for planning and building products with AI agents.",
+      "body": "The productdevelopmentsystem for teamsand agentsThe product developmentsystem for teams."
+    },
+    {
+      "kicker": "PROOF",
+      "headline": "Designed for the AI era.",
+      "body": "From drafting PRDs to pushing PRs."
+    },
+    {
+      "kicker": "PUNCH",
+      "headline": "Purpose-built for planning and building products.",
+      "body": "Designed for workflows shared by humans and agents."
+    },
+    {
+      "kicker": "PAYOFF",
+      "headline": "Linear is shaped by the practices and principles of world-class.",
+      "body": "A new species of product tool. Purpose-built for modern teams with AI workflows at its."
+    }
+  ],
+  "cta": {
+    "verb": "Contact",
+    "url": "https://linear.app",
+    "tagline": "Purpose-built for planning and building products with AI agents"
+  },
+  "meta": {
+    "generatedAt": "2026-04-26",
+    "wordCount": 64,
+    "beatCount": 4,
+    "sourcedFrom": {
+      "metaDescription": true,
+      "h1Count": 1,
+      "paragraphCount": 14
+    }
+  }
+}

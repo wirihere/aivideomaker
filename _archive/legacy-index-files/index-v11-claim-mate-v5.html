@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Claim Mate — v5 · Ninety Days</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; background: #0d1826; overflow: hidden; }
+
+    [data-composition-id="claim-mate-v5"] {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #0d1826;
+      font-family: "Inter", system-ui, sans-serif;
+      color: #eef1f5;
+    }
+
+    /* ---------- Backgrounds (track 0) ---------- */
+    .bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #0d1826;
+    }
+    .bg-media {
+      position: absolute;
+      inset: -6%;
+      width: 112%;
+      height: 112%;
+      object-fit: cover;
+      transform-origin: center;
+      will-change: transform;
+      /* v3.2 grade — no sepia, kills wild colour casts, adds punch. */
+      filter: saturate(0.92) contrast(1.18) brightness(0.95);
+    }
+    /* Calendar cartoon is drawn on WHITE — we need a darker grade so it reads
+       as a background under bright text stamps. */
+    .bg-media.bg-calendar {
+      filter: saturate(0.85) contrast(1.10) brightness(0.78);
+    }
+
+    /* ---------- Global FX ---------- */
+    .global-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 900;
+      mix-blend-mode: multiply;
+      background: linear-gradient(180deg, rgba(220,232,246,0.00) 0%, rgba(220,232,246,0.00) 55%, rgba(13,24,38,0.18) 100%);
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 901;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 62%, rgba(0,0,0,0.28) 100%);
+    }
+
+    /* ---------- Overlays (track 1) ---------- */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    /* Persistent brand mark — top-left corner (v4/v5 parity) */
+    .brand-mark {
+      position: absolute;
+      top: 56px;
+      left: 56px;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 22px;
+      background: rgba(13, 24, 38, 0.55);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid rgba(238, 241, 245, 0.20);
+      border-radius: 14px;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 60px;
+      line-height: 1;
+      letter-spacing: -0.015em;
+      color: #eef1f5;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      will-change: opacity, transform;
+    }
+    .brand-mark .bm-tick {
+      width: 46px;
+      height: 46px;
+      flex: 0 0 auto;
+      margin: 0 2px;
+    }
+    .brand-mark .bm-tick path {
+      stroke: #7aa0d4;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+    }
+    .brand-mark .bm-claim,
+    .brand-mark .bm-mate { display: inline-block; opacity: 0; will-change: opacity, transform; }
+
+    /* Scene 1 — text hook on dark canvas.
+       "Has / A.C.C. (hero) / denied your / injury claim?" */
+    .bg-hook {
+      background: #0b1522;
+      background-image: radial-gradient(ellipse at 50% 45%, rgba(30,54,90,0.55) 0%, rgba(11,21,34,1) 72%);
+    }
+    .hook-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+    }
+    .hook-line {
+      font-family: "Inter", sans-serif;
+      color: #eef1f5;
+      line-height: 1;
+      will-change: transform, opacity;
+      text-shadow: 0 6px 22px rgba(0,0,0,0.35);
+    }
+    .hook-line-1 { font-size: 110px; font-weight: 500; color: rgba(238,241,245,0.70); letter-spacing: -0.01em; margin-bottom: 14px; }
+    .hook-line-2 { font-size: 280px; font-weight: 800; letter-spacing: -0.03em; color: #ffffff; line-height: 0.95; margin: 4px 0 28px; }
+    .hook-line-3 { font-size: 92px; font-weight: 500; color: rgba(238,241,245,0.82); letter-spacing: -0.01em; margin-bottom: 10px; }
+    .hook-line-4 { font-size: 92px; font-weight: 600; color: #eef1f5; letter-spacing: -0.01em; }
+
+    /* DENIED stamp — reused from v4, one letter longer than DECLINED */
+    .denied-stage {
+      position: relative;
+      padding: 48px 96px;
+      background: rgba(13, 24, 38, 0.28);
+      border-radius: 22px;
+      backdrop-filter: blur(6px);
+    }
+    .denied-rule {
+      position: absolute;
+      inset: 0;
+      border: 8px solid #b84a4a;
+      border-radius: 22px;
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+    .denied-word {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 200px;         /* DENIED is 1 letter less than DECLINED so bumped up */
+      letter-spacing: 0.06em;
+      color: #d85656;
+      text-shadow: 0 5px 18px rgba(0,0,0,0.55);
+      will-change: transform, opacity;
+    }
+    .denied-strike {
+      position: absolute;
+      left: 70px;
+      right: 70px;
+      top: 50%;
+      height: 10px;
+      background: #d85656;
+      transform-origin: left center;
+      transform: scaleX(0);
+      will-change: transform;
+    }
+
+    /* Scene 2 — 90 DAYS reveal overlay.
+       "Did you know…" kicker (top), 90 hero stamp + DAYS beside it,
+       "to appeal" subline underneath. */
+    .ninety-stage {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 80px;
+      text-align: center;
+      gap: 18px;
+    }
+    .ninety-kicker {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: 46px;
+      letter-spacing: 0.32em;
+      color: #f0d7a0;
+      text-transform: uppercase;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+      will-change: transform, opacity;
+    }
+    .ninety-hero {
+      display: flex;
+      align-items: flex-end;
+      gap: 34px;
+      will-change: transform, opacity;
+    }
+    .ninety-num {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 440px;
+      line-height: 0.88;
+      color: #f5ecd4;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 10px 40px rgba(0, 0, 0, 0.70),
+                   0 4px 14px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .ninety-unit {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 100px;
+      line-height: 1;
+      color: #f5ecd4;
+      letter-spacing: 0.12em;
+      padding-bottom: 44px;
+      text-shadow: 0 6px 22px rgba(0, 0, 0, 0.6);
+      will-change: transform, opacity;
+    }
+    .ninety-sub {
+      font-family: "Inter", sans-serif;
+      font-weight: 500;
+      font-size: 72px;
+      color: #eef1f5;
+      letter-spacing: -0.01em;
+      text-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+
+    /* Step badge — matches v4 */
+    .step-stage {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      padding: 48px 68px;
+      background: rgba(13, 24, 38, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(238, 241, 245, 0.25);
+      border-radius: 26px;
+      max-width: 920px;
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .step-num {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 150px;
+      line-height: 1;
+      color: #eef1f5;
+      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
+      will-change: transform, opacity;
+    }
+    .step-text { display: flex; flex-direction: column; gap: 12px; }
+    .step-kicker {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: 26px;
+      letter-spacing: 0.32em;
+      color: #7a93b8;
+      will-change: transform, opacity;
+    }
+    .step-label {
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+      font-size: 54px;
+      color: #eef1f5;
+      letter-spacing: -0.015em;
+      max-width: 640px;
+      line-height: 1.14;
+      will-change: transform, opacity;
+    }
+
+    /* Scene 6 — minimal $0 card (no fee-mechanism claim, v5 simplification) */
+    .ledger-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+      padding: 72px 96px;
+      min-width: 560px;
+      background: rgba(238, 241, 245, 0.96);
+      border-radius: 28px;
+      box-shadow: 0 36px 110px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .ledger-fig {
+      font-family: "Inter", sans-serif;
+      font-weight: 800;
+      font-size: 260px;
+      line-height: 1;
+      color: #0d1826;
+      letter-spacing: -0.045em;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .ledger-currency {
+      font-size: 130px;
+      line-height: 1.1;
+      padding-top: 26px;
+      color: #1f3a68;
+      font-weight: 700;
+    }
+    .ledger-rule {
+      width: 120px;
+      height: 4px;
+      background: #1f3a68;
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+    .ledger-label {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: 36px;
+      letter-spacing: 0.30em;
+      color: #4b5a6d;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* Scene 7 — wordmark CTA with animated tick */
+    .wm-panel {
+      position: relative;
+      padding: 72px 60px;
+      background: rgba(13, 24, 38, 0.58);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(238, 241, 245, 0.18);
+      border-radius: 32px;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .wm-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 34px;
+    }
+    .wm-mark {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 700;
+      font-size: 190px;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #eef1f5;
+      display: flex;
+      align-items: center;
+      text-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .wm-tick {
+      width: 160px;
+      height: 160px;
+      margin: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      will-change: opacity, transform;
+    }
+    .wm-tick svg { width: 100%; height: 100%; overflow: visible; }
+    .wm-tick path {
+      stroke: #7aa0d4;
+      stroke-width: 16;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 340;
+      stroke-dashoffset: 340;
+      filter: drop-shadow(0 6px 20px rgba(0,0,0,0.4));
+    }
+    .wm-rule {
+      width: 140px;
+      height: 4px;
+      background: #7aa0d4;
+      transform-origin: center;
+      will-change: transform;
+    }
+    .wm-url {
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 500;
+      font-size: 50px;
+      color: #eef1f5;
+      letter-spacing: 0.06em;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+    .wm-fine {
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 30px;
+      color: #cbd4e0;
+      letter-spacing: 0.01em;
+      max-width: 780px;
+      text-align: center;
+      line-height: 1.4;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+      will-change: transform, opacity;
+    }
+  </style>
+</head>
+<body>
+<div id="root" data-composition-id="claim-mate-v5" data-width="1080" data-height="1920" data-start="0" data-duration="26.5">
+
+  <!-- ========================================================= -->
+  <!-- BACKGROUND TRACK (track 0) — continuous 0.0 → 26.5         -->
+  <!-- v5 retimed for en-AU-WilliamNeural @ -12% (25.36s vo)      -->
+  <!-- Scene 1 text hook → Scene 2 calendar (90 DAYS) → Step 01  -->
+  <!-- workspace → Step 02 keyboard → Step 03 laptop → $0 →      -->
+  <!-- CTA wordmark. Cuts anchored to VTT word boundaries.        -->
+  <!-- ========================================================= -->
+
+  <!-- Scene 1 · 0.0-3.2  TEXT HOOK. Dark canvas, stacked type.
+       "Has A.C.C. denied your injury claim?" (VTT 0.05-2.93).
+       DENIED stamp slams over "A.C.C." at t=1.30 (on the word "denied"). -->
+  <div id="bg-0" class="clip bg bg-hook" data-start="0" data-duration="3.2" data-track-index="0">
+    <div class="hook-stage">
+      <div class="hook-line hook-line-1">Has</div>
+      <div class="hook-line hook-line-2">A.C.C.</div>
+      <div class="hook-line hook-line-3">denied your</div>
+      <div class="hook-line hook-line-4">injury claim?</div>
+    </div>
+  </div>
+
+  <!-- Scene 2 · 3.2-7.7  90 DAYS reveal on dark canvas (matches scene 1 hook).
+       Typography alone carries the beat — cream/gold 90 stamp pops off navy.
+       Voice: "Did you know, you only have ninety days to appeal that decision?"
+       (VTT 3.32-7.35). 90 stamp lands at 5.29 on the word "ninety". -->
+  <div id="bg-1" class="clip bg bg-hook" data-start="3.2" data-duration="4.5" data-track-index="0">
+    <!-- Dark canvas backdrop (the .bg-hook radial gradient). 90 DAYS overlay on track 2. -->
+  </div>
+
+  <!-- Scene 3 · 7.7-11.7  Workspace photo. Step 01 badge.
+       Voice: "Upload your decision letter. It takes two minutes." (VTT 7.73-11.44). -->
+  <div id="bg-2" class="clip bg" data-start="7.7" data-duration="4.0" data-track-index="0">
+    <img id="bg-2-img" class="bg-media" src="assets/photos/workspace.jpg" alt="" />
+  </div>
+
+  <!-- Scene 4 · 11.7-15.8  Keyboard typing. Step 02 badge.
+       Voice: "We check your case. Find what A.C.C. missed." (VTT 11.83-15.59). -->
+  <div id="bg-3" class="clip bg" data-start="11.7" data-duration="4.1" data-track-index="0">
+    <video id="bg-3-vid" class="bg-media"
+           src="assets/videos/v5-typing.mp4"
+           muted playsinline preload="metadata" style="opacity:0;"></video>
+  </div>
+
+  <!-- Scene 5 · 15.8-20.5  Working video. Step 03 badge.
+       Voice: "We draft your review. Lodge it inside five days." (VTT 15.97-20.26). -->
+  <div id="bg-4" class="clip bg" data-start="15.8" data-duration="4.7" data-track-index="0">
+    <video id="bg-4-vid" class="bg-media"
+           src="assets/videos/working-encoded.mp4"
+           muted playsinline preload="metadata" style="opacity:0;"></video>
+  </div>
+
+  <!-- Scenes 6+7 · 20.5-26.5  Cost beat + CTA on single phone-doc background.
+       Voice: "You pay nothing." (VTT 20.65-21.90)
+             + "Claim Mate. Start your appeal today." (VTT 22.28-25.36).
+       One clip, one Ken-Burns — avoids duplicate-media lint warning. -->
+  <div id="bg-5" class="clip bg" data-start="20.5" data-duration="6.0" data-track-index="0">
+    <img id="bg-5-img" class="bg-media" src="assets/photos/phone-doc.jpg" alt="" />
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- OVERLAYS (track 1) — VTT-anchored                          -->
+  <!-- ========================================================= -->
+
+  <!-- 1.30-4.20  DENIED stamp. Slams on "denied" word (VTT 1.30), holds
+       through scene 1→2 cut (3.2), crumples away at 4.20. -->
+  <div id="ov-denied" class="clip overlay" data-start="1.30" data-duration="2.90" data-track-index="1">
+    <div class="denied-stage">
+      <div class="denied-rule"></div>
+      <div class="denied-word">DENIED</div>
+      <div class="denied-strike"></div>
+    </div>
+  </div>
+
+  <!-- 3.40-7.55  90 DAYS reveal block. ON TRACK 2 so it can layer with the
+       DENIED stamp that's crumpling off on track 1 (3.40 → 4.20).
+       "Did you know…" lands at 3.45 ("Did you know" VTT 3.32-4.16).
+       "90" hero stamps at 5.29 on "ninety" word (VTT 5.29-5.69).
+       "DAYS" unit lands at 5.69 on "days" word (VTT 5.69-6.02).
+       "to appeal that decision" sub lands at 6.14 (VTT 6.14-7.35). -->
+  <div id="ov-ninety" class="clip overlay" data-start="3.40" data-duration="4.15" data-track-index="2">
+    <div class="ninety-stage">
+      <div class="ninety-kicker">Did you know…</div>
+      <div class="ninety-hero">
+        <div class="ninety-num">90</div>
+        <div class="ninety-unit">DAYS</div>
+      </div>
+      <div class="ninety-sub">to appeal that decision</div>
+    </div>
+  </div>
+
+  <!-- 7.75-11.55  Step 01 UPLOAD
+       Voice: "Upload your decision letter. It takes two minutes." (VTT 7.73-11.44). -->
+  <div id="ov-step1" class="clip overlay" data-start="7.75" data-duration="3.80" data-track-index="1">
+    <div class="step-stage">
+      <div class="step-num">01</div>
+      <div class="step-text">
+        <div class="step-kicker">STEP</div>
+        <div class="step-label">Upload your letter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11.85-15.65  Step 02 CHECK — v5 tighter copy "Find every mistake"
+       Voice: "We check your case. Find what A.C.C. missed." (VTT 11.83-15.59). -->
+  <div id="ov-step2" class="clip overlay" data-start="11.85" data-duration="3.80" data-track-index="1">
+    <div class="step-stage">
+      <div class="step-num">02</div>
+      <div class="step-text">
+        <div class="step-kicker">STEP</div>
+        <div class="step-label">Find every mistake</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15.95-20.35  Step 03 LODGE
+       Voice: "We draft your review. Lodge it inside five days." (VTT 15.97-20.26). -->
+  <div id="ov-step3" class="clip overlay" data-start="15.95" data-duration="4.40" data-track-index="1">
+    <div class="step-stage">
+      <div class="step-num">03</div>
+      <div class="step-text">
+        <div class="step-kicker">STEP</div>
+        <div class="step-label">Lodged in five days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 20.60-22.10  $0 card — minimal, no fee-mechanism claim
+       Voice: "You pay nothing." (VTT 20.65-21.90). -->
+  <div id="ov-ledger" class="clip overlay" data-start="20.60" data-duration="1.50" data-track-index="1">
+    <div class="ledger-stage">
+      <div class="ledger-fig">
+        <span class="ledger-currency">$</span><span>0</span>
+      </div>
+      <div class="ledger-rule"></div>
+      <div class="ledger-label">TO YOU</div>
+    </div>
+  </div>
+
+  <!-- 22.25-26.50  Wordmark CTA with animated tick. v5 subtitle callback to scene 2.
+       Voice: "Claim Mate. Start your appeal today." (VTT 22.28-25.36). -->
+  <div id="ov-wordmark" class="clip overlay" data-start="22.25" data-duration="4.25" data-track-index="1">
+    <div class="wm-panel">
+      <div class="wm-stack">
+        <div class="wm-mark">
+          <span class="wm-a">CLAIM</span>
+          <span class="wm-tick">
+            <svg viewBox="0 0 160 160" aria-hidden="true">
+              <path d="M 30 90 Q 50 120 66 110 Q 98 58 130 26" />
+            </svg>
+          </span>
+          <span class="wm-b">MATE</span>
+        </div>
+        <div class="wm-rule"></div>
+        <div class="wm-url">claim-mate.co.nz</div>
+        <div class="wm-fine">90 days from your decision letter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- AUDIO — v5 William narration + new inspirational music bed  -->
+  <!-- ========================================================= -->
+  <audio id="aud-narration" class="clip"
+         src="assets/voiceover/claim-mate-v5.mp3"
+         data-start="0" data-duration="25.5" data-track-index="9"
+         data-volume="1.0"></audio>
+  <audio id="aud-music" class="clip"
+         src="assets/music/v5-inspirational.mp3"
+         data-start="0" data-duration="26.5" data-track-index="8"
+         data-volume="0.28"></audio>
+
+  <!-- ========================================================= -->
+  <!-- GLOBAL FX                                                  -->
+  <!-- ========================================================= -->
+  <div class="global-overlay"></div>
+  <div class="vignette"></div>
+
+  <!-- Persistent brand mark — top-left. Fades in at scene 3 (steps), exits before CTA. -->
+  <div class="brand-mark">
+    <span class="bm-claim">CLAIM</span>
+    <svg class="bm-tick" viewBox="0 0 48 48" aria-hidden="true">
+      <path d="M 10 26 Q 16 34 20 32 Q 28 20 38 10" />
+    </svg>
+    <span class="bm-mate">MATE</span>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<script>
+(function () {
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+
+  // ============================================================
+  // v5 timeline — William @ -12% VTT anchors
+  //   Scene 1 Hook:     0.00 → 3.20  (text on dark)
+  //   Scene 2 90 Days:  3.20 → 7.70  (cartoon calendar + 90 DAYS)
+  //   Scene 3 Upload:   7.70 → 11.70 (workspace + Step 01)
+  //   Scene 4 Check:    11.70 → 15.80 (keyboard + Step 02)
+  //   Scene 5 Lodge:    15.80 → 20.50 (working video + Step 03)
+  //   Scene 6 Cost:     20.50 → 22.20 ($0 on phone-doc)
+  //   Scene 7 CTA:      22.20 → 26.50 (wordmark + tick)
+  // ============================================================
+
+  // ---------- Scene 1 · Hook · staggered stack, A.C.C. is the hero ----------
+  tl.from(".hook-line-1", { y: 38, opacity: 0, duration: 0.50, ease: "power3.out" },     0.12);
+  tl.from(".hook-line-2", { y: 60, scale: 0.90, opacity: 0, duration: 0.60, ease: "back.out(1.5)" }, 0.26);
+  tl.from(".hook-line-3", { y: 28, opacity: 0, duration: 0.42, ease: "power3.out" },     0.55);
+  tl.from(".hook-line-4", { y: 28, opacity: 0, duration: 0.42, ease: "power3.out" },     0.70);
+  // Pulse on A.C.C. just before the DENIED stamp lands on "denied" at 1.30
+  tl.to(".hook-line-2", { scale: 1.03, duration: 0.22, ease: "power2.inOut", yoyo: true, repeat: 1 }, 1.05);
+  // Hook fades on cut to bg-1 at 3.2 (lead-out, transition handled by cut)
+  tl.to([".hook-line-1", ".hook-line-3", ".hook-line-4"],
+    { opacity: 0, duration: 0.28, ease: "power2.in" }, 2.90);
+  tl.to(".hook-line-2", { opacity: 0, scale: 1.08, duration: 0.28, ease: "power2.in" }, 2.90);
+
+  // ---------- Scene 2 · Dark canvas — subtle gradient breathe ----------
+  // No media to move — we give the dark canvas a gentle scale to avoid a
+  // completely static frame while the typographic 90 DAYS reveal plays out.
+  tl.fromTo("#bg-1",
+    { opacity: 1.0 },
+    { opacity: 1.0, duration: 4.5, ease: "none" }, 3.2);
+
+  // Scene 3-5: photo + video Ken-Burns
+  tl.fromTo("#bg-2-img", { scale: 1.0, xPercent: 0 },
+                         { scale: 1.08, xPercent: -1.5, duration: 4.0, ease: "none" }, 7.7);
+
+  tl.set("#bg-3-vid", { opacity: 1 }, 11.7);
+  tl.fromTo("#bg-3-vid", { scale: 1.0, xPercent: 0 },
+                         { scale: 1.08, xPercent: 1.4, duration: 4.1, ease: "none" }, 11.7);
+  tl.set("#bg-3-vid", { opacity: 0 }, 15.8);
+
+  tl.set("#bg-4-vid", { opacity: 1 }, 15.8);
+  tl.fromTo("#bg-4-vid", { scale: 1.0, xPercent: 0 },
+                         { scale: 1.08, xPercent: -1.4, duration: 4.7, ease: "none" }, 15.8);
+  tl.set("#bg-4-vid", { opacity: 0 }, 20.5);
+
+  // Single Ken-Burns across both scenes 6 + 7 on bg-5 (20.5 → 26.5 = 6.0s)
+  tl.fromTo("#bg-5-img", { scale: 1.0, yPercent: 0 },
+                         { scale: 1.12, yPercent: -1.4, duration: 6.0, ease: "none" }, 20.5);
+
+  // ---------- Persistent brand mark — corner anchor with cycling pulse ----------
+  tl.fromTo(".brand-mark",
+    { x: -16, opacity: 0 },
+    { x: 0,   opacity: 0.92, duration: 0.45, ease: "power3.out" }, 7.80);
+  tl.to(".brand-mark",
+    { x: -16, opacity: 0, duration: 0.35, ease: "power3.in" }, 21.70);
+
+  // Brand mark cycling pulse: CLAIM → tick draws → MATE → hold → clear → repeat.
+  // Cycle 1.80s. Runs from 7.80 → 21.60 (13.8s) = 7 full cycles + tail. Use repeat: 7.
+  const brandCycle = gsap.timeline({ repeat: 6 });
+  brandCycle
+    .fromTo(".bm-claim",
+      { x: -10, opacity: 0 },
+      { x: 0,   opacity: 1, duration: 0.22, ease: "power3.out" }, 0.00)
+    .fromTo(".bm-tick path",
+      { strokeDashoffset: 60 },
+      { strokeDashoffset: 0, duration: 0.38, ease: "power2.inOut" }, 0.22)
+    .fromTo(".bm-mate",
+      { x: 10, opacity: 0 },
+      { x: 0,  opacity: 1, duration: 0.22, ease: "power3.out" }, 0.60)
+    .to([".bm-claim", ".bm-mate"],
+      { opacity: 0, duration: 0.25, ease: "power2.in" }, 1.55)
+    .to(".bm-tick path",
+      { strokeDashoffset: 60, duration: 0.25, ease: "power2.in" }, 1.55);
+  tl.add(brandCycle, 7.80);
+
+  // ---------- Overlay: DENIED stamp (1.30 → 4.20) ----------
+  // Slams at 1.30 on "denied" VTT word, holds through scene 1→2 cut, crumples away.
+  tl.fromTo("#ov-denied .denied-stage",
+    { scale: 1.6, rotation: -10, opacity: 0 },
+    { scale: 1.0, rotation: -4,  opacity: 1, duration: 0.28, ease: "expo.out" }, 1.30);
+  tl.fromTo("#ov-denied .denied-rule",
+    { scale: 1.5, rotation: -8, opacity: 0 },
+    { scale: 1.0, rotation: -4, opacity: 0.95, duration: 0.28, ease: "expo.out" }, 1.30);
+  tl.fromTo("#ov-denied .denied-word",
+    { scale: 1.5, rotation: -8, opacity: 0 },
+    { scale: 1.0, rotation: -4, opacity: 1, duration: 0.28, ease: "expo.out" }, 1.30);
+  tl.to("#ov-denied .denied-rule, #ov-denied .denied-word",
+    { rotation: -3, duration: 0.35, ease: "elastic.out(1, 0.5)" }, 1.58);
+  tl.to("#ov-denied .denied-strike",
+    { scaleX: 1, duration: 0.45, ease: "power2.inOut" }, 1.85);
+  // Crumple exit
+  tl.to("#ov-denied .denied-stage",
+    { y: 80, x: 60, scale: 0.6, rotation: -22, opacity: 0, duration: 0.40, ease: "power3.in" }, 4.10);
+
+  // ---------- Overlay: 90 DAYS reveal (3.40 → 7.55) ----------
+  // "Did you know…" kicker lands first (3.45, early in "Did you know" VTT 3.32-4.16).
+  tl.fromTo("#ov-ninety .ninety-kicker",
+    { y: 30, opacity: 0 },
+    { y: 0,  opacity: 1, duration: 0.42, ease: "power3.out" }, 3.45);
+  // "90" SLAM at 5.29 on the word "ninety" — big scale+rotate entrance.
+  tl.fromTo("#ov-ninety .ninety-num",
+    { scale: 2.2, rotation: -14, opacity: 0 },
+    { scale: 1.0, rotation: -3,  opacity: 1, duration: 0.34, ease: "expo.out" }, 5.29);
+  tl.to("#ov-ninety .ninety-num",
+    { rotation: -1, duration: 0.32, ease: "elastic.out(1, 0.55)" }, 5.63);
+  // "DAYS" lands at 5.69 on the word "days".
+  tl.fromTo("#ov-ninety .ninety-unit",
+    { x: 60, scale: 1.3, opacity: 0 },
+    { x: 0,  scale: 1.0, opacity: 1, duration: 0.30, ease: "back.out(1.8)" }, 5.69);
+  // Sub "to appeal that decision" lands at 6.14.
+  tl.fromTo("#ov-ninety .ninety-sub",
+    { y: 24, opacity: 0 },
+    { y: 0,  opacity: 1, duration: 0.42, ease: "power3.out" }, 6.14);
+  // 90 DAYS block holds then fades on cut to workspace at 7.7.
+  tl.to("#ov-ninety .ninety-stage",
+    { opacity: 0, duration: 0.30, ease: "power2.in" }, 7.40);
+
+  // ---------- Overlay: step badges — snappy entrance + 3-direction exits ----------
+  function stepEntrance(hostSel, at) {
+    tl.fromTo(`${hostSel} .step-stage`,
+      { y: 50, scale: 0.88, opacity: 0 },
+      { y: 0,  scale: 1,    opacity: 1, duration: 0.38, ease: "back.out(1.6)" }, at);
+    tl.fromTo(`${hostSel} .step-num`,
+      { scale: 1.5, opacity: 0 },
+      { scale: 1,   opacity: 1, duration: 0.30, ease: "expo.out" }, at + 0.08);
+    tl.fromTo(`${hostSel} .step-kicker`,
+      { x: -18, opacity: 0 },
+      { x: 0,   opacity: 1, duration: 0.25, ease: "power4.out" }, at + 0.18);
+    tl.fromTo(`${hostSel} .step-label`,
+      { x: -18, opacity: 0 },
+      { x: 0,   opacity: 1, duration: 0.30, ease: "power4.out" }, at + 0.24);
+  }
+  function stepExit(hostSel, at, dx, dy, rot) {
+    tl.to(`${hostSel} .step-stage`,
+      { x: dx, y: dy, rotation: rot || 0, opacity: 0, duration: 0.32, ease: "power3.in" }, at);
+  }
+  stepEntrance("#ov-step1",  7.75);
+  stepExit(    "#ov-step1", 11.35,  140,   0,   4);   // exits right
+  stepEntrance("#ov-step2", 11.85);
+  stepExit(    "#ov-step2", 15.45,   0, -140,  -3);   // exits up
+  stepEntrance("#ov-step3", 15.95);
+  stepExit(    "#ov-step3", 20.15, -140,   0,  -4);   // exits left
+
+  // ---------- Overlay: $0 card (20.60 → 22.10) ----------
+  tl.fromTo("#ov-ledger .ledger-stage",
+    { y: 40, scale: 0.85, opacity: 0 },
+    { y: 0,  scale: 1,    opacity: 1, duration: 0.40, ease: "back.out(1.8)" }, 20.60);
+  tl.fromTo("#ov-ledger .ledger-fig",
+    { scale: 1.4, opacity: 0 },
+    { scale: 1,   opacity: 1, duration: 0.30, ease: "expo.out" }, 20.70);
+  tl.fromTo("#ov-ledger .ledger-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.38, ease: "power2.out" }, 20.95);
+  tl.fromTo("#ov-ledger .ledger-label",
+    { y: 10, opacity: 0 },
+    { y: 0,  opacity: 1, duration: 0.32, ease: "power2.out" }, 21.05);
+  // Collapse exit before CTA
+  tl.to("#ov-ledger .ledger-stage",
+    { scale: 0.72, y: -30, opacity: 0, duration: 0.32, ease: "power3.in" }, 21.85);
+
+  // ---------- Overlay: wordmark CTA (22.25 → 26.50) ----------
+  tl.fromTo("#ov-wordmark .wm-panel",
+    { scale: 0.82, opacity: 0 },
+    { scale: 1,    opacity: 1, duration: 0.42, ease: "back.out(1.5)" }, 22.25);
+  tl.fromTo("#ov-wordmark .wm-a",
+    { x: -34, opacity: 0 },
+    { x: 0,   opacity: 1, duration: 0.38, ease: "power4.out" }, 22.40);
+  tl.fromTo("#ov-wordmark .wm-tick",
+    { scale: 0.4, opacity: 0 },
+    { scale: 1,   opacity: 1, duration: 0.35, ease: "back.out(2.4)" }, 22.50);
+  tl.fromTo("#ov-wordmark .wm-tick path",
+    { strokeDashoffset: 340 },
+    { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, 22.63);
+  tl.fromTo("#ov-wordmark .wm-b",
+    { x: 34, opacity: 0 },
+    { x: 0,  opacity: 1, duration: 0.38, ease: "power4.out" }, 22.65);
+  tl.fromTo("#ov-wordmark .wm-rule",
+    { scaleX: 0, opacity: 0 },
+    { scaleX: 1, opacity: 1, duration: 0.35, ease: "power2.out" }, 23.00);
+  tl.fromTo("#ov-wordmark .wm-url",
+    { y: 14, opacity: 0 },
+    { y: 0,  opacity: 1, duration: 0.32, ease: "power3.out" }, 23.13);
+  tl.fromTo("#ov-wordmark .wm-fine",
+    { y: 8, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.32, ease: "power2.out" }, 23.33);
+
+  // ---------- Tail: deepen vignette into silence ----------
+  tl.to(".vignette",       { opacity: 1.15, duration: 1.2, ease: "power1.out" }, 25.30);
+  tl.to(".global-overlay", { opacity: 0.85, duration: 1.2, ease: "power1.out" }, 25.30);
+
+  window.__timelines["claim-mate-v5"] = tl;
+})();
+</script>
+</body>
+</html>

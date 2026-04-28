@@ -1,0 +1,802 @@
+[
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "Pixabay",
+    "href": "/",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "",
+    "aria": "Search Pixabay",
+    "href": "",
+    "className": "iconButton--lb+St",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "",
+    "aria": "Clear",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Music",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Explore",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Photos",
+    "aria": "",
+    "href": "/photos/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Illustrations",
+    "aria": "",
+    "href": "/illustrations/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Vectors",
+    "aria": "",
+    "href": "/vectors/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Videos",
+    "aria": "",
+    "href": "/videos/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Music",
+    "aria": "",
+    "href": "/music/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Sound Effects",
+    "aria": "",
+    "href": "/sound-effects/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "3D Models",
+    "aria": "",
+    "href": "/3d-models/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "GIFs",
+    "aria": "",
+    "href": "/gifs/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Editor's Choice",
+    "aria": "",
+    "href": "/editors_choice/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Curated Collections",
+    "aria": "",
+    "href": "/collections/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Pixabay Radio",
+    "aria": "",
+    "href": "/playlists/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Popular Images",
+    "aria": "",
+    "href": "/images/search/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Popular Videos",
+    "aria": "",
+    "href": "/videos/search/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Popular Music",
+    "aria": "",
+    "href": "/music/search/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Popular Searches",
+    "aria": "",
+    "href": "/popular-searches/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Space",
+    "aria": "",
+    "href": "/images/search/space/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Mother's Day",
+    "aria": "",
+    "href": "/images/search/mother's%20day/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Spring",
+    "aria": "",
+    "href": "/images/search/spring/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Flowers",
+    "aria": "",
+    "href": "/images/search/flowers/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Travel",
+    "aria": "",
+    "href": "/images/search/travel/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "ContestsLive",
+    "aria": "",
+    "href": "/contests/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Creators",
+    "aria": "",
+    "href": "/users/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "AmbassadorsNew",
+    "aria": "",
+    "href": "/service/ambassador/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Forum",
+    "aria": "",
+    "href": "/forum/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Blog",
+    "aria": "",
+    "href": "/blog/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "About Us",
+    "aria": "",
+    "href": "/service/about/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "FAQ",
+    "aria": "",
+    "href": "/service/faq/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "License Summary",
+    "aria": "",
+    "href": "/service/license-summary/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Terms of Service",
+    "aria": "",
+    "href": "/service/terms/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Privacy Policy",
+    "aria": "",
+    "href": "/service/privacy/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Cookies Policy",
+    "aria": "",
+    "href": "/service/cookies/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Digital Services Act",
+    "aria": "",
+    "href": "/service/digital-services-act/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Report Content",
+    "aria": "",
+    "href": "/content-reports/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "API",
+    "aria": "",
+    "href": "/service/about/api/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Language",
+    "aria": "",
+    "href": "",
+    "className": "triggerButton--LCHJn",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Čeština",
+    "aria": "",
+    "href": "https://pixabay.com/cs/music/search/firemn%C3%AD%20optimismus/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Dansk",
+    "aria": "",
+    "href": "https://pixabay.com/da/music/search/virksomhedens%20optimisme/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Deutsch",
+    "aria": "",
+    "href": "https://pixabay.com/de/music/search/optimismus%20im%20unternehmen/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "English",
+    "aria": "",
+    "href": "https://pixabay.com/music/search/corporate%20upbeat/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Español",
+    "aria": "",
+    "href": "https://pixabay.com/es/music/search/optimismo%20corporativo/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Français",
+    "aria": "",
+    "href": "https://pixabay.com/fr/music/search/optimisme%20d%27entreprise/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Indonesia",
+    "aria": "",
+    "href": "https://pixabay.com/id/music/search/optimis%20perusahaan/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Italiano",
+    "aria": "",
+    "href": "https://pixabay.com/it/music/search/ottimismo%20aziendale/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Magyar",
+    "aria": "",
+    "href": "https://pixabay.com/hu/music/search/v%C3%A1llalati%20optimizmus/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Nederlands",
+    "aria": "",
+    "href": "https://pixabay.com/nl/music/search/optimistische%20kijk%20op%20het%20bedrijfsleven/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Norsk",
+    "aria": "",
+    "href": "https://pixabay.com/no/music/search/bedriftens%20optimisme/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Polski",
+    "aria": "",
+    "href": "https://pixabay.com/pl/music/search/korporacyjny%20optymizm/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Português",
+    "aria": "",
+    "href": "https://pixabay.com/pt/music/search/otimismo%20corporativo/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Română",
+    "aria": "",
+    "href": "https://pixabay.com/ro/music/search/optimism%20corporativ/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Slovenčina",
+    "aria": "",
+    "href": "https://pixabay.com/sk/music/search/firemn%C3%BD%20optimizmus/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Suomi",
+    "aria": "",
+    "href": "https://pixabay.com/fi/music/search/yritysmaailman%20optimismi/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Svenska",
+    "aria": "",
+    "href": "https://pixabay.com/sv/music/search/f%C3%B6retagslycka/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Türkçe",
+    "aria": "",
+    "href": "https://pixabay.com/tr/music/search/kurumsal%20iyimserlik/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Việt",
+    "aria": "",
+    "href": "https://pixabay.com/vi/music/search/tinh%20th%E1%BA%A7n%20doanh%20nghi%E1%BB%87p%20l%E1%BA%A1c%20quan/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "ไทย",
+    "aria": "",
+    "href": "https://pixabay.com/th/music/search/%E0%B8%AD%E0%B8%87%E0%B8%84%E0%B9%8C%E0%B8%81%E0%B8%A3%E0%B8%A1%E0%B8%AD%E0%B8%87%E0%B9%82%E0%B8%A5%E0%B8%81%E0%B9%83%E0%B8%99%E0%B9%81%E0%B8%87%E0%B9%88%E0%B8%94%E0%B8%B5/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Български",
+    "aria": "",
+    "href": "https://pixabay.com/bg/music/search/%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%B5%D0%BD%20%D0%BE%D0%BF%D1%82%D0%B8%D0%BC%D0%B8%D0%B7%D1%8A%D0%BC/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Русский",
+    "aria": "",
+    "href": "https://pixabay.com/ru/music/search/%D0%BA%D0%BE%D1%80%D0%BF%D0%BE%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D1%8B%D0%B9%20%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%B8%D0%B2/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Ελληνική",
+    "aria": "",
+    "href": "https://pixabay.com/el/music/search/%CE%B5%CF%84%CE%B1%CE%B9%CF%81%CE%B9%CE%BA%CE%AE%20%CE%B1%CE%B9%CF%83%CE%B9%CE%BF%CE%B4%CE%BF%CE%BE%CE%AF%CE%B1/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "日本語",
+    "aria": "",
+    "href": "https://pixabay.com/ja/music/search/%E4%BC%81%E6%A5%AD%E6%99%AF%E6%B3%81%E6%84%9F%E3%81%AF%E6%98%8E%E3%82%8B%E3%81%84/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "한국어",
+    "aria": "",
+    "href": "https://pixabay.com/ko/music/search/%EA%B8%B0%EC%97%85%20%EB%B6%84%EC%9C%84%EA%B8%B0%20%EA%B8%8D%EC%A0%95%EC%A0%81/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "简体中文",
+    "aria": "",
+    "href": "https://pixabay.com/zh/music/search/%E4%BC%81%E4%B8%9A%E4%B9%90%E8%A7%82%E6%83%85%E7%BB%AA/",
+    "className": "dropdownMenuItem--yZ9j-",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "",
+    "href": "https://www.instagram.com/pixabay/",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "",
+    "href": "https://www.facebook.com/pixabay",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "",
+    "href": "https://www.tiktok.com/@pixabaymedia",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "",
+    "href": "https://x.com/pixabay",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "",
+    "href": "https://www.linkedin.com/company/pixabay/",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "",
+    "href": "https://www.youtube.com/@pixabaymedia",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "",
+    "aria": "",
+    "href": "https://pinterest.com/pixabay/",
+    "className": "",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Log in",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Join",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 outline--rYKlp light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Upload",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 primary--rehiP center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Music",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Genre",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Mood",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Movement",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Duration",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Theme",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Content type\nNEW",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "",
+    "aria": "Search settings",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Most relevant",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 outline--rYKlp light--C3NP- stretch--PMRkR center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "upbeat corporate",
+    "aria": "",
+    "href": "/music/search/upbeat%20corporate/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "corporate music",
+    "aria": "",
+    "href": "/music/search/corporate%20music/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "corporate",
+    "aria": "",
+    "href": "/music/search/corporate/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "business",
+    "aria": "",
+    "href": "/music/search/business/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "corporate background",
+    "aria": "",
+    "href": "/music/search/corporate%20background/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "corporate inspiring",
+    "aria": "",
+    "href": "/music/search/corporate%20inspiring/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "corporate presentation",
+    "aria": "",
+    "href": "/music/search/corporate%20presentation/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "corporate commercial",
+    "aria": "",
+    "href": "/music/search/corporate%20commercial/",
+    "className": "tag--GBLgc light--YDlX5",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40 disabled--y8RV+",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 ghost--wIHwU light--C3NP- center--ZZf40 disabled--y8RV+",
+    "testid": ""
+  },
+  {
+    "tag": "A",
+    "text": "Auto-match your soundtrack to your footage with one-click Beat Sync.\nTry Canva P",
+    "aria": "",
+    "href": "https://www.canva.com/features/beat-sync/?utm_medium=partner&utm_source=pixabay&utm_campaign=canva_brand&utm_content=beat_sync_v1&utm_term=69.2%2165.2",
+    "className": "container--aRRDn",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "Try Canva Pro for free",
+    "aria": "",
+    "href": "",
+    "className": "button--9NFL8 square--n2VLb overlay--TH9Yn center--ZZf40",
+    "testid": ""
+  },
+  {
+    "tag": "DIV",
+    "text": "",
+    "aria": "",
+    "href": "",
+    "className": "thumbnail--TvKkc lg--swle8 interactive--RyOh5",
+    "testid": ""
+  },
+  {
+    "tag": "BUTTON",
+    "text": "",
+    "aria": "",
+    "href": "",
+    "className": "playOverlay--5uS0j overlay--WZ1A+",
+    "testid": ""
+  }
+]

@@ -1,0 +1,109 @@
+{
+  "name": "patek",
+  "url": "https://www.patek.com",
+  "durationMs": 20301,
+  "scrape": {
+    "finalUrl": "https://www.patek.com/",
+    "title": "Patek Philippe Official Site | Luxury Watches for Men & Ladies | Patek Philippe",
+    "titleLen": 79,
+    "metaDescription": "Official website of the last family-owned Genevan luxury watch manufacturer. Enter the Patek Philippe universe to discover our watches and savoir-faire.",
+    "metaDescriptionLen": 152,
+    "ogTagsCount": 12,
+    "ogTagsKeys": [
+      "og:site_name",
+      "og:type",
+      "og:title",
+      "og:description",
+      "og:image",
+      "og:url",
+      "twitter:site",
+      "twitter:card"
+    ],
+    "ogImage": "https://patek-res.cloudinary.com/dfsmedia/0906caea301d42b3b8bd23bd656d1711/250169-51882/pp-manufacture-pp6-entrance-interior-calatrava-cross-symbol",
+    "jsonLdCount": 0,
+    "jsonLdTypes": [],
+    "h1Count": 1,
+    "h1Sample": [
+      "New models 2026"
+    ],
+    "h2Count": 6,
+    "h2Sample": [
+      "The last family-owned Genevan manufacture",
+      "Innovation and Tradition",
+      "the patek philippe museum"
+    ],
+    "h3Count": 0,
+    "paragraphsCount": 2,
+    "paragraphSample": [
+      "Preserving for the Future",
+      "Assembling one of the world's most extraordinary watch collections, our Museum showcases our legacy and represents an inexhaustible source of inspiration for our designers and artists."
+    ],
+    "listItemsCount": 43,
+    "listItemSample": [
+      "Our values",
+      "The founders",
+      "Patek Philippe"
+    ],
+    "ctaCount": 16,
+    "ctaSample": [
+      {
+        "text": "Find stores nearby",
+        "score": 5,
+        "href": "/en/points-of-sale"
+      },
+      {
+        "text": "Find your timepiece",
+        "score": 5,
+        "href": "/en/collection/watch-finder"
+      },
+      {
+        "text": "Register your watch",
+        "score": 5,
+        "href": "/en/service/taking-care-of-your-watch/register-your-watch"
+      },
+      {
+        "text": "Plan your visit",
+        "score": 5,
+        "href": "/en/museum/plan-your-visit"
+      },
+      {
+        "text": "Careers - join us",
+        "score": 5,
+        "href": "/en/careers"
+      }
+    ],
+    "visibleTextLen": 3849,
+    "visibleTextSample": "Skip to main content MENU 0:00 / 0:00 NEW MODELS 2026 Our latest creations unveiled at Watches and Wonders 2026. A new chapter of design and craftsmanship, where innovation meets timeless elegance. DISCOVER MORE 0:00 / 0:00 RARE HANDCRAFTS COLLECTION Patek Philippe is dedicated to preserving all the Rare Handcrafts that have been used to decorate timepieces for more than four centuries. The result is exceptional creations - pocket watches, wristwatches and table clocks. DISCOVER MORE 0:00 / 0:00 CRAFTING A LEGACY 50 years after its creation, the Nautilus epitomizes the elegant sports watch lik",
+    "stats": {
+      "fetchedAt": "2026-04-27T06:22:24.624Z",
+      "durationMs": 14063,
+      "fellBack": false,
+      "partial": false,
+      "error": null,
+      "status": 200
+    }
+  },
+  "curl": {
+    "cssVarsCount": 5,
+    "cssVarsBrandKeys": [
+      "font-primary"
+    ],
+    "topHexes": [
+      {
+        "hex": "#8C7A66",
+        "count": 2
+      },
+      {
+        "hex": "#C6BA82",
+        "count": 1
+      }
+    ],
+    "fontImports": [],
+    "fontFamiliesFound": 0,
+    "fontFamiliesSample": [],
+    "logoImgFound": false,
+    "ogImage": "https://patek-res.cloudinary.com/dfsmedia/0906caea301d42b3b8bd23bd656d1711/250169-51882/pp-manufacture-pp6-entrance-interior-calatrava-cross-symbol",
+    "htmlLen": 173512
+  },
+  "errors": []
+}

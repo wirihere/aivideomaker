@@ -1,0 +1,454 @@
+[
+  {
+    "name": "headspace",
+    "url": "https://www.headspace.com",
+    "durationMs": 86580,
+    "scrape": {
+      "finalUrl": "https://www.headspace.com/",
+      "title": "Mental Health App for Meditation & Sleep - Headspace",
+      "titleLen": 52,
+      "metaDescription": "Live a healthier, happier, more well-rested life in just a few minutes a day. Get the science-backed mental health app for every moment. Try for free.",
+      "metaDescriptionLen": 150,
+      "ogTagsCount": 15,
+      "ogTagsKeys": [
+        "og:site_name",
+        "og:type",
+        "twitter:site",
+        "twitter:card",
+        "og:image",
+        "og:title",
+        "og:description",
+        "og:url"
+      ],
+      "ogImage": "https://images.ctfassets.net/v3n26e09qg2r/4NcF0eXixKLYQFKIQ0pXWV/802a953e11a4f70ef3c5aaf8df27dbfc/Headspace_Opengraph.png",
+      "jsonLdCount": 2,
+      "jsonLdTypes": [
+        "SoftwareApplication",
+        "FAQPage"
+      ],
+      "h1Count": 0,
+      "h1Sample": [],
+      "h2Count": 8,
+      "h2Sample": [
+        "all with Headspace",
+        "What kind of headspace are you looking for?",
+        "The mental health app for every moment"
+      ],
+      "h3Count": 5,
+      "paragraphsCount": 24,
+      "paragraphSample": [
+        "HSA/FSA eligible: save with pre-tax dollars",
+        "Mental health app with expert-led meditations and tools",
+        "Online therapy that accepts insurance"
+      ],
+      "listItemsCount": 54,
+      "listItemSample": [
+        "1,000+ meditations and Ebb, your AI companion",
+        "Affordable therapy that accepts insurance",
+        "Trusted mental health app with 105M+ downloads"
+      ],
+      "ctaCount": 16,
+      "ctaSample": [
+        {
+          "text": "Learn more",
+          "score": 5,
+          "href": "https://www.headspace.com/meditation"
+        },
+        {
+          "text": "Explore sleep resources",
+          "score": 5,
+          "href": "https://www.headspace.com/sleep"
+        },
+        {
+          "text": "Learn more",
+          "score": 5,
+          "href": "https://www.headspace.com/mental-health"
+        },
+        {
+          "text": "Get started",
+          "score": 5,
+          "href": "https://www.headspace.com/online-therapy"
+        },
+        {
+          "text": "View all",
+          "score": 5,
+          "href": "https://www.headspace.com/content?origin=homepage"
+        }
+      ],
+      "visibleTextLen": 4198,
+      "visibleTextSample": "HSA/FSA eligible: save with pre-tax dollars For You For Business For Providers Our Plans Resources About Log in Help Try for free Stress less all with Headspace 1,000+ meditations and Ebb, your AI companion Affordable therapy that accepts insurance Trusted mental health app with 105M+ downloads Mental health app with expert-led meditations and tools Try for $0 Online therapy that accepts insurance Check your coverage What kind of headspace are you looking for? Stress less Sleep soundly Manage anxiety Process thoughts Practice meditation Start therapy The mental health app for every moment AI g",
+      "stats": {
+        "fetchedAt": "2026-04-27T06:21:32.588Z",
+        "durationMs": 77330,
+        "fellBack": false,
+        "partial": false,
+        "error": null,
+        "status": 200
+      }
+    },
+    "curl": {
+      "cssVarsCount": 0,
+      "cssVarsBrandKeys": [],
+      "topHexes": [
+        {
+          "hex": "#44423F",
+          "count": 94
+        },
+        {
+          "hex": "#2D2C2B",
+          "count": 66
+        },
+        {
+          "hex": "#0040EA",
+          "count": 31
+        },
+        {
+          "hex": "#F9F4F2",
+          "count": 25
+        },
+        {
+          "hex": "#0061EF",
+          "count": 18
+        },
+        {
+          "hex": "#E5E7EC",
+          "count": 14
+        },
+        {
+          "hex": "#FFCE00",
+          "count": 11
+        },
+        {
+          "hex": "#141313",
+          "count": 10
+        }
+      ],
+      "fontImports": [],
+      "fontFamiliesFound": 8,
+      "fontFamiliesSample": [
+        "Headspace Apercu",
+        "Headspace Apercu",
+        "Headspace Apercu",
+        "Headspace Apercu"
+      ],
+      "logoImgFound": true,
+      "ogImage": "https://images.ctfassets.net/v3n26e09qg2r/4NcF0eXixKLYQFKIQ0pXWV/802a953e11a4f70ef3c5aaf8df27dbfc/Headspace_Opengraph.png",
+      "htmlLen": 565220
+    },
+    "errors": []
+  },
+  {
+    "name": "calm",
+    "url": "https://www.calm.com",
+    "durationMs": 31693,
+    "scrape": {
+      "finalUrl": "https://www.calm.com/",
+      "title": "Access to this page has been denied",
+      "titleLen": 35,
+      "metaDescription": "px-captcha",
+      "metaDescriptionLen": 10,
+      "ogTagsCount": 0,
+      "ogTagsKeys": [],
+      "ogImage": null,
+      "jsonLdCount": 0,
+      "jsonLdTypes": [],
+      "h1Count": 0,
+      "h1Sample": [],
+      "h2Count": 0,
+      "h2Sample": [],
+      "h3Count": 0,
+      "paragraphsCount": 0,
+      "paragraphSample": [],
+      "listItemsCount": 0,
+      "listItemSample": [],
+      "ctaCount": 0,
+      "ctaSample": [],
+      "visibleTextLen": 0,
+      "visibleTextSample": "",
+      "stats": {
+        "fetchedAt": "2026-04-27T06:22:04.322Z",
+        "durationMs": 27948,
+        "fellBack": false,
+        "partial": false,
+        "error": null,
+        "status": 403
+      }
+    },
+    "curl": {
+      "cssVarsCount": 0,
+      "cssVarsBrandKeys": [],
+      "topHexes": [
+        {
+          "hex": "#F0F1F2",
+          "count": 5
+        },
+        {
+          "hex": "#FAFBFC",
+          "count": 2
+        },
+        {
+          "hex": "#FCF0F2",
+          "count": 1
+        },
+        {
+          "hex": "#CE0E2D",
+          "count": 1
+        },
+        {
+          "hex": "#F0EEEE",
+          "count": 1
+        },
+        {
+          "hex": "#B1B5B8",
+          "count": 1
+        }
+      ],
+      "fontImports": [
+        "https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      ],
+      "fontFamiliesFound": 1,
+      "fontFamiliesSample": [
+        "Roboto,sans-serif"
+      ],
+      "logoImgFound": false,
+      "ogImage": null,
+      "htmlLen": 5455
+    },
+    "errors": []
+  },
+  {
+    "name": "patek",
+    "url": "https://www.patek.com",
+    "durationMs": 20301,
+    "scrape": {
+      "finalUrl": "https://www.patek.com/",
+      "title": "Patek Philippe Official Site | Luxury Watches for Men & Ladies | Patek Philippe",
+      "titleLen": 79,
+      "metaDescription": "Official website of the last family-owned Genevan luxury watch manufacturer. Enter the Patek Philippe universe to discover our watches and savoir-faire.",
+      "metaDescriptionLen": 152,
+      "ogTagsCount": 12,
+      "ogTagsKeys": [
+        "og:site_name",
+        "og:type",
+        "og:title",
+        "og:description",
+        "og:image",
+        "og:url",
+        "twitter:site",
+        "twitter:card"
+      ],
+      "ogImage": "https://patek-res.cloudinary.com/dfsmedia/0906caea301d42b3b8bd23bd656d1711/250169-51882/pp-manufacture-pp6-entrance-interior-calatrava-cross-symbol",
+      "jsonLdCount": 0,
+      "jsonLdTypes": [],
+      "h1Count": 1,
+      "h1Sample": [
+        "New models 2026"
+      ],
+      "h2Count": 6,
+      "h2Sample": [
+        "The last family-owned Genevan manufacture",
+        "Innovation and Tradition",
+        "the patek philippe museum"
+      ],
+      "h3Count": 0,
+      "paragraphsCount": 2,
+      "paragraphSample": [
+        "Preserving for the Future",
+        "Assembling one of the world's most extraordinary watch collections, our Museum showcases our legacy and represents an inexhaustible source of inspiration for our designers and artists."
+      ],
+      "listItemsCount": 43,
+      "listItemSample": [
+        "Our values",
+        "The founders",
+        "Patek Philippe"
+      ],
+      "ctaCount": 16,
+      "ctaSample": [
+        {
+          "text": "Find stores nearby",
+          "score": 5,
+          "href": "/en/points-of-sale"
+        },
+        {
+          "text": "Find your timepiece",
+          "score": 5,
+          "href": "/en/collection/watch-finder"
+        },
+        {
+          "text": "Register your watch",
+          "score": 5,
+          "href": "/en/service/taking-care-of-your-watch/register-your-watch"
+        },
+        {
+          "text": "Plan your visit",
+          "score": 5,
+          "href": "/en/museum/plan-your-visit"
+        },
+        {
+          "text": "Careers - join us",
+          "score": 5,
+          "href": "/en/careers"
+        }
+      ],
+      "visibleTextLen": 3849,
+      "visibleTextSample": "Skip to main content MENU 0:00 / 0:00 NEW MODELS 2026 Our latest creations unveiled at Watches and Wonders 2026. A new chapter of design and craftsmanship, where innovation meets timeless elegance. DISCOVER MORE 0:00 / 0:00 RARE HANDCRAFTS COLLECTION Patek Philippe is dedicated to preserving all the Rare Handcrafts that have been used to decorate timepieces for more than four centuries. The result is exceptional creations - pocket watches, wristwatches and table clocks. DISCOVER MORE 0:00 / 0:00 CRAFTING A LEGACY 50 years after its creation, the Nautilus epitomizes the elegant sports watch lik",
+      "stats": {
+        "fetchedAt": "2026-04-27T06:22:24.624Z",
+        "durationMs": 14063,
+        "fellBack": false,
+        "partial": false,
+        "error": null,
+        "status": 200
+      }
+    },
+    "curl": {
+      "cssVarsCount": 5,
+      "cssVarsBrandKeys": [
+        "font-primary"
+      ],
+      "topHexes": [
+        {
+          "hex": "#8C7A66",
+          "count": 2
+        },
+        {
+          "hex": "#C6BA82",
+          "count": 1
+        }
+      ],
+      "fontImports": [],
+      "fontFamiliesFound": 0,
+      "fontFamiliesSample": [],
+      "logoImgFound": false,
+      "ogImage": "https://patek-res.cloudinary.com/dfsmedia/0906caea301d42b3b8bd23bd656d1711/250169-51882/pp-manufacture-pp6-entrance-interior-calatrava-cross-symbol",
+      "htmlLen": 173512
+    },
+    "errors": []
+  },
+  {
+    "name": "aesop",
+    "url": "https://www.aesop.com",
+    "durationMs": 23350,
+    "scrape": {
+      "finalUrl": "https://www.aesop.com/",
+      "title": "Just a moment...",
+      "titleLen": 16,
+      "metaDescription": "",
+      "metaDescriptionLen": 0,
+      "ogTagsCount": 0,
+      "ogTagsKeys": [],
+      "ogImage": null,
+      "jsonLdCount": 0,
+      "jsonLdTypes": [],
+      "h1Count": 1,
+      "h1Sample": [
+        "www.aesop.com"
+      ],
+      "h2Count": 1,
+      "h2Sample": [
+        "Performing security verification"
+      ],
+      "h3Count": 0,
+      "paragraphsCount": 1,
+      "paragraphSample": [
+        "This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot."
+      ],
+      "listItemsCount": 0,
+      "listItemSample": [],
+      "ctaCount": 0,
+      "ctaSample": [],
+      "visibleTextLen": 259,
+      "visibleTextSample": "www.aesop.com Performing security verification This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot. Ray ID: 9f2bbbbcae6450c2 Performance and Security by Cloudflare Privacy",
+      "stats": {
+        "fetchedAt": "2026-04-27T06:22:47.975Z",
+        "durationMs": 19501,
+        "fellBack": false,
+        "partial": false,
+        "error": null,
+        "status": 403
+      }
+    },
+    "curl": {
+      "cssVarsCount": 0,
+      "cssVarsBrandKeys": [],
+      "topHexes": [
+        {
+          "hex": "#313131",
+          "count": 1
+        }
+      ],
+      "fontImports": [],
+      "fontFamiliesFound": 1,
+      "fontFamiliesSample": [
+        "system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji"
+      ],
+      "logoImgFound": false,
+      "ogImage": null,
+      "htmlLen": 5510
+    },
+    "errors": []
+  },
+  {
+    "name": "margiela-fragrances",
+    "url": "https://maisonmargiela-fragrances.com",
+    "durationMs": 30695,
+    "scrape": {
+      "finalUrl": "https://www.maisonmargiela-fragrances.us/",
+      "title": "Just a moment...",
+      "titleLen": 16,
+      "metaDescription": "",
+      "metaDescriptionLen": 0,
+      "ogTagsCount": 0,
+      "ogTagsKeys": [],
+      "ogImage": null,
+      "jsonLdCount": 0,
+      "jsonLdTypes": [],
+      "h1Count": 1,
+      "h1Sample": [
+        "www.maisonmargiela-fragrances.us"
+      ],
+      "h2Count": 1,
+      "h2Sample": [
+        "Performing security verification"
+      ],
+      "h3Count": 0,
+      "paragraphsCount": 1,
+      "paragraphSample": [
+        "This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot."
+      ],
+      "listItemsCount": 0,
+      "listItemSample": [],
+      "ctaCount": 0,
+      "ctaSample": [],
+      "visibleTextLen": 278,
+      "visibleTextSample": "www.maisonmargiela-fragrances.us Performing security verification This website uses a security service to protect against malicious bots. This page is displayed while the website verifies you are not a bot. Ray ID: 9f2bbc52cefdd992 Performance and Security by Cloudflare Privacy",
+      "stats": {
+        "fetchedAt": "2026-04-27T06:23:18.671Z",
+        "durationMs": 27457,
+        "fellBack": false,
+        "partial": false,
+        "error": null,
+        "status": 403
+      }
+    },
+    "curl": {
+      "cssVarsCount": 0,
+      "cssVarsBrandKeys": [],
+      "topHexes": [
+        {
+          "hex": "#313131",
+          "count": 1
+        }
+      ],
+      "fontImports": [],
+      "fontFamiliesFound": 1,
+      "fontFamiliesSample": [
+        "system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji"
+      ],
+      "logoImgFound": false,
+      "ogImage": null,
+      "htmlLen": 5572
+    },
+    "errors": []
+  }
+]

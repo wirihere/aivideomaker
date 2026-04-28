@@ -1,0 +1,770 @@
+{
+  "superImpact": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/superImpact-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/superImpact-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/superImpact-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "cinematicReveal": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/cinematicReveal-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/cinematicReveal-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/cinematicReveal-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "hyperGlitch": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/hyperGlitch-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/hyperGlitch-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/hyperGlitch-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "dreamSequence": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/dreamSequence-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/dreamSequence-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/dreamSequence-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "kineticBurst": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/kineticBurst-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/kineticBurst-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/kineticBurst-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "slamCut": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/slamCut-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/slamCut-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/slamCut-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "signalPulse": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/signalPulse-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/signalPulse-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/signalPulse-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "paperTear": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/paperTear-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/paperTear-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/paperTear-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "confettiFinale": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/confettiFinale-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/confettiFinale-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/confettiFinale-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "holoFlash": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/holoFlash-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/holoFlash-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/holoFlash-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "glitchStamp": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/glitchStamp-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/glitchStamp-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/glitchStamp-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "pricePop": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/pricePop-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/pricePop-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/pricePop-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "testimonialReveal": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/testimonialReveal-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/testimonialReveal-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/testimonialReveal-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "focusPull": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/focusPull-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/focusPull-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/focusPull-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "statGroup": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/statGroup-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/statGroup-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/statGroup-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  },
+  "spotlight": {
+    "stills": [
+      {
+        "t": 1,
+        "file": "combos/brand-fit/stills/spotlight-t1.png"
+      },
+      {
+        "t": 2,
+        "file": "combos/brand-fit/stills/spotlight-t2.png"
+      },
+      {
+        "t": 3,
+        "file": "combos/brand-fit/stills/spotlight-t3.png"
+      }
+    ],
+    "colors": [
+      {
+        "t": 1,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 2,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      },
+      {
+        "t": 3,
+        "brands": [
+          "navy",
+          "cream",
+          "honey"
+        ]
+      }
+    ],
+    "paletteScore": 3,
+    "brandsSeen": [
+      "navy",
+      "cream",
+      "honey"
+    ]
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "name": "calm",
+  "url": "https://www.calm.com",
+  "durationMs": 31693,
+  "scrape": {
+    "finalUrl": "https://www.calm.com/",
+    "title": "Access to this page has been denied",
+    "titleLen": 35,
+    "metaDescription": "px-captcha",
+    "metaDescriptionLen": 10,
+    "ogTagsCount": 0,
+    "ogTagsKeys": [],
+    "ogImage": null,
+    "jsonLdCount": 0,
+    "jsonLdTypes": [],
+    "h1Count": 0,
+    "h1Sample": [],
+    "h2Count": 0,
+    "h2Sample": [],
+    "h3Count": 0,
+    "paragraphsCount": 0,
+    "paragraphSample": [],
+    "listItemsCount": 0,
+    "listItemSample": [],
+    "ctaCount": 0,
+    "ctaSample": [],
+    "visibleTextLen": 0,
+    "visibleTextSample": "",
+    "stats": {
+      "fetchedAt": "2026-04-27T06:22:04.322Z",
+      "durationMs": 27948,
+      "fellBack": false,
+      "partial": false,
+      "error": null,
+      "status": 403
+    }
+  },
+  "curl": {
+    "cssVarsCount": 0,
+    "cssVarsBrandKeys": [],
+    "topHexes": [
+      {
+        "hex": "#F0F1F2",
+        "count": 5
+      },
+      {
+        "hex": "#FAFBFC",
+        "count": 2
+      },
+      {
+        "hex": "#FCF0F2",
+        "count": 1
+      },
+      {
+        "hex": "#CE0E2D",
+        "count": 1
+      },
+      {
+        "hex": "#F0EEEE",
+        "count": 1
+      },
+      {
+        "hex": "#B1B5B8",
+        "count": 1
+      }
+    ],
+    "fontImports": [
+      "https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    ],
+    "fontFamiliesFound": 1,
+    "fontFamiliesSample": [
+      "Roboto,sans-serif"
+    ],
+    "logoImgFound": false,
+    "ogImage": null,
+    "htmlLen": 5455
+  },
+  "errors": []
+}

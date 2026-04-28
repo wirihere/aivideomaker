@@ -1,0 +1,1180 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+  /* ============================================================
+     CLAIM MATE v2 — vertical 1080×1920 promo · 27s
+     Brand: cadastral / ordnance-survey
+  ============================================================ */
+
+  /* ─── RESET ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ─── BRAND TOKENS ──────────────────────────────────────── */
+  :root {
+    --paper:       #eef1f5;
+    --paper-deep:  #e2e7ed;
+    --paper-line:  #c8d0da;
+    --ink:         #0d1826;
+    --ink-2:       #1a2a3d;
+    --ink-3:       #4b5a6d;
+    --ink-mute:    #7d8a9a;
+    --accent:      #1f3a68;
+    --warn:        #9a3a3a;
+    --rule:        rgba(13,24,38,.14);
+    --font-mono:   'JetBrains Mono', monospace;
+    --font-body:   'Inter', sans-serif;
+    --font-serif:  'Instrument Serif', serif;
+  }
+
+  /* ─── BODY + ROOT ───────────────────────────────────────── */
+  body {
+    background: var(--paper);
+    overflow: hidden;
+    width: 1080px;
+    height: 1920px;
+  }
+
+  #root {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background: var(--paper);
+    overflow: hidden;
+    font-family: var(--font-body);
+    color: var(--ink);
+  }
+
+  /* ─── CLIP BASE ─────────────────────────────────────────── */
+  .clip {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ─── PAPER GRID BACKGROUND ─────────────────────────────── */
+  .paper-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ─── COLOR GRADE ────────────────────────────────────────── */
+  /* Applied to every stock photo and video element. No per-asset variation. */
+  .grade {
+    filter: grayscale(0.45) sepia(0.22) contrast(1.08) brightness(0.88);
+  }
+
+  /* Global frame overlay — present in every scene, not per-scene */
+  .global-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      rgba(31, 58, 104, 0.07) 0%,
+      rgba(238, 241, 245, 0.00) 55%
+    );
+    z-index: 900;
+    mix-blend-mode: multiply;
+  }
+
+  /* ─── SCENE OVERLAYS ─────────────────────────────────────── */
+
+  /* Beat 1 — deep vignette for forensic cold open */
+  .vignette-heavy {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 38%, rgba(13,24,38,0.55) 100%);
+    z-index: 50;
+  }
+
+  /* Beat 2 — lighter vignette for reframe warmth */
+  .vignette-light {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(13,24,38,0.28) 100%);
+    z-index: 50;
+  }
+
+  /* Beat 2 shot 2.2 — paper-tone wash, preserves native warmth */
+  .wash-paper {
+    position: absolute; inset: 0; pointer-events: none;
+    background: rgba(238, 241, 245, 0.12);
+    z-index: 48;
+  }
+
+  /* Beat 5 shot 5.1 — lower-third darkening for text over video */
+  .lower-third-darken {
+    position: absolute; inset: 75% 0 0 0; pointer-events: none;
+    background: linear-gradient(to bottom, transparent, rgba(13,24,38,0.45));
+    z-index: 40;
+  }
+
+  /* Beat 8 — top-edge soften to ease entry from ledger card */
+  .top-edge-soften {
+    position: absolute; inset: 0 0 auto 0; height: 80px; pointer-events: none;
+    background: linear-gradient(to bottom, rgba(238,241,245,0.45), transparent);
+    z-index: 48;
+  }
+
+  /* ─── SHOT FRAMING ───────────────────────────────────────── */
+
+  /* All photographic shots: img/video fills the full clip frame */
+  .shot-photo,
+  .shot-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    z-index: 0;
+  }
+
+  /* ─── SHOT 1.1 — CU denied letter ───────────────────────── */
+  #shot-1-1 { z-index: 10; }
+
+  /* ─── SHOT 1.2 — ECU DECLINED stamp ─────────────────────── */
+  #shot-1-2 { z-index: 10; }
+
+  .declined-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/photos/denied-letter.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(0.45) sepia(0.22) contrast(1.08) brightness(0.88) blur(6px);
+    z-index: 0;
+  }
+
+  .declined-stamp {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .declined-text {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 72px;
+    letter-spacing: 0.18em;
+    color: var(--warn);
+    text-transform: uppercase;
+    /* clip-path wipe reveal: motion-designer animates clipPath from left */
+    clip-path: inset(0 100% 0 0);
+  }
+
+  /* ─── SHOT 2.1 — MS pull-back ────────────────────────────── */
+  #shot-2-1 { z-index: 10; }
+
+  .s2-1-bg {
+    position: absolute;
+    inset: -4% -4%;
+    background-image: url('assets/photos/workspace.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+  }
+
+  /* ─── SHOT 2.2 — WS parallax (two sibling layers) ───────── */
+  #shot-2-2 { z-index: 10; overflow: hidden; }
+
+  .s2-2-bg {
+    position: absolute;
+    inset: -4% -4%;
+    background-image: url('assets/photos/workspace.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    /* GSAP: translateX 0 → -1.5%, sine.inOut */
+    /* Note: grade applied via class — but filter on a bg-image div is fine (no text children) */
+  }
+
+  .s2-2-fg-wash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: rgba(238, 241, 245, 0.12);
+    z-index: 48;
+    /* GSAP: translateX 0 → -3% (faster parallax drift) */
+  }
+
+  /* ─── SHOT 3.1 — CU phone+paper ─────────────────────────── */
+  #shot-3-1 { z-index: 10; }
+
+  /* ─── SHOT 3.2 — Insert: upload confirmation ─────────────── */
+  #shot-3-2 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .s3-2-icon {
+    width: 64px;
+    height: 64px;
+    display: block;
+    /* static, no animation; GSAP drives translateY on parent */
+  }
+
+  .s3-2-label {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .s3-2-sub {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.10em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  /* ─── SHOT 4.1 — MS desk review ─────────────────────────── */
+  #shot-4-1 { z-index: 10; overflow: hidden; }
+
+  .s4-1-bg {
+    position: absolute;
+    inset: -4% -4%;
+    background-image: url('assets/photos/workspace.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+  }
+
+  .s4-1-annotation {
+    position: absolute;
+    bottom: 60px;
+    right: 60px;
+    width: 32px;
+    height: 32px;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  /* ─── SHOT 4.2 — Insert: check-success SVG ───────────────── */
+  #shot-4-2 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .s4-2-check {
+    width: 120px;
+    height: 120px;
+    display: block;
+    /* GSAP: scale 0.82 → 1.0, power4.out, 0.22s, then static */
+  }
+
+  /* ─── SHOT 5.1 — MS working video ───────────────────────── */
+  #shot-5-1 { z-index: 10; overflow: hidden; }
+
+  /* ─── SHOT 5.2 — Insert: LODGED card ─────────────────────── */
+  #shot-5-2 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .s5-2-lodged {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 48px;
+    letter-spacing: 0.10em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .s5-2-days {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  /* ─── SHOT 6.1 — Silent card: Step 04 ────────────────────── */
+  #shot-6-1 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 80px;
+  }
+
+  .s6-1-eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  .s6-1-rule {
+    width: 100%;
+    max-width: 320px;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .s6-1-heading {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 36px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .s6-1-sub {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.10em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  /* ─── SHOT 7.1 — Ledger card: $0 smash zoom ─────────────── */
+  #shot-7-1 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+  }
+
+  /* ─── SHOT 7.2 — Same ledger card, pull-back ─────────────── */
+  #shot-7-2 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+  }
+
+  .ledger-card {
+    width: 100%;
+    max-width: 780px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .ledger-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 32px 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .ledger-divider {
+    width: 1px;
+    align-self: stretch;
+    background: var(--rule);
+    flex-shrink: 0;
+  }
+
+  .ledger-left {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+
+  .ledger-right {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 72px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-align: right;
+  }
+
+  .ledger-footer {
+    padding: 20px 48px;
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* ─── SHOT 8.1 — Wordmark arrival ────────────────────────── */
+  #shot-8-1 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  /* ─── SHOT 8.2 — Wordmark + CTA + fine print ─────────────── */
+  #shot-8-2 {
+    z-index: 10;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 80px;
+  }
+
+  /* Shared wordmark block (used in 8.1 and 8.2) */
+  .wordmark {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 52px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .wordmark-claim { color: var(--ink); }
+  .wordmark-slash  { color: var(--accent); }
+  .wordmark-mate  { color: var(--ink); }
+
+  .wordmark-url {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    text-align: center;
+  }
+
+  .cta-text {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    text-align: center;
+  }
+
+  .cta-rule {
+    width: 100%;
+    max-width: 480px;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .cta-fine-print {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    color: var(--ink-3);
+    text-align: center;
+    max-width: 480px;
+  }
+
+  /* ─── STEP LABEL OVERLAYS ────────────────────────────────── */
+  .step-label {
+    position: absolute;
+    top: 80px;
+    left: 60px;
+    right: 60px;
+    z-index: 10;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    /* GSAP: translateX -40px → 0, opacity 0 → 1, 0.3s; fade out 0.3s before clip end */
+  }
+
+  /* Step label on Shot 5.1 goes to lower-third area instead of top */
+  .step-label-lower {
+    top: auto;
+    bottom: 100px;
+    color: var(--paper);
+  }
+
+  /* ─── PAPER GRID WITHIN SHOTS ────────────────────────────── */
+  .in-shot-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.08;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+<div id="root"
+     data-composition-id="claim-mate-v2"
+     data-start="0"
+     data-duration="27"
+     data-width="1080"
+     data-height="1920">
+
+  <!-- ─── PERSISTENT: paper grid ──────────────────────────── -->
+  <div class="paper-grid"></div>
+
+  <!-- ─── PERSISTENT: global color overlay ───────────────── -->
+  <div class="global-overlay"></div>
+
+  <!-- ─── AUDIO: narration ────────────────────────────────── -->
+  <audio id="el-narration"
+         class="clip"
+         data-start="0"
+         data-duration="25.672"
+         data-track-index="9"
+         src="assets/voiceover/claim-mate-v2.mp3"
+         muted="false"></audio>
+
+  <!-- ─── AUDIO: music bed ────────────────────────────────── -->
+  <audio id="el-music"
+         class="clip"
+         data-start="0"
+         data-duration="27"
+         data-track-index="8"
+         data-volume="0.32"
+         src="assets/music/claim-mate-v2-bed.mp3"></audio>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 1 — Hook: the letter, the no (0.00 – 2.70s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 1.1 | CU | 1.45s | Ken Burns slow push -->
+  <div id="shot-1-1"
+       class="clip"
+       data-start="0.00"
+       data-duration="1.45"
+       data-track-index="0">
+    <img class="shot-photo grade"
+         src="assets/photos/denied-letter.jpg"
+         alt=""
+         aria-hidden="true" />
+    <!-- GSAP: scale 1.0 → 1.06, power1.inOut, 1.45s on img element -->
+  </div>
+
+  <!-- Shot 1.2 | ECU | 1.25s | Static with DECLINED wipe reveal -->
+  <div id="shot-1-2"
+       class="clip"
+       data-start="1.45"
+       data-duration="1.25"
+       data-track-index="0">
+    <!-- Background: CSS background-image (avoids duplicate <img> src with shot 1.1; blur via class) -->
+    <div class="declined-bg"></div>
+    <!-- DECLINED text: clip-path wipe reveal, GSAP animates clipPath inset(0 100% 0 0) → inset(0 0% 0 0), 0.4s -->
+    <div class="declined-stamp">
+      <span class="declined-text">DECLINED</span>
+    </div>
+  </div>
+
+  <!-- Vignette-heavy overlay (Beat 1) -->
+  <div class="vignette-heavy clip"
+       data-start="0.00"
+       data-duration="2.70"
+       data-track-index="2">
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 2 — Reframe: not the end (2.70 – 5.55s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 2.1 | MS | 1.70s | Pull-back reveal -->
+  <div id="shot-2-1"
+       class="clip"
+       data-start="2.70"
+       data-duration="1.70"
+       data-track-index="0">
+    <!-- CSS background avoids duplicate <img> src — workspace.jpg used across shots 2.1, 2.2, 4.1 -->
+    <!-- GSAP: scale 1.08 → 1.0, power2.inOut, 1.7s on this div -->
+    <div class="s2-1-bg grade"></div>
+  </div>
+
+  <!-- Shot 2.2 | WS | 1.14s | Parallax drift (two sibling layers) -->
+  <!-- Note: duration 1.14 (not 1.15) to avoid floating-point boundary overlap with shot 3.1 at 5.55 -->
+  <div id="shot-2-2"
+       class="clip"
+       data-start="4.40"
+       data-duration="1.14"
+       data-track-index="0">
+    <!-- Background layer: CSS background-image (avoids duplicate <img> src warning with shots 2.1 and 4.1) -->
+    <!-- GSAP: translateX 0 → -1.5%, sine.inOut on this div -->
+    <div class="s2-2-bg grade"></div>
+    <!-- Foreground wash: GSAP translateX 0 → -3%, sine.inOut (faster = depth) -->
+    <div class="s2-2-fg-wash"></div>
+  </div>
+
+  <!-- Vignette-light overlay (Beat 2) -->
+  <div class="vignette-light clip"
+       data-start="2.70"
+       data-duration="2.85"
+       data-track-index="2">
+  </div>
+
+  <!-- Wash-paper overlay (Shot 2.2 only) -->
+  <div class="wash-paper clip"
+       data-start="4.40"
+       data-duration="1.15"
+       data-track-index="3">
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 3 — Process: Step 01, Upload (5.55 – 9.90s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 3.1 | CU | 1.70s | Ken Burns slow push -->
+  <div id="shot-3-1"
+       class="clip"
+       data-start="5.55"
+       data-duration="1.70"
+       data-track-index="0">
+    <img class="shot-photo grade"
+         src="assets/photos/phone-doc.jpg"
+         alt=""
+         aria-hidden="true" />
+    <!-- GSAP: scale 1.0 → 1.05, power1.inOut, 1.7s on img element -->
+  </div>
+
+  <!-- Shot 3.2 | Insert | 2.65s | Slow drift up -->
+  <div id="shot-3-2"
+       class="clip"
+       data-start="7.25"
+       data-duration="2.65"
+       data-track-index="0">
+    <div class="in-shot-grid"></div>
+    <!-- GSAP: translateY 0 → -2%, sine.inOut, 2.65s on this entire shot div -->
+    <img class="s3-2-icon"
+         src="assets/icons/lucide/check-circle-2.svg"
+         alt=""
+         aria-hidden="true" />
+    <span class="s3-2-label">Upload Letter</span>
+    <span class="s3-2-sub">2 minutes</span>
+  </div>
+
+  <!-- Step 01 label overlay -->
+  <div id="label-step-01"
+       class="step-label clip"
+       data-start="5.55"
+       data-duration="4.35"
+       data-track-index="1">
+    STEP 01 · UPLOAD LETTER
+    <!-- GSAP: translateX -40px → 0, opacity 0 → 1, 0.3s on enter; opacity 1 → 0 0.3s before clip end -->
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 4 — Process: Step 02, Case Check (9.90 – 12.30s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 4.1 | MS | 1.20s | Slow drift left -->
+  <div id="shot-4-1"
+       class="clip"
+       data-start="9.90"
+       data-duration="1.20"
+       data-track-index="0">
+    <!-- CSS background avoids duplicate <img> src warning (workspace.jpg used in shots 2.1, 2.2) -->
+    <!-- GSAP: translateX 0 → -2.5%, sine.inOut, 1.2s on this div -->
+    <div class="s4-1-bg grade"></div>
+    <!-- Annotation icon: bottom-right, static -->
+    <img class="s4-1-annotation"
+         src="assets/icons/lucide/search.svg"
+         alt=""
+         aria-hidden="true" />
+  </div>
+
+  <!-- Shot 4.2 | Insert | 1.20s | Smash zoom settle -->
+  <div id="shot-4-2"
+       class="clip"
+       data-start="11.10"
+       data-duration="1.20"
+       data-track-index="0">
+    <!-- GSAP: scale 0.82 → 1.0, power4.out, 0.22s on img; then static -->
+    <img class="s4-2-check"
+         src="assets/svg-animations/status/check-success.svg"
+         alt=""
+         aria-hidden="true" />
+  </div>
+
+  <!-- Step 02 label overlay -->
+  <div id="label-step-02"
+       class="step-label clip"
+       data-start="9.90"
+       data-duration="2.40"
+       data-track-index="1">
+    STEP 02 · WE CHECK THE CASE
+    <!-- GSAP: same slide-in treatment as Step 01 -->
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 5 — Process: Step 03, Draft + Lodge (12.30 – 15.65s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 5.1 | MS | 1.29s | Slow drift right + grade on video -->
+  <!-- Note: duration 1.29 (not 1.30) to avoid floating-point boundary overlap with shot 5.2 at 13.60 -->
+  <div id="shot-5-1"
+       class="clip"
+       data-start="12.30"
+       data-duration="1.29"
+       data-track-index="0">
+    <video class="shot-video grade"
+           src="assets/videos/working-encoded.mp4"
+           muted
+           playsinline
+           loop
+           aria-hidden="true"></video>
+    <!-- GSAP: translateX 0 → 2%, sine.inOut, 1.3s on video element -->
+    <div class="lower-third-darken"></div>
+  </div>
+
+  <!-- Shot 5.2 | Insert | 2.05s | Pull-back reveal -->
+  <div id="shot-5-2"
+       class="clip"
+       data-start="13.60"
+       data-duration="2.05"
+       data-track-index="0">
+    <div class="in-shot-grid"></div>
+    <!-- GSAP: scale 1.06 → 1.0, power2.inOut, 0.8s on this shot div; holds after -->
+    <span class="s5-2-lodged">Lodged</span>
+    <span class="s5-2-days">Within 5 Days</span>
+  </div>
+
+  <!-- Step 03 label overlay (sits in lower-third area for shot 5.1) -->
+  <div id="label-step-03"
+       class="step-label step-label-lower clip"
+       data-start="12.30"
+       data-duration="3.35"
+       data-track-index="1">
+    STEP 03 · DRAFT + LODGE
+    <!-- GSAP: same slide-in treatment; white text version for video legibility -->
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 6 — Silent card: Step 04, FairWay (15.65 – 16.95s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 6.1 | Insert | 1.30s | Breathe float (single oscillation) -->
+  <div id="shot-6-1"
+       class="clip"
+       data-start="15.65"
+       data-duration="1.30"
+       data-track-index="0">
+    <div class="in-shot-grid"></div>
+    <!-- GSAP: translateY 0 → -4px → 0, sine.inOut, 0.65s half-cycle × 2 = 1.30s total -->
+    <span class="s6-1-eyebrow">Step 04</span>
+    <div class="s6-1-rule"></div>
+    <span class="s6-1-heading">FairWay Hearing</span>
+    <span class="s6-1-sub">About 4 Weeks</span>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 7 — Cost: You Pay Nothing (16.95 – 21.00s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 7.1 | Insert | 1.00s | Smash zoom settle -->
+  <div id="shot-7-1"
+       class="clip"
+       data-start="16.95"
+       data-duration="1.00"
+       data-track-index="0">
+    <div class="in-shot-grid"></div>
+    <!-- GSAP: scale 0.85 → 1.0, power4.out, 0.22s on .ledger-card; then static 0.78s -->
+    <div class="ledger-card">
+      <div class="ledger-row">
+        <span class="ledger-left">You Pay</span>
+        <div class="ledger-divider"></div>
+        <span class="ledger-right">$0</span>
+      </div>
+      <div class="ledger-footer">ACC Pays Our Fee</div>
+    </div>
+  </div>
+
+  <!-- Shot 7.2 | MS | 3.05s | Pull-back reveal -->
+  <div id="shot-7-2"
+       class="clip"
+       data-start="17.95"
+       data-duration="3.05"
+       data-track-index="0">
+    <div class="in-shot-grid"></div>
+    <!-- GSAP: scale 1.08 → 1.0, power2.inOut, 1.2s on .ledger-card; holds 1.85s -->
+    <div class="ledger-card">
+      <div class="ledger-row">
+        <span class="ledger-left">You Pay</span>
+        <div class="ledger-divider"></div>
+        <span class="ledger-right">$0</span>
+      </div>
+      <div class="ledger-footer">ACC Pays Our Fee</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       BEAT 8 — CTA: Claim Mate, Start Today (21.00 – 27.00s)
+  ══════════════════════════════════════════════════════ -->
+
+  <!-- Shot 8.1 | MS | 2.00s | Pull-back reveal (wordmark arrival) -->
+  <div id="shot-8-1"
+       class="clip"
+       data-start="21.00"
+       data-duration="2.00"
+       data-track-index="0">
+    <div class="in-shot-grid"></div>
+    <div class="top-edge-soften"></div>
+    <!-- GSAP: scale 1.10 → 1.0, power2.inOut, 1.0s on .wordmark; holds -->
+    <!-- URL fades in 0.5s after wordmark settles: opacity 0 → 1 at t+1.0s -->
+    <div class="wordmark">
+      <span class="wordmark-claim">CLAIM</span><span class="wordmark-slash">/</span><span class="wordmark-mate">MATE</span>
+    </div>
+    <span class="wordmark-url">claim-mate.co.nz</span>
+  </div>
+
+  <!-- Shot 8.2 | MS | 4.00s | Breathe float (hold to end) -->
+  <div id="shot-8-2"
+       class="clip"
+       data-start="23.00"
+       data-duration="4.00"
+       data-track-index="0">
+    <div class="in-shot-grid"></div>
+    <div class="top-edge-soften"></div>
+    <!-- GSAP: translateY 0 → -5px → 0, sine.inOut, 2.0s, once on .s8-2-stack; then static hold -->
+    <div class="s8-2-stack" style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
+      <div class="wordmark">
+        <span class="wordmark-claim">CLAIM</span><span class="wordmark-slash">/</span><span class="wordmark-mate">MATE</span>
+      </div>
+      <span class="wordmark-url">claim-mate.co.nz</span>
+      <span class="cta-text">Start your free review</span>
+      <div class="cta-rule"></div>
+      <span class="cta-fine-print">3 months from your decision letter</span>
+    </div>
+  </div>
+
+</div><!-- /#root -->
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 1 — Hook: the letter, the no  (0.00 – 2.70s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Shot 1.1 | CU | 0.00–1.45s | Ken Burns slow push
+  // scale 1.0 → 1.06 over shot duration; push closes in as "no" lands at 1.438s
+  tl.fromTo("#shot-1-1 img.grade",
+    { scale: 1.0 },
+    { scale: 1.06, duration: 1.45, ease: "power1.inOut" },
+    0.00
+  );
+
+  // Shot 1.2 | ECU | 1.45–2.70s | DECLINED clip-path wipe reveal
+  // Background stays static (CSS blur handles it); only the text gets the wipe
+  // clip-path: inset(0 100% 0 0) → inset(0 0% 0 0) over 0.4s, lands on "no" echo
+  tl.fromTo(".declined-text",
+    { clipPath: "inset(0 100% 0 0)" },
+    { clipPath: "inset(0 0% 0 0)", duration: 0.4, ease: "power2.out" },
+    1.45
+  );
+  // Stamp holds static after the wipe — stillness IS the move here
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 2 — Reframe: not the end  (2.70 – 5.55s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Shot 2.1 | MS | 2.70–4.40s | Pull-back reveal
+  // Dissolve in (transition overlay): opacity 0 → 1 over 0.15s at cut point
+  tl.fromTo("#shot-2-1",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.15, ease: "power2.inOut" },
+    2.70
+  );
+  // Pull-back on bg div: scale 1.08 → 1.0 over full shot duration, power2.inOut
+  // "A decline" @ 2.733s lands as camera is still pulling back — motivated by the reframe
+  tl.fromTo("#shot-2-1 .s2-1-bg",
+    { scale: 1.08 },
+    { scale: 1.0, duration: 1.70, ease: "power2.inOut" },
+    2.70
+  );
+
+  // Shot 2.2 | WS | 4.40–5.55s | Parallax drift (two independent layers)
+  // BG div has inset:-4% so animate in px not % (html-composer note honoured)
+  // 1.5% of 1080 = 16px; bg drifts slower, fg wash drifts faster → depth
+  tl.fromTo("#shot-2-2 .s2-2-bg",
+    { x: 0 },
+    { x: -16, duration: 1.14, ease: "sine.inOut" },
+    4.40
+  );
+  tl.fromTo("#shot-2-2 .s2-2-fg-wash",
+    { x: 0 },
+    { x: -32, duration: 1.14, ease: "sine.inOut" },
+    4.40
+  );
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 3 — Process: Step 01, Upload  (5.55 – 9.90s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Step 01 label entrance: "Upload" @ 5.555s = shot start
+  // Slide in from left + fade, 0.3s; VTT-anchored to narration onset
+  tl.fromTo("#label-step-01",
+    { x: -40, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.3, ease: "power3.out" },
+    5.55
+  );
+  // Step 01 label exit: fade 0.3s before clip end at 9.90s → starts 9.60s
+  tl.to("#label-step-01",
+    { opacity: 0, duration: 0.3, ease: "power2.in" },
+    9.60
+  );
+
+  // Shot 3.1 | CU | 5.55–7.25s | Ken Burns slow push
+  // scale 1.0 → 1.05 over 1.70s; tighter crop than shot 1.1 = slightly smaller push delta
+  tl.fromTo("#shot-3-1 img.grade",
+    { scale: 1.0 },
+    { scale: 1.05, duration: 1.70, ease: "power1.inOut" },
+    5.55
+  );
+
+  // Shot 3.2 | Insert | 7.25–9.90s | Slow drift up
+  // "Two minutes" @ 7.909s lands during this shot — confirmation held
+  // Entire shot div drifts up; paper bg + icon + text move together
+  tl.fromTo("#shot-3-2",
+    { y: 0 },
+    { y: "-2%", duration: 2.65, ease: "sine.inOut" },
+    7.25
+  );
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 4 — Process: Step 02, Case Check  (9.90 – 12.30s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Step 02 label entrance: "We check" @ 9.912s = shot start
+  tl.fromTo("#label-step-02",
+    { x: -40, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.3, ease: "expo.out" },
+    9.90
+  );
+  // Step 02 label exit: 0.3s before clip end at 12.30s → starts 12.00s
+  tl.to("#label-step-02",
+    { opacity: 0, duration: 0.3, ease: "power2.in" },
+    12.00
+  );
+
+  // Shot 4.1 | MS | 9.90–11.10s | Slow drift left
+  // Pan left mimics reading motion — "We check your case" @ 9.912–11.023s
+  tl.fromTo("#shot-4-1 .s4-1-bg",
+    { x: 0 },
+    { x: "-2.5%", duration: 1.20, ease: "sine.inOut" },
+    9.90
+  );
+
+  // Shot 4.2 | Insert | 11.10–12.30s | Smash zoom settle (smash cut in)
+  // Cutlist: smash cut, scale 0.95→1.0 on the shot wrapper at 0.15s as the transition
+  // Then per-plan: check icon itself does 0.82→1.0, power4.out, 0.22s
+  tl.fromTo("#shot-4-2",
+    { scale: 0.95 },
+    { scale: 1.0, duration: 0.15, ease: "power4.out" },
+    11.10
+  );
+  tl.fromTo(".s4-2-check",
+    { scale: 0.82 },
+    { scale: 1.0, duration: 0.22, ease: "power4.out", overwrite: "auto" },
+    11.10
+  );
+  // Holds static after settle — "case" ends @ 11.023s, check stays through 12.339s silence
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 5 — Process: Step 03, Draft + Lodge  (12.30 – 15.65s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Step 03 label entrance: "We draft" @ 12.339s = shot start (lower-third, white text)
+  tl.fromTo("#label-step-03",
+    { x: -40, opacity: 0 },
+    { x: 0, opacity: 1, duration: 0.3, ease: "back.out(1.4)" },
+    12.30
+  );
+  // Step 03 label exit: 0.3s before clip end at 15.65s → starts 15.35s
+  tl.to("#label-step-03",
+    { opacity: 0, duration: 0.3, ease: "power2.in" },
+    15.35
+  );
+
+  // Shot 5.1 | MS | 12.30–13.60s | Slow drift right + grade on video
+  // "review" stressed @ 13.143s; drift right suggests forward progress
+  tl.fromTo("#shot-5-1 video.grade",
+    { x: 0 },
+    { x: "2%", duration: 1.30, ease: "sine.inOut" },
+    12.30
+  );
+
+  // Shot 5.2 | Insert | 13.60–15.65s | Pull-back reveal
+  // "lodge" @ 13.947s, "days" ends @ 15.657s — LODGED card earns this time
+  tl.fromTo("#shot-5-2",
+    { scale: 1.06 },
+    { scale: 1.0, duration: 0.8, ease: "power2.inOut" },
+    13.60
+  );
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 6 — Silent card: Step 04, FairWay  (15.65 – 16.95s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Shot 6.1 | Insert | 15.65–16.95s | Dissolve in + breathe float
+  // Cutlist: dissolve in over 0.30s at 15.65s
+  tl.fromTo("#shot-6-1",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.30, ease: "power2.inOut" },
+    15.65
+  );
+  // Breathe float: html-composer note — MUST fit 1.30s total
+  // Exact recipe: duration 0.65, yoyo true, repeat 1 → 0.65s + 0.65s = 1.30s
+  // Targets inner content block, not #shot-6-1 itself (which is the opacity tween target)
+  // Animate the flex children as a group by targeting the eyebrow span as proxy;
+  // but the entire shot children need to float together — wrap with a tl.set baseline then to
+  // The shot div uses display:flex/column/align-center so children share coordinate space.
+  // Target the shot div's contents collectively via its child group; since there is no inner wrapper,
+  // we animate the non-clip properties (y) on #shot-6-1 itself.
+  // opacity is already done above at 15.65; y starts after the dissolve settles — both are on #shot-6-1
+  // but on DIFFERENT properties (opacity vs y) so no conflict.
+  tl.fromTo("#shot-6-1",
+    { y: 0 },
+    { y: -4, duration: 0.65, ease: "sine.inOut", yoyo: true, repeat: 1, overwrite: "auto" },
+    15.65
+  );
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 7 — Cost: You Pay Nothing  (16.95 – 21.00s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Shot 7.1 | Insert | 16.95–17.95s | Smash zoom settle
+  // GSAP target is .ledger-card per html-composer note — NOT #shot-7-1
+  // "You pay nothing" @ 16.973–17.923s; "nothing" stressed @ 17.500s
+  tl.fromTo(".ledger-card",
+    { scale: 0.85 },
+    { scale: 1.0, duration: 0.22, ease: "power4.out" },
+    16.95
+  );
+  // Holds static 0.78s after settle — no further tween needed
+
+  // Shot 7.2 | MS | 17.95–21.00s | Dissolve in + pull-back reveal
+  // Cutlist: dissolve in 0.20s at 17.95s (breath between cost sentences)
+  tl.fromTo("#shot-7-2",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.20, ease: "power2.inOut" },
+    17.95
+  );
+  // Pull-back on the ledger card inside shot 7.2 specifically
+  // #shot-7-2 .ledger-card — overwrite:auto to avoid conflict with the Shot 7.1 .ledger-card tween
+  // (those two .ledger-card elements are siblings in different parent clips, but we use
+  // a descendant selector to be explicit)
+  tl.fromTo("#shot-7-2 .ledger-card",
+    { scale: 1.08 },
+    { scale: 1.0, duration: 1.20, ease: "power2.inOut" },
+    17.95
+  );
+  // Holds at 1.0 through "ACC pays our fee" @ 19.166–20.964s, into 20.964s silence
+
+  // ─────────────────────────────────────────────────────────────────
+  // BEAT 8 — CTA: Claim Mate, Start Today  (21.00 – 27.00s)
+  // ─────────────────────────────────────────────────────────────────
+
+  // Shot 8.1 | MS | 21.00–23.00s | Dissolve in + pull-back reveal (wordmark arrival)
+  // Cutlist: dissolve in 0.20s at 21.00s; silence from 20.964s into brand arrival
+  tl.fromTo("#shot-8-1",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.20, ease: "power2.inOut" },
+    21.00
+  );
+  // Wordmark pull-back: scale 1.10 → 1.0 over 1.0s; biggest pull-back in the video
+  // "Claim" @ 22.251s lands as pull-back completes — brand settles as name is spoken
+  tl.fromTo("#shot-8-1 .wordmark",
+    { scale: 1.10 },
+    { scale: 1.0, duration: 1.0, ease: "power2.inOut" },
+    21.00
+  );
+  // URL fade-in 0.5s after wordmark settles (at t=22.00s)
+  // VTT: "Claim Mate" @ 22.251–22.982s — URL visible as name is spoken
+  tl.fromTo("#shot-8-1 .wordmark-url",
+    { opacity: 0 },
+    { opacity: 1, duration: 0.4, ease: "power2.out" },
+    22.00
+  );
+
+  // Shot 8.2 | MS | 23.00–27.00s | Breathe float (hold to end)
+  // GSAP target is .s8-2-stack per html-composer note — NOT #shot-8-2 directly
+  // Float: translateY 0 → -5px → 0, sine.inOut, 2.0s yoyo once = 4.0s total (fills the shot)
+  // "Start your review today" @ 24.195–25.672s plays as stack breathes through its arc
+  tl.fromTo(".s8-2-stack",
+    { y: 0 },
+    { y: -5, duration: 2.0, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    23.00
+  );
+  // Static hold after 27.00s — no fade to black, frame holds as a still card
+
+  // ─────────────────────────────────────────────────────────────────
+  // AMBIENT AMBIENT: Shot 7.1 ledger hold — subtle breathe during 0.78s static
+  // A single compressed micro-drift on the $0 figure keeps it alive while held
+  tl.fromTo("#shot-7-1 .ledger-right",
+    { y: 0 },
+    { y: -2, duration: 0.39, ease: "sine.inOut", yoyo: true, repeat: 1 },
+    17.18
+  );
+
+  window.__timelines["claim-mate-v2"] = tl;
+</script>
+</body>
+</html>

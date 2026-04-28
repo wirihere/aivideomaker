@@ -3,7 +3,7 @@
 Canonical list of every template in `TEMPLATE_REGISTRY` and its production-readiness status. The orchestrator reads this file (`scripts/lib/template-status.mjs`) before render to decide whether a render is allowed.
 
 For the rules each template should follow, see `docs/social-video-patterns.md`.
-For the production playbook, see `docs/playbooks/cinematic-vertical-promo.md`.
+For the canonical 10-stage flow from URL to MP4, see `docs/skills/how-a-video-gets-made.md` (the founding doc).
 
 ---
 
@@ -38,6 +38,7 @@ Machine-readable per template. Each row's status governs the orchestrator's rend
 
 | template                  | status     | tag                       | locked date | brands validated                |
 | ------------------------- | ---------- | ------------------------- | ----------- | ------------------------------- |
+| manifesto-directive-60s   | locked-v1  | manifesto-directive-v1    | 2026-04-28  | singularity-convergence         |
 | community-app-tour-30s    | locked-v1  | community-app-tour-v1     | 2026-04-26  | kindred-nz                      |
 | kinetic-product-30s       | iterating  | —                         | —           | resurgence-indigo (in progress) |
 | faq-quick-30s             | legacy     | —                         | —           | (pre-loop renders only)         |
@@ -50,6 +51,33 @@ Machine-readable per template. Each row's status governs the orchestrator's rend
 | social-reel-15s           | legacy     | —                         | —           | —                               |
 
 Update this table when a template's status changes. The parser splits on `|`, trims, ignores rows where the first column is `template`/`---` (header), and looks up `status` by the first column.
+
+---
+
+## manifesto-directive-60s — `manifesto-directive-v1`
+
+- **Locked:** 2026-04-28
+- **File:** `compositions/templates/contemplative/manifesto-directive-60s.html`
+- **Vibe:** contemplative (sacred-denials / "we will never X" promise contract)
+- **Dims:** 1080×1920 (9:16 vertical)
+- **Duration:** 60s
+- **Voice:** `en-GB-RyanNeural` at `-15%` (locked — see `memory/feedback_voice_locked_contemplative.md`)
+- **Music:** `assets/music/contemplative-1.mp3` at vol 0.16
+- **Brands validated against:** singularity-convergence (NZ AI-oracle for spiritual seekers)
+
+**User reaction at lock:** *"that was great. the best so far. that was the best voice I've heard so far. lock that in."* — third in the contemplative trilogy after manifesto (declarative "we believe") + questions (interrogative "what weighs on you"). Negation-as-structure / contractual register.
+
+### Shape
+
+5 promises with roman numerals (I → V) as the hero element per beat, framed by cross-of-circuits intro/outro and atom hero on brand-reveal close. Cumulative learnings applied: S16 (text + SVG separate vertical bands), S17 (hero rotates per beat), S18 (brand strip fits 920px safe zone), S19 (hero fills 65-85% frame width), S20 (one-visible-at-a-time flex children need `position: absolute; left: 50%; translateX(-50%)`).
+
+### When to use
+
+When a brand has a "Prime Directive" / "Our Promises" / "What We Won't Do" / "Code of Ethics" section — any 3-7 negation-structured commitments. Solves trust-gap inherent to AI / oracular / spiritual / fiduciary brands by leading with what the product won't do. NOT for community / DTC / kinetic-feed brands.
+
+### Reuse instructions
+
+In the template's HTML header comment. TL;DR: swap script + voice file + brand wordmark + atom SVG; adjust ordinal count if not 5. See `compositions/templates/contemplative/manifesto-directive-60s.html`.
 
 ---
 

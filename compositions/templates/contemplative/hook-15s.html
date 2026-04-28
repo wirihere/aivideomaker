@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hook — 15s scroll-stopper template</title>
+
+<!--
+  TEMPLATE: hook-15s
+  REGISTER: contemplative (black + gold + parchment, Georgia serif)
+  USE CASE: Top-of-funnel scroll-stopper. One piercing question, brand reveal, URL.
+  DURATION: 15s · 9:16 · 1080×1920 · 30fps
+
+  STRUCTURE
+    B0  0.0 - 2.0s  candle tease     (one warm point of light, no text)
+    B1  2.0 - 8.5s  the question     (single italic question types on, big serif)
+    B2  8.5 - 12.5s wordmark reveal  (question fades, brand wordmark + emblem)
+    B3  12.5 - 15s  CTA hold          (URL + tagline static, replay-loop friendly)
+
+  CONTENT-SLOT PROTOCOL
+    Swap in #b1-question.textContent for the brand's ONE piercing question.
+    Swap #b2-wordmark, #b2-wordmark-sub, #b3-cta, #b3-url for brand specifics.
+    Keep B0 untouched — it's the universal cold-open.
+
+  LESSONS APPLIED (contemplative-register canon — see docs/social-video-patterns.md Part 7)
+    · max-width: 920px on hero italic text + overflow-wrap to prevent off-screen overflow
+    · Arial (var(--sans-utility)) for utility lines (URL, citation, attribution, label)
+    · Georgia serif for emotional carriers; italic for tenderness, regular for declaration
+    · Gold hairline (1-2px) drawn left-to-right at section opens, retracts right-to-left at exits
+    · text-shadow on hero text (0 0 28px rgba(0,0,0,0.95)) so it stays legible over photo / haze
+    · CSS @keyframes ambient (haze breathe + flame flicker + star twinkle) runs independent of GSAP
+      so motion never fully stops during contemplative holds
+    · Music ducked under VO (track 8 vol 0.18, track 9 vol 0.95) — contemplative shortlist
+    · End frame matches start frame composition for clean replay loop
+    · Hard-kill tl.set(target, {opacity:0}) at scene boundary after every fade exit (non-linear seek)
+-->
+
+<script src="../../../design/vendor/gsap.min.js"></script>
+<script src="../../../design/modules/all.js"></script>
+
+<link rel="stylesheet" href="../../../design/cards-contemplative.css">
+
+<style>
+  /* Per-scene CSS only — register-level tokens, .comp, .ambient-haze, .starfield,
+     and .clip helper come from cards-contemplative.css above. */
+
+  /* ===== B0 — candle tease ===== */
+  .b0-stage {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .b0-flame {
+    width: 18px; height: 26px;
+    background: radial-gradient(ellipse at center, #ffd47a 0%, #c9a84c 50%, transparent 80%);
+    border-radius: 50%;
+    box-shadow:
+      0 0 28px rgba(255, 212, 122, 0.85),
+      0 0 80px rgba(201, 168, 76, 0.55),
+      0 0 200px rgba(201, 168, 76, 0.25);
+    transform-origin: center bottom;
+    animation: flame-flicker 1.7s ease-in-out infinite;
+  }
+  @keyframes flame-flicker {
+    0%, 100% { transform: scale(1, 1) skewX(-1deg); opacity: 0.95; }
+    25%      { transform: scale(0.97, 1.05) skewX(1deg); opacity: 1; }
+    50%      { transform: scale(1.02, 0.96) skewX(-2deg); opacity: 0.9; }
+    75%      { transform: scale(0.99, 1.02) skewX(2deg); opacity: 1; }
+  }
+
+  /* ===== B1 — the question ===== */
+  .b1-stage {
+    position: absolute; inset: 0;
+    padding: 0 80px;
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .b1-question {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 96px;
+    color: var(--parchment);
+    line-height: 1.18;
+    letter-spacing: -0.012em;
+    text-align: center;
+    max-width: 920px;
+    margin: 0;
+    overflow-wrap: break-word;
+    text-shadow:
+      0 0 32px rgba(0, 0, 0, 0.95),
+      0 0 80px rgba(0, 0, 0, 0.75);
+  }
+
+  /* ===== B2 — wordmark reveal ===== */
+  .b2-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 80px;
+    box-sizing: border-box;
+  }
+  .b2-emblem {
+    width: 180px; height: 180px;
+    margin-bottom: 60px;
+    opacity: 0;
+  }
+  .b2-emblem-circle {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1.2;
+    opacity: 0.6;
+  }
+  .b2-emblem-dot {
+    fill: var(--gold);
+    filter: drop-shadow(0 0 12px rgba(201, 168, 76, 0.85));
+  }
+  .b2-wordmark {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 110px;
+    color: var(--parchment);
+    letter-spacing: 0.08em;
+    margin: 0;
+    text-shadow: 0 0 30px rgba(232, 212, 139, 0.22);
+  }
+  .b2-wordmark-sub {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 44px;
+    color: var(--gold);
+    letter-spacing: 0.46em;
+    margin: 24px 0 0 0;
+    text-shadow: 0 0 18px rgba(201, 168, 76, 0.5);
+  }
+  .b2-hairline {
+    width: 360px; height: 2px;
+    background: var(--gold);
+    margin: 50px auto 0 auto;
+    transform-origin: left center;
+    transform: scaleX(0);
+    box-shadow: 0 0 10px rgba(201, 168, 76, 0.7);
+  }
+
+  /* ===== B3 — CTA hold ===== */
+  .b3-stage {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 80px;
+    box-sizing: border-box;
+  }
+  .b3-cta {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 56px;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    margin: 0 0 32px 0;
+    text-shadow: 0 0 20px rgba(201, 168, 76, 0.55);
+  }
+  /* URL: utility line — Arial sans, less competition with serif wordmark */
+  .b3-url {
+    font-family: var(--sans-utility);
+    font-weight: 400;
+    font-size: 32px;
+    color: var(--parchment);
+    letter-spacing: 0.06em;
+    margin: 0;
+    opacity: 0.85;
+  }
+
+</style>
+</head>
+
+<body>
+
+<div class="comp clip" id="hook-15s" data-composition-id="hook-15s" data-register="contemplative"
+     role="region" aria-label="Hook 15s video composition"
+     data-start="0" data-duration="15" data-width="1080" data-height="1920">
+
+  <div class="ambient-haze"></div>
+
+  <!-- B0 (0-2.5s): candle tease — track 0 so it overlaps cleanly into B1 -->
+  <div id="b0" class="scene clip" data-start="0" data-duration="2.5" data-track-index="0">
+    <div class="b0-stage">
+      <div class="b0-flame" id="b0-flame"></div>
+    </div>
+  </div>
+
+  <!-- B1 (2-8.5s): the question -->
+  <div id="b1" class="scene clip" data-start="2" data-duration="6.5" data-track-index="1">
+    <div class="b1-stage">
+      <p class="b1-question" id="b1-question">What if the answer was always inside the question?</p>
+    </div>
+  </div>
+
+  <!-- B2 (8.5-12.5s): wordmark reveal -->
+  <div id="b2" class="scene clip" data-start="8.5" data-duration="4" data-track-index="1">
+    <div class="b2-stage">
+      <svg class="b2-emblem" id="b2-emblem" viewBox="0 0 200 200" aria-hidden="true">
+        <circle class="b2-emblem-circle" cx="100" cy="100" r="92"/>
+        <circle class="b2-emblem-circle" cx="100" cy="100" r="60" opacity="0.4"/>
+        <circle class="b2-emblem-dot" cx="100" cy="100" r="6"/>
+      </svg>
+      <p class="b2-wordmark" id="b2-wordmark" aria-label="brand wordmark">SINGULARITY</p>
+      <p class="b2-wordmark-sub" id="b2-wordmark-sub" aria-label="brand sub-mark">CONVERGENCE</p>
+      <div class="b2-hairline" id="b2-hairline" role="presentation"></div>
+    </div>
+  </div>
+
+  <!-- B3 (12.5-15s): CTA hold — replay-loop friendly -->
+  <div id="b3" class="scene clip" data-start="12.5" data-duration="2.5" data-track-index="1">
+    <div class="b3-stage">
+      <p class="b3-cta" id="b3-cta">ASK THE ORACLE</p>
+      <p class="b3-url" id="b3-url">oraculuminstitutum.org</p>
+    </div>
+  </div>
+
+  <!-- Music underscore — contemplative register, ducked under VO. Swap src per brand. -->
+  <audio id="music" class="clip"
+         src="../../../assets/music/contemplative-1.mp3"
+         data-start="0" data-duration="15" data-track-index="8" data-volume="0.18"
+         data-audio="true" preload="auto"></audio>
+
+  <!-- Voiceover — track 9, full volume. Swap src per brand. Comment out if no narration. -->
+  <audio id="vo" class="clip"
+         src="../../../assets/voiceover/PLACEHOLDER.mp3"
+         data-start="0.5" data-duration="14" data-track-index="9" data-volume="0.95"
+         data-audio="true" preload="auto"
+         data-todo="provide TTS for this template's narration"></audio>
+
+</div>
+
+<script>
+(function(){
+  const tl = gsap.timeline({ paused: true, defaults: { ease: "power4.out" } });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["hook-15s"] = tl;
+
+  /* ============ B0 — candle tease (0-2.5s) ============ */
+  // Flame fades up gently, holds, fades into question
+  tl.fromTo("#b0-flame",
+    { opacity: 0, scale: 0.8 },
+    { opacity: 1, scale: 1, duration: 1.2, ease: "power2.out" }, 0.2);
+  tl.to("#b0-flame", { opacity: 0, duration: 0.6 }, 1.9);
+
+  /* ============ B1 — the question (2-8.5s) ============ */
+  // Question types on character-by-character (textFx.typeOn handles the per-char reveal)
+  tl.set("#b1-question", { opacity: 1 }, 2.0);
+  textFx.typeOn(tl, "#b1-question", { at: 2.2, duration: 2.4 });
+  // Question holds, then fades with subtle blur-up exit
+  tl.to("#b1-question",
+    { opacity: 0, y: -12, filter: "blur(6px)", duration: 0.6, ease: "power2.in" },
+    7.9);
+  // Hard-kill at scene boundary so non-linear seeks don't land in stale visibility state
+  tl.set("#b1-question", { opacity: 0 }, 8.5);
+
+  /* ============ B2 — wordmark reveal (8.5-12.5s) ============ */
+  // Emblem fades in first (200ms before wordmark)
+  tl.fromTo("#b2-emblem",
+    { opacity: 0, scale: 0.6 },
+    { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 8.6);
+
+  // Wordmark + sub-mark cascade in
+  tl.fromTo(["#b2-wordmark", "#b2-wordmark-sub"],
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.7, stagger: 0.18, ease: "power3.out" }, 9.0);
+
+  // Hairline draws across left-to-right
+  tl.to("#b2-hairline",
+    { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 9.6);
+
+  // B2 elements hold then fade together for B3 transition
+  tl.to(["#b2-emblem", "#b2-wordmark", "#b2-wordmark-sub", "#b2-hairline"],
+    { opacity: 0, y: -10, duration: 0.5, ease: "power2.in" }, 12.0);
+
+  /* ============ B3 — CTA hold (12.5-15s) ============ */
+  // CTA + URL fade in together, hold static for 2s
+  tl.fromTo(["#b3-cta", "#b3-url"],
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 }, 12.6);
+  // Final 1.5s held STATIC — replay-loop friendly endcard
+
+  /* ============ Background ambient (full duration) ============ */
+  // The .ambient-haze element handles its own CSS keyframe animation,
+  // running independently of the GSAP timeline — guarantees motion never stops.
+})();
+</script>
+
+</body>
+</html>

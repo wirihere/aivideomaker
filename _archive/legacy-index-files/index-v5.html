@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden;
+        background: #0b1f3f;
+        font-family: "Inter", "Segoe UI", -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        color: #f5f1e8;
+      }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+
+      /* Ambient paper grain (subtle) */
+      .bg-grain {
+        position: absolute; inset: 0;
+        background-image:
+          radial-gradient(circle at 25% 30%, rgba(255,184,77,0.06) 0%, transparent 40%),
+          radial-gradient(circle at 75% 70%, rgba(255,184,77,0.04) 0%, transparent 40%);
+      }
+
+      /* Top progress bar */
+      .progress-bar {
+        position: absolute; top: 0; left: 0; height: 6px;
+        width: 100%; background: rgba(245,241,232,0.08);
+        z-index: 100;
+      }
+      .progress-bar .fill {
+        height: 100%; width: 100%;
+        background: #ffb84d;
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      .scene {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        padding: 80px;
+      }
+      .scene-inner {
+        width: 100%;
+        max-width: 920px;
+        text-align: center;
+      }
+
+      /* ================ Scene 1: Envelope reveal ================ */
+      .envelope {
+        position: relative;
+        width: 720px; height: 440px;
+        margin: 0 auto;
+        background: #1a2e52;
+        border: 3px solid #2a4272;
+        border-radius: 8px;
+      }
+      .envelope-flap {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 220px;
+        background: linear-gradient(135deg, #2a4272 50%, #1a2e52 50%);
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        transform-origin: top center;
+      }
+      .letter-stub {
+        position: absolute;
+        top: 60px; left: 60px; right: 60px;
+        height: 340px;
+        background: #f5f1e8;
+        border-radius: 4px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        padding: 60px 50px;
+        color: #0b1f3f;
+        text-align: left;
+      }
+      .letter-stub .stub-head {
+        font-size: 28px;
+        font-weight: 900;
+        letter-spacing: 0.15em;
+        color: #0b1f3f;
+        text-transform: uppercase;
+        border-bottom: 2px solid #0b1f3f;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .letter-stub .stub-body {
+        font-size: 26px;
+        font-weight: 500;
+        color: #0b1f3f;
+        line-height: 1.3;
+        opacity: 0.7;
+      }
+      .s1-caption {
+        margin-top: 60px;
+        font-size: 48px;
+        font-weight: 600;
+        color: #f5f1e8;
+        letter-spacing: 0.02em;
+      }
+      .s1-caption .accent { color: #ffb84d; font-weight: 900; }
+
+      /* ================ Scene 2: Letter with highlight ================ */
+      .letter-full {
+        position: relative;
+        width: 880px;
+        margin: 0 auto;
+        background: #f5f1e8;
+        color: #0b1f3f;
+        border-radius: 6px;
+        padding: 64px 70px;
+        text-align: left;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      }
+      .letter-full .head {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #0b1f3f;
+        border-bottom: 2px solid #0b1f3f;
+        padding-bottom: 12px;
+        margin-bottom: 28px;
+      }
+      .letter-full .ref {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0b1f3f;
+        opacity: 0.6;
+        margin-bottom: 28px;
+      }
+      .letter-full .para {
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 1.5;
+        color: #0b1f3f;
+        margin-bottom: 20px;
+      }
+      .letter-full .key-line {
+        position: relative;
+        font-weight: 700;
+        display: inline;
+      }
+      .highlighter {
+        position: absolute;
+        height: 44px;
+        background: #ffe066;
+        mix-blend-mode: multiply;
+        z-index: -1;
+        border-radius: 2px;
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+      .s2-zoom-label {
+        position: absolute;
+        bottom: 260px; left: 0; right: 0;
+        text-align: center;
+        font-size: 38px;
+        font-weight: 800;
+        color: #ffb84d;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ================ Scene 3: Jargon → Plain English ================ */
+      .translate-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        align-items: center;
+      }
+      .jargon-box, .plain-box {
+        width: 880px;
+        padding: 40px 50px;
+        border-radius: 20px;
+        text-align: left;
+      }
+      .jargon-box {
+        background: rgba(245,241,232,0.04);
+        border: 2px solid rgba(245,241,232,0.2);
+      }
+      .plain-box {
+        background: #ffb84d;
+        color: #0b1f3f;
+      }
+      .box-label {
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-bottom: 16px;
+      }
+      .jargon-text {
+        font-size: 72px;
+        font-weight: 900;
+        color: #f5f1e8;
+        line-height: 1.05;
+        letter-spacing: -0.01em;
+      }
+      .plain-text {
+        font-size: 56px;
+        font-weight: 800;
+        color: #0b1f3f;
+        line-height: 1.15;
+      }
+      .plain-note {
+        margin-top: 20px;
+        font-size: 32px;
+        font-weight: 600;
+        color: #0b1f3f;
+        opacity: 0.75;
+      }
+      .arrow-down {
+        font-size: 80px;
+        font-weight: 900;
+        color: #ffb84d;
+        line-height: 1;
+      }
+
+      /* ================ Scene 4: "Reviewable." reveal ================ */
+      .reveal-main {
+        font-size: 180px;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        color: #ffb84d;
+        line-height: 0.9;
+      }
+      .reveal-main .dot { color: #f5f1e8; }
+      .reveal-sub {
+        margin-top: 40px;
+        font-size: 46px;
+        font-weight: 700;
+        color: #f5f1e8;
+        letter-spacing: 0.02em;
+      }
+      .reveal-deadline {
+        margin-top: 70px;
+        padding: 28px 50px;
+        border: 3px solid #f5f1e8;
+        border-radius: 16px;
+        display: inline-block;
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        color: #f5f1e8;
+      }
+      .reveal-deadline .num { color: #ffb84d; font-size: 54px; }
+
+      /* ================ Scene 5: CTA ================ */
+      .cta-logo {
+        font-size: 150px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+        line-height: 0.95;
+      }
+      .cta-logo .mate { color: #ffb84d; }
+      .cta-tagline {
+        margin-top: 40px;
+        font-size: 42px;
+        font-weight: 600;
+        color: #f5f1e8;
+        opacity: 0.85;
+        line-height: 1.2;
+      }
+      .cta-url-wrap {
+        margin-top: 60px;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 58px;
+        font-weight: 700;
+        color: #ffb84d;
+      }
+      .cta-url-wrap .cursor {
+        display: inline-block;
+        width: 5px; height: 54px;
+        background: #ffb84d;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .cta-tag {
+        margin-top: 60px;
+        display: inline-block;
+        padding: 20px 50px;
+        background: #f5f1e8;
+        color: #0b1f3f;
+        border-radius: 10px;
+        font-size: 40px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+
+      /* ================ Persistent watermark ================ */
+      .watermark {
+        position: absolute;
+        bottom: 50px; left: 0; right: 0;
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 0.4em;
+        opacity: 0.4;
+        color: #f5f1e8;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="30"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Ambient -->
+      <div id="bg" class="clip" data-start="0" data-duration="30" data-track-index="0">
+        <div class="bg-grain"></div>
+      </div>
+
+      <!-- Music (faded, 30s) -->
+      <audio
+        id="bg-music"
+        class="clip bg-music"
+        src="assets/music/track-faded.mp3"
+        data-start="0"
+        data-duration="30"
+        data-track-index="8"
+      ></audio>
+
+      <!-- Progress bar -->
+      <div id="progress" class="clip" data-start="0" data-duration="30" data-track-index="7">
+        <div class="progress-bar"><div class="fill"></div></div>
+      </div>
+
+      <!-- Scene 1: Envelope and letter (0-4s) -->
+      <div id="s1" class="scene clip" data-start="0" data-duration="4" data-track-index="1">
+        <div class="scene-inner">
+          <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="letter-stub">
+              <div class="stub-head">Accident Compensation<br/>Corporation</div>
+              <div class="stub-body">Re: Decision on your claim</div>
+            </div>
+          </div>
+          <div class="s1-caption">Got a letter that says <span class="accent">NO</span>?</div>
+        </div>
+      </div>
+
+      <!-- Scene 2: Letter body with highlighted jargon (4-10s) -->
+      <div id="s2" class="scene clip" data-start="4" data-duration="6" data-track-index="1">
+        <div class="scene-inner">
+          <div class="letter-full">
+            <div class="head">ACC Decision Letter</div>
+            <div class="ref">Claim: 4387291 &middot; 18 March 2026</div>
+            <div class="para">After reviewing the medical evidence in relation to your claim, ACC has determined that there is</div>
+            <div class="para">
+              <span class="key-line">
+                <span class="highlighter" id="hl1"></span>
+                no causal link between the injury and the stated event.
+              </span>
+            </div>
+            <div class="para">As such, we are unable to accept cover under section 20 of the Act.</div>
+          </div>
+          <div class="s2-zoom-label">Watch that phrase.</div>
+        </div>
+      </div>
+
+      <!-- Scene 3: Jargon → Plain English (10-17s) -->
+      <div id="s3" class="scene clip" data-start="10" data-duration="7" data-track-index="1">
+        <div class="scene-inner">
+          <div class="translate-grid">
+            <div class="jargon-box">
+              <div class="box-label">In ACC's words</div>
+              <div class="jargon-text">"NO CAUSAL LINK"</div>
+            </div>
+            <div class="arrow-down">&darr;</div>
+            <div class="plain-box">
+              <div class="box-label">In plain English</div>
+              <div class="plain-text">They think something else caused it.</div>
+              <div class="plain-note">Not that it didn't happen.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 4: Reviewable. + deadline (17-23s) -->
+      <div id="s4" class="scene clip" data-start="17" data-duration="6" data-track-index="1">
+        <div class="scene-inner">
+          <div class="reveal-main">Reviewable<span class="dot">.</span></div>
+          <div class="reveal-sub">Every ACC decision can be.</div>
+          <div class="reveal-deadline">
+            <span class="num">3 MONTHS</span> from the letter date.
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 5: CTA (23-30s) -->
+      <div id="s5" class="scene clip" data-start="23" data-duration="7" data-track-index="1">
+        <div class="scene-inner">
+          <div class="cta-logo">CLAIM<span class="mate"> MATE</span></div>
+          <div class="cta-tagline">Translates ACC.<br/>Fights back. You pay $0.</div>
+          <div class="cta-url-wrap"><span class="typed"></span><span class="cursor"></span></div>
+          <div class="cta-tag">FREE · NZ-WIDE</div>
+        </div>
+      </div>
+
+      <!-- Watermark -->
+      <div id="wm" class="clip" data-start="4" data-duration="26" data-track-index="5">
+        <div class="watermark">NZ &middot; LAY ADVOCATE &middot; CLAIMMATE.CO.NZ</div>
+      </div>
+    </div>
+
+    <script>
+      // Music volume sits mid so narration would still sit on top if/when we add TTS
+      const __music = document.querySelector("audio.bg-music");
+      if (__music) __music.volume = 0.5;
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Persistent progress bar
+      tl.to(".progress-bar .fill", { scaleX: 1, duration: 30, ease: "none" }, 0);
+
+      // ========== Scene 1: Envelope opens (0-4s) ==========
+      tl.from(".envelope", { scale: 0.5, opacity: 0, duration: 0.6, ease: "back.out(1.6)" }, 0.1);
+      tl.to(".envelope-flap", { rotateX: 180, duration: 0.7, ease: "power2.inOut" }, 0.9);
+      tl.fromTo(".letter-stub",
+        { y: 40, opacity: 0 },
+        { y: -120, opacity: 1, duration: 0.8, ease: "power2.out" }, 1.3);
+      tl.from(".s1-caption", { opacity: 0, y: 30, duration: 0.5 }, 2.2);
+      tl.from(".s1-caption .accent",
+        { scale: 1.4, color: "#f5f1e8", duration: 0.3, ease: "back.out(2)" }, 2.6);
+      tl.to("#s1", { opacity: 0, duration: 0.3 }, 3.7);
+
+      // ========== Scene 2: Letter + highlight sweep (4-10s) ==========
+      tl.from(".letter-full",
+        { scale: 0.9, opacity: 0, duration: 0.6, ease: "power3.out" }, 4.1);
+      tl.from(".letter-full .head", { opacity: 0, y: -10, duration: 0.4 }, 4.5);
+      tl.from(".letter-full .ref", { opacity: 0, y: -10, duration: 0.4 }, 4.7);
+      tl.from(".letter-full .para", { opacity: 0, y: 10, stagger: 0.2, duration: 0.4 }, 4.9);
+
+      // Position the highlighter under the key phrase and sweep it
+      tl.set("#hl1", {
+        left: 0, right: 0, top: -4, bottom: -4,
+        width: "100%"
+      }, 5.8);
+      tl.to("#hl1", { scaleX: 1, duration: 1.0, ease: "power2.inOut" }, 5.9);
+
+      // Pulse the highlighted line
+      tl.to(".key-line", { scale: 1.03, duration: 0.3, yoyo: true, repeat: 1 }, 7.3);
+      tl.from(".s2-zoom-label",
+        { opacity: 0, y: 20, duration: 0.5 }, 7.8);
+      tl.to(".s2-zoom-label",
+        { scale: 1.05, duration: 0.3, yoyo: true, repeat: 2, ease: "sine.inOut" }, 8.4);
+      tl.to("#s2", { opacity: 0, duration: 0.3 }, 9.7);
+
+      // ========== Scene 3: Jargon → Plain (10-17s) ==========
+      tl.from(".jargon-box",
+        { x: -1000, opacity: 0, duration: 0.7, ease: "power3.out" }, 10.1);
+      tl.from(".jargon-text",
+        { scale: 0.7, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 10.5);
+      tl.from(".arrow-down",
+        { opacity: 0, scale: 0.4, duration: 0.4, ease: "back.out(2)" }, 11.4);
+      tl.to(".arrow-down",
+        { y: 20, duration: 0.5, yoyo: true, repeat: 5, ease: "sine.inOut" }, 11.8);
+      tl.from(".plain-box",
+        { x: 1000, opacity: 0, duration: 0.7, ease: "power3.out" }, 12.0);
+      tl.from(".plain-text",
+        { opacity: 0, y: 20, duration: 0.5 }, 12.5);
+      tl.from(".plain-note",
+        { opacity: 0, y: 20, duration: 0.5 }, 13.5);
+      // Punch on plain text to sell it
+      tl.to(".plain-text",
+        { scale: 1.04, duration: 0.3, yoyo: true, repeat: 1, ease: "sine.inOut" }, 14.5);
+      tl.to("#s3", { opacity: 0, duration: 0.3 }, 16.7);
+
+      // ========== Scene 4: Reviewable (17-23s) ==========
+      tl.from(".reveal-main",
+        { scale: 0.5, opacity: 0, duration: 0.6, ease: "back.out(2)" }, 17.1);
+      tl.to(".reveal-main",
+        { rotate: -2, duration: 0.15, yoyo: true, repeat: 1, ease: "sine.inOut" }, 17.7);
+      tl.from(".reveal-sub",
+        { opacity: 0, y: 20, duration: 0.5 }, 18.2);
+      tl.from(".reveal-deadline",
+        { opacity: 0, scale: 0.8, duration: 0.5, ease: "back.out(1.6)" }, 19.0);
+      tl.to(".reveal-deadline",
+        { borderColor: "#ffb84d", duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 19.7);
+      tl.to("#s4", { opacity: 0, duration: 0.3 }, 22.7);
+
+      // ========== Scene 5: CTA (23-30s) ==========
+      tl.from(".cta-logo",
+        { scale: 0.5, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 23.1);
+      tl.from(".cta-logo .mate",
+        { color: "#f5f1e8", duration: 0.4 }, 23.5);
+      tl.from(".cta-tagline",
+        { opacity: 0, y: 20, duration: 0.5 }, 23.9);
+
+      // Type-in URL, deterministic keyframes
+      const url = "claimmate.co.nz";
+      for (let i = 1; i <= url.length; i++) {
+        tl.set(".typed", { innerText: url.slice(0, i) }, 24.6 + i * 0.06);
+      }
+      // Cursor blink
+      tl.to(".cursor",
+        { opacity: 0, duration: 0.3, yoyo: true, repeat: 10, ease: "steps(1)" }, 25.0);
+
+      tl.from(".cta-tag",
+        { scale: 0, rotate: -8, opacity: 0, duration: 0.5, ease: "back.out(2)" }, 26.5);
+      tl.to(".cta-tag",
+        { scale: 1.05, duration: 0.3, yoyo: true, repeat: 2, ease: "sine.inOut" }, 27.1);
+
+      // Watermark fade-in at 4s
+      tl.from(".watermark", { opacity: 0, duration: 0.4 }, 4.1);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

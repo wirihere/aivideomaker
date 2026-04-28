@@ -1,0 +1,35 @@
+{
+  "slug": "linear-test",
+  "url": "https://linear.app",
+  "finalUrl": "https://linear.app/",
+  "extractedAt": "2026-04-26T01:22:05.273Z",
+  "assets": [
+    {
+      "kind": "favicon",
+      "path": "assets/linear-test/favicon.png",
+      "src": "https://linear.app/static/apple-touch-icon.png?v=2",
+      "width": 180,
+      "height": 180,
+      "bytes": 25274,
+      "format": "png"
+    },
+    {
+      "kind": "hero",
+      "path": "assets/linear-test/hero.jpg",
+      "src": "https://linear.app/static/og/homepage.jpg",
+      "width": 1200,
+      "height": 630,
+      "bytes": 277008,
+      "format": "jpeg"
+    },
+    {
+      "kind": "product",
+      "path": "assets/linear-test/product.jpg",
+      "src": "https://linear.app/static/og/homepage.jpg",
+      "width": 1200,
+      "height": 630,
+      "bytes": 277008,
+      "format": "jpeg"
+    }
+  ]
+}

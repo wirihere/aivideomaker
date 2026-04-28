@@ -1,0 +1,5239 @@
+{
+  "duration": 29.8,
+  "samples": [
+    {
+      "t": 0,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 1,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "0.98",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 2,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 3,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 4,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 5,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "0.68",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "0.41",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 6,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 7,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 8,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "0.89",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 9,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 10,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 11,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 12,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 13,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "0.68",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "0.41",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 14,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 15,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 16,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "0.89",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 17,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 18,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 19,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 20,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        }
+      ]
+    },
+    {
+      "t": 21,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "0.68",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "0.41",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        }
+      ]
+    },
+    {
+      "t": 22,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        }
+      ]
+    },
+    {
+      "t": 23,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        }
+      ]
+    },
+    {
+      "t": 24,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        },
+        {
+          "scene": "s4",
+          "op": "0.89",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "If you want quick noise, no. If you want something kept honest, yes."
+        }
+      ]
+    },
+    {
+      "t": 25,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "If you want quick noise, no. If you want something kept honest, yes."
+        }
+      ]
+    },
+    {
+      "t": 26,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "If you want quick noise, no. If you want something kept honest, yes."
+        }
+      ]
+    },
+    {
+      "t": 27,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "If you want quick noise, no. If you want something kept honest, yes."
+        }
+      ]
+    },
+    {
+      "t": 28,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "If you want quick noise, no. If you want something kept honest, yes."
+        }
+      ]
+    },
+    {
+      "t": 29,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "If you want quick noise, no. If you want something kept honest, yes."
+        },
+        {
+          "scene": "s5",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "s5-cta",
+          "text": "Book a session."
+        },
+        {
+          "scene": "s5",
+          "op": "0.75",
+          "tag": "DIV",
+          "cls": "s5-url",
+          "text": "https://kindred-nz.org"
+        }
+      ]
+    },
+    {
+      "t": 30,
+      "scenes": [
+        {
+          "id": "s1",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s2",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s3",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s4",
+          "display": "flex",
+          "op": "1.00"
+        },
+        {
+          "id": "s5",
+          "display": "flex",
+          "op": "1.00"
+        }
+      ],
+      "visible": [
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "scene__kicker",
+          "text": "THREE QUESTIONS"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "H1",
+          "cls": "s1-mark",
+          "text": "KINDRED"
+        },
+        {
+          "scene": "s1",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "s1-tag",
+          "text": "ANSWERED PLAINLY"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "01"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "How long does a sessiontake?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "How"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "long"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "a"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "session"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "take?"
+        },
+        {
+          "scene": "s2",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "Ninety minutes. Then thirty for the conversation that matters."
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "02"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "What does the first visitcost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "What"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "does"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "first"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "visit"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "cost?"
+        },
+        {
+          "scene": "s3",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "One flat number. No upsell, no add-ons. The price you read is the price you pay."
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "DIV",
+          "cls": "qa-num",
+          "text": "03"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "H2",
+          "cls": "qa-question",
+          "text": "Is this the right fit forme?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "Is"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "this"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "the"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "right"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "fit"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "for"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "SPAN",
+          "cls": "fx-piece",
+          "text": "me?"
+        },
+        {
+          "scene": "s4",
+          "op": "1.00",
+          "tag": "P",
+          "cls": "qa-answer",
+          "text": "If you want quick noise, no. If you want something kept honest, yes."
+        },
+        {
+          "scene": "s5",
+          "op": "0.92",
+          "tag": "H2",
+          "cls": "s5-cta",
+          "text": "Book a session."
+        },
+        {
+          "scene": "s5",
+          "op": "0.92",
+          "tag": "DIV",
+          "cls": "s5-url",
+          "text": "https://kindred-nz.org"
+        }
+      ]
+    }
+  ]
+}

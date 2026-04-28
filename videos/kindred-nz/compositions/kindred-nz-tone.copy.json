@@ -1,0 +1,45 @@
+{
+  "slug": "kindred-nz-tone",
+  "url": "https://kindred-nz.org",
+  "title": "Kindred — Share with neighbours. Find local help within 100km.",
+  "template": "warm-community",
+  "seconds": 30,
+  "narration": "Find local help. Share with neighbours. Post it. Just local. One free app, two sides to it. No money, no ads, no algorithm. Nearby neighbours will see it first. Ask — someone a few doors down probably has it. Informal lending and the odd swap happen too — that's between neighbours. One free app for your street — a place to give, ask, and find local help close to home.",
+  "beats": [
+    {
+      "kicker": "WHO WE ARE",
+      "headline": "Find local help.",
+      "body": "Share with neighbours. Post it."
+    },
+    {
+      "kicker": "WHAT WE DO",
+      "headline": "Just local.",
+      "body": "One free app, two sides to it. No money, no ads, no algorithm."
+    },
+    {
+      "kicker": "HOW IT FEELS",
+      "headline": "Nearby neighbours will see it first.",
+      "body": "Ask — someone a few doors down probably has it. Informal lending and the odd swap happen."
+    },
+    {
+      "kicker": "WHY IT MATTERS",
+      "headline": "One free app for your street — a place to give, ask, and find.",
+      "body": "Two things, really."
+    }
+  ],
+  "cta": {
+    "verb": "Visit",
+    "url": "https://kindred-nz.org",
+    "tagline": "Share with neighbours. Find local help."
+  },
+  "meta": {
+    "generatedAt": "2026-04-26",
+    "wordCount": 70,
+    "beatCount": 4,
+    "sourcedFrom": {
+      "metaDescription": false,
+      "h1Count": 1,
+      "paragraphCount": 14
+    }
+  }
+}

@@ -95,3 +95,13 @@ claude-design-context.md
 # per-render artifacts (one .json + one timestamped .md per run).
 docs/render-learnings/*.json
 docs/render-learnings/*-[0-9]*.md
+
+# Frame extraction debug folders (regenerable via ffmpeg from any render)
+.tmp-frames*/
+scripts/.tmp-faq-*/
+
+# Throwaway scripts from one-off debugging
+scripts/_tmp_*.mjs
+
+# Worktree state (per-machine, not portable)
+.claude/worktrees/

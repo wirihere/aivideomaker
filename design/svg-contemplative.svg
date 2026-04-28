@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SVG sprite — contemplative register iconography.
+
+  Symbols defined here are referenced from compositions via:
+    <svg viewBox="..." aria-hidden="true">
+      <use href="../../../design/svg-contemplative.svg#<id>"/>
+    </svg>
+
+  Adjust the relative path's `..` depth per template location:
+    compositions/<file>.html              → ../design/svg-contemplative.svg
+    compositions/templates/<vibe>/<file>  → ../../../design/svg-contemplative.svg
+
+  Colors come from CSS custom properties (--gold etc) via stroke="currentColor"
+  + the <use> ancestor's color: var(--gold) — so brand swaps work.
+
+  Symbols:
+    #atom               — atom orbital model (3 ellipses + nucleus + 3 electrons), 200x200 viewBox
+    #atom-small         — same but minus the small electrons (cleaner at <100px sizes)
+    #concentric         — 3 nested circles + center dot, 200x200 viewBox
+    #concentric-small   — simplified for <100px
+-->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;" aria-hidden="true">
+
+  <!-- ===== Atom orbital model — 3 ellipses crossed, nucleus, 3 electrons ===== -->
+  <symbol id="atom" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="100" rx="70" ry="25" transform="rotate(-30 100 100)"
+             fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/>
+    <ellipse cx="100" cy="100" rx="70" ry="25" transform="rotate(30 100 100)"
+             fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/>
+    <ellipse cx="100" cy="100" rx="70" ry="25" transform="rotate(90 100 100)"
+             fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.55"/>
+    <circle cx="100" cy="100" r="10" fill="currentColor" opacity="0.95"/>
+    <circle cx="170" cy="100" r="4"  fill="currentColor"/>
+    <circle cx="65"  cy="135" r="4"  fill="currentColor"/>
+    <circle cx="65"  cy="65"  r="4"  fill="currentColor"/>
+  </symbol>
+
+  <!-- ===== Atom small — same orbital lines + nucleus, electrons removed ===== -->
+  <!-- Use this at sizes <120px where the 4px electrons become invisible noise. -->
+  <symbol id="atom-small" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="100" rx="70" ry="25" transform="rotate(-30 100 100)"
+             fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+    <ellipse cx="100" cy="100" rx="70" ry="25" transform="rotate(30 100 100)"
+             fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+    <ellipse cx="100" cy="100" rx="70" ry="25" transform="rotate(90 100 100)"
+             fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.6"/>
+    <circle cx="100" cy="100" r="14" fill="currentColor" opacity="1.0"/>
+  </symbol>
+
+  <!-- ===== Concentric — 2 circles + center dot ===== -->
+  <symbol id="concentric" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.6"/>
+    <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.24"/>
+    <circle cx="100" cy="100" r="6"  fill="currentColor"/>
+  </symbol>
+
+  <!-- ===== Concentric small — simplified for ambient emblem at <120px ===== -->
+  <symbol id="concentric-small" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="2.2" opacity="0.7"/>
+    <circle cx="100" cy="100" r="14" fill="currentColor"/>
+  </symbol>
+
+</svg>

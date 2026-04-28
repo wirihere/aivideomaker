@@ -1,0 +1,1821 @@
+{
+  "slug": "kindred-recut",
+  "template": null,
+  "tone": null,
+  "durationS": 18,
+  "generatedAt": "2026-04-27T02:28:48.166Z",
+  "comp": "index.html",
+  "copy": null,
+  "vtt": null,
+  "vttCueCount": 0,
+  "brandName": "Kindred",
+  "brandUrl": null,
+  "tokensPath": "design/tokens-kindred.css",
+  "tokenHexes": [
+    "#1b2a3d",
+    "#0f1621",
+    "#14806f",
+    "#5a6677",
+    "#fbf9f6",
+    "#f5efe6",
+    "#1a9e8f",
+    "#e98b6a"
+  ],
+  "manifestPath": null,
+  "manifestAssetCount": 0,
+  "sceneCensus": [
+    {
+      "id": "s1",
+      "sceneId": "s1",
+      "bgHex": "#fbf9f6",
+      "sceneBgIsBrand": true,
+      "imageCount": 0,
+      "decorativeCount": 0,
+      "textOnly": false
+    },
+    {
+      "id": "s2",
+      "sceneId": "s2",
+      "bgHex": "#1a9e8f",
+      "sceneBgIsBrand": true,
+      "imageCount": 0,
+      "decorativeCount": 0,
+      "textOnly": false
+    },
+    {
+      "id": "s3",
+      "sceneId": "s3",
+      "bgHex": "#fbf9f6",
+      "sceneBgIsBrand": true,
+      "imageCount": 0,
+      "decorativeCount": 0,
+      "textOnly": false
+    },
+    {
+      "id": "s4",
+      "sceneId": "s4",
+      "bgHex": "#1b2a3d",
+      "sceneBgIsBrand": true,
+      "imageCount": 0,
+      "decorativeCount": 0,
+      "textOnly": false
+    }
+  ],
+  "motionContinuity": {
+    "frameDir": "tmp/verify-frames/kindred-recut-20260427-142840",
+    "perScene": [
+      {
+        "sceneId": "s1",
+        "windowStart": 0,
+        "windowEnd": 3,
+        "samples": [
+          {
+            "t": 0.5,
+            "sha": "80fe8d15de1dd231a6d713017269a18ceea286f703d1636c9b37872a2c094067",
+            "bytes": 56115
+          },
+          {
+            "t": 1,
+            "sha": "4d415c5f99c5890b01bbd4d27896f180e9d1f1e2fef6c99f9a98efa486001aa2",
+            "bytes": 80182
+          },
+          {
+            "t": 1.5,
+            "sha": "7443117d0daa6f814cf800e8867f89a371c38a49201199de0c6863a9b268894d",
+            "bytes": 87974
+          },
+          {
+            "t": 2,
+            "sha": "8e8b2c9c606b634bfcf79278b60480b17c576912e072cd820a5cf78925b2bee1",
+            "bytes": 88731
+          },
+          {
+            "t": 2.5,
+            "sha": "9ad4359e3a66c74e5107a302deb3658a7c7ac23916add4ae68fc6f4861363995",
+            "bytes": 89104
+          },
+          {
+            "t": 3,
+            "sha": "fb64d857dd9d4aed031a4144a180577f45344b7f1669dd178c300e174fc699fb",
+            "bytes": 90563
+          },
+          {
+            "t": 3.25,
+            "sha": "9c17e1f9bfdd5dc1a55bfb6c332365882a1abbd3d28084325571af54d1f74007",
+            "bytes": 90849
+          },
+          {
+            "t": 3.5,
+            "sha": "30be86c27deee9251c8ed2a44c70031e2bcc0f7d6bb9a5e206ab0c9e4656900e",
+            "bytes": 88629
+          },
+          {
+            "t": 3.75,
+            "sha": "ee6a6520bf6926a55e3d502f8796161b75e07a47f7f6a590a189095df5ecc10c",
+            "bytes": 89613
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 0.5,
+            "bT": 1,
+            "kind": "moving",
+            "diffPct": 0.30015464817540094
+          },
+          {
+            "aT": 1,
+            "bT": 1.5,
+            "kind": "moving",
+            "diffPct": 0.08857162343419647
+          },
+          {
+            "aT": 1.5,
+            "bT": 2,
+            "kind": "near-static",
+            "diffPct": 0.008531403906188367
+          },
+          {
+            "aT": 2,
+            "bT": 2.5,
+            "kind": "near-static",
+            "diffPct": 0.00418611959059077
+          },
+          {
+            "aT": 2.5,
+            "bT": 3,
+            "kind": "near-static",
+            "diffPct": 0.016110332034053643
+          },
+          {
+            "aT": 3,
+            "bT": 3.25,
+            "kind": "near-static",
+            "diffPct": 0.003148080881462647
+          },
+          {
+            "aT": 3.25,
+            "bT": 3.5,
+            "kind": "moving",
+            "diffPct": 0.0244361522966681
+          },
+          {
+            "aT": 3.5,
+            "bT": 3.75,
+            "kind": "near-static",
+            "diffPct": 0.010980549697030564
+          }
+        ]
+      },
+      {
+        "sceneId": "s2",
+        "windowStart": 4,
+        "windowEnd": 8,
+        "samples": [
+          {
+            "t": 4.5,
+            "sha": "ade5fa437729b231b3a3f23648634a144629a3acc59a3a966b6fe940282a8421",
+            "bytes": 198709
+          },
+          {
+            "t": 5,
+            "sha": "6b75b1eb85d2edc839bcfb4a9fec5e7735616ade2bb34e474a99f44fea986469",
+            "bytes": 279422
+          },
+          {
+            "t": 5.5,
+            "sha": "5f4ef8b9659a80571a784e84616d44b6489f2665ee3ed2a6575204385f3f66c5",
+            "bytes": 288834
+          },
+          {
+            "t": 6,
+            "sha": "54507711b311af8e7ae8c3b436027b83f04d9fa876c8002e9c3c3c32d2932d60",
+            "bytes": 286783
+          },
+          {
+            "t": 6.5,
+            "sha": "2003db52499034204e4d496a8a570a17b52d5a117f25d40603f55a6336d10835",
+            "bytes": 241913
+          },
+          {
+            "t": 7,
+            "sha": "64f8f9d5d0d82e3073ca8726cf9e436dc210a9c9749894048b2a7846846bb1d0",
+            "bytes": 279803
+          },
+          {
+            "t": 7.5,
+            "sha": "ba3660b60c234c09cd3a8ea9b6890e37359db5da1322b91913761f4f004d871b",
+            "bytes": 277654
+          },
+          {
+            "t": 8,
+            "sha": "5fe1efbabbc48aa4a3e4035d403fb5af49e6c967f7653a79af7c9cfd162824b0",
+            "bytes": 253798
+          },
+          {
+            "t": 8.5,
+            "sha": "51de892a987e3f00318f50b9148e35047ec23b9a8142c2b609b1e2bdca4a45dc",
+            "bytes": 239251
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 4.5,
+            "bT": 5,
+            "kind": "moving",
+            "diffPct": 0.28885699765945416
+          },
+          {
+            "aT": 5,
+            "bT": 5.5,
+            "kind": "moving",
+            "diffPct": 0.03258619137636151
+          },
+          {
+            "aT": 5.5,
+            "bT": 6,
+            "kind": "near-static",
+            "diffPct": 0.0071009645678832825
+          },
+          {
+            "aT": 6,
+            "bT": 6.5,
+            "kind": "moving",
+            "diffPct": 0.1564597622592692
+          },
+          {
+            "aT": 6.5,
+            "bT": 7,
+            "kind": "moving",
+            "diffPct": 0.13541670389524058
+          },
+          {
+            "aT": 7,
+            "bT": 7.5,
+            "kind": "near-static",
+            "diffPct": 0.007680403712612088
+          },
+          {
+            "aT": 7.5,
+            "bT": 8,
+            "kind": "moving",
+            "diffPct": 0.08591988590115755
+          },
+          {
+            "aT": 8,
+            "bT": 8.5,
+            "kind": "moving",
+            "diffPct": 0.05731723654244714
+          }
+        ]
+      },
+      {
+        "sceneId": "s3",
+        "windowStart": 9,
+        "windowEnd": 13,
+        "samples": [
+          {
+            "t": 9.5,
+            "sha": "fac229f57a9914ff7d4bbc773c556de81f135b4e485824ce2b8b3d92398c4650",
+            "bytes": 29693
+          },
+          {
+            "t": 10,
+            "sha": "024577d7b4f29711f6691b9af2b2e43da6824d429042a243a9ba1a064bc14e04",
+            "bytes": 51634
+          },
+          {
+            "t": 10.5,
+            "sha": "717a16d016ebcd8b876980d122fc74b3afb285878551d0967cc121083d6753c0",
+            "bytes": 56130
+          },
+          {
+            "t": 11,
+            "sha": "a9e6cc81b908805e06148c608914c40534be2e16ed2da60327ecaf37fd25fe94",
+            "bytes": 65926
+          },
+          {
+            "t": 11.5,
+            "sha": "ba0bcd677308aeadc99ce1d8ee5cb27de56875bb6f01b6f39ea03598cad4dbba",
+            "bytes": 63577
+          },
+          {
+            "t": 12,
+            "sha": "ba0bcd677308aeadc99ce1d8ee5cb27de56875bb6f01b6f39ea03598cad4dbba",
+            "bytes": 63577
+          },
+          {
+            "t": 12.5,
+            "sha": "ba0bcd677308aeadc99ce1d8ee5cb27de56875bb6f01b6f39ea03598cad4dbba",
+            "bytes": 63577
+          },
+          {
+            "t": 13,
+            "sha": "ba0bcd677308aeadc99ce1d8ee5cb27de56875bb6f01b6f39ea03598cad4dbba",
+            "bytes": 63577
+          },
+          {
+            "t": 13.5,
+            "sha": "ba0bcd677308aeadc99ce1d8ee5cb27de56875bb6f01b6f39ea03598cad4dbba",
+            "bytes": 63577
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 9.5,
+            "bT": 10,
+            "kind": "moving",
+            "diffPct": 0.42493318356121934
+          },
+          {
+            "aT": 10,
+            "bT": 10.5,
+            "kind": "moving",
+            "diffPct": 0.0800997683947978
+          },
+          {
+            "aT": 10.5,
+            "bT": 11,
+            "kind": "moving",
+            "diffPct": 0.14859084427995026
+          },
+          {
+            "aT": 11,
+            "bT": 11.5,
+            "kind": "moving",
+            "diffPct": 0.03563085884173164
+          },
+          {
+            "aT": 11.5,
+            "bT": 12,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 12,
+            "bT": 12.5,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 12.5,
+            "bT": 13,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 13,
+            "bT": 13.5,
+            "kind": "static",
+            "diffPct": 0
+          }
+        ]
+      },
+      {
+        "sceneId": "s4",
+        "windowStart": 14,
+        "windowEnd": 18,
+        "samples": [
+          {
+            "t": 14.5,
+            "sha": "39f6fd6b569116a25efbb2ae1f42b5ccb950b94a35f3555016b4382f47154344",
+            "bytes": 30210
+          },
+          {
+            "t": 15,
+            "sha": "865d1f766bb332ff3a64a595a0b0f8b8bb73b5b9883c713ce4765e2b8db46443",
+            "bytes": 30557
+          },
+          {
+            "t": 15.5,
+            "sha": "865d1f766bb332ff3a64a595a0b0f8b8bb73b5b9883c713ce4765e2b8db46443",
+            "bytes": 30557
+          },
+          {
+            "t": 16,
+            "sha": "865d1f766bb332ff3a64a595a0b0f8b8bb73b5b9883c713ce4765e2b8db46443",
+            "bytes": 30557
+          },
+          {
+            "t": 16.5,
+            "sha": "865d1f766bb332ff3a64a595a0b0f8b8bb73b5b9883c713ce4765e2b8db46443",
+            "bytes": 30557
+          },
+          {
+            "t": 17,
+            "sha": "865d1f766bb332ff3a64a595a0b0f8b8bb73b5b9883c713ce4765e2b8db46443",
+            "bytes": 30557
+          },
+          {
+            "t": 17.5,
+            "sha": "524865aba87bf8e2f26f19ec48f5a3c696d6d596a856d32a99b4fbbcf737ba48",
+            "bytes": 30783
+          },
+          {
+            "t": 17.95,
+            "sha": "46a06ed19131abb379d09dfd7d58073f93b3b943afb29a526168c24c033b5ee0",
+            "bytes": 30718
+          },
+          {
+            "t": 17.95,
+            "sha": "46a06ed19131abb379d09dfd7d58073f93b3b943afb29a526168c24c033b5ee0",
+            "bytes": 30718
+          }
+        ],
+        "pairs": [
+          {
+            "aT": 14.5,
+            "bT": 15,
+            "kind": "near-static",
+            "diffPct": 0.011355826815459633
+          },
+          {
+            "aT": 15,
+            "bT": 15.5,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 15.5,
+            "bT": 16,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 16,
+            "bT": 16.5,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 16.5,
+            "bT": 17,
+            "kind": "static",
+            "diffPct": 0
+          },
+          {
+            "aT": 17,
+            "bT": 17.5,
+            "kind": "near-static",
+            "diffPct": 0.007341714582724231
+          },
+          {
+            "aT": 17.5,
+            "bT": 17.95,
+            "kind": "near-static",
+            "diffPct": 0.002111555079102102
+          },
+          {
+            "aT": 17.95,
+            "bT": 17.95,
+            "kind": "static",
+            "diffPct": 0
+          }
+        ]
+      }
+    ]
+  },
+  "scriptTiming": {
+    "sceneWindows": [
+      {
+        "id": "s1",
+        "start": 0,
+        "end": 4,
+        "duration": 4
+      },
+      {
+        "id": "s2",
+        "start": 4,
+        "end": 9,
+        "duration": 5
+      },
+      {
+        "id": "s3",
+        "start": 9,
+        "end": 14,
+        "duration": 5
+      },
+      {
+        "id": "s4",
+        "start": 14,
+        "end": 18,
+        "duration": 4
+      }
+    ],
+    "emphasisEvents": [
+      {
+        "at": 0.8,
+        "type": "textFx.cascade"
+      },
+      {
+        "at": 14.7,
+        "type": "effectFx.glitchBurst"
+      },
+      {
+        "at": 15.1,
+        "type": "effectFx.glitchBurst"
+      }
+    ]
+  },
+  "samples": [
+    {
+      "t": 0,
+      "activeSceneId": "s1",
+      "innerText": "KINDRED\nA WARMER WAY\nFrom your kitchen table.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "KINDRED",
+          "fontSize": 380,
+          "fontWeight": 600,
+          "contrast": 4.5969866750503625
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A WARMER WAY",
+          "fontSize": 24,
+          "fontWeight": 400,
+          "contrast": 3.156205144044456
+        },
+        {
+          "tag": "div",
+          "id": "s1-title",
+          "text": "From your kitchen table.",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        }
+      ]
+    },
+    {
+      "t": 1,
+      "activeSceneId": "s1",
+      "innerText": "KINDRED\nA WARMER WAY\nFrom your kitchen table.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "KINDRED",
+          "fontSize": 380,
+          "fontWeight": 600,
+          "contrast": 4.5969866750503625
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A WARMER WAY",
+          "fontSize": 24,
+          "fontWeight": 400,
+          "contrast": 3.156205144044456
+        },
+        {
+          "tag": "div",
+          "id": "s1-title",
+          "text": "From your kitchen table.",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "From",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "your",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "kitchen",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "table.",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        }
+      ]
+    },
+    {
+      "t": 2,
+      "activeSceneId": "s1",
+      "innerText": "KINDRED\nA WARMER WAY\nFrom your kitchen table.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "KINDRED",
+          "fontSize": 380,
+          "fontWeight": 600,
+          "contrast": 4.5969866750503625
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A WARMER WAY",
+          "fontSize": 24,
+          "fontWeight": 400,
+          "contrast": 3.156205144044456
+        },
+        {
+          "tag": "div",
+          "id": "s1-title",
+          "text": "From your kitchen table.",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "From",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "your",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "kitchen",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "table.",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        }
+      ]
+    },
+    {
+      "t": 3,
+      "activeSceneId": "s1",
+      "innerText": "KINDRED\nA WARMER WAY\nFrom your kitchen table.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": null,
+          "text": "KINDRED",
+          "fontSize": 380,
+          "fontWeight": 600,
+          "contrast": 4.5969866750503625
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A WARMER WAY",
+          "fontSize": 24,
+          "fontWeight": 400,
+          "contrast": 3.156205144044456
+        },
+        {
+          "tag": "div",
+          "id": "s1-title",
+          "text": "From your kitchen table.",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "From",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "your",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "kitchen",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "table.",
+          "fontSize": 54,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        }
+      ]
+    },
+    {
+      "t": 4,
+      "activeSceneId": "s2",
+      "innerText": "Kindred\nkindred-nz.org",
+      "visible": []
+    },
+    {
+      "t": 5,
+      "activeSceneId": "s2",
+      "innerText": "Kindred\nkindred-nz.org",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-mark",
+          "text": "Kindred",
+          "fontSize": 240,
+          "fontWeight": 600,
+          "contrast": 3.156205144044456
+        }
+      ]
+    },
+    {
+      "t": 6,
+      "activeSceneId": "s2",
+      "innerText": "Kindred\nkindred-nz.org",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-mark",
+          "text": "Kindred",
+          "fontSize": 240,
+          "fontWeight": 600,
+          "contrast": 3.156205144044456
+        },
+        {
+          "tag": "div",
+          "id": "s2-url",
+          "text": "kindred-nz.org",
+          "fontSize": 36,
+          "fontWeight": 400,
+          "contrast": 2.9017309828576585
+        }
+      ]
+    },
+    {
+      "t": 7,
+      "activeSceneId": "s2",
+      "innerText": "Kindred\nkindred-nz.org",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-mark",
+          "text": "Kindred",
+          "fontSize": 240,
+          "fontWeight": 600,
+          "contrast": 3.156205144044456
+        },
+        {
+          "tag": "div",
+          "id": "s2-url",
+          "text": "kindred-nz.org",
+          "fontSize": 36,
+          "fontWeight": 400,
+          "contrast": 2.9017309828576585
+        }
+      ]
+    },
+    {
+      "t": 8,
+      "activeSceneId": "s2",
+      "innerText": "Kindred\nkindred-nz.org",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s2-mark",
+          "text": "Kindred",
+          "fontSize": 240,
+          "fontWeight": 600,
+          "contrast": 3.156205144044456
+        },
+        {
+          "tag": "div",
+          "id": "s2-url",
+          "text": "kindred-nz.org",
+          "fontSize": 36,
+          "fontWeight": 400,
+          "contrast": 2.9017309828576585
+        }
+      ]
+    },
+    {
+      "t": 9,
+      "activeSceneId": "s3",
+      "innerText": "🤝\nGIVE\nA pram, a meal, a hand.\n💬\nASK\nWhen the day's a lot.\n❤️\nSUPPORT\nShowing up, that's all.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-give",
+          "text": "GIVE",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A pram, a meal, a hand.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-ask",
+          "text": "ASK",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "When the day's a lot.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-support",
+          "text": "SUPPORT",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "Showing up, that's all.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        }
+      ]
+    },
+    {
+      "t": 10,
+      "activeSceneId": "s3",
+      "innerText": "🤝\nGIVE\nA pram, a meal, a hand.\n💬\nASK\nWhen the day's a lot.\n❤️\nSUPPORT\nShowing up, that's all.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-give",
+          "text": "GIVE",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "G",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "I",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "V",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "E",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A pram, a meal, a hand.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-ask",
+          "text": "ASK",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "A",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "K",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "When the day's a lot.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-support",
+          "text": "SUPPORT",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "U",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "P",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "Showing up, that's all.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        }
+      ]
+    },
+    {
+      "t": 11,
+      "activeSceneId": "s3",
+      "innerText": "🤝\nGIVE\nA pram, a meal, a hand.\n💬\nASK\nWhen the day's a lot.\n❤️\nSUPPORT\nShowing up, that's all.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-give",
+          "text": "GIVE",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "G",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "I",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "V",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "E",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A pram, a meal, a hand.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-ask",
+          "text": "ASK",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "A",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "K",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "When the day's a lot.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-support",
+          "text": "SUPPORT",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "U",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "P",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "P",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "O",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "R",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "T",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "Showing up, that's all.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        }
+      ]
+    },
+    {
+      "t": 12,
+      "activeSceneId": "s3",
+      "innerText": "🤝\nGIVE\nA pram, a meal, a hand.\n💬\nASK\nWhen the day's a lot.\n❤️\nSUPPORT\nShowing up, that's all.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-give",
+          "text": "GIVE",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "G",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "I",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "V",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "E",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A pram, a meal, a hand.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-ask",
+          "text": "ASK",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "A",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "K",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "When the day's a lot.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-support",
+          "text": "SUPPORT",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "U",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "P",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "P",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "O",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "R",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "T",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "Showing up, that's all.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        }
+      ]
+    },
+    {
+      "t": 13,
+      "activeSceneId": "s3",
+      "innerText": "🤝\nGIVE\nA pram, a meal, a hand.\n💬\nASK\nWhen the day's a lot.\n❤️\nSUPPORT\nShowing up, that's all.",
+      "visible": [
+        {
+          "tag": "div",
+          "id": "s3-give",
+          "text": "GIVE",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "G",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "I",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "V",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "E",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "A pram, a meal, a hand.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-ask",
+          "text": "ASK",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "A",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "K",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "When the day's a lot.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        },
+        {
+          "tag": "div",
+          "id": "s3-support",
+          "text": "SUPPORT",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "S",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "U",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "P",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "P",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "O",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "R",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": null,
+          "text": "T",
+          "fontSize": 88,
+          "fontWeight": 600,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "text": "Showing up, that's all.",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "contrast": 5.54823902078604
+        }
+      ]
+    },
+    {
+      "t": 14,
+      "activeSceneId": "s4",
+      "innerText": "Just local, just helping.",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s4-line",
+          "text": "Just local, just helping.",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": "s4-just",
+          "text": "Just",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 5.788856991338522
+        }
+      ]
+    },
+    {
+      "t": 15,
+      "activeSceneId": "s4",
+      "innerText": "Just local, just helping.",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s4-line",
+          "text": "Just local, just helping.",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": "s4-just",
+          "text": "Just",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 5.788856991338522
+        }
+      ]
+    },
+    {
+      "t": 16,
+      "activeSceneId": "s4",
+      "innerText": "Just local, just helping.",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s4-line",
+          "text": "Just local, just helping.",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": "s4-just",
+          "text": "Just",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 5.788856991338522
+        }
+      ]
+    },
+    {
+      "t": 17,
+      "activeSceneId": "s4",
+      "innerText": "Just local, just helping.",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s4-line",
+          "text": "Just local, just helping.",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": "s4-just",
+          "text": "Just",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 5.788856991338522
+        }
+      ]
+    },
+    {
+      "t": 18,
+      "activeSceneId": "s4",
+      "innerText": "Just local, just helping.",
+      "visible": [
+        {
+          "tag": "h2",
+          "id": "s4-line",
+          "text": "Just local, just helping.",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 13.827334426351605
+        },
+        {
+          "tag": "span",
+          "id": "s4-just",
+          "text": "Just",
+          "fontSize": 96,
+          "fontWeight": 500,
+          "contrast": 5.788856991338522
+        }
+      ]
+    }
+  ],
+  "findings": {
+    "composition": [
+      {
+        "kind": "ok",
+        "scene": "s1",
+        "message": "scene s1: 7 text elements (70 chars)",
+        "lines": [
+          "KINDRED",
+          "A WARMER WAY",
+          "From your kitchen table.",
+          "From",
+          "your",
+          "kitchen",
+          "table."
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s2",
+        "message": "scene s2: 2 text elements (22 chars)",
+        "lines": [
+          "Kindred",
+          "kindred-nz.org"
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s3",
+        "message": "scene s3: 18 text elements (110 chars)",
+        "lines": [
+          "GIVE",
+          "A pram, a meal, a hand.",
+          "ASK",
+          "When the day's a lot.",
+          "SUPPORT",
+          "Showing up, that's all.",
+          "G",
+          "I",
+          "V",
+          "E",
+          "A",
+          "S",
+          "K",
+          "U",
+          "P",
+          "O",
+          "R",
+          "T"
+        ]
+      },
+      {
+        "kind": "ok",
+        "scene": "s4",
+        "message": "scene s4: 2 text elements (30 chars)",
+        "lines": [
+          "Just local, just helping.",
+          "Just"
+        ]
+      }
+    ],
+    "brandFidelity": [
+      {
+        "kind": "brand-name-present",
+        "message": "brand name \"Kindred\" present in visible text"
+      }
+    ],
+    "placeholderLeakage": [],
+    "pacing": [],
+    "audioCoverage": [
+      {
+        "kind": "no-vtt",
+        "message": "no VTT cues — couldn't check narration timing"
+      }
+    ],
+    "accessibility": [
+      {
+        "kind": "contrast",
+        "scene": "s2",
+        "text": "kindred-nz.org",
+        "ratio": 2.9017309828576585,
+        "threshold": 3,
+        "message": "scene s2: \"kindred-nz.org\" contrast 2.90:1 < 3:1"
+      }
+    ],
+    "brandPaletteUse": [
+      {
+        "kind": "var-refs-present",
+        "count": 31,
+        "message": "31 var(--card-) references in assembled <style> — brand tokens consumed"
+      }
+    ],
+    "brandAssetUse": [
+      {
+        "kind": "no-manifest",
+        "message": "no assets/<slug>/manifest.json — asset check skipped"
+      }
+    ],
+    "sceneVisualDensity": [],
+    "motionContinuity": [
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 1.5,
+        "atEnd": 2,
+        "diffPct": 0.008531403906188367,
+        "message": "scene s1 at t=1.5s–2s: near-static (0.85% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 2,
+        "atEnd": 2.5,
+        "diffPct": 0.00418611959059077,
+        "message": "scene s1 at t=2s–2.5s: near-static (0.42% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 2.5,
+        "atEnd": 3,
+        "diffPct": 0.016110332034053643,
+        "message": "scene s1 at t=2.5s–3s: near-static (1.61% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 3,
+        "atEnd": 3.25,
+        "diffPct": 0.003148080881462647,
+        "message": "scene s1 at t=3s–3.25s: near-static (0.31% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s1",
+        "atStart": 3.5,
+        "atEnd": 3.75,
+        "diffPct": 0.010980549697030564,
+        "message": "scene s1 at t=3.5s–3.75s: near-static (1.10% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 5.5,
+        "atEnd": 6,
+        "diffPct": 0.0071009645678832825,
+        "message": "scene s2 at t=5.5s–6s: near-static (0.71% byte change)"
+      },
+      {
+        "kind": "near-static-moment",
+        "scene": "s2",
+        "atStart": 7,
+        "atEnd": 7.5,
+        "diffPct": 0.007680403712612088,
+        "message": "scene s2 at t=7s–7.5s: near-static (0.77% byte change)"
+      },
+      {
+        "kind": "multiple-static",
+        "severity": "error",
+        "scene": "s3",
+        "staticCount": 4,
+        "pairs": [
+          "11.5s–12s",
+          "12s–12.5s",
+          "12.5s–13s",
+          "13s–13.5s"
+        ],
+        "message": "scene s3 has 4 consecutive static frames (11.5s–12s, 12s–12.5s, 12.5s–13s, 13s–13.5s) — reads as PowerPoint, not video"
+      },
+      {
+        "kind": "scene-frozen",
+        "severity": "error",
+        "scene": "s4",
+        "pairCount": 8,
+        "message": "scene s4 is fully static across its 5s duration — no visible motion in any sampled pair"
+      }
+    ],
+    "scriptTiming": [
+      {
+        "kind": "no-vtt",
+        "message": "no VTT cues — script-timing checks skipped"
+      }
+    ]
+  },
+  "verdict": "needs-fix"
+}

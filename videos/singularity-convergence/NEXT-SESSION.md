@@ -1,11 +1,11 @@
-# Next session — pick up Singularity Convergence intro video here
+# Singularity Convergence intro video — ARCHIVED PLANNING (work complete)
 
-> **Read order for the new session:**
-> 1. `~/.claude/projects/<this>/memory/MEMORY.md` — read **`feedback_orchestrator_role.md`** FIRST. You are the orchestrator; the system + templates are tools you direct. Then skim the rest (~24 durable rules).
-> 2. `docs/PROCESS.md` — workflow (Principle 0 + the 6 principles + the cycle).
-> 3. `docs/SESSION-HANDOFF-2026-04-26-late.md` — broader project state (faq-quick template work parked).
-> 4. **THIS FILE** — current video project state.
-> 5. `videos/singularity-convergence/DESIGN.md` + `SCRIPT.md` + `STORYBOARD.md` — the creative plan you'll execute.
+> **STATUS (as of 2026-04-28): COMPLETE.** Trilogy shipped (v3 manifesto, v4 questions, v5 directive). v5 user-approved + locked as template `manifesto-directive-60s` v1. See [`docs/template-models.md`](../../docs/template-models.md#manifesto-directive-60s--manifesto-directive-v1). This file is preserved as historical planning context.
+
+> **For new sessions, read order:**
+> 1. `~/.claude/projects/<this>/memory/MEMORY.md` — orchestrator-role rule first, then founding-doc rule second.
+> 2. `docs/skills/how-a-video-gets-made.md` — **founding doc** (10-stage flow + companion-doc manifest).
+> 3. THIS FILE — only relevant if doing more variants of Singularity Convergence specifically.
 
 ---
 

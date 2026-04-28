@@ -1,0 +1,45 @@
+{
+  "slug": "baseline-stripe",
+  "url": "https://stripe.com",
+  "title": "Stripe | Financial Infrastructure to Grow Your Revenue",
+  "template": "kinetic-pop",
+  "seconds": 30,
+  "narration": "Stripe is a financial services platform that helps all types of businesses accept payments, build flexible billing models and manage money movement. Financial infrastructure to grow your revenue. Accept payments, offer financial services and implement custom revenue models – from your first transaction to your billionth. in payments volume processed in 2025. historical uptime for Stripe services. currencies and payment methods supported.",
+  "beats": [
+    {
+      "kicker": "INTRO",
+      "headline": "Stripe is a financial services platform that helps all types of.",
+      "body": "Financial infrastructure to grow your revenue."
+    },
+    {
+      "kicker": "PROOF",
+      "headline": "Accept payments, offer financial services and implement custom.",
+      "body": "in payments volume processed in 2025."
+    },
+    {
+      "kicker": "PUNCH",
+      "headline": "historical uptime for Stripe services.",
+      "body": "currencies and payment methods supported."
+    },
+    {
+      "kicker": "PAYOFF",
+      "headline": "Flexible solutions for every business model.",
+      "body": "The backbone of global commerce"
+    }
+  ],
+  "cta": {
+    "verb": "Contact sales",
+    "url": "https://stripe.com",
+    "tagline": "Stripe is a financial services platform that helps all types of businesses accep"
+  },
+  "meta": {
+    "generatedAt": "2026-04-25",
+    "wordCount": 62,
+    "beatCount": 4,
+    "sourcedFrom": {
+      "metaDescription": true,
+      "h1Count": 1,
+      "paragraphCount": 14
+    }
+  }
+}

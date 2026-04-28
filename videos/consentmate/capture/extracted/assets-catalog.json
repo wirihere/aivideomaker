@@ -1,0 +1,150 @@
+[
+  {
+    "url": "https://consentmate.co.nz/assets/zooms/z-address.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "LOCATE PARCEL card with an empty NZ address search and the FIND PROPERTY button",
+    "description": "LOCATE PARCEL card with an empty NZ address search and the FIND PROPERTY button",
+    "nearestHeading": "Three actions. That's the whole check.",
+    "sectionClasses": "showcase deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/zooms/z-building.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Green draggable building footprint placed on a real NZ property, with the 3.7 m front-boundary setback flagged in red",
+    "description": "Green draggable building footprint placed on a real NZ property, with the 3.7 m front-boundary setback flagged in red",
+    "nearestHeading": "Three actions. That's the whole check.",
+    "sectionClasses": "showcase deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/hero-placed.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Real screenshot of the ConsentMate map tool — a NZ property with a 7.5 × 5 m minor dwelling placed tight to the front boundary, live setback measurements on the map, and the 'resource consent likely required' verdict in the right sidebar",
+    "description": "Real screenshot of the ConsentMate map tool — a NZ property with a 7.5 × 5 m minor dwelling placed tight to the front boundary, live setback measureme",
+    "nearestHeading": "Three actions. That's the whole check.",
+    "sectionClasses": "showcase deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/docs/doc-aee.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Assessment of Environmental Effects — the main drafted report",
+    "description": "Assessment of Environmental Effects — the main drafted report",
+    "nearestHeading": "What actually lands in your inbox.",
+    "sectionClasses": "block deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/docs/doc-cover.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Cover letter addressed to your council's resource consent team",
+    "description": "Cover letter addressed to your council's resource consent team",
+    "nearestHeading": "What actually lands in your inbox.",
+    "sectionClasses": "block deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/docs/doc-rules.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Planning rule check — 13 standards, pass or breach",
+    "description": "Planning rule check — 13 standards, pass or breach",
+    "nearestHeading": "What actually lands in your inbox.",
+    "sectionClasses": "block deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/docs/doc-form.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Filled-in council application form (Form 9)",
+    "description": "Filled-in council application form (Form 9)",
+    "nearestHeading": "What actually lands in your inbox.",
+    "sectionClasses": "block deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/docs/doc-site.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Site plan drawn from your title polygon with setbacks marked",
+    "description": "Site plan drawn from your title polygon with setbacks marked",
+    "nearestHeading": "What actually lands in your inbox.",
+    "sectionClasses": "block deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/docs/doc-list.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Attachment checklist — ten items, what's done and what's left",
+    "description": "Attachment checklist — ten items, what's done and what's left",
+    "nearestHeading": "What actually lands in your inbox.",
+    "sectionClasses": "block deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/docs/doc-pack.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Your Google Drive pack — all seven docs ready to lodge",
+    "description": "Your Google Drive pack — all seven docs ready to lodge",
+    "nearestHeading": "What actually lands in your inbox.",
+    "sectionClasses": "block deep",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/nz-map.jpg",
+    "type": "Image",
+    "contexts": [
+      "img[src]"
+    ],
+    "notes": "Satellite map of New Zealand showing both islands",
+    "description": "Satellite map of New Zealand showing both islands",
+    "nearestHeading": "22 councils, wired in live.",
+    "sectionClasses": "block",
+    "aboveFold": false
+  },
+  {
+    "url": "https://consentmate.co.nz/favicon.svg",
+    "type": "Icon",
+    "contexts": [
+      "link[rel=\"icon\"]"
+    ],
+    "notes": null
+  },
+  {
+    "url": "https://consentmate.co.nz/assets/og-image.png",
+    "type": "Image",
+    "contexts": [
+      "meta[og:image]"
+    ],
+    "notes": null
+  }
+]

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stripe | Financial Infrastructure to Grow Your Revenue</title>
+
+<link rel="stylesheet" href="../design/cards.css">
+<link rel="stylesheet" href="../design/templates/warm-community.css">
+<link rel="stylesheet" href="../design/tokens-baseline-stripe.css">
+<link rel="stylesheet" href="../design/effects-batch-08.css">
+<link rel="stylesheet" href="../design/modules/all.css">
+
+<script src="../design/vendor/gsap.min.js"></script>
+<script src="../design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: var(--card-paper); font-family: var(--card-font-ui); }
+  .comp {
+    width: 1920px; height: 1080px;
+    position: relative; overflow: hidden;
+    background: var(--card-paper);
+    color: var(--card-navy);
+  }
+  .scene {
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 96px 120px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+  .scene__kicker {
+    font-family: var(--card-font-ui);
+    font-size: var(--card-kicker-size);
+    letter-spacing: var(--card-kicker-track);
+    text-transform: uppercase;
+    color: var(--card-accent);
+    margin-bottom: 32px;
+  }
+  .hero-title {
+    font-family: var(--card-font-display);
+    font-size: var(--card-title-size);
+    font-weight: var(--card-title-weight, 600);
+    letter-spacing: var(--card-title-track);
+    line-height: var(--card-title-line);
+    color: var(--card-navy);
+    max-width: 1600px;
+  }
+  .s2 { background: var(--card-accent); color: var(--card-paper); }
+  .s2 .hero-title { color: var(--card-paper); }
+  .s3-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 80px;
+    width: 100%; max-width: 1640px;
+  }
+  .s3-item {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    font-family: var(--card-font-display);
+    font-size: 56px; font-weight: 600;
+    color: var(--card-navy);
+  }
+</style>
+</head>
+<body>
+
+<div id="baseline-stripe" class="comp clip"
+     data-composition-id="baseline-stripe"
+     data-width="1920" data-height="1080"
+     data-start="0" data-duration="14" data-track-index="0">
+
+  <!-- Scene 1 (0–4s): hero -->
+  <div id="s1" class="scene s1 clip"
+       data-start="0" data-duration="4" data-track-index="1">
+    <div class="scene__kicker">BASELINE-STRIPE</div>
+    <div id="s1-title" class="hero-title">Financial infrastructure to grow your revenue. Accept paymen</div>
+  </div>
+
+  <!-- Scene 2 (4–9s): brand block + ambient sparkle -->
+  <div id="s2" class="scene s2 clip"
+       data-start="4" data-duration="5" data-track-index="1">
+    <div id="s2-glitter" class="s2-glitter-bg" style="position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;"></div>
+    <div style="position:relative;z-index:2;">
+      <div id="s2-title" class="hero-title">Stripe | Financial Infrastructure to Grow Your Revenue</div>
+    </div>
+  </div>
+
+  <!-- Scene 3 (9–14s): three-up -->
+  <div id="s3" class="scene s3 clip"
+       data-start="9" data-duration="5" data-track-index="1">
+    <div class="s3-grid">
+      <div id="s3a" class="s3-item">Financial</div>
+      <div id="s3b" class="s3-item">Flexible</div>
+      <div id="s3c" class="s3-item">infrastructure</div>
+    </div>
+  </div>
+</div>
+
+<!-- SVG filter defs (used by inkBleed + glitchBurst) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="fx-ink" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="7" />
+      <feDisplacementMap in="SourceGraphic" scale="0" />
+    </filter>
+    <filter id="fx-rgb-shift">
+      <feColorMatrix type="matrix" in="SourceGraphic" result="r"
+        values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feOffset in="r" dx="3" dy="0" result="r-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="b"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+      <feOffset in="b" dx="-3" dy="0" result="b-shift" />
+      <feColorMatrix type="matrix" in="SourceGraphic" result="g"
+        values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" />
+      <feBlend in="r-shift" in2="g" mode="screen" result="rg" />
+      <feBlend in="rg" in2="b-shift" mode="screen" />
+    </filter>
+  </defs>
+</svg>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["baseline-stripe"] = tl;
+
+  // Scene 1 — kicker + headline cascade
+  tl.fromTo("#s1 .scene__kicker", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, 0.4);
+  textFx.cascade(tl, "#s1-title", { at: 0.8, duration: 0.7, stagger: 0.08 });
+
+  // Scene 2 — brand block with ambient sparkle + ink-bleed reveal
+  glitterFx.ambient(tl, "#s2-glitter", { at: 4.0, duration: 5.0, count: 50, seed: 31 });
+  tl.fromTo("#s2-title", { scale: 0.96, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: "power3.out" }, 4.5);
+  effectFx.inkBleed(tl, "#s2-title", { at: 4.5, duration: 0.9, from: 60, to: 0 });
+
+  // Scene 3 — three-up stagger
+  tl.fromTo(["#s3a", "#s3b", "#s3c"],
+    { y: 40, opacity: 0 },
+    { y: 0, opacity: 1, duration: 0.7, stagger: 0.18, ease: "power3.out" },
+    9.2);
+  textFx.stagger(tl, "#s3a", { at: 9.6,  duration: 0.5, stagger: 0.04 });
+  textFx.stagger(tl, "#s3b", { at: 10.0, duration: 0.5, stagger: 0.04 });
+  textFx.stagger(tl, "#s3c", { at: 10.4, duration: 0.5, stagger: 0.04 });
+
+  // Standalone autoplay — only when loaded directly (not in studio/renderer iframe).
+  if (window === window.top) {
+    setTimeout(() => tl.play(0), 250);
+  }
+</script>
+</body>
+</html>
