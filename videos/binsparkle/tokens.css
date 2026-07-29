@@ -1,0 +1,41 @@
+/* Bin Sparkle design tokens
+ *
+ * Hand-set from the binsparkle.nz design system (landing-page/assets/cadastral.css)
+ * rather than scraped — the site's palette is already known and locked.
+ *
+ * Native brand vars (--leaf / --sunny / --cream) mirror the site exactly.
+ * The --card-* aliases map the brand onto the HyperFrames design system
+ * (cards.css / effects read --card-*), so shared modules inherit the look.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Native Bin Sparkle palette (exact, from cadastral.css) ── */
+  --cream:        #faf6ee;   /* page background */
+  --leaf:         #2f7a4d;   /* primary green */
+  --leaf-deep:    #1f5b38;   /* dark green (heads / footer) */
+  --leaf-soft:    #d8ecdd;   /* tint */
+  --leaf-line:    #a8d1b4;   /* hairline */
+  --sunny:        #f4b942;   /* yellow accent */
+  --sunny-soft:   #fce6b6;
+  --sunny-deep:   #c9941e;
+  --coral:        #c25a35;   /* alert / trial chip */
+  --ink:          #0d2218;   /* near-black green for body text */
+
+  /* ── Type ── */
+  --brand-display: "Bricolage Grotesque", "General Sans", sans-serif;
+  --brand-ui:      "Inter", system-ui, sans-serif;
+
+  /* ── HyperFrames design-system aliases (--card-*) ── */
+  --card-slate:        var(--cream);        /* canvas background */
+  --card-paper:        var(--sunny);        /* gold surface */
+  --card-paper-soft:   var(--sunny-soft);
+  --card-navy-deep:    var(--leaf-deep);    /* darkest text / heads */
+  --card-navy:         var(--leaf);         /* primary text / accent */
+  --card-accent:       var(--leaf);         /* accent */
+  --card-warn:         var(--sunny);        /* warm pop */
+  --card-font-display: var(--brand-display);
+  --card-font-ui:      var(--brand-ui);
+  --card-rule:         var(--leaf-line);
+}

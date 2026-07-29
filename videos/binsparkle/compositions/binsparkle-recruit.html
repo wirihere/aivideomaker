@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Recruit a cleaner</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="sym-check" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></g></symbol>
+  <symbol id="sym-drop" viewBox="0 0 24 24"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 12l.4 1 1 .4-1 .4-.4 1-.4-1-1-.4 1-.4z" fill="#f4b942"/></symbol>
+  <symbol id="sym-money" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="1"/><circle cx="12" cy="12" r="2.5"/></g></symbol>
+  <symbol id="sym-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+  <symbol id="sym-spark" viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#f4b942"/></symbol>
+  <symbol id="sym-hero" viewBox="0 0 480 360">
+    <circle cx="400" cy="70" r="38" fill="#f4b942" opacity="0.85"/>
+    <g stroke="#f4b942" stroke-width="3" stroke-linecap="round" opacity="0.65"><line x1="400" y1="14" x2="400" y2="24"/><line x1="400" y1="116" x2="400" y2="126"/><line x1="344" y1="70" x2="354" y2="70"/><line x1="446" y1="70" x2="456" y2="70"/><line x1="362" y1="32" x2="370" y2="40"/><line x1="430" y1="100" x2="438" y2="108"/><line x1="438" y1="32" x2="430" y2="40"/><line x1="370" y1="100" x2="362" y2="108"/></g>
+    <path d="M 0 280 Q 240 220, 480 280 L 480 360 L 0 360 Z" fill="#a8d1b4"/>
+    <path d="M 0 300 Q 240 250, 480 300 L 480 360 L 0 360 Z" fill="#7fb88f"/>
+    <g stroke="#1f5b38" stroke-width="1.6" stroke-linecap="round" opacity="0.55"><path d="M50 320 L52 312"/><path d="M90 318 L92 311"/><path d="M380 322 L382 314"/><path d="M430 318 L432 311"/><path d="M240 318 L242 310"/></g>
+    <g transform="translate(120,130)"><ellipse cx="55" cy="200" rx="56" ry="6" fill="#1b2d22" opacity="0.18"/><rect x="38" y="-2" width="34" height="6" rx="3" fill="#1b2d22"/><path d="M14 6 L96 6 Q100 6 100 10 L100 22 L10 22 L10 10 Q10 6 14 6 Z" fill="#e85a4f"/><rect x="18" y="9" width="74" height="3" rx="1.5" fill="#fff" opacity="0.4"/><path d="M16 24 Q16 24 18 24 L92 24 Q94 24 94 26 L96 192 Q96 196 92 196 L18 196 Q14 196 14 192 L16 26 Z" fill="#3d6347"/><circle cx="42" cy="100" r="3" fill="#1b2d22"/><circle cx="68" cy="100" r="3" fill="#1b2d22"/><path d="M42 118 Q55 128 68 118" stroke="#1b2d22" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="26" cy="200" r="11" fill="#1b2d22"/><circle cx="84" cy="200" r="11" fill="#1b2d22"/></g>
+    <g transform="translate(280,130)"><ellipse cx="55" cy="200" rx="56" ry="6" fill="#1b2d22" opacity="0.18"/><rect x="38" y="-2" width="34" height="6" rx="3" fill="#1b2d22"/><path d="M14 6 L96 6 Q100 6 100 10 L100 22 L10 22 L10 10 Q10 6 14 6 Z" fill="#f4b942"/><rect x="18" y="9" width="74" height="3" rx="1.5" fill="#fff" opacity="0.5"/><path d="M16 24 Q16 24 18 24 L92 24 Q94 24 94 26 L96 192 Q96 196 92 196 L18 196 Q14 196 14 192 L16 26 Z" fill="#3d6347"/><circle cx="42" cy="100" r="3" fill="#1b2d22"/><circle cx="68" cy="100" r="3" fill="#1b2d22"/><path d="M42 118 Q55 128 68 118" stroke="#1b2d22" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="26" cy="200" r="11" fill="#1b2d22"/><circle cx="84" cy="200" r="11" fill="#1b2d22"/></g>
+    <g fill="#fff" stroke="#2f7a4d" stroke-width="1.5"><circle cx="100" cy="80" r="14"/><circle cx="80" cy="120" r="9"/><circle cx="240" cy="50" r="10"/><circle cx="220" cy="90" r="6"/></g>
+    <g fill="#f4b942"><path d="M175 180 L178 188 L186 191 L178 194 L175 202 L172 194 L164 191 L172 188 Z"/><path d="M335 180 L338 188 L346 191 L338 194 L335 202 L332 194 L324 191 L332 188 Z"/></g>
+    <path d="M 30 50 Q 50 30, 70 50 T 110 50" stroke="#f08a5d" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+  </symbol>
+</defs></svg>
+
+<style>
+  body { margin: 0; background: var(--cream, #faf6ee); font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; color: var(--leaf-deep,#1f5b38);
+    background: radial-gradient(ellipse at 20% 8%, rgba(255,255,255,0.6) 0%, transparent 50%), var(--cream,#faf6ee); }
+  .spark-field { position: absolute; inset: 0; z-index: 40; pointer-events: none; }
+  .spark-field use { position: absolute; will-change: transform, opacity; }
+  .spark-field .a { left: 6%; top: 8%; width: 40px; } .spark-field .b { left: 88%; top: 14%; width: 30px; }
+  .spark-field .c { left: 10%; top: 60%; width: 26px; } .spark-field .d { left: 84%; top: 70%; width: 44px; }
+  .spark-field .e { left: 50%; top: 4%; width: 24px; }
+  .wordmark { position: absolute; top: 40px; left: 48px; z-index: 50; display: flex; align-items: center; gap: 10px;
+    font-family: var(--card-font-display); font-weight: 700; font-size: 26px; color: var(--leaf-deep,#1f5b38); }
+  .wordmark .dot { color: var(--sunny,#f4b942); }
+  .wordmark .mark { width: 30px; height: 30px; border-radius: 8px; background: var(--leaf,#2f7a4d); display: grid; place-items: center; color:#fff; font-size:16px; }
+
+  .scene { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 80px; box-sizing: border-box; }
+  .scene > * { position: relative; z-index: 2; }
+  .kicker { font-family: var(--card-font-ui); font-size: 24px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--sunny-deep,#c9941e); margin-bottom: 24px; }
+  .headline { font-family: var(--card-font-display); font-weight: 700; font-size: 92px; line-height: 1.03; letter-spacing: -0.03em; color: var(--leaf-deep,#1f5b38); margin: 0; }
+  .headline em { font-style: normal; color: var(--leaf,#2f7a4d); }
+  .line2 { font-family: var(--card-font-display); font-weight: 700; font-size: 78px; line-height: 1.05; color: var(--leaf,#2f7a4d); margin-top: 14px; }
+  .accent { font-family: var(--card-font-display); font-weight: 800; font-size: 150px; color: var(--sunny-deep,#c9941e); line-height: 1; letter-spacing: -0.03em; margin-top: 18px; }
+  .sub { font-family: var(--card-font-ui); font-size: 36px; font-weight: 500; line-height: 1.4; color: var(--leaf,#2f7a4d); margin-top: 28px; opacity: 0.92; }
+  .hero { width: 820px; height: auto; margin-bottom: 20px; }
+  .hero-sm { width: 320px; height: auto; margin-bottom: 16px; }
+
+  .split { display: flex; width: 880px; height: 96px; border-radius: 20px; overflow: hidden; margin-top: 34px; box-shadow: 0 8px 24px rgba(31,91,56,0.18); font-family: var(--card-font-display); font-weight: 700; }
+  .split .you { flex: 75; background: var(--sunny,#f4b942); color: var(--leaf-deep,#1f5b38); display: grid; place-items: center; font-size: 46px; }
+  .split .plat { flex: 25; background: var(--leaf-deep,#1f5b38); color: #fff; display: grid; place-items: center; font-size: 36px; }
+
+  .pills { display: flex; gap: 26px; margin-top: 44px; flex-wrap: wrap; justify-content: center; }
+  .pill { font-family: var(--card-font-display); font-weight: 700; font-size: 50px; background: #fff; border: 3px solid var(--leaf-line,#a8d1b4); color: var(--leaf-deep,#1f5b38); padding: 18px 44px; border-radius: 999px; box-shadow: 0 6px 0 var(--leaf-soft,#d8ecdd); }
+
+  .flow { display: flex; align-items: center; gap: 26px; margin-top: 44px; }
+  .flow .step { display: flex; flex-direction: column; align-items: center; gap: 14px; color: var(--leaf,#2f7a4d); width: 230px; }
+  .flow .step svg { width: 96px; height: 96px; }
+  .flow .step .cap { font-family: var(--card-font-ui); font-size: 27px; font-weight: 600; color: var(--leaf-deep,#1f5b38); }
+  .flow .arrow { font-size: 46px; color: var(--sunny,#f4b942); font-weight: 700; align-self: flex-start; margin-top: 24px; }
+
+  .clock-ic { width: 200px; height: 200px; color: var(--leaf,#2f7a4d); margin-bottom: 16px; }
+  .url { font-family: var(--card-font-ui); font-size: 34px; font-weight: 600; color: var(--leaf,#2f7a4d); margin-top: 22px; }
+</style>
+</head>
+<body>
+
+<div id="binsparkle-recruit" class="comp clip" data-composition-id="binsparkle-recruit"
+     data-width="1080" data-height="1920" data-start="0" data-duration="30" data-track-index="0">
+
+  <div class="spark-field clip" data-start="0" data-duration="30" data-track-index="3">
+    <use class="a" href="#sym-spark"/><use class="b" href="#sym-spark"/><use class="c" href="#sym-spark"/><use class="d" href="#sym-spark"/><use class="e" href="#sym-spark"/>
+  </div>
+  <div class="wordmark clip" data-start="0" data-duration="30" data-track-index="2">
+    <span class="mark">✦</span><span>bin sparkle<span class="dot">.</span></span>
+  </div>
+
+  <!-- S1: We find the customers / We handle the payments (0 -> 2.99) -->
+  <div id="s1" class="scene clip" data-start="0" data-duration="2.99" data-track-index="1">
+    <svg id="s1-hero" class="hero" viewBox="0 0 480 360"><use href="#sym-hero"/></svg>
+    <h1 id="s1-h" class="headline">We find the customers.</h1>
+    <div id="s1-l2" class="line2">We handle the payments.</div>
+  </div>
+
+  <!-- S2: You just clean / Keep 75% (3.01 -> 7.50) -->
+  <div id="s2" class="scene clip" data-start="3.01" data-duration="4.49" data-track-index="1">
+    <h1 id="s2-h" class="headline">You just clean.</h1>
+    <div id="s2-acc" class="accent">Keep 75%.</div>
+    <div id="s2-split" class="split"><div class="you">75% you</div><div class="plat">25%</div></div>
+  </div>
+
+  <!-- S3: Your jobs. Your rules. + 3 pills (7.52 -> 14.26) -->
+  <div id="s3" class="scene clip" data-start="7.52" data-duration="6.74" data-track-index="1">
+    <h1 id="s3-h" class="headline">Your jobs. <em>Your rules.</em></h1>
+    <div id="s3-pills" class="pills">
+      <span class="pill" id="p1">No bidding</span><span class="pill" id="p2">No boss</span><span class="pill" id="p3">No roster</span>
+    </div>
+  </div>
+
+  <!-- S4: Clean your way + flow (14.28 -> 20.65) -->
+  <div id="s4" class="scene clip" data-start="14.28" data-duration="6.37" data-track-index="1">
+    <h1 id="s4-h" class="headline">Clean <em>your way.</em></h1>
+    <div id="s4-flow" class="flow">
+      <div class="step" id="f1"><svg viewBox="0 0 24 24"><use href="#sym-drop"/></svg><span class="cap">Your way</span></div>
+      <span class="arrow">→</span>
+      <div class="step" id="f2"><svg viewBox="0 0 24 24"><use href="#sym-check"/></svg><span class="cap">We check it</span></div>
+      <span class="arrow">→</span>
+      <div class="step" id="f3"><svg viewBox="0 0 24 24"><use href="#sym-money"/></svg><span class="cap">Paid to bank</span></div>
+    </div>
+  </div>
+
+  <!-- S5: Round your day job + clock (20.67 -> 25.16) -->
+  <div id="s5" class="scene clip" data-start="20.67" data-duration="4.49" data-track-index="1">
+    <svg id="s5-clock" class="clock-ic" viewBox="0 0 24 24"><use href="#sym-clock"/></svg>
+    <h1 id="s5-h" class="headline">Round your <em>day job.</em></h1>
+    <p id="s5-sub" class="sub">Your hours. Your pace. Your business.</p>
+  </div>
+
+  <!-- S6: CTA (25.18 -> 30) -->
+  <div id="s6" class="scene clip" data-start="25.18" data-duration="4.82" data-track-index="1">
+    <svg id="s6-hero" class="hero-sm" viewBox="0 0 480 360"><use href="#sym-hero"/></svg>
+    <h1 id="s6-h" class="headline">Apply in <em>2 minutes.</em></h1>
+    <div id="s6-url" class="url">binsparkle.nz/contractor/apply</div>
+  </div>
+
+  <audio id="vo" class="clip" src="videos/binsparkle/voiceover/binsparkle-recruit-final.mp3"
+         data-start="0" data-duration="30" data-track-index="9" data-volume="0.97" data-audio="true" preload="auto"></audio>
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["binsparkle-recruit"] = tl;
+
+  document.querySelectorAll(".spark-field use").forEach((el, i) => {
+    tl.fromTo(el, { scale: 0.7, opacity: 0.15 }, { scale: 1.15, opacity: 0.7, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: 8, repeatDelay: 0.2 }, i * 0.5);
+  });
+  function pop(sel, at){ tl.fromTo(sel, { scale:0.5, opacity:0 }, { scale:1, opacity:1, duration:0.5, ease:"back.out(1.6)" }, at); }
+  function kick(sel, at){ tl.fromTo(sel, { y:16, opacity:0 }, { y:0, opacity:1, duration:0.5, ease:"power2.out" }, at); }
+
+  // S1
+  tl.fromTo("#s1-hero", { scale:0.6, opacity:0 }, { scale:1, opacity:1, duration:0.6, ease:"back.out(1.5)" }, 0.15);
+  textFx.cascade(tl, "#s1-h", { at:0.7, duration:0.6, stagger:0.05, ease:"power3.out" });
+  kick("#s1-l2", 1.4);
+
+  // S2
+  textFx.cascade(tl, "#s2-h", { at:3.3, duration:0.6, stagger:0.05, ease:"power3.out" });
+  pop("#s2-acc", 3.9);
+  tl.fromTo("#s2-split", { scaleX:0, opacity:0 }, { scaleX:1, opacity:1, duration:0.7, ease:"power3.out" }, 4.5);
+
+  // S3
+  textFx.cascade(tl, "#s3-h", { at:7.9, duration:0.7, stagger:0.06, ease:"power3.out" });
+  ["#p1","#p2","#p3"].forEach((s,i)=> pop(s, 8.7 + i*0.7));
+
+  // S4
+  textFx.cascade(tl, "#s4-h", { at:14.6, duration:0.6, stagger:0.06, ease:"power3.out" });
+  ["#f1","#f2","#f3"].forEach((s,i)=> pop(s, 15.3 + i*0.9));
+
+  // S5
+  pop("#s5-clock", 20.9);
+  textFx.cascade(tl, "#s5-h", { at:21.3, duration:0.7, stagger:0.06, ease:"power3.out" });
+  kick("#s5-sub", 22.2);
+
+  // S6
+  tl.fromTo("#s6-hero", { scale:0.5, opacity:0 }, { scale:1, opacity:1, duration:0.5, ease:"back.out(1.5)" }, 25.4);
+  textFx.cascade(tl, "#s6-h", { at:25.9, duration:0.6, stagger:0.06, ease:"power3.out" });
+  kick("#s6-url", 26.8);
+
+  tl.fromTo(".wordmark", { y:0 }, { y:-3, duration:4, ease:"sine.inOut", yoyo:true, repeat:6 }, 0);
+  if (window === window.top) { setTimeout(() => tl.play(0), 250); }
+</script>
+</body>
+</html>

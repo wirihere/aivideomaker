@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Get your bins cleaned</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<!-- Brand gradients, defined once and referenced by every copy of the mark.
+     Taken verbatim from binsparkle-mark.svg so the video and the site cannot
+     drift apart. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="bsTile" x1="0" y1="0" x2="0.55" y2="1">
+    <stop offset="0" stop-color="#3f9463"/><stop offset="1" stop-color="#1d5634"/>
+  </linearGradient>
+  <linearGradient id="bsSun" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#fdd479"/><stop offset="1" stop-color="#f4b942"/>
+  </linearGradient>
+</defs></svg>
+
+<style>
+  body { margin: 0; background: #0f2b1d; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #0f2b1d; }
+
+  /* ── Photo beats ── */
+  .scene { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+  .ph { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; will-change: transform; }
+  .scene::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgba(9,26,18,0.58) 0%, rgba(9,26,18,0) 26%),
+      linear-gradient(to top,    rgba(9,26,18,0.84) 0%, rgba(9,26,18,0.36) 26%, rgba(9,26,18,0) 48%); }
+  .cap { position: absolute; left: 72px; right: 72px; bottom: 190px; z-index: 3; }
+  .cap .k { font-size: 26px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+            color: #f4b942; margin: 0 0 18px; }
+  .cap .h { font-family: var(--card-font-display); font-weight: 800; font-size: 104px; line-height: 0.98;
+            letter-spacing: -0.035em; color: #fff; margin: 0; text-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+  .cap .h em { font-style: normal; color: #f4b942; }
+
+  /* Corner lockup — the real mark, not a stand-in glyph. */
+  .wordmark { position: absolute; top: 52px; left: 68px; z-index: 60; display: flex; align-items: center; gap: 16px; }
+  .wordmark svg { width: 62px; height: 62px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.45)); }
+  .wordmark span { font-family: var(--card-font-display); font-weight: 800; font-size: 38px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  /* ── Intro / outro brand cards ── */
+  .brandcard { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 38%, rgba(63,148,99,0.42) 0%, rgba(15,43,29,0) 70%),
+      linear-gradient(160deg, #1d5634 0%, #0f2b1d 60%, #0b2117 100%); }
+  .bigmark { width: 470px; height: 470px; }
+  .brandtype { font-family: var(--card-font-display); font-weight: 800; font-size: 116px;
+    letter-spacing: -0.04em; color: #faf6ee; margin: 34px 0 0; }
+  .brandtype i { font-style: normal; color: #f4b942; }
+  .tagline { font-size: 38px; font-weight: 600; color: #bfdcc9; margin-top: 14px; letter-spacing: 0.01em; }
+  .oPrice { font-family: var(--card-font-display); font-weight: 800; font-size: 150px; color: #f4b942;
+    line-height: 1; margin: 26px 0 0; letter-spacing: -0.03em; }
+  .oPriceSub { font-size: 36px; font-weight: 600; color: #cfe4d6; margin-top: 4px; }
+  .oUrl { font-size: 46px; font-weight: 700; color: #0f2b1d; margin-top: 46px;
+    padding: 22px 52px; border-radius: 999px; background: #f4b942; }
+
+  /* Loose sparkles that drift over the brand cards. */
+  .field { position: absolute; inset: 0; pointer-events: none; }
+  .field i { position: absolute; display: block; width: 26px; height: 26px; opacity: 0; }
+  .field i svg { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+
+<!-- The composition id must match the timeline key at the bottom of this file,
+     and the dimensions must be declared here, or the runtime never drives clip
+     visibility and every scene renders stacked. Run hyperframes lint before
+     each render. Keep attribute-shaped examples out of comments - the linter
+     scans comment text too and reads them as real declarations. -->
+<div class="comp" id="comp"
+     data-composition-id="binsparkle-customer"
+     data-width="1080" data-height="1920"
+     data-start="0" data-duration="22.0" data-track-index="0">
+
+  <!-- ══ INTRO 0.00 → 2.20 ══ -->
+  <div id="intro" class="brandcard clip" data-start="0" data-duration="2.20" data-track-index="1">
+    <div class="field" id="i-field">
+      <i style="left:14%;top:20%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#f4b942"/></svg></i>
+      <i style="left:80%;top:26%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#fdd479"/></svg></i>
+      <i style="left:22%;top:70%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#f4b942"/></svg></i>
+      <i style="left:76%;top:74%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#fdd479"/></svg></i>
+    </div>
+
+    <svg class="bigmark" id="i-mark" viewBox="0 0 64 64">
+      <rect id="i-tile" width="64" height="64" rx="19" fill="url(#bsTile)"/>
+      <path id="i-gloss" d="M0 19 A19 19 0 0 1 19 0 H45 A19 19 0 0 1 64 19 V27 C48 34 16 34 0 27 Z" fill="#ffffff" opacity="0.07"/>
+      <g id="i-bin" transform="rotate(-8 29.5 34)">
+        <rect id="i-handle" x="24.3" y="13.0" width="10.4" height="5.8" rx="2.9" fill="#ffffff" opacity="0.5"/>
+        <rect id="i-lid" x="13.6" y="17.4" width="32.8" height="6.3" rx="3.15" fill="#ffffff"/>
+        <path id="i-body" d="M16.5 25.6 H42.5 a1.7 1.7 0 0 1 1.69 1.87 L42.24 45.3 a4.2 4.2 0 0 1 -4.18 3.8 H20.94 A4.2 4.2 0 0 1 16.76 45.3 L14.81 27.47 A1.7 1.7 0 0 1 16.5 25.6 Z" fill="#ffffff"/>
+        <path class="i-rib" d="M23.1 30.2 L22.1 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+        <path class="i-rib" d="M29.5 30.2 L29.5 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+        <path class="i-rib" d="M35.9 30.2 L36.9 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+      </g>
+      <path id="i-sp1" d="M50.40,6.20C50.95,11.08 52.92,13.04 57.80,13.60C52.92,14.15 50.95,16.12 50.40,21.00C49.84,16.12 47.88,14.15 43.00,13.60C47.88,13.04 49.84,11.08 50.40,6.20Z" fill="url(#bsSun)"/>
+      <path id="i-sp2" d="M56.40,20.80C56.67,23.18 57.62,24.13 60.00,24.40C57.62,24.67 56.67,25.62 56.40,28.00C56.13,25.62 55.18,24.67 52.80,24.40C55.18,24.13 56.13,23.18 56.40,20.80Z" fill="#f4b942"/>
+      <path id="i-sp3" d="M43.60,6.00C43.78,7.58 44.42,8.22 46.00,8.40C44.42,8.58 43.78,9.22 43.60,10.80C43.42,9.22 42.78,8.58 41.20,8.40C42.78,8.22 43.42,7.58 43.60,6.00Z" fill="#f4b942" opacity="0.9"/>
+    </svg>
+
+    <h1 class="brandtype" id="i-type">Bin Sparkle<i>.</i></h1>
+    <p class="tagline" id="i-tag">Your bins, properly clean.</p>
+  </div>
+
+  <!-- ══ PHOTO BEATS 2.20 → 21.30 ══ -->
+  <div id="s1" class="scene clip" data-start="2.20" data-duration="1.398" data-track-index="1">
+    <img id="s1-ph" class="ph" src="videos/binsparkle/assets/01_dirty.png" alt="">
+    <div class="cap"><h1 id="s1-h" class="h">Stinky bins.</h1></div>
+  </div>
+
+  <div id="s2" class="scene clip" data-start="3.60" data-duration="1.318" data-track-index="1">
+    <img id="s2-ph" class="ph" src="videos/binsparkle/assets/02_smell.png" alt="">
+    <div class="cap"><h1 id="s2-h" class="h">Bin Sparkle <em>sorts it.</em></h1></div>
+  </div>
+
+  <div id="s3" class="scene clip" data-start="4.92" data-duration="2.038" data-track-index="1">
+    <img id="s3-ph" class="ph" src="videos/binsparkle/assets/03_book.png" alt="">
+    <div class="cap"><h1 id="s3-h" class="h">Book online in <em>60 seconds.</em></h1></div>
+  </div>
+
+  <div id="s4" class="scene clip" data-start="6.96" data-duration="2.678" data-track-index="1">
+    <img id="s4-ph" class="ph" src="videos/binsparkle/assets/07_end.png" alt="">
+    <div class="cap"><p id="s4-k" class="k">A local contractor</p><h1 id="s4-h" class="h">Comes to <em>your kerb.</em></h1></div>
+  </div>
+
+  <div id="s5" class="scene clip" data-start="9.64" data-duration="3.418" data-track-index="1">
+    <img id="s5-ph" class="ph" src="videos/binsparkle/assets/04_scrub.png" alt="">
+    <div class="cap"><h1 id="s5-h" class="h">A proper clean, <em>inside and out.</em></h1></div>
+  </div>
+
+  <div id="s6" class="scene clip" data-start="13.06" data-duration="2.158" data-track-index="1">
+    <img id="s6-ph" class="ph" src="videos/binsparkle/assets/05_fresh.png" alt="">
+    <div class="cap"><p id="s6-k" class="k">One-off cleans</p><h1 id="s6-h" class="h">From <em>$25.</em></h1></div>
+  </div>
+
+  <div id="s7" class="scene clip" data-start="15.22" data-duration="2.998" data-track-index="1">
+    <img id="s7-ph" class="ph" src="videos/binsparkle/assets/06_photos.png" alt="">
+    <div class="cap"><p id="s7-k" class="k">Or go monthly</p><h1 id="s7-h" class="h">Never think about <em>it again.</em></h1></div>
+  </div>
+
+  <!-- Corner lockup rides the photo beats only; the brand cards carry their own. -->
+  <div class="wordmark clip" id="wm" data-start="2.20" data-duration="16.00" data-track-index="2">
+    <svg viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="19" fill="url(#bsTile)"/>
+      <path d="M0 19 A19 19 0 0 1 19 0 H45 A19 19 0 0 1 64 19 V27 C48 34 16 34 0 27 Z" fill="#ffffff" opacity="0.07"/>
+      <g transform="rotate(-8 29.5 34)">
+        <rect x="24.3" y="13.0" width="10.4" height="5.8" rx="2.9" fill="#ffffff" opacity="0.5"/>
+        <rect x="13.6" y="17.4" width="32.8" height="6.3" rx="3.15" fill="#ffffff"/>
+        <path d="M16.5 25.6 H42.5 a1.7 1.7 0 0 1 1.69 1.87 L42.24 45.3 a4.2 4.2 0 0 1 -4.18 3.8 H20.94 A4.2 4.2 0 0 1 16.76 45.3 L14.81 27.47 A1.7 1.7 0 0 1 16.5 25.6 Z" fill="#ffffff"/>
+      </g>
+      <path id="wm-sp" d="M50.40,6.20C50.95,11.08 52.92,13.04 57.80,13.60C52.92,14.15 50.95,16.12 50.40,21.00C49.84,16.12 47.88,14.15 43.00,13.60C47.88,13.04 49.84,11.08 50.40,6.20Z" fill="url(#bsSun)"/>
+      <path d="M56.40,20.80C56.67,23.18 57.62,24.13 60.00,24.40C57.62,24.67 56.67,25.62 56.40,28.00C56.13,25.62 55.18,24.67 52.80,24.40C55.18,24.13 56.13,23.18 56.40,20.80Z" fill="#f4b942"/>
+    </svg>
+    <span>Bin Sparkle<i>.</i></span>
+  </div>
+
+  <!-- ══ OUTRO 21.30 → 24.50 ══ -->
+  <div id="outro" class="brandcard clip" data-start="18.22" data-duration="3.78" data-track-index="1">
+    <div class="field" id="o-field">
+      <i style="left:12%;top:16%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#f4b942"/></svg></i>
+      <i style="left:84%;top:22%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#fdd479"/></svg></i>
+      <i style="left:18%;top:78%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#fdd479"/></svg></i>
+      <i style="left:82%;top:82%"><svg viewBox="0 0 24 24"><path d="M12 2l1.8 7.2L21 12l-7.2 1.8L12 21l-1.8-7.2L3 12l7.2-1.8z" fill="#f4b942"/></svg></i>
+    </div>
+
+    <svg class="bigmark" id="o-mark" viewBox="0 0 64 64" style="width:300px;height:300px">
+      <rect id="o-tile" width="64" height="64" rx="19" fill="url(#bsTile)"/>
+      <path d="M0 19 A19 19 0 0 1 19 0 H45 A19 19 0 0 1 64 19 V27 C48 34 16 34 0 27 Z" fill="#ffffff" opacity="0.07"/>
+      <g id="o-bin" transform="rotate(-8 29.5 34)">
+        <rect x="24.3" y="13.0" width="10.4" height="5.8" rx="2.9" fill="#ffffff" opacity="0.5"/>
+        <rect id="o-lid" x="13.6" y="17.4" width="32.8" height="6.3" rx="3.15" fill="#ffffff"/>
+        <path d="M16.5 25.6 H42.5 a1.7 1.7 0 0 1 1.69 1.87 L42.24 45.3 a4.2 4.2 0 0 1 -4.18 3.8 H20.94 A4.2 4.2 0 0 1 16.76 45.3 L14.81 27.47 A1.7 1.7 0 0 1 16.5 25.6 Z" fill="#ffffff"/>
+        <path d="M23.1 30.2 L22.1 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+        <path d="M29.5 30.2 L29.5 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+        <path d="M35.9 30.2 L36.9 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+      </g>
+      <path id="o-sp1" d="M50.40,6.20C50.95,11.08 52.92,13.04 57.80,13.60C52.92,14.15 50.95,16.12 50.40,21.00C49.84,16.12 47.88,14.15 43.00,13.60C47.88,13.04 49.84,11.08 50.40,6.20Z" fill="url(#bsSun)"/>
+      <path id="o-sp2" d="M56.40,20.80C56.67,23.18 57.62,24.13 60.00,24.40C57.62,24.67 56.67,25.62 56.40,28.00C56.13,25.62 55.18,24.67 52.80,24.40C55.18,24.13 56.13,23.18 56.40,20.80Z" fill="#f4b942"/>
+      <path id="o-sp3" d="M43.60,6.00C43.78,7.58 44.42,8.22 46.00,8.40C44.42,8.58 43.78,9.22 43.60,10.80C43.42,9.22 42.78,8.58 41.20,8.40C42.78,8.22 43.42,7.58 43.60,6.00Z" fill="#f4b942" opacity="0.9"/>
+    </svg>
+
+    <h1 class="brandtype" id="o-type" style="font-size:96px">Bin Sparkle<i>.</i></h1>
+    <div class="oPrice" id="o-price">$25</div>
+    <div class="oPriceSub" id="o-psub">for one bin</div>
+    <div class="oUrl" id="o-url">binsparkle.nz</div>
+  </div>
+
+  <audio id="vo" class="clip" src="videos/binsparkle/voiceover/customer-final.mp3"
+         data-start="0" data-duration="24.5" data-track-index="9"
+         data-volume="1.0" data-audio="true" preload="auto"></audio>
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines["binsparkle-customer"] = tl;
+
+  // ── INTRO: the mark builds itself ─────────────────────────────
+  // The bin drops in, the lid flips like it has been emptied, and the three
+  // sparkles land one after another. Built from the real logo paths, so the
+  // thing that assembles on screen IS the brand mark, not an imitation.
+  tl.fromTo("#i-mark", { scale: 0.72, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "power2.out" }, 0.0);
+  tl.fromTo("#i-tile", { scale: 0.2, transformOrigin: "50% 50%" },
+                       { scale: 1, duration: 0.62, ease: "back.out(1.7)" }, 0.0);
+  tl.fromTo("#i-gloss", { opacity: 0 }, { opacity: 0.07, duration: 0.4 }, 0.45);
+
+  // bin body drops from above the tile and settles
+  tl.fromTo("#i-bin", { y: -34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.75, ease: "elastic.out(1, 0.62)" }, 0.34);
+
+  // lid flips open on its hinge, then shuts with a bounce
+  tl.fromTo("#i-lid", { rotation: 0, svgOrigin: "15.5 20.5" },
+                      { rotation: -58, duration: 0.26, ease: "power2.out" }, 0.72);
+  tl.to("#i-lid", { rotation: 0, duration: 0.42, ease: "bounce.out" }, 0.98);
+
+  // ribs draw on
+  tl.fromTo(".i-rib", { strokeDasharray: 16, strokeDashoffset: 16, opacity: 0 },
+                      { strokeDashoffset: 0, opacity: 0.22, duration: 0.4, stagger: 0.07, ease: "power2.out" }, 0.86);
+
+  // sparkles land in size order, each with a spin
+  [["#i-sp1", 1.02], ["#i-sp3", 1.16], ["#i-sp2", 1.28]].forEach(([sel, at]) => {
+    tl.fromTo(sel, { scale: 0, rotation: -120, transformOrigin: "50% 50%", opacity: 0 },
+                   { scale: 1, rotation: 0, opacity: 1, duration: 0.5, ease: "back.out(2.4)" }, at);
+  });
+  // ...then twinkle
+  tl.to("#i-sp1", { scale: 1.16, duration: 0.34, yoyo: true, repeat: 2, transformOrigin: "50% 50%", ease: "sine.inOut" }, 1.5);
+  tl.to("#i-sp2", { scale: 1.22, duration: 0.3,  yoyo: true, repeat: 2, transformOrigin: "50% 50%", ease: "sine.inOut" }, 1.62);
+
+  textFx.cascade(tl, "#i-type", { at: 1.16, duration: 0.55, stagger: 0.045, ease: "power3.out" });
+  tl.fromTo("#i-tag", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power2.out" }, 1.5);
+
+  tl.fromTo("#i-field i", { scale: 0.3, opacity: 0, rotation: -60 },
+    { scale: 1, opacity: 0.85, rotation: 0, duration: 0.7, stagger: 0.09, ease: "back.out(2)" }, 0.55);
+  tl.to("#i-field i", { y: -18, duration: 1.0, stagger: 0.06, ease: "sine.inOut" }, 1.40);
+
+  // hand off to the photos
+  tl.to(["#i-mark", "#i-type", "#i-tag", "#i-field"], { opacity: 0, duration: 0.22, ease: "power2.in" }, 1.96);
+
+  // ── PHOTO BEATS ───────────────────────────────────────────────
+  const SHOTS = [
+    ["#s1-ph",  2.20, 1.40, 1.00, 1.07],
+    ["#s2-ph",  3.60, 1.32, 1.07, 1.00],
+    ["#s3-ph",  4.92, 2.04, 1.00, 1.06],
+    ["#s4-ph",  6.96, 2.68, 1.06, 1.00],
+    ["#s5-ph",  9.64, 3.42, 1.00, 1.08],
+    ["#s6-ph", 13.06, 2.16, 1.05, 1.00],
+    ["#s7-ph", 15.22, 3.00, 1.00, 1.07],
+  ];
+  SHOTS.forEach(([sel, at, dur, from, to]) => {
+    tl.fromTo(sel, { scale: from }, { scale: to, duration: dur, ease: "none" }, at);
+  });
+
+  function rise(sel, at){ tl.fromTo(sel, { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, at); }
+  function pop(sel, at){ tl.fromTo(sel, { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.7)" }, at); }
+
+  textFx.cascade(tl, "#s1-h", { at: 2.38, duration: 0.42, stagger: 0.05, ease: "power3.out" });
+  textFx.cascade(tl, "#s2-h", { at: 3.78, duration: 0.42, stagger: 0.045, ease: "power3.out" });
+  textFx.cascade(tl, "#s3-h", { at: 5.10, duration: 0.48, stagger: 0.045, ease: "power3.out" });
+  rise("#s4-k", 7.14); textFx.cascade(tl, "#s4-h", { at: 7.36, duration: 0.48, stagger: 0.045, ease: "power3.out" });
+  textFx.cascade(tl, "#s5-h", { at: 9.84, duration: 0.52, stagger: 0.045, ease: "power3.out" });
+  rise("#s6-k", 13.24); textFx.cascade(tl, "#s6-h", { at: 13.46, duration: 0.45, stagger: 0.045, ease: "power3.out" });
+  rise("#s7-k", 15.40); textFx.cascade(tl, "#s7-h", { at: 15.62, duration: 0.48, stagger: 0.045, ease: "power3.out" });
+
+  // corner lockup fades in with the first photo, sparkle keeps ticking
+  tl.fromTo("#wm", { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.5, ease: "power2.out" }, 2.25);
+  tl.to("#wm-sp", { scale: 1.2, transformOrigin: "50% 50%", duration: 0.55, yoyo: true, repeat: 10, ease: "sine.inOut" }, 3.0);
+
+  // ── OUTRO: the mark returns and the sparkles burst ────────────
+  tl.fromTo("#o-mark", { scale: 0.45, opacity: 0, rotation: -10 },
+                       { scale: 1, opacity: 1, rotation: 0, duration: 0.62, ease: "back.out(1.8)" }, 18.28);
+  tl.fromTo("#o-bin", { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "elastic.out(1, 0.65)" }, 18.47);
+  tl.fromTo("#o-lid", { rotation: 0, svgOrigin: "15.5 20.5" }, { rotation: -50, duration: 0.22, ease: "power2.out" }, 18.78);
+  tl.to("#o-lid", { rotation: 0, duration: 0.38, ease: "bounce.out" }, 19.00);
+
+  [["#o-sp1", 18.78], ["#o-sp3", 18.90], ["#o-sp2", 19.00]].forEach(([sel, at]) => {
+    tl.fromTo(sel, { scale: 0, rotation: -140, transformOrigin: "50% 50%", opacity: 0 },
+                   { scale: 1, rotation: 0, opacity: 1, duration: 0.5, ease: "back.out(2.6)" }, at);
+  });
+  tl.to("#o-sp1", { scale: 1.2, duration: 0.4, yoyo: true, repeat: 3, transformOrigin: "50% 50%", ease: "sine.inOut" }, 19.42);
+
+  textFx.cascade(tl, "#o-type", { at: 19.02, duration: 0.5, stagger: 0.045, ease: "power3.out" });
+  pop("#o-price", 19.40);
+  rise("#o-psub", 19.64);
+  rise("#o-url", 19.92);
+
+  tl.fromTo("#o-field i", { scale: 0.2, opacity: 0 },
+    { scale: 1, opacity: 0.9, duration: 0.6, stagger: 0.08, ease: "back.out(2.2)" }, 18.82);
+  tl.to("#o-field i", { y: -22, rotation: 20, duration: 1.6, stagger: 0.07, ease: "sine.inOut" }, 19.52);
+
+  if (window === window.top) { setTimeout(() => tl.play(0), 250); }
+</script>
+</body>
+</html>

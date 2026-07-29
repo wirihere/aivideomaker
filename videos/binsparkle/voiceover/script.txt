@@ -1,0 +1,13 @@
+Here's how Bin Sparkle works. A customer in your suburb books a clean. The job pops up on your dashboard. First cleaner to claim it gets it. You do the clean, snap a before and after photo, and tap done. We pay you your share. That's the whole loop.
+
+All we ask is the result. The bin clean, inside, outside, the lid and the wheels. Smelling fresh at the end. A before and after photo so we know it's done. And the bin back where you found it. How you get there is entirely up to you.
+
+The moment a job lands in one of your suburbs, you get an email. You sign in with a one-tap magic link. No password. See it, claim it, done.
+
+Before we pay out, we look at your before and after photos. That's it. We're checking the bin's clean, not how you cleaned it. Your method, your gear, your call.
+
+You keep seventy-five percent of every job. We keep twenty-five for the platform. Stripe fees, the website, the alerts. When you mark a job done and the photos check out, Stripe sends your share to your bank, usually within a few working days.
+
+You're an independent contractor, not an employee. You pick which jobs to take, when to work, and how to do them. You can clean for other people too. No exclusivity, ever.
+
+Three things to get going. Sign the agreement. Set up Stripe so we can pay you. Then claim your first job. We'll look at that one closely, then it's business as usual. Welcome to Bin Sparkle.
