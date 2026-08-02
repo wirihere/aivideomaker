@@ -96,12 +96,23 @@ Postiz/library machine when needed.
 ## 5. What's been posted
 
 **Ledger:** [`posts.md`](posts.md) — one row per live post, updated whenever
-something goes live.
+something goes live. **The Postiz Postgres DB on the VPS is the source of
+truth, not this file** — re-query it to verify (the query is in posts.md).
 
-| Status | Where | What | Verified |
+**4 carousel posts + 1 test post, all published 2026-08-02/03 NZST.** Each
+carousel has 5 images. Verified against Postiz 2026-08-03:
+
+| Channel | Format | Count | Copy angle |
 |---|---|---|---|
-| ✅ confirmed | Local Client Finder (FB), via Postiz | **Test text post** ("Test post — please disregard"). Post id fragment `…1307860914890937`. | 2026-08-02 (recorded in CLAUDE.md + `automation-template/postiz.md`) |
-| ⚠️ unverified | Local Client Finder (FB), via Postiz | **A carousel**, per the user. No record found in any repo, no post id captured. If posted via the Postiz web UI directly, the record lives only in the Postiz Postgres DB on the VPS (`postiz.srv1788347.hstgr.cloud`) — unreachable from a dev session. **Open:** get the post URL or date from the user, or SSH the VPS to confirm. | 2026-08-03 (gap flagged) |
+| Local Client Finder (FB) | text | 1 | Test post (the API-e2e check) |
+| Local Client Finder (FB) | carousel × 5 imgs | 2 | Recruit ("side hustle, 75% yours") + How-it-works ("here's how it works end to end") — both link to `/contractor/apply?ref=lcf` |
+| Local Client Finder (FB) | carousel × 5 imgs | 1 | Customer ("if your bin is the one the neighbours dread") — links to `binsparkle.nz?ref=lcf` |
+| Bin Sparkle (FB page `1011356651724878`) | carousel × 5 imgs | 1 | Customer ("if opening your bin makes you gag") — links to `binsparkle.nz` |
+
+**Carousel images are on the Postiz VPS** under
+`https://postiz.srv1178347.hstgr.cloud/uploads/2026/08/02/*.png` — not in
+this repo. Pull them down with a query to the `image` column if reuse is
+needed.
 
 **Posting mechanism:** documented in `automation-template/postiz.md` (Public
 API recipe, run live on the VPS). Known channels: Bin Sparkle (FB),

@@ -27,21 +27,20 @@ manifest, asset catalogue, posts ledger, and all scripts are here under
 ### What got built this session (2026-08-03)
 - **Project manifest** at `videos/binsparkle/MANIFEST.md` — the one file a fresh session reads.
 - **Asset catalogue** at `videos/binsparkle/assets/asset-catalogue.{json,md}` — all 14 images vision-described (subject, mood, colours, alt text, suggested uses). Refresh with `npm run describe:assets -- --dir=videos/binsparkle/assets`.
-- **Posts ledger** at `videos/binsparkle/posts.md` — one row per live post. Currently holds the test post + an unverified carousel entry.
+- **Posts ledger** at `videos/binsparkle/posts.md` — populated from the Postiz Postgres DB. Found **4 carousel posts + 1 test post** the prior session made on 2026-08-02 and never recorded. The query to re-verify is in the ledger.
 - **`describe:assets` command** (`scripts/describe-assets.mjs`) — reusable vision-describer for any folder, cost-capped.
 
 ### The next job — three funny stories
 1. **Make 3 stories (9:16, 1080×1920) using the existing image set** — the
-   `clean-*` and/or `0X_*` images. Funny tone. Pick images from the catalogue's
-   `good_for` column.
-2. **Bump the text size slightly on the existing carousel slides** for mobile
-   readability (the user's only feedback on the current carousel).
-3. **Resolve the posting gap** — the user says a carousel was posted to LCF via
-   Postiz, but no record exists in any repo. Get the post URL or date from the
-   user (or check the Postiz DB on the VPS), then record it in `posts.md`.
+   `clean-*` and/or `0X_*` images, or the carousel slides already on Postiz.
+   Funny tone. Pick images from the catalogue's `good_for` column.
+2. **Bump the text size slightly on the carousel slides** for mobile
+   readability (the user's feedback on the 4 carousels posted 2026-08-02).
+   The slide images live on the Postiz VPS — pull them down if the source
+   template isn't in this repo.
 
-Defer until needed: the `render:carousel` engine (a second carousel isn't queued),
-the Full Care image set, the customer-ad re-record.
+Defer until needed: the `render:carousel` engine (the 4 carousels were made
+without it), the Full Care image set, the customer-ad re-record.
 
 ### Discipline
 Cheapest Runware tier that works; escalate only on borderline; every call under
