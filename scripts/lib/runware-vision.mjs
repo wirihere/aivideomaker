@@ -90,6 +90,11 @@ function recordSpend(cost) {
   try { fs.writeFileSync(USAGE_FILE, JSON.stringify(all, null, 2)); } catch {}
 }
 
+// Exported for any Runware call site (vision, audio, …) so the daily-cap guard
+// covers ALL spend, not just vision. Additive — vision judge() still uses these
+// internally; other modules import them rather than reimplementing.
+export { assertWithinCap, recordSpend };
+
 // CLI: `node scripts/lib/runware-vision.mjs usage` — print today's spend vs cap.
 if (process.argv[1] && process.argv[1].replace(/\\/g, "/").endsWith("scripts/lib/runware-vision.mjs") && process.argv[2] === "usage") {
   const { spend, calls, cap, remaining } = todaySummary();

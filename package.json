@@ -33,6 +33,7 @@
     "judge:still": "node scripts/judge-still.mjs",
     "judge:video": "node scripts/judge-video.mjs",
     "runware:usage": "node scripts/lib/runware-vision.mjs usage",
+    "runware:models": "node scripts/lib/runware-models.mjs",
     "render:vite": "node scripts/render-vite.mjs",
     "render:queue": "node scripts/render-queue.mjs",
     "video": "node scripts/video.mjs",
