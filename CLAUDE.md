@@ -1,82 +1,73 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-02, end of the Runware-pipeline session
+## ▶ Start here — written 2026-08-02, consolidation decision
 
-Say "let's go" and this session does the next job below. Everything below
-this block is stable project rules; this block is the current briefing —
-replace it wholesale next session, never keep a second.
+Say "let's go" and this session does the next job below. Everything below this
+block is stable project rules; this block is the current briefing — replace it
+wholesale next session, never keep a second.
 
-**Verify before you trust this.** Repo state verified at handoff
-(`git rev-parse HEAD` ↔ `origin/main`). Runware model facts verified
-live on 2026-08-02 — see `docs/runware-models.md` and `docs/voices.md`
-for the per-entry `verified` dates. Pricing was right at probe time;
-re-run `npm run runware:models` to confirm nothing moved.
+**Verify before you trust this.** Runware facts were verified live by the prior
+session (2026-08-02) — see the per-entry `verified` dates in `docs/runware-models.md`
+and `docs/voices.md`; re-run `npm run runware:models` to confirm pricing hasn't
+moved. The "Local Client Finder is on Postiz" fact was verified live by an
+earlier session (a test post landed, id `…1307860914890937`). Repo heads: verify
+with `git rev-parse HEAD` ↔ `origin/main`.
 
-### Where things stand (verified 2026-08-02, end of session)
-- Repo on `main` @ `e3c3b21`, pushed (local + remote heads match). Dev
-  repo, nothing deployed live, nothing cron'd.
-- **Full Runware pipeline built and tested end-to-end.** Audio (TTS +
-  music), text (script generation), image-gen, vision judging — all
-  wired, all cost-guarded by `RUNWARE_DAILY_CAP` ($2 default). Spend
-  today: $0.59 across 50 calls.
-- **Two BinSparkle videos shipped** (renders local-only under
-  `renders/binsparkle/`): the Full Care reference (`SCRIPT-fullcare.md`,
-  Luna voice — known sultry, not the recommended pick) and the
-  clean-ad (`SCRIPT` lives at `videos/binsparkle/compositions/binsparkle-clean.html`,
-  Aoede voice — **this is the good one**).
-- **Opencode permissions widened globally** — `~/.config/opencode/opencode.json`
-  now has `external_directory: { "*": "allow" }`. Takes effect on next
-  opencode restart. Removes the cross-folder prompts that were blocking
-  multi-repo work (e.g. reading automation-template, bin-sparkle-social).
+### The architecture decision (NEW — overrides the prior multi-folder plan)
+**Everything content lives in THIS repo (aivideomaker). One spot.** Carousel
+engine, post files, posting — all here. The user wants no folder-hopping.
+- **`bin-sparkle-social` is NOT used.** The prior session's
+  `docs/social-media-pipeline.md` proposed it as a "distributor" layer — **that
+  doc is now obsolete**; correct it to this one-repo model or move it to `_archive/`.
+- **`bin-sparkle` (the live website repo) is NOT touched** for content — the
+  brand kit was already copied into `videos/binsparkle/assets/brand/`.
+- **The cron (`autonomous-runner`) stays separate** — a reusable timer, not daily
+  work. Wire it up only when unattended runs are wanted. Out of scope for now.
 
-### What to read, in order
-1. `docs/skills/how-a-video-gets-made.md` — the canonical 10-stage flow
-   (unchanged). Stage 3 (Copywriting) is still the highest-leverage stage.
-2. `docs/runware-models.md` — the full model catalogue with verified AIR
-   ids, prices, and the per-modality ladders.
-3. `docs/playbooks/script-and-copy.md` — model-selection playbook for
-   scripts + image captions. 8 models probed; **Anthropic dominates**.
-4. `docs/voices.md` — TTS voice selection. **Locked:** Aoede (Gemini 3.1
-   Flash TTS) with `language: en-AU` + transcript tags for warm-community.
-5. `docs/social-media-pipeline.md` — the architecture for how assets flow
-   from this repo into `bin-sparkle-social/social/` and out to platforms.
+### Already built + working (verified by prior session, 2026-08-02)
+- **Full Runware pipeline** — audio (TTS + music), text (scripts), image-gen,
+  vision judging; cost-guarded (`RUNWARE_DAILY_CAP`, $2 default). Catalogue in
+  `docs/runware-models.md`; voices in `docs/voices.md`; scripts in `docs/playbooks/script-and-copy.md`.
+- **Two BinSparkle videos** rendered (local, `renders/binsparkle/`): Full Care
+  (Luna voice — not the pick) and **clean-ad `binsparkle-clean.html`, Aoede voice
+  — the good one**.
+- **Vision judge + cost guard + still renderer** (earlier session): `judge:still`,
+  `judge:video`, `render:still`, `render:comp --judge`, `runware:usage`.
+- **Opencode global permissions widened** (`external_directory: allow`) — needs an
+  opencode restart to take effect.
 
-### The next job — "let's go" = do this
-**Implement the social-media bridge.** Take the binsparkle-clean assets
-video + 7 images + script + Aoede narration and turn them into scheduled
-posts in `bin-sparkle-social/social/posts/`. Per-platform captioning
-(TikTok/IG/FB/LinkedIn/X differ), one file per post under the
-`<YYYY-MM-DD>-<slug>.md` convention. See `docs/social-media-pipeline.md`
-for the contract.
+### The next job — "let's go" = build the carousel engine, post the first one to LCF
+1. **Central content layer here.** Add `social/binsparkle/` (`decks/`, `posts/`,
+   `copy/`, `sources/`). Brand kit stays at `videos/binsparkle/assets/brand/` +
+   `tokens.css`; both video and social pull from it.
+2. **Carousel engine.** Branded slide template + `render:carousel --deck=…` that
+   renders each slide as a PNG (**image-set format** — covers IG/FB/TikTok/
+   LinkedIn; **no PDF for now**). Reuse the still-renderer machinery (static
+   server + Playwright + brand tokens). Seed with the 7 AI backgrounds + Claire's
+   real photos (the only real set — pull from the `bin-sparkle` repo).
+3. **First post → Local Client Finder (FB) via Postiz.** LCF is a connected
+   Postiz channel (verified). **First step: verify Postiz supports multi-image/
+   carousel posts**; if not, fall back to an album or a single hero image. **Ask
+   the user before the post actually goes live** (it's a public action).
+4. **Correct `docs/social-media-pipeline.md`** to the one-repo model (or archive it).
 
-If the user wants to iterate the video first instead, the levers are:
-different voice (audition via `node scripts/preview-runware-voices.mjs`),
-different images (`node scripts/fetch-image-runware.mjs` — but it doesn't
-exist yet as a CLI, just the lib at `scripts/lib/runware-image.mjs`),
-different script angle (re-run Opus 4.8 via the prompt template in
-`docs/playbooks/script-and-copy.md`).
+### Reuse principle (the whole point)
+One source → many outputs. The same brand kit + backgrounds + copy become carousel
+slides, a hero still, video beats, captions. The engine takes any image, so when
+real job photos start flowing they drop into `sources/` with no rebuild.
 
-### Traps (all verified live this session)
-1. **Render produces `yuv444p`** — only VLC plays it. Run `npm run to-yuv420 <file.mp4>`
-   after every render for universal player compat. LEARNINGS §4.
-2. **audio-duck volume jumps +6 dB when the bed drops out.** Loop the bed
-   to >2× comp duration (see `assets/music/binsparkle-bed-looped.mp3`
-   for the pattern). LEARNINGS §4.
-3. **silence-detect timings drift.** Use **whisper word-level** for slide
-   sync (`python scripts/_whisper_sentences.py <audio.mp3>` — currently a
-   throwaway; promote to a real script if used again).
-4. **Runware has no `en-NZ` voices.** Edge TTS does (`en-NZ-Molly/Mitchell`).
-   For NZ brands, Edge is both cheaper (free) and more authentic. See TRAPS
-   in `scripts/lib/runware-models.mjs`.
-5. **Opus 4.8 is the text default, not Fable 5.** Fable 5 is 8× the cost
-   for marginal gain. Fable 5 is in TRAPS.
-6. **Don't edit `render.mjs`/`smoke.mjs`/`index.html`** — extend only.
+### Traps (verified live in prior sessions)
+1. Render outputs `yuv444p` (only VLC plays it) → `npm run to-yuv420 <mp4>` after every render.
+2. `audio-duck` jumps +6 dB when the bed drops out → loop the bed to >2× comp duration.
+3. Runware has no `en-NZ` voices → Edge TTS (`en-NZ-Molly/Mitchell`) is cheaper + more authentic for NZ.
+4. Opus 4.8 is the text default, not Fable 5 (8× cost, marginal gain).
+5. Runware vision = `textInference` + image (NOT the `caption` task); model id = AIR `creator:family@version`.
+6. Don't edit `render.mjs`/`smoke.mjs`/`index.html` — extend only. Brand stuff → `videos/<brand>/`.
 
 ### Discipline
-Default every Runware call to the cheapest tier that works; escalate only
-on borderline. Every call passes through the daily cap. Commit + push as
-you go. Ask before any live deploy.
+Cheapest Runware tier that works; escalate only on borderline; every call under
+the daily cap. Commit + push as you go. **Ask before any live post or deploy.**
 <!-- NEXT-SESSION:END -->
 
 ## Read first, every video task
