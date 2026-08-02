@@ -35,8 +35,10 @@ real-job photos into `assets/` and they join the pool with no rebuild.
 ## 2. Image assets
 
 **Vision-described catalogue:** [`assets/asset-catalogue.md`](assets/asset-catalogue.md)
-(machine-readable: `assets/asset-catalogue.json`). Re-run
-`npm run describe:assets -- --dir=videos/binsparkle/assets` to refresh.
+(machine-readable: `assets/asset-catalogue.json`). **Every session reads
+this before picking images — for videos, image posts, carousels, stories.**
+When new images arrive, refresh it (the process is in §7, "Adding new base
+images").
 
 | Set | Files | Count | Origin | Used by |
 |---|---|---|---|---|
@@ -155,28 +157,57 @@ rule 1: "Do not bake text into scenes 1–6"), and it's how carousel slides
 and stories should work too. A new slide = base image + new HTML text +
 `render:still`. The image never gets touched.
 
+### Step zero — ALWAYS check the catalogue first
+Before making ANY content that uses a base image — a **video**, an **image
+post**, a **carousel**, a **story**, a thumbnail — open
+[`assets/asset-catalogue.md`](assets/asset-catalogue.md) and pick from there.
+The catalogue tells you what each image actually depicts, its mood, its
+dominant colours, whether people are visible, and what it's good for (the
+`good_for` column). Don't guess from filenames. Don't re-describe images
+you already have. The catalogue IS the source — a new session reads it and
+knows every image without a human re-explaining.
+
+### Adding new base images (the process)
+When new images arrive — supplied photos, freshly generated, pulled from a
+brand repo — do this every time:
+
+1. Drop them into `videos/binsparkle/assets/` (PNG preferred, descriptive filename).
+2. Run `npm run describe:assets -- --dir=videos/binsparkle/assets`
+3. The catalogue rewrites with ALL images (old + new) — each one
+   vision-described (~$0.0015/image). Re-running on the whole folder is by
+   design; it refreshes everything, not just the new files.
+4. Commit the updated `asset-catalogue.{json,md}` alongside the new images.
+5. Every session and every content prompt can now reason about the new
+   images automatically.
+
+This is not optional and not a one-off. If a base image lands in `assets/`
+and the catalogue isn't refreshed, the next session won't know it exists.
+
 ### Video ad
-1. Script first ([`docs/playbooks/script-and-copy.md`](../../docs/playbooks/script-and-copy.md) is the gold-standard example).
-2. Images next — generate fresh per scene, feeding the brand anchors from `IMAGE-PROMPTS.md` Part A as image-to-image references.
-3. Composition at `compositions/binsparkle-<name>.html` (copy the cleanest existing one as a starting point, don't edit the originals).
-4. Voiceover: Edge TTS `en-NZ-MollyNeural` is the locked voice ([`docs/voices.md`](../../docs/voices.md)). Use `npm run fetch:tts:edge` or the OpenAI fetcher (`scripts/fetch-tts-openai.mjs`).
-5. Render: `npm run render:comp -- --comp=<name>` → `npm run to-yuv420 -- <mp4>` (every render).
-6. Judge: `npm run judge:still` and/or `npm run judge:video` against the rubric.
+1. **Check the catalogue** (step zero) — pick base images from `asset-catalogue.md`, don't guess.
+2. Script first ([`docs/playbooks/script-and-copy.md`](../../docs/playbooks/script-and-copy.md) is the gold-standard example).
+3. Images next — generate fresh per scene if needed, feeding the brand anchors from `IMAGE-PROMPTS.md` Part A as image-to-image references. **Any new image → refresh the catalogue** (see "Adding new base images" above).
+4. Composition at `compositions/binsparkle-<name>.html` (copy the cleanest existing one as a starting point, don't edit the originals).
+5. Voiceover: Edge TTS `en-NZ-MollyNeural` is the locked voice ([`docs/voices.md`](../../docs/voices.md)). Use `npm run fetch:tts:edge` or the OpenAI fetcher (`scripts/fetch-tts-openai.mjs`).
+6. Render: `npm run render:comp -- --comp=<name>` → `npm run to-yuv420 -- <mp4>` (every render).
+7. Judge: `npm run judge:still` and/or `npm run judge:video` against the rubric.
 
 ### Carousel slides
+1. **Check the catalogue** (step zero) — pick images from `asset-catalogue.md`.
+2. Write the slide copy (one line per slide, punchy).
+3. Build an HTML slide template that overlays branded text on the base image (never bake text into the image itself).
+4. Render each slide with `render:still`.
+
 The 7-image `clean-*` set reads as a carousel arc: house-bin → interior →
 scrub → fresh → sparkle → brand-reveal → before-after. The 4 published
-carousels (see §5) were made as base-image + HTML text overlays. To make a
-new one: pick images from the catalogue, write an HTML slide template that
-overlays branded text, render each slide with `render:still`. A formal
-`render:carousel` wrapper isn't built yet — defer until a repeatable deck
-format is wanted.
+carousels (see §5) were made this way. A formal `render:carousel` wrapper
+isn't built yet — defer until a repeatable deck format is wanted.
 
 ### Stories (9:16, vertical, 1080×1920)
-Same canvas as the video comps. Pick a base image from the catalogue (the
-`good_for` column flags which suit `story background`), overlay text via
-HTML, render with `render:still`. Multiple stories = multiple stills, one
-per story.
+1. **Check the catalogue** (step zero) — the `good_for` column flags which images suit `story background`.
+2. Write the story (one line per slide, 7–10 slides).
+3. Overlay text via HTML on each base image.
+4. Render with `render:still` — one PNG per slide.
 
 `verified: 2026-08-03`
 
