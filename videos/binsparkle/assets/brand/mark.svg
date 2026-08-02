@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+  <defs>
+    <linearGradient id="bsTile" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#3f9463"/>
+      <stop offset="1" stop-color="#1d5634"/>
+    </linearGradient>
+    <linearGradient id="bsSun" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0" stop-color="#fdd479"/>
+      <stop offset="1" stop-color="#f4b942"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(0.00 0.00) scale(1.00000)">
+      <rect width="64" height="64" rx="19" fill="url(#bsTile)"/>
+      <path d="M0 19 A19 19 0 0 1 19 0 H45 A19 19 0 0 1 64 19 V27 C48 34 16 34 0 27 Z" fill="#ffffff" opacity="0.07"/>
+
+      <g transform="rotate(-8 29.5 34)">
+        <rect x="24.3" y="13.0" width="10.4" height="5.8" rx="2.9" fill="#ffffff" opacity="0.5"/>
+        <rect x="13.6" y="17.4" width="32.8" height="6.3" rx="3.15" fill="#ffffff"/>
+        <path d="M16.5 25.6 H42.5 a1.7 1.7 0 0 1 1.69 1.87 L42.24 45.3 a4.2 4.2 0 0 1 -4.18 3.8 H20.94 A4.2 4.2 0 0 1 16.76 45.3 L14.81 27.47 A1.7 1.7 0 0 1 16.5 25.6 Z" fill="#ffffff"/>
+        <path d="M23.1 30.2 L22.1 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+        <path d="M29.5 30.2 L29.5 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+        <path d="M35.9 30.2 L36.9 44.4" stroke="#2f7a4d" stroke-width="1.8" stroke-linecap="round" opacity="0.22"/>
+      </g>
+      <path d="M50.40,6.20C50.95,11.08 52.92,13.04 57.80,13.60C52.92,14.15 50.95,16.12 50.40,21.00C49.84,16.12 47.88,14.15 43.00,13.60C47.88,13.04 49.84,11.08 50.40,6.20Z" fill="url(#bsSun)"/>
+      <path d="M56.40,20.80C56.67,23.18 57.62,24.13 60.00,24.40C57.62,24.67 56.67,25.62 56.40,28.00C56.13,25.62 55.18,24.67 52.80,24.40C55.18,24.13 56.13,23.18 56.40,20.80Z" fill="#f4b942"/>
+      <path d="M43.60,6.00C43.78,7.58 44.42,8.22 46.00,8.40C44.42,8.58 43.78,9.22 43.60,10.80C43.42,9.22 42.78,8.58 41.20,8.40C42.78,8.22 43.42,7.58 43.60,6.00Z" fill="#f4b942" opacity="0.9"/>
+  </g>
+</svg>
