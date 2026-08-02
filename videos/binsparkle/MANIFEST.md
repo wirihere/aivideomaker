@@ -109,10 +109,12 @@ carousel has 5 images. Verified against Postiz 2026-08-03:
 | Local Client Finder (FB) | carousel × 5 imgs | 1 | Customer ("if your bin is the one the neighbours dread") — links to `binsparkle.nz?ref=lcf` |
 | Bin Sparkle (FB page `1011356651724878`) | carousel × 5 imgs | 1 | Customer ("if opening your bin makes you gag") — links to `binsparkle.nz` |
 
-**Carousel images are on the Postiz VPS** under
-`https://postiz.srv1178347.hstgr.cloud/uploads/2026/08/02/*.png` — not in
-this repo. Pull them down with a query to the `image` column if reuse is
-needed.
+**Carousel slide images are published outputs, NOT source material.** They
+live on the Postiz VPS under
+`https://postiz.srv1178347.hstgr.cloud/uploads/2026/08/02/*.png` with text
+baked in. Do not pull them down for reuse — the base images in `assets/` +
+HTML text overlay produce a fresh slide any time, and stay editable. The
+published slides are the finished goods; the base images are the raw stock.
 
 **Posting mechanism:** documented in `automation-template/postiz.md` (Public
 API recipe, run live on the VPS). Known channels: Bin Sparkle (FB),
@@ -144,6 +146,15 @@ takes any image + a prompt, returns text. Daily-capped at `RUNWARE_DAILY_CAP`
 
 ## 7. How to make new content (the patterns)
 
+### The core principle: base image + HTML text overlay
+**Never bake text into an image.** The base images in `assets/` (described
+in the catalogue) are the reusable stock. Text — headlines, captions, CTAs —
+is overlaid via HTML on top of the image, then the whole frame is rendered
+to a PNG/MP4. This is how the video compositions work (see `IMAGE-PROMPTS.md`
+rule 1: "Do not bake text into scenes 1–6"), and it's how carousel slides
+and stories should work too. A new slide = base image + new HTML text +
+`render:still`. The image never gets touched.
+
 ### Video ad
 1. Script first ([`docs/playbooks/script-and-copy.md`](../../docs/playbooks/script-and-copy.md) is the gold-standard example).
 2. Images next — generate fresh per scene, feeding the brand anchors from `IMAGE-PROMPTS.md` Part A as image-to-image references.
@@ -152,17 +163,20 @@ takes any image + a prompt, returns text. Daily-capped at `RUNWARE_DAILY_CAP`
 5. Render: `npm run render:comp -- --comp=<name>` → `npm run to-yuv420 -- <mp4>` (every render).
 6. Judge: `npm run judge:still` and/or `npm run judge:video` against the rubric.
 
-### Carousel (not yet built as a distinct format)
-The 7-image `clean-*` set already reads as a carousel arc: house-bin →
-interior → scrub → fresh → sparkle → brand-reveal → before-after. To build
-actual swipeable carousel slides with text overlays, the plan was a
-`render:carousel` command reusing the still-renderer machinery — see "Open"
-below.
+### Carousel slides
+The 7-image `clean-*` set reads as a carousel arc: house-bin → interior →
+scrub → fresh → sparkle → brand-reveal → before-after. The 4 published
+carousels (see §5) were made as base-image + HTML text overlays. To make a
+new one: pick images from the catalogue, write an HTML slide template that
+overlays branded text, render each slide with `render:still`. A formal
+`render:carousel` wrapper isn't built yet — defer until a repeatable deck
+format is wanted.
 
 ### Stories (9:16, vertical, 1080×1920)
-Same canvas as the video comps. Use `render:still` per slide, or a new
-`render:story` wrapper. The `clean-*` and `0X_*` images both work as story
-backgrounds per the catalogue's `good_for` column.
+Same canvas as the video comps. Pick a base image from the catalogue (the
+`good_for` column flags which suit `story background`), overlay text via
+HTML, render with `render:still`. Multiple stories = multiple stills, one
+per story.
 
 `verified: 2026-08-03`
 
@@ -170,17 +184,17 @@ backgrounds per the catalogue's `good_for` column.
 
 ## 8. Open threads
 
-1. **Three funny stories** (9:16) using the existing image set — requested
-   2026-08-03. Not started.
-2. **Text on the existing carousel slides could be bigger for mobile** — the
-   user's only feedback on the current carousel (2026-08-03).
-3. **Was the carousel actually posted?** No repo record. Need the post URL or
-   date from the user, or an SSH check on the Postiz VPS.
-4. **Carousel engine** — `render:carousel` command (planned, not built).
-   Defer until a second carousel is needed.
-5. **Full Care image set** — the Full Care ad reuses customer images. Give it
+1. **Three funny stories** (9:16) using the existing base image set —
+   requested 2026-08-03. Not started. Pattern: base image + HTML text
+   overlay → `render:still` (see §7).
+2. **Text on the carousel slides could be bigger for mobile** — the user's
+   feedback on the 4 published carousels (2026-08-03). The fix is in the
+   HTML text-overlay layer, not the base images.
+3. **Carousel engine** — a `render:carousel` wrapper (planned, not built).
+    Defer until a repeatable deck format is wanted.
+4. **Full Care image set** — the Full Care ad reuses customer images. Give it
    its own set when the script is locked.
-6. **Customer-ad voice** — the shipped v3 uses an older supplied recording
+5. **Customer-ad voice** — the shipped v3 uses an older supplied recording
    that says "Hamilton" and "60 seconds". `SCRIPT-customer.md` v10 drops the
    town and corrects the booking claim to ~2 minutes. Re-record when the
    voice decision (NZ Molly vs AU Natasha) is settled.
