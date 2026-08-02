@@ -98,6 +98,7 @@ export const TRAPS = [
   { id: "alibaba-qwen2-5-vl-*", name: "Qwen2.5-VL (any)",  modality: "vision", trap: "Listed in docs but NOT live on this account at probe time. Probe before trusting.", verified: "2026-08-02" },
   { id: "anthropic:claude@fable-5", name: "Claude Fable 5", modality: "text", trap: "Tested #1 on quality ($0.13/script) but 8× Opus 4.8's cost for a marginal gain. Use for one-off hero work where the absolute best matters; otherwise Opus 4.8 is the smart pick.", verified: "2026-08-02" },
   { id: "openai:gpt@5.5", name: "GPT-5.5", modality: "text", trap: "Flagship pricing ($0.027/script) but missed an explicit 'do NOT name Hamilton' constraint in the probe. A flagship that ignores instructions is a liability for brand-controlled copy.", verified: "2026-08-02" },
+  { id: "runware:*tts*", name: "All Runware TTS models", modality: "tts", trap: "NONE have en-NZ voices. For NZ brands, use Edge TTS (en-NZ-MollyNeural / en-NZ-MitchellNeural) via scripts/fetch-tts-edge.mjs — unmetered AND authentic. Runware TTS only makes sense for non-NZ work, voice cloning, or multi-speaker. See docs/voices.md for the NZ-adjacent accent ladder.", verified: "2026-08-02" },
 ];
 
 // --- modelsFor: list curated candidates for a modality --------------------
