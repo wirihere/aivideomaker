@@ -13,11 +13,11 @@ assets/videos/
 # via scripts/analyze-music-alignment.mjs.
 !assets/music/alignment.json
 
-  # Edge TTS voice previews — regenerable via `npm run voices:preview`
-  assets/voice-library/
+# Edge TTS voice previews — regenerable via `npm run voices:preview`
+assets/voice-library/
 
-  # Runware TTS voice previews — regenerable via scripts/preview-runware-voices.mjs
-  assets/runware-voice-library/
+# Runware TTS voice previews — regenerable via scripts/preview-runware-voices.mjs
+assets/runware-voice-library/
 
 # Content-addressed asset cache (sha256-keyed copies of fetched URLs).
 # Regenerable on demand. Subdirs like assets/.cache/luts/ are still tracked

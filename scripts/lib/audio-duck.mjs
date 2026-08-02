@@ -1,5 +1,11 @@
 // Spectral ducking ("frequency-aware sidechain") — library only.
 //
+// ⚠ VOLUME-JUMP TRAP: the final amix uses `dropout_transition=0` and
+// normalises by 1/inputs. When the bed ends, the voice instantly gains
+// +6 dB (often clipping). Always use a bed longer than the comp duration,
+// OR loop the bed (see LEARNINGS.md §4 "audio-duck volume jumps"). Verified
+// 2026-08-02 on binsparkle-clean — peaks went 0 → +6.7 dBFS at the bed-out.
+//
 // Plain language: when a comp has BOTH a voiceover and a music bed, flat
 // amix mushes them — loud music buries words, loud voice drowns the song.
 // We split the music into low / mid / high bands, sidechain-compress only

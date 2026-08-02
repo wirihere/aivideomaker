@@ -59,6 +59,7 @@
     "verify": "node scripts/verify-render.mjs",
     "verify:assembled": "node scripts/verify-render.mjs --comp=index.html",
     "verify:fix": "node scripts/verify-fix.mjs",
+    "to-yuv420": "node scripts/to-yuv420.mjs",
     "health": "node scripts/health-check.mjs",
     "help": "node scripts/help.mjs"
   },

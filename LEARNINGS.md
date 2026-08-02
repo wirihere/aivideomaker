@@ -990,6 +990,32 @@ Verified 2026-04-25 — single round of 4 parallel agents (Explore + 3 general-p
 - **Fix:** Drop workers. On wirihere's box, anything with 11+ clips + a video renders clean at `-w 2 --gpu`. Cost: ~12:40 vs would-be ~6:30 at `-w 4`.
 - **Status:** Confirmed twice (Claim Mate v2, v3). Proven preset captured in playbook §3.
 
+### ⚠ Render produces `yuv444p` — only VLC plays it
+- **Symptom:** Rendered MP4 plays in VLC but won't open in Windows Media Player, the Photos app, QuickTime, or some browser embeds. No error, just silent failure.
+- **Cause:** The render pipeline emits H.264 **High 4:4:4 Predictive** profile with `yuv444p` chroma. Most consumer players only decode `yuv420p` (4:2:0, the universal standard). VLC plays anything, so the symptom looks intermittent.
+- **Fix:** Post-process with ffmpeg to re-encode video to `yuv420p` (audio passes through untouched):
+  ```bash
+  node scripts/lib/ffmpeg-path.mjs && \
+  ffmpeg -y -i renders/.../input-graded.mp4 \
+    -c:v libx264 -profile:v high -pix_fmt yuv420p -crf 18 -preset slow \
+    -c:a copy -movflags +faststart \
+    renders/.../input-graded-yuv420.mp4
+  ```
+  Or use `node scripts/to-yuv420.mjs <input.mp4>` which does the same thing. File size barely changes (~13 MB at 1080×1920×36s). Keep the original `yuv444p` file for any future re-grade, ship the `yuv420p` everywhere.
+- **Status:** Verified 2026-08-02 on the binsparkle-clean render. Worth fixing at the pipeline root eventually (render.mjs or hyperframes config) — for now, the transcode is one command.
+
+### ⚠ audio-duck volume jumps +6 dB when the bed drops out
+- **Symptom:** Mixed narration+bed audio sounds fine until ~30s in, then suddenly gets noticeably louder and clipped at the end. Peak measurement confirms: peaks go from ~0 dBFS to **+6.7 dBFS** the moment the bed ends.
+- **Cause:** `scripts/lib/audio-duck.mjs` ends its filter graph with `amix=inputs=2:duration=longest:dropout_transition=0`. `amix` normalises by `1/N` (each input halved when N=2). When the bed stops at 30s, N drops to 1 and the voice goes from -6 dB (halved) to 0 dB (full) — a +6 dB jump. With the existing `--voice-level=+12` trim from the Job 4 recipe, the now-full-level voice clips hard.
+- **Fix:** Make the bed longer than the comp so it never drops out. The simplest pattern:
+  ```bash
+  ffmpeg -stream_loop 1 -i assets/music/bed.mp3 -c:a libmp3lame -b:a 192k -t 60 assets/music/bed-looped.mp3
+  node scripts/audio-duck.mjs --voice=vo.mp3 --music=assets/music/bed-looped.mp3 --out=mix.mp3 \
+    --voice-level=+12 --music-level=+5
+  ```
+  Loop to ~2× the comp duration. The comp duration decides where playback stops; the bed just needs to be present throughout. Peaks stay flat (~0 dBFS) end-to-end.
+- **Status:** Verified 2026-08-02 on the binsparkle-clean mix. Pre-loop peaks: 0 dBFS → +6.7 dBFS at the bed-out point. Post-loop peaks: 0 dBFS → 0.7 dBFS throughout. Warning also added at the top of `audio-duck.mjs` so the next session sees it before re-blending.
+
 ---
 
 ## 5. Free-tier quotas in this project
