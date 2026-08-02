@@ -1,73 +1,59 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-02, consolidation decision
+## ▶ Start here — written 2026-08-03
 
-Say "let's go" and this session does the next job below. Everything below this
-block is stable project rules; this block is the current briefing — replace it
-wholesale next session, never keep a second.
+**READ FIRST:** [`videos/binsparkle/MANIFEST.md`](videos/binsparkle/MANIFEST.md)
+— the running source-of-truth for everything BinSparkle. Assets, compositions,
+renders, posts ledger, vision tooling, traps, open threads. Every section has a
+`verified` date; re-check before relying on any line older than a week.
 
-**Verify before you trust this.** Runware facts were verified live by the prior
-session (2026-08-02) — see the per-entry `verified` dates in `docs/runware-models.md`
-and `docs/voices.md`; re-run `npm run runware:models` to confirm pricing hasn't
-moved. The "Local Client Finder is on Postiz" fact was verified live by an
-earlier session (a test post landed, id `…1307860914890937`). Repo heads: verify
-with `git rev-parse HEAD` ↔ `origin/main`.
+This block is the current briefing only — replace it wholesale next session,
+never keep a second. The stable detail lives in the manifest.
 
-### The architecture decision (NEW — overrides the prior multi-folder plan)
-**Everything content lives in THIS repo (aivideomaker). One spot.** Carousel
-engine, post files, posting — all here. The user wants no folder-hopping.
-- **`bin-sparkle-social` is NOT used.** The prior session's
-  `docs/social-media-pipeline.md` proposed it as a "distributor" layer — **that
-  doc is now obsolete**; correct it to this one-repo model or move it to `_archive/`.
-- **`bin-sparkle` (the live website repo) is NOT touched** for content — the
-  brand kit was already copied into `videos/binsparkle/assets/brand/`.
-- **The cron (`autonomous-runner`) stays separate** — a reusable timer, not daily
-  work. Wire it up only when unattended runs are wanted. Out of scope for now.
+### Verify before you trust this
+- Repo heads: `git rev-parse HEAD` ↔ `origin/main` (push isn't always automatic).
+- Runware pricing: `npm run runware:models` and the `verified` dates in `docs/runware-models.md`.
+- The manifest's own `verified` dates — if old, re-check against the real system.
 
-### Already built + working (verified by prior session, 2026-08-02)
-- **Full Runware pipeline** — audio (TTS + music), text (scripts), image-gen,
-  vision judging; cost-guarded (`RUNWARE_DAILY_CAP`, $2 default). Catalogue in
-  `docs/runware-models.md`; voices in `docs/voices.md`; scripts in `docs/playbooks/script-and-copy.md`.
-- **Two BinSparkle videos** rendered (local, `renders/binsparkle/`): Full Care
-  (Luna voice — not the pick) and **clean-ad `binsparkle-clean.html`, Aoede voice
-  — the good one**.
-- **Vision judge + cost guard + still renderer** (earlier session): `judge:still`,
-  `judge:video`, `render:still`, `render:comp --judge`, `runware:usage`.
-- **Opencode global permissions widened** (`external_directory: allow`) — needs an
-  opencode restart to take effect.
+### The architecture decision (still in force)
+**Everything content lives in THIS repo (aivideomaker). One spot.** The brand
+manifest, asset catalogue, posts ledger, and all scripts are here under
+`videos/binsparkle/`. Do not spread content across folders.
+- `bin-sparkle-social` — NOT used. `docs/social-media-pipeline.md` here is obsolete.
+- `bin-sparkle` (the live website repo) — NOT touched for content; brand kit copied in.
+- `autonomous-runner` — separate, reusable cron. Out of scope until unattended runs are wanted.
 
-### The next job — "let's go" = build the carousel engine, post the first one to LCF
-1. **Central content layer here.** Add `social/binsparkle/` (`decks/`, `posts/`,
-   `copy/`, `sources/`). Brand kit stays at `videos/binsparkle/assets/brand/` +
-   `tokens.css`; both video and social pull from it.
-2. **Carousel engine.** Branded slide template + `render:carousel --deck=…` that
-   renders each slide as a PNG (**image-set format** — covers IG/FB/TikTok/
-   LinkedIn; **no PDF for now**). Reuse the still-renderer machinery (static
-   server + Playwright + brand tokens). Seed with the 7 AI backgrounds + Claire's
-   real photos (the only real set — pull from the `bin-sparkle` repo).
-3. **First post → Local Client Finder (FB) via Postiz.** LCF is a connected
-   Postiz channel (verified). **First step: verify Postiz supports multi-image/
-   carousel posts**; if not, fall back to an album or a single hero image. **Ask
-   the user before the post actually goes live** (it's a public action).
-4. **Correct `docs/social-media-pipeline.md`** to the one-repo model (or archive it).
+### What got built this session (2026-08-03)
+- **Project manifest** at `videos/binsparkle/MANIFEST.md` — the one file a fresh session reads.
+- **Asset catalogue** at `videos/binsparkle/assets/asset-catalogue.{json,md}` — all 14 images vision-described (subject, mood, colours, alt text, suggested uses). Refresh with `npm run describe:assets -- --dir=videos/binsparkle/assets`.
+- **Posts ledger** at `videos/binsparkle/posts.md` — one row per live post. Currently holds the test post + an unverified carousel entry.
+- **`describe:assets` command** (`scripts/describe-assets.mjs`) — reusable vision-describer for any folder, cost-capped.
 
-### Reuse principle (the whole point)
-One source → many outputs. The same brand kit + backgrounds + copy become carousel
-slides, a hero still, video beats, captions. The engine takes any image, so when
-real job photos start flowing they drop into `sources/` with no rebuild.
+### The next job — three funny stories
+1. **Make 3 stories (9:16, 1080×1920) using the existing image set** — the
+   `clean-*` and/or `0X_*` images. Funny tone. Pick images from the catalogue's
+   `good_for` column.
+2. **Bump the text size slightly on the existing carousel slides** for mobile
+   readability (the user's only feedback on the current carousel).
+3. **Resolve the posting gap** — the user says a carousel was posted to LCF via
+   Postiz, but no record exists in any repo. Get the post URL or date from the
+   user (or check the Postiz DB on the VPS), then record it in `posts.md`.
 
-### Traps (verified live in prior sessions)
-1. Render outputs `yuv444p` (only VLC plays it) → `npm run to-yuv420 <mp4>` after every render.
-2. `audio-duck` jumps +6 dB when the bed drops out → loop the bed to >2× comp duration.
-3. Runware has no `en-NZ` voices → Edge TTS (`en-NZ-Molly/Mitchell`) is cheaper + more authentic for NZ.
-4. Opus 4.8 is the text default, not Fable 5 (8× cost, marginal gain).
-5. Runware vision = `textInference` + image (NOT the `caption` task); model id = AIR `creator:family@version`.
-6. Don't edit `render.mjs`/`smoke.mjs`/`index.html` — extend only. Brand stuff → `videos/<brand>/`.
+Defer until needed: the `render:carousel` engine (a second carousel isn't queued),
+the Full Care image set, the customer-ad re-record.
 
 ### Discipline
 Cheapest Runware tier that works; escalate only on borderline; every call under
-the daily cap. Commit + push as you go. **Ask before any live post or deploy.**
+the $2/day cap (`npm run runware:usage` to check). Commit + push as you go.
+**Ask before any live post or deploy.**
+
+### Traps (full list in the manifest §9)
+1. Render outputs `yuv444p` → `npm run to-yuv420 <mp4>` after every render.
+2. `voiceover/binsparkle-recruit-music.mp3` is NOT music — it's spoken VO.
+3. Runware has no `en-NZ` voices → Edge TTS `en-NZ-MollyNeural` for NZ.
+4. Runware vision = `textInference` + image (NOT the `caption` task).
+5. Don't edit `render.mjs`/`smoke.mjs`/`index.html` — extend only. Brand stuff → `videos/<brand>/`.
 <!-- NEXT-SESSION:END -->
 
 ## Read first, every video task
