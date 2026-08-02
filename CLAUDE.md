@@ -1,65 +1,82 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-02, end of session
+## ▶ Start here — written 2026-08-02, end of the Runware-pipeline session
 
-Say "let's go" and this session does the four jobs below, in order. Everything
-below this block is the stable project rules; this block is the current briefing
-— replace it wholesale next session, never keep a second.
+Say "let's go" and this session does the next job below. Everything below
+this block is stable project rules; this block is the current briefing —
+replace it wholesale next session, never keep a second.
 
-**Verify before you trust this.** Runware facts here were checked live on
-2026-08-02. Audio/music model details are NOT verified yet — research each from
-runware.ai docs before relying on it. Some doc pages list models not live on the
-account (Qwen2.5-VL was that trap this session); probe with a real call first.
+**Verify before you trust this.** Repo state verified at handoff
+(`git rev-parse HEAD` ↔ `origin/main`). Runware model facts verified
+live on 2026-08-02 — see `docs/runware-models.md` and `docs/voices.md`
+for the per-entry `verified` dates. Pricing was right at probe time;
+re-run `npm run runware:models` to confirm nothing moved.
 
-### Where things stand (verified 2026-08-02)
-- Repo on `main` @ `766c861`, pushed (local + remote heads match). Nothing
-  deployed live (dev repo); nothing cron'd. No concurrent commits observed.
-- This session built the content factory + Runware vision judge, all additive
-  (`render.mjs`/`smoke.mjs`/`index.html` untouched): `render:still`,
-  `render:comp` (opt `--judge`), `judge:still`, `judge:video`, `runware:usage`.
-  All tested live against real binsparkle assets.
-- **Runware vision = `textInference` + OpenAI-style multimodal content** (NOT
-  the `caption` task — that's legacy and most vision models reject it). Endpoint
-  `https://api.runware.ai/v1`, `Authorization: Bearer $RUNWARE_API_KEY`, body =
-  array of tasks. Model id = AIR `creator:family@version` (NOT the dashed slug).
-- Cheap vision that works: **`openai:gpt@5-mini`** (~$0.0004 simple / ~$0.002–
-  0.005 per rubric judge). `google:nano-banana@*` only does `caption`.
-  `alibaba-qwen2-5-vl-*` is NOT live on the account. Key in
-  `automation-template/.env` → `RUNWARE_API_KEY`. Daily cap $2
-  (`RUNWARE_DAILY_CAP`); spend tracker at `.runware-usage.json` (gitignored).
+### Where things stand (verified 2026-08-02, end of session)
+- Repo on `main` @ `e3c3b21`, pushed (local + remote heads match). Dev
+  repo, nothing deployed live, nothing cron'd.
+- **Full Runware pipeline built and tested end-to-end.** Audio (TTS +
+  music), text (script generation), image-gen, vision judging — all
+  wired, all cost-guarded by `RUNWARE_DAILY_CAP` ($2 default). Spend
+  today: $0.59 across 50 calls.
+- **Two BinSparkle videos shipped** (renders local-only under
+  `renders/binsparkle/`): the Full Care reference (`SCRIPT-fullcare.md`,
+  Luna voice — known sultry, not the recommended pick) and the
+  clean-ad (`SCRIPT` lives at `videos/binsparkle/compositions/binsparkle-clean.html`,
+  Aoede voice — **this is the good one**).
+- **Opencode permissions widened globally** — `~/.config/opencode/opencode.json`
+  now has `external_directory: { "*": "allow" }`. Takes effect on next
+  opencode restart. Removes the cross-folder prompts that were blocking
+  multi-repo work (e.g. reading automation-template, bin-sparkle-social).
 
-### The next four jobs — "let's go" = do these, in order
-1. **Runware model chooser + catalogue.** Add `scripts/lib/runware-models.mjs`
-   (a `modelSearch` wrapper — proven this session) + `npm run runware:models`
-   reporter, and a `docs/runware-models.md` catalogue: per modality (image-gen /
-   vision / text / TTS / music / video) list AIR id, price, capability, and
-   "best-for / avoid-for". Goal: given a task, return the cheapest suitable model
-   id. **Self-research** each model via modelSearch + its
-   `runware.ai/docs/models/<slug>.md` page — don't guess params.
-2. **Audio expert playbook.** Research Runware's TTS + music models from the docs
-   (voice ids, pacing/emotion, output format for TTS; style/tempo/duration/seed
-   for music) and write it up. Shared home: `automation-template/runware.md`.
-   Mark each fact with the date you verified it against the docs.
-3. **Music bed generation.** Pick a music model from job 2; generate a BinSparkle
-   brand-aligned bed (warm, upbeat, not cheesy, loopable ~30s); drop into
-   `assets/music/`; set as a default bed option.
-4. **Narration + music blend.** Route generated narration (TTS) + the bed through
-   the existing `scripts/audio-duck.mjs` (spec in LEARNINGS + rule R6: VO −6 dB
-   above bed, bed −18 to −14 LUFS). Output a final mix a composition can use.
-   Verify the mix by rendering a short test and inspecting peaks (you can't see
-   audio levels — don't claim it sounds right without checking).
+### What to read, in order
+1. `docs/skills/how-a-video-gets-made.md` — the canonical 10-stage flow
+   (unchanged). Stage 3 (Copywriting) is still the highest-leverage stage.
+2. `docs/runware-models.md` — the full model catalogue with verified AIR
+   ids, prices, and the per-modality ladders.
+3. `docs/playbooks/script-and-copy.md` — model-selection playbook for
+   scripts + image captions. 8 models probed; **Anthropic dominates**.
+4. `docs/voices.md` — TTS voice selection. **Locked:** Aoede (Gemini 3.1
+   Flash TTS) with `language: en-AU` + transcript tags for warm-community.
+5. `docs/social-media-pipeline.md` — the architecture for how assets flow
+   from this repo into `bin-sparkle-social/social/` and out to platforms.
 
-**Discipline.** Default every call to the cheapest model that works; escalate
-only on borderline; every call passes through the existing daily-cap guard.
-Verify each audio/music model works on the account before trusting it. Commit +
-push as you go (backups). Ask before any live deploy.
+### The next job — "let's go" = do this
+**Implement the social-media bridge.** Take the binsparkle-clean assets
+video + 7 images + script + Aoede narration and turn them into scheduled
+posts in `bin-sparkle-social/social/posts/`. Per-platform captioning
+(TikTok/IG/FB/LinkedIn/X differ), one file per post under the
+`<YYYY-MM-DD>-<slug>.md` convention. See `docs/social-media-pipeline.md`
+for the contract.
 
-**Traps.** (a) `caption` task ≠ vision-qa — use `textInference`+image. (b) Model
-id = AIR `creator:family@version`, not the dashed doc slug. (c) Some doc pages
-list models not live on the account — probe before relying. (d) Don't edit
-`render.mjs`/`smoke.mjs`/`index.html` — extend only. (e) Brand stuff →
-`videos/<brand>/`; shared → `assets/`/`design/`/`scripts/`.
+If the user wants to iterate the video first instead, the levers are:
+different voice (audition via `node scripts/preview-runware-voices.mjs`),
+different images (`node scripts/fetch-image-runware.mjs` — but it doesn't
+exist yet as a CLI, just the lib at `scripts/lib/runware-image.mjs`),
+different script angle (re-run Opus 4.8 via the prompt template in
+`docs/playbooks/script-and-copy.md`).
+
+### Traps (all verified live this session)
+1. **Render produces `yuv444p`** — only VLC plays it. Run `npm run to-yuv420 <file.mp4>`
+   after every render for universal player compat. LEARNINGS §4.
+2. **audio-duck volume jumps +6 dB when the bed drops out.** Loop the bed
+   to >2× comp duration (see `assets/music/binsparkle-bed-looped.mp3`
+   for the pattern). LEARNINGS §4.
+3. **silence-detect timings drift.** Use **whisper word-level** for slide
+   sync (`python scripts/_whisper_sentences.py <audio.mp3>` — currently a
+   throwaway; promote to a real script if used again).
+4. **Runware has no `en-NZ` voices.** Edge TTS does (`en-NZ-Molly/Mitchell`).
+   For NZ brands, Edge is both cheaper (free) and more authentic. See TRAPS
+   in `scripts/lib/runware-models.mjs`.
+5. **Opus 4.8 is the text default, not Fable 5.** Fable 5 is 8× the cost
+   for marginal gain. Fable 5 is in TRAPS.
+6. **Don't edit `render.mjs`/`smoke.mjs`/`index.html`** — extend only.
+
+### Discipline
+Default every Runware call to the cheapest tier that works; escalate only
+on borderline. Every call passes through the daily cap. Commit + push as
+you go. Ask before any live deploy.
 <!-- NEXT-SESSION:END -->
 
 ## Read first, every video task
