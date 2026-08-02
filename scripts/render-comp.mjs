@@ -28,6 +28,10 @@
 //   node scripts/render-comp.mjs --comp=videos/binsparkle/compositions/binsparkle-customer.html --lut=warm
 //   node scripts/render-comp.mjs --comp=videos/binsparkle/compositions/binsparkle-customer.html -- --gpu -w 2
 //   npm run render:comp -- --comp=videos/binsparkle/compositions/binsparkle-customer.html
+//   npm run render:comp -- --comp=videos/.../customer.html --judge   # + auto-critique the output
+//
+// --judge (opt-in): after the render lands, auto-runs judge-video.mjs on the
+// newest output. Cost-guarded by the daily cap (RUNWARE_DAILY_CAP, default $2).
 //
 // render.mjs stays 100% untouched — `npm run render` (no --comp) behaves identically.
 
@@ -116,6 +120,21 @@ try {
     moved++;
   }
   if (moved === 0) console.log("⚠ no new render files detected to move (render may have used --replace or failed silently)");
+  // --judge: after a successful render, auto-critique the newest output via
+  // judge-video (cost-guarded by the daily cap in lib/runware-vision.mjs).
+  if (argv.includes("--judge")) {
+    const mps = fs.readdirSync(slugDir).filter(f => f.endsWith(".mp4"))
+      .map(f => ({ f, t: fs.statSync(path.join(slugDir, f)).mtimeMs }))
+      .sort((a, b) => b.t - a.t);
+    if (mps.length) {
+      const newest = path.join(slugDir, mps[0].f);
+      console.log(`▶ --judge: critiquing ${path.relative(projectRoot, newest)}`);
+      const j = spawn(process.execPath, ["scripts/judge-video.mjs", `--video=${newest}`], { cwd: projectRoot, stdio: "inherit" });
+      await new Promise(r => j.on("close", r));
+    } else {
+      console.log("⚠ --judge: no .mp4 found in output to critique");
+    }
+  }
   console.log("✓ render-comp done");
 } catch (err) {
   console.error("✗", err.message);

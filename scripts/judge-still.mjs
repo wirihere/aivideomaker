@@ -123,7 +123,7 @@ for (const img of images) {
     console.log("  ⚠ could not parse structured verdict. Raw response:");
     console.log(result.text.split("\n").map(l => "    " + l).join("\n"));
   }
-  console.log(`  cost: ${result.cost != null ? "$" + result.cost.toFixed(6) : "n/a"}`);
+  console.log(`  cost: ${result.cost != null ? "$" + result.cost.toFixed(6) : "n/a"}` + (result.today ? `   today: $${result.today.spend.toFixed(4)} / $${result.today.cap.toFixed(2)} cap` : ""));
 
   if (wantLedger) {
     const ledgerPath = path.join(projectRoot, "videos", brand, "judge-ledger.md");

@@ -28,6 +28,9 @@ assets/.cache/*.*
 # Pixabay/etc fetcher rate-limit tracking
 .usage.json
 
+# Runware vision-judge daily spend tracker (per-machine state)
+.runware-usage.json
+
 # Node
 node_modules/
 npm-debug.log*
