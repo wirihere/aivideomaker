@@ -63,9 +63,14 @@ outputs, and the reusable prompt template: `docs/playbooks/script-and-copy.md`.
 
 | AIR id | Name | Price | Best for | Avoid for | Verified |
 |---|---|---|---|---|---|
-| — | — | — | Pending live probe. Candidate defaults: `runware:400@1` (FLUX.2 [dev]), `bfl:5@1` (FLUX.2 [pro]). | — | pending |
+| `runware:400@1` | FLUX.2 [dev] | $0.009 / image | **Default** for all social content — carousels, stories, thumbnails, base character images. Serverless (GPU-billed). | Hero shots where maximum detail and prompt adherence matter (use Pro). | 2026-08-03 |
+| `bfl:5@1` | FLUX.2 [pro] | $0.030 / image | Top-quality generation. Better prompt adherence and fine detail than dev. | Routine social content (dev is 3× cheaper and fine for carousels/stories). | 2026-08-03 |
 
-The still renderer (`scripts/render-still.mjs`) already drives image-gen — confirm which AIR it currently uses before adding to this table.
+**Default is dev.** Escalate to pro only for hero work where the extra detail is
+visible and cost doesn't matter. 7 character-base images on dev cost ~$0.06;
+the same set on pro costs ~$0.21. Image-to-image (feeding a reference back to
+keep the character consistent) uses the same model and price — call through
+`imageInference()` in `scripts/lib/runware-image.mjs`.
 
 ### TTS (text-to-audio)
 
