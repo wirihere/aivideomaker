@@ -33,6 +33,7 @@
     "judge:still": "node scripts/judge-still.mjs",
     "judge:video": "node scripts/judge-video.mjs",
     "describe:assets": "node scripts/describe-assets.mjs",
+    "gen:image": "node scripts/gen-image.mjs",
     "runware:usage": "node scripts/lib/runware-vision.mjs usage",
     "runware:models": "node scripts/lib/runware-models.mjs",
     "render:vite": "node scripts/render-vite.mjs",

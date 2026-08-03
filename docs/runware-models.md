@@ -63,14 +63,14 @@ outputs, and the reusable prompt template: `docs/playbooks/script-and-copy.md`.
 
 | AIR id | Name | Price | Best for | Avoid for | Verified |
 |---|---|---|---|---|---|
-| `runware:400@1` | FLUX.2 [dev] | $0.009 / image | **Default** for all social content — carousels, stories, thumbnails, base character images. Serverless (GPU-billed). | Hero shots where maximum detail and prompt adherence matter (use Pro). | 2026-08-03 |
-| `bfl:5@1` | FLUX.2 [pro] | $0.030 / image | Top-quality generation. Better prompt adherence and fine detail than dev. | Routine social content (dev is 3× cheaper and fine for carousels/stories). | 2026-08-03 |
+| `runware:400@1` | FLUX.2 [dev] | $0.009 / image (1024²) · $0.016 / image (1088×1920 social) | **Default** for all social content — carousels, stories, thumbnails, base character images. Serverless (GPU-billed). | Hero shots where maximum detail and prompt adherence matter (use Pro). | 2026-08-03 |
+| `bfl:5@1` | FLUX.2 [pro] | $0.030 / image (1024²) · scales with resolution | Top-quality generation. Better prompt adherence and fine detail than dev. | Routine social content (dev is 3× cheaper at square and fine for carousels/stories). | 2026-08-03 |
 
-**Default is dev.** Escalate to pro only for hero work where the extra detail is
-visible and cost doesn't matter. 7 character-base images on dev cost ~$0.06;
-the same set on pro costs ~$0.21. Image-to-image (feeding a reference back to
-keep the character consistent) uses the same model and price — call through
-`imageInference()` in `scripts/lib/runware-image.mjs`.
+**Pricing scales with resolution** (serverless = GPU-seconds). Social-sized
+9:16 images (1088×1920, the nearest valid FLUX size to 1080×1920) cost ~$0.016
+on dev. **Default is dev.** Escalate to pro only for hero work. 7
+character-base images at social size on dev ≈ $0.11. Full playbook:
+`docs/playbooks/image-generation.md`.
 
 ### TTS (text-to-audio)
 

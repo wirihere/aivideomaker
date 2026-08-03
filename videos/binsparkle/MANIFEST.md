@@ -171,13 +171,16 @@ knows every image without a human re-explaining.
 When new images arrive — supplied photos, freshly generated, pulled from a
 brand repo — do this every time:
 
-1. Drop them into `videos/binsparkle/assets/` (PNG preferred, descriptive filename).
-2. Run `npm run describe:assets -- --dir=videos/binsparkle/assets`
-3. The catalogue rewrites with ALL images (old + new) — each one
+1. **Generate** (if AI): `npm run gen:image -- --prompt="..." --out=videos/binsparkle/assets/<name>.png`
+   — full playbook at [`docs/playbooks/image-generation.md`](../../docs/playbooks/image-generation.md).
+   Or drop supplied photos straight in.
+2. Drop them into `videos/binsparkle/assets/` (PNG preferred, descriptive filename).
+3. Run `npm run describe:assets -- --dir=videos/binsparkle/assets`
+4. The catalogue rewrites with ALL images (old + new) — each one
    vision-described (~$0.0015/image). Re-running on the whole folder is by
    design; it refreshes everything, not just the new files.
-4. Commit the updated `asset-catalogue.{json,md}` alongside the new images.
-5. Every session and every content prompt can now reason about the new
+5. Commit the updated `asset-catalogue.{json,md}` alongside the new images.
+6. Every session and every content prompt can now reason about the new
    images automatically.
 
 This is not optional and not a one-off. If a base image lands in `assets/`
