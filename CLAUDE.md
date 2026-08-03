@@ -1,58 +1,53 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-03
+## ▶ Start here — written 2026-08-03, end of session
 
-**READ FIRST:** [`videos/binsparkle/MANIFEST.md`](videos/binsparkle/MANIFEST.md)
-— the running source-of-truth for everything BinSparkle. Assets, compositions,
-renders, posts ledger, vision tooling, traps, open threads. Every section has a
-`verified` date; re-check before relying on any line older than a week.
+**READ FIRST (in order):**
+1. [`videos/binsparkle/MANIFEST.md`](videos/binsparkle/MANIFEST.md) — the brand state file
+2. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) — the 9 rules (mandatory)
+3. The **tool map** below in this file — every command, asset, and playbook
 
-This block is the current briefing only — replace it wholesale next session,
-never keep a second. The stable detail lives in the manifest.
+**Verify before you trust this.** Postiz data was verified live at end of
+session (2026-08-03 ~20:40 UTC). Repo heads confirmed pushed. Re-query
+Postiz (the command is in `posts.md`) if any post state looks stale.
 
-### Verify before you trust this
-- Repo heads: `git rev-parse HEAD` ↔ `origin/main` (push isn't always automatic).
-- Runware pricing: `npm run runware:models` and the `verified` dates in `docs/runware-models.md`.
-- The manifest's own `verified` dates — if old, re-check against the real system.
+### What shipped this session
+- **Manifest + asset catalogue + posts ledger** — the discoverability layer. 53 images vision-described. Any session can now find every asset.
+- **`gen:image` + `describe:assets` + `post` commands** — one-command image generation, catalogue refresh, and posting.
+- **Character toolkit: 24 transparent cut-outs** (12 clean + 12 dirty, 3 angles each) + 8 background scenes. All in `videos/binsparkle/assets/cutouts/`.
+- **5 compositions** built (hero story carousel, Tinder carousel v2, "say" carousel, Tinder swipe video, speech bubble video).
+- **Content creation playbook** (9 rules) + **tool map** in CLAUDE.md.
+- **Postiz playbook corrected** (wrong API path `/api/public/v1` → `/public/v1`; IPv6 networking trap documented).
 
-### The architecture decision (still in force)
-**Everything content lives in THIS repo (aivideomaker). One spot.** The brand
-manifest, asset catalogue, posts ledger, and all scripts are here under
-`videos/binsparkle/`. Do not spread content across folders.
-- `bin-sparkle-social` — NOT used. `docs/social-media-pipeline.md` here is obsolete.
-- `bin-sparkle` (the live website repo) — NOT touched for content; brand kit copied in.
-- `autonomous-runner` — separate, reusable cron. Out of scope until unattended runs are wanted.
+### Content calendar (verified against Postiz 2026-08-03)
 
-### What got built this session (2026-08-03)
-- **Project manifest** at `videos/binsparkle/MANIFEST.md` — the one file a fresh session reads.
-- **Asset catalogue** at `videos/binsparkle/assets/asset-catalogue.{json,md}` — all 14 images vision-described (subject, mood, colours, alt text, suggested uses). Refresh with `npm run describe:assets -- --dir=videos/binsparkle/assets`.
-- **Posts ledger** at `videos/binsparkle/posts.md` — populated from the Postiz Postgres DB. Found **4 carousel posts + 1 test post** the prior session made on 2026-08-02 and never recorded. The query to re-verify is in the ledger.
-- **`describe:assets` command** (`scripts/describe-assets.mjs`) — reusable vision-describer for any folder, cost-capped.
+| When (NZST) | What | Channel | State |
+|---|---|---|---|
+| Aug 3 (today) | Hero story carousel (8 slides) | FB + IG + Threads | ✅ PUBLISHED |
+| Aug 4, 8:30am | Tinder carousel (7 slides) | FB + IG + Threads | ⏳ QUEUED |
+| Aug 4, 1:30pm | "What your bin would say" carousel (7 slides) | FB + IG + Threads | ⏳ QUEUED |
+| Aug 4, 6pm | Tinder swipe video (20s) | FB + IG + Threads | ⏳ QUEUED |
+| Aug 5, 6pm | Speech bubble video (22s) | FB + IG + Threads | ⏳ QUEUED |
 
-### The next job — three funny stories
-1. **Make 3 stories (9:16, 1080×1920) using the existing image set** — the
-   `clean-*` and/or `0X_*` images, or the carousel slides already on Postiz.
-   Funny tone. Pick images from the catalogue's `good_for` column.
-2. **Bump the text size slightly on the carousel slides** for mobile
-   readability (the user's feedback on the 4 carousels posted 2026-08-02).
-   The slide images live on the Postiz VPS — pull them down if the source
-   template isn't in this repo.
+Plus 4 carousels + 1 test post from the prior session (Aug 2) — all published.
 
-Defer until needed: the `render:carousel` engine (the 4 carousels were made
-without it), the Full Care image set, the customer-ad re-record.
+### Meta app status
+Confirmed LIVE (user verified 2026-08-03). Posts are public. ✓
 
-### Discipline
-Cheapest Runware tier that works; escalate only on borderline; every call under
-the $2/day cap (`npm run runware:usage` to check). Commit + push as you go.
-**Ask before any live post or deploy.**
+### Open jobs (next session)
+1. **Check the Aug 4 morning carousel actually published.** It's the first scheduled post — if it didn't go out, the scheduling pipeline has a bug.
+2. **Build the remaining 3 carousel concepts** ("week in the life", "stages of a dirty bin", "POV: you're a bin") — we had 5 concepts, built 2.
+3. **Optimise `describe:assets`** — 53 images takes 10+ minutes. Needs parallel calls or skip-unchanged logic.
+4. **Fetch more SFX** — only whoosh + ding. A pop, chime, swoosh would add polish. Use `fetch-pixabay-sfx.mjs`.
+5. **Update the posts ledger** (`videos/binsparkle/posts.md`) with all scheduled posts — it's behind.
 
-### Traps (full list in the manifest §9)
-1. Render outputs `yuv444p` → `npm run to-yuv420 <mp4>` after every render.
-2. `voiceover/binsparkle-recruit-music.mp3` is NOT music — it's spoken VO.
-3. Runware has no `en-NZ` voices → Edge TTS `en-NZ-MollyNeural` for NZ.
-4. Runware vision = `textInference` + image (NOT the `caption` task).
-5. Don't edit `render.mjs`/`smoke.mjs`/`index.html` — extend only. Brand stuff → `videos/<brand>/`.
+### Traps
+1. Postiz API path is `/public/v1` (no `/api/`). The playbook was wrong; now corrected.
+2. VPS can't reach its own public URL (IPv6). Use Docker internal IP — the `post` command handles this automatically.
+3. Audio elements in compositions MUST have `id` attributes or they're silent.
+4. Every render needs `to-yuv420` after.
+5. The `post` command's bash script had a duplicate-post bug on first run (unclosed quote created posts before erroring). Fixed, but always check for duplicates after posting.
 <!-- NEXT-SESSION:END -->
 
 ## Tool map — READ BEFORE BUILDING ANYTHING
