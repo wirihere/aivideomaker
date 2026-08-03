@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — What Your Bin Would Say</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="bsTile" x1="0" y1="0" x2="0.55" y2="1">
+    <stop offset="0" stop-color="#3f9463"/><stop offset="1" stop-color="#1d5634"/>
+  </linearGradient>
+  <linearGradient id="bsSun" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#fdd479"/><stop offset="1" stop-color="#f4b942"/>
+  </linearGradient>
+</defs></svg>
+
+<style>
+  body { margin: 0; background: #0f2b1d; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #0f2b1d; }
+
+  .slide { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  /* Light darkening at the top and bottom for wordmark + speech bubble legibility */
+  .slide::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgba(9,26,18,0.5) 0%, rgba(9,26,18,0) 18%),
+      linear-gradient(to top, rgba(9,26,18,0.65) 0%, rgba(9,26,18,0.3) 15%, rgba(9,26,18,0) 30%); }
+
+  /* Character cut-out */
+  .char { position: absolute; bottom: 300px; left: 50%; transform: translateX(-50%);
+          z-index: 3; max-height: 1150px; max-width: 880px; }
+
+  /* Speech bubble */
+  .bubble { position: absolute; z-index: 5; left: 70px; right: 70px;
+            background: rgba(250,246,238,0.96);
+            border-radius: 48px; padding: 48px 56px 56px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+  .bubble.top { top: 200px; }
+  .bubble.mid { top: 240px; }
+  .bubble .quote { font-family: var(--card-font-display); font-weight: 800;
+                   font-size: 76px; line-height: 1.04; letter-spacing: -0.02em;
+                   color: #0d2218; margin: 0; }
+  .bubble .quote em { font-style: normal; color: #2f7a4d; }
+  .bubble .quote i { font-style: normal; color: #c25a35; }
+  /* Tail pointing down toward the character */
+  .bubble::after { content: ""; position: absolute; bottom: -30px; left: 50%;
+                   transform: translateX(-50%);
+                   width: 0; height: 0;
+                   border-left: 30px solid transparent;
+                   border-right: 30px solid transparent;
+                   border-top: 30px solid rgba(250,246,238,0.96); }
+
+  /* Wordmark */
+  .wordmark { position: absolute; top: 48px; left: 0; right: 0; z-index: 60;
+              display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .wordmark svg { width: 48px; height: 48px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.5)); }
+  .wordmark span { font-family: var(--card-font-display); font-weight: 800; font-size: 34px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  /* Bottom caption for slides without a speech bubble (slide 7 CTA) */
+  .bottom-cta { position: absolute; left: 0; right: 0; bottom: 160px; z-index: 5;
+                text-align: center; }
+  .bottom-cta .line { font-family: var(--card-font-display); font-weight: 800;
+                      font-size: 84px; line-height: 1.0; letter-spacing: -0.03em;
+                      color: #fff; margin: 0; text-shadow: 0 4px 30px rgba(0,0,0,0.7); }
+  .bottom-cta .line em { font-style: normal; color: #f4b942; }
+
+  .ctapill { position: absolute; left: 50%; transform: translateX(-50%);
+             bottom: 60px; z-index: 6;
+             font-family: var(--card-font-ui); font-weight: 700; font-size: 42px;
+             color: #0f2b1d; background: #f4b942;
+             padding: 22px 54px; border-radius: 999px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+             white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div id="binsparkle-say" class="comp" data-composition-id="binsparkle-say"
+     data-width="1080" data-height="1920">
+
+  <!-- Slide 1 — "go ahead. pretend i'm not here." -->
+  <div class="slide clip" data-start="0" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-05-behind-garage.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-cheeky-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="bubble top">
+      <p class="quote">go ahead. <em>pretend i'm not here.</em></p>
+    </div>
+  </div>
+
+  <!-- Slide 2 — "even I can't handle what's inside me right now." -->
+  <div class="slide clip" data-start="1" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-03-rainy-curb.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-disgusted-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="bubble mid">
+      <p class="quote">even <em>I</em> can't handle what's inside me <i>right now.</i></p>
+    </div>
+  </div>
+
+  <!-- Slide 3 — "something moved in there. i felt it." -->
+  <div class="slide clip" data-start="2" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-04-storm.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-worried-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="bubble top">
+      <p class="quote">something <i>moved</i> in there. <em>i felt it.</em></p>
+    </div>
+  </div>
+
+  <!-- Slide 4 — "35 degrees out and you left me like THIS?" -->
+  <div class="slide clip" data-start="3" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-08-summer-heat.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-side-annoyed-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="bubble mid">
+      <p class="quote">35 degrees out and you <i>left me like THIS?</i></p>
+    </div>
+  </div>
+
+  <!-- Slide 5 — "oh. OH. someone actually came." -->
+  <div class="slide clip" data-start="4" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-06-spring-garden.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-surprised-cutout.png" alt="" style="bottom: 350px;">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="bubble top">
+      <p class="quote">oh. <em>OH.</em> someone actually came.</p>
+    </div>
+  </div>
+
+  <!-- Slide 6 — "i can see in colour again." -->
+  <div class="slide clip" data-start="5" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-01-sunny-curb.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-happy-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="bubble top">
+      <p class="quote">i can see in <em>colour</em> again.</p>
+    </div>
+  </div>
+
+  <!-- Slide 7 — CTA -->
+  <div class="slide clip" data-start="6" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-02-golden-driveway.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-proud-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="bottom-cta">
+      <p class="line">book a clean.</p>
+      <p class="line"><em>change a bin's life.</em></p>
+    </div>
+    <div class="ctapill">binsparkle.nz</div>
+  </div>
+
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  window.__timelines["binsparkle-say"] = gsap.timeline({ paused: true });
+</script>
+</body>
+</html>
