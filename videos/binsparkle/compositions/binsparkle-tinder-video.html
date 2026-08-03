@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Tinder Swipe Video</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="bsTile" x1="0" y1="0" x2="0.55" y2="1">
+    <stop offset="0" stop-color="#3f9463"/><stop offset="1" stop-color="#1d5634"/>
+  </linearGradient>
+  <linearGradient id="bsSun" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#fdd479"/><stop offset="1" stop-color="#f4b942"/>
+  </linearGradient>
+</defs></svg>
+
+<style>
+  body { margin: 0; background: #1a1a2e; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #1a1a2e; }
+
+  .card { position: absolute; inset: 0; z-index: 5; overflow: hidden; will-change: transform, opacity; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0) 38%); }
+  .char { position: absolute; bottom: 340px; left: 50%; transform: translateX(-50%);
+          z-index: 3; max-height: 1250px; max-width: 920px; }
+  .profile { position: absolute; left: 56px; right: 56px; bottom: 230px; z-index: 4; }
+  .profile .name-age { font-family: var(--card-font-display); font-weight: 800;
+                       font-size: 76px; line-height: 1.0; letter-spacing: -0.02em;
+                       color: #fff; margin: 0; text-shadow: 0 2px 20px rgba(0,0,0,0.6); }
+  .profile .name-age em { font-style: normal; color: #f4b942; }
+  .profile .detail { font-family: var(--card-font-ui); font-weight: 600;
+                     font-size: 46px; line-height: 1.15; color: #e8e8e8; margin: 14px 0 0;
+                     text-shadow: 0 2px 15px rgba(0,0,0,0.6); }
+  .profile .tag { display: inline-block; font-size: 40px; font-weight: 700;
+                  color: #c25a35; margin: 10px 0 0; }
+
+  .actions { position: absolute; bottom: 60px; left: 0; right: 0; z-index: 10;
+             display: flex; justify-content: center; align-items: center; gap: 22px; }
+  .btn { border-radius: 50%; background: #fff; display: flex;
+         align-items: center; justify-content: center;
+         box-shadow: 0 6px 20px rgba(0,0,0,0.2); will-change: transform; }
+  .btn.sm { width: 74px; height: 74px; font-size: 32px; }
+  .btn.md { width: 88px; height: 88px; font-size: 40px; }
+  .btn.lg { width: 100px; height: 100px; font-size: 46px; }
+  .btn.rewind { border: 3px solid #fcc136; color: #fcc136; }
+  .btn.x { border: 3px solid #fd5c5c; color: #fd5c5c; }
+  .btn.star { border: 3px solid #1aa7ff; color: #1aa7ff; }
+  .btn.heart { border: 3px solid #3ad0c0; color: #3ad0c0; }
+  .btn.boost { border: 3px solid #b14dff; color: #b14dff; }
+
+  .wordmark { position: absolute; top: 48px; left: 0; right: 0; z-index: 60;
+              display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .wordmark svg { width: 48px; height: 48px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.5)); }
+  .wordmark span { font-family: var(--card-font-display); font-weight: 800; font-size: 34px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  .match-screen { position: absolute; inset: 0; z-index: 20; opacity: 0;
+                  background: linear-gradient(160deg, #1a1a2e 0%, #2d1b4e 50%, #1a1a2e 100%);
+                  display: flex; flex-direction: column;
+                  align-items: center; justify-content: center; }
+  .match-cards { display: flex; gap: 40px; align-items: center; margin-bottom: 60px; }
+  .match-card { width: 340px; height: 340px; border-radius: 28px; overflow: hidden;
+                border: 5px solid #fff; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+  .match-card img { width: 100%; height: 100%; object-fit: cover; }
+  .match-card.logo { background: linear-gradient(135deg, #2f7a4d, #1f5b38);
+                     display: flex; align-items: center; justify-content: center; }
+  .match-text { text-align: center; }
+  .match-text .title { font-family: var(--card-font-display); font-weight: 800;
+                       font-size: 88px; color: #f4b942; margin: 0; letter-spacing: -0.03em; }
+  .match-text .sub { font-size: 44px; font-weight: 600; color: #e8e8e8; margin: 16px 0 0; }
+
+  .ctapill { position: absolute; left: 50%; transform: translateX(-50%);
+             bottom: 180px; z-index: 10;
+             font-family: var(--card-font-ui); font-weight: 700; font-size: 42px;
+             color: #0f2b1d; background: #f4b942;
+             padding: 22px 54px; border-radius: 999px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.4); white-space: nowrap; }
+
+  .streak { position: absolute; inset: 0; z-index: 15; pointer-events: none;
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0) 38%,
+                     rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 62%, transparent 100%);
+            filter: blur(18px); }
+</style>
+</head>
+<body>
+
+<div id="tinder-swipe-video" class="comp" data-composition-id="tinder-swipe-video"
+     data-width="1080" data-height="1920">
+
+  <!-- Background music -->
+  <audio class="clip" src="assets/music/binsparkle-bed.mp3" data-start="0" data-duration="10" data-track-index="8" data-volume="0.12" loop></audio>
+
+  <!-- Card 1: dirty proud -->
+  <div class="card clip" id="card1" data-start="0" data-duration="1.4" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-05-behind-garage.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-proud-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="profile">
+      <p class="name-age">your bin, <em>4 months</em></p>
+      <p class="detail">4 km away · behind the garage</p>
+    </div>
+    <div class="actions">
+      <div class="btn sm rewind">⟲</div><div class="btn lg x" id="x1">✕</div>
+      <div class="btn md star">★</div><div class="btn lg heart">♥</div><div class="btn sm boost">⚡</div>
+    </div>
+  </div>
+
+  <!-- Card 2: dirty cheeky -->
+  <div class="card clip" id="card2" data-start="1.1" data-duration="1.4" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-05-behind-garage.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-cheeky-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="profile">
+      <p class="name-age">your bin, <em>4 months</em></p>
+      <p class="detail">"i've got depth, character, and a thriving ecosystem 🦠"</p>
+    </div>
+    <div class="actions">
+      <div class="btn sm rewind">⟲</div><div class="btn lg x" id="x2">✕</div>
+      <div class="btn md star">★</div><div class="btn lg heart">♥</div><div class="btn sm boost">⚡</div>
+    </div>
+  </div>
+
+  <!-- Card 3: dirty love -->
+  <div class="card clip" id="card3" data-start="2.1" data-duration="1.4" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-03-rainy-curb.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-side-love-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="profile">
+      <p class="name-age">your bin, <em>4 months</em></p>
+      <p class="detail">looking for: someone who'll love me for who i am inside 💔</p>
+    </div>
+    <div class="actions">
+      <div class="btn sm rewind">⟲</div><div class="btn lg x" id="x3">✕</div>
+      <div class="btn md star">★</div><div class="btn lg heart">♥</div><div class="btn sm boost">⚡</div>
+    </div>
+  </div>
+
+  <!-- Card 4: dirty disgusted -->
+  <div class="card clip" id="card4" data-start="3.1" data-duration="1.4" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-04-storm.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-disgusted-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="profile">
+      <p class="name-age">your bin, <em>4 months</em></p>
+      <p class="tag">🚩 open me at your own risk</p>
+    </div>
+    <div class="actions">
+      <div class="btn sm rewind">⟲</div><div class="btn lg x" id="x4">✕</div>
+      <div class="btn md star">★</div><div class="btn lg heart" id="heart4">♥</div><div class="btn sm boost">⚡</div>
+    </div>
+  </div>
+
+  <!-- Card 5: clean surprised (swiped RIGHT) -->
+  <div class="card clip" id="card5" data-start="4.1" data-duration="1.4" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-06-spring-garden.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-surprised-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="profile">
+      <p class="name-age">your bin, <em>today</em></p>
+      <p class="detail">wait… someone actually came? ✨</p>
+    </div>
+    <div class="actions">
+      <div class="btn sm rewind">⟲</div><div class="btn lg x">✕</div>
+      <div class="btn md star">★</div><div class="btn lg heart" id="heart5">♥</div><div class="btn sm boost">⚡</div>
+    </div>
+  </div>
+
+  <!-- Match screen -->
+  <div class="match-screen clip" id="match" data-start="5.0" data-duration="1.8" data-track-index="1">
+    <div class="match-cards">
+      <div class="match-card"><img src="videos/binsparkle/assets/char2-quarter-cheeky-dirty.png" alt=""></div>
+      <div style="font-size: 80px;">💛</div>
+      <div class="match-card logo"><svg viewBox="0 0 64 64" style="width:140px;height:140px;"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg></div>
+    </div>
+    <div class="match-text">
+      <p class="title">It's a Match!</p>
+      <p class="sub">binsparkle can clean you up ✨</p>
+    </div>
+  </div>
+
+  <!-- Card 6: clean happy -->
+  <div class="card clip" id="card6" data-start="6.5" data-duration="1.5" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-02-golden-driveway.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-happy-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="profile">
+      <p class="name-age">your bin, <em>today</em></p>
+      <p class="detail">first date went great ✨ feeling like myself again</p>
+    </div>
+    <div class="actions">
+      <div class="btn sm rewind">⟲</div><div class="btn lg x">✕</div>
+      <div class="btn md star">★</div><div class="btn lg heart" style="background:#3ad0c0;color:#fff;">♥</div><div class="btn sm boost">⚡</div>
+    </div>
+  </div>
+
+  <!-- Card 7: CTA -->
+  <div class="card clip" id="card7" data-start="7.5" data-duration="2.5" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-01-sunny-curb.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-proud-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="profile" style="text-align:center;left:0;right:0;">
+      <p class="name-age">book YOUR bin <em>a date 🧹</em></p>
+    </div>
+    <div class="ctapill">binsparkle.nz</div>
+  </div>
+
+  <!-- Swipe streaks (track 11) -->
+  <div class="streak clip" id="streak1" data-start="1.0" data-duration="0.5" data-track-index="11"></div>
+  <div class="streak clip" id="streak2" data-start="2.0" data-duration="0.5" data-track-index="11"></div>
+  <div class="streak clip" id="streak3" data-start="3.0" data-duration="0.5" data-track-index="11"></div>
+  <div class="streak clip" id="streak4" data-start="4.0" data-duration="0.5" data-track-index="11"></div>
+
+  <!-- Whoosh SFX (track 12) -->
+  <audio class="clip" src="assets/sfx/whoosh-short.mp3" data-start="1.0" data-duration="0.65" data-track-index="12" data-volume="0.55"></audio>
+  <audio class="clip" src="assets/sfx/whoosh-short.mp3" data-start="2.0" data-duration="0.65" data-track-index="12" data-volume="0.55"></audio>
+  <audio class="clip" src="assets/sfx/whoosh-short.mp3" data-start="3.0" data-duration="0.65" data-track-index="12" data-volume="0.55"></audio>
+  <audio class="clip" src="assets/sfx/whoosh-short.mp3" data-start="4.0" data-duration="0.65" data-track-index="12" data-volume="0.65"></audio>
+  <audio class="clip" src="assets/sfx/ding.wav" data-start="5.1" data-duration="1.0" data-track-index="12" data-volume="0.7"></audio>
+
+</div>
+
+<script>
+  // Set initial hidden states for cards 2-7 and match
+  gsap.set(["#card2","#card3","#card4","#card5","#card6","#card7"], { opacity: 0 });
+  gsap.set(["#streak1","#streak2","#streak3","#streak4"], { opacity: 0 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // --- Swipe 1: card1 left ---
+  tl.to("#x1", { scale: 1.6, duration: 0.12, ease: "back.out(2)" }, 1.0)
+    .to("#card1", { x: -1280, rotation: -12, opacity: 0, duration: 0.35, ease: "power3.in" }, 1.03)
+    .fromTo("#streak1", { x: "-100%", opacity: 0 }, { x: "100%", opacity: 1, duration: 0.3, ease: "power2.inOut" }, 1.0)
+    .to("#streak1", { opacity: 0, duration: 0.1 }, 1.35);
+
+  // Card 2 enters from right
+  tl.set("#card2", { x: 700, opacity: 0 }, 1.15)
+    .to("#card2", { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 1.2);
+
+  // --- Swipe 2: card2 left ---
+  tl.to("#x2", { scale: 1.6, duration: 0.12, ease: "back.out(2)" }, 2.0)
+    .to("#card2", { x: -1280, rotation: -12, opacity: 0, duration: 0.35, ease: "power3.in" }, 2.03)
+    .fromTo("#streak2", { x: "-100%", opacity: 0 }, { x: "100%", opacity: 1, duration: 0.3, ease: "power2.inOut" }, 2.0)
+    .to("#streak2", { opacity: 0, duration: 0.1 }, 2.35);
+
+  // Card 3 enters from right
+  tl.set("#card3", { x: 700, opacity: 0 }, 2.15)
+    .to("#card3", { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 2.2);
+
+  // --- Swipe 3: card3 left ---
+  tl.to("#x3", { scale: 1.6, duration: 0.12, ease: "back.out(2)" }, 3.0)
+    .to("#card3", { x: -1280, rotation: -12, opacity: 0, duration: 0.35, ease: "power3.in" }, 3.03)
+    .fromTo("#streak3", { x: "-100%", opacity: 0 }, { x: "100%", opacity: 1, duration: 0.3, ease: "power2.inOut" }, 3.0)
+    .to("#streak3", { opacity: 0, duration: 0.1 }, 3.35);
+
+  // Card 4 enters from right
+  tl.set("#card4", { x: 700, opacity: 0 }, 3.15)
+    .to("#card4", { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 3.2);
+
+  // --- Swipe RIGHT: card4 → match (the "like") ---
+  tl.to("#heart4", { scale: 1.6, duration: 0.12, ease: "back.out(2)" }, 4.0)
+    .to("#card4", { x: 1280, rotation: 12, opacity: 0, duration: 0.35, ease: "power3.in" }, 4.03)
+    .fromTo("#streak4", { x: "100%", opacity: 0 }, { x: "-100%", opacity: 1, duration: 0.3, ease: "power2.inOut" }, 4.0)
+    .to("#streak4", { opacity: 0, duration: 0.1 }, 4.35);
+
+  // Card 5 enters from LEFT (because we swiped right)
+  tl.set("#card5", { x: -700, opacity: 0 }, 4.15)
+    .to("#card5", { x: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 4.2);
+
+  // Match screen pops up
+  tl.to("#card5", { opacity: 0.3, scale: 0.95, duration: 0.3, ease: "power2.in" }, 5.0)
+    .fromTo("#match", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 5.1);
+
+  // Match fades out
+  tl.to("#match", { opacity: 0, scale: 1.05, duration: 0.4, ease: "power2.in" }, 6.4);
+
+  // Card 6 fades in
+  tl.to("#card6", { opacity: 1, duration: 0.5, ease: "power2.out" }, 6.5);
+
+  // Card 7 fades in
+  tl.to("#card7", { opacity: 1, duration: 0.5, ease: "power2.out" }, 7.5);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["tinder-swipe-video"] = tl;
+</script>
+</body>
+</html>
