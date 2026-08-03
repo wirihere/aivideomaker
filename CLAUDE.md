@@ -55,6 +55,76 @@ the $2/day cap (`npm run runware:usage` to check). Commit + push as you go.
 5. Don't edit `render.mjs`/`smoke.mjs`/`index.html` — extend only. Brand stuff → `videos/<brand>/`.
 <!-- NEXT-SESSION:END -->
 
+## Tool map — READ BEFORE BUILDING ANYTHING
+
+> **The rule:** before creating any content (video, carousel, story, image post,
+> sound effect), check this map. Use the tools that already exist. Read the
+> playbook that covers the task. Never reinvent with external tools (ffmpeg,
+> manual image editing, hand-rolled API calls) when a command or playbook
+> already does it. If you find yourself reaching for something that isn't on
+> this map, STOP and look harder — it probably exists.
+
+### Commands (the tools)
+
+| Command | What it does | When to use |
+|---|---|---|
+| `npm run gen:image -- --prompt="…" --out=<path>` | Generate an image via FLUX.2 dev ($0.016/social, $0.009/square) | Creating new base images, character art, backgrounds |
+| `npm run describe:assets -- --dir=<folder>` | Vision-describe every image, writes `asset-catalogue.{json,md}` | After adding ANY new image to an assets folder. Not optional. |
+| `npm run render:comp -- --comp=<path>` | Render a HyperFrames composition to MP4 | **Video** — animated compositions with GSAP timelines |
+| `npm run render:still -- --comp=<path> --at=<times>` | Capture PNG(s) from a composition | **Static slides** — carousels, stories, image posts |
+| `npm run judge:still -- --image=<path>` | Score a still against the brand rubric | QA on rendered slides |
+| `npm run judge:video -- --image=<path>` | Score a video contact-sheet | QA on rendered video |
+| `npm run runware:usage` | Today's Runware spend vs the $2/day cap | Before any batch of API calls |
+| `npx hyperframes lint` | Validate a composition (errors + warnings) | After EVERY composition edit, before rendering |
+| `npx hyperframes preview` | Preview in browser | Checking composition timing/animation interactively |
+
+### Asset library (where things live)
+
+| What | Where | Notes |
+|---|---|---|
+| **Sound effects** | `assets/sfx/` | whoosh-short.mp3 (swipe/whip transitions), ding.wav, impacts, sweeps, ticks, pads. Reusable — one file, many compositions. |
+| **Music beds** | `assets/music/` | Curated shortlists per register in `assets/music-shortlists/` |
+| **Voiceover output** | `assets/voiceover/` + `videos/<brand>/voiceover/` | TTS .mp3 + .vtt captions |
+| **Base images** | `videos/<brand>/assets/` | Catalogued in `asset-catalogue.{json,md}` — check the catalogue, not the filenames |
+| **Character cut-outs** | `videos/<brand>/assets/cutouts/` | Transparent PNGs (character art with background removed via rembg) |
+| **Brand kit** | `videos/<brand>/assets/brand/` | Logo SVGs, mark variants |
+| **Fonts** | `videos/<brand>/assets/fonts/` | Web font subsets |
+| **Brand tokens** | `videos/<brand>/tokens.css` | Colours, font families — the single source for the look |
+| **Judge rubrics** | `videos/<brand>/judge-rubrics/` | Brand-safe-zone rules, scoring criteria |
+| **Design system** | `design/` | Shared CSS modules, templates, vendor (GSAP), card components |
+| **Composition templates** | `compositions/templates/` | Per-archetype, per-register reference implementations |
+| **Text animation patterns** | `assets/svg-animations/text-fx/` | Typewriter, cascade, underline-draw, circle-around, etc. |
+
+### Playbooks (read the relevant one BEFORE building)
+
+| Playbook | Covers | Read before |
+|---|---|---|
+| `docs/playbooks/composition-assembly.md` | Every video archetype's layout, timing, animation, audio | Building ANY video composition |
+| `docs/playbooks/transitions.md` | Scene transitions: whip+whoosh, cross-dissolve, color wash, match cut | Adding transitions between scenes |
+| `docs/playbooks/image-generation.md` | FLUX.2 dev model, gen:image CLI, character-set consistency, the generate→describe→commit workflow | Generating new images |
+| `docs/playbooks/script-and-copy.md` | Copywriting process, model selection, A/B testing | Writing scripts, captions, ad copy |
+| `docs/playbooks/music.md` | Music selection per register | Choosing background music |
+| `docs/playbooks/cards-library.md` | Card component patterns | Building card-based layouts |
+| `docs/playbooks/atmospheric-polish.md` | Polish: grain, vignette, ambient layers | Final visual polish pass |
+| `docs/skills/how-a-video-gets-made.md` | The full 10-stage process from URL to MP4 | The founding process doc — read first if new |
+
+### The decision tree: "how do I make X?"
+
+| I want to make… | Use this | Read this playbook first |
+|---|---|---|
+| A **video** (animated, with sound) | HyperFrames composition + `render:comp` | `composition-assembly.md` + `transitions.md` |
+| A **carousel** (swipeable static slides) | HyperFrames composition + `render:still` per slide | Check brand manifest §7 |
+| A **story** (single 9:16 frame) | HyperFrames composition + `render:still` | Check brand manifest §7 |
+| A **single image post** | Pick from catalogue + overlay text in composition + `render:still` | Check brand manifest §7 |
+| A **new base image** | `gen:image` | `image-generation.md` |
+| **Sound effects** | Check `assets/sfx/` first. Fetch new via `fetch-pixabay-sfx.mjs` | `transitions.md` (whoosh setup) |
+| **Music** | Check `assets/music/` + shortlists. Fetch via `fetch-pixabay-music.mjs` or Runware `ace-step` | `music.md` |
+| **Voiceover** | Edge TTS (`fetch-tts-edge.mjs`) or Runware TTS | `voices.md` |
+
+### Before you reach for ffmpeg
+
+**Stop.** ffmpeg is used INSIDE the pipeline (render:comp, to-yuv420, audio mixing) — it is not a content-creation tool. If you're about to write an ffmpeg command to create a video, transition, or effect, you should be building a HyperFrames composition instead. The composition handles animation, audio, and rendering. ffmpeg is the engine, not the steering wheel.
+
 ## Read first, every video task
 
 **Founding doc:** [`docs/skills/how-a-video-gets-made.md`](docs/skills/how-a-video-gets-made.md)
