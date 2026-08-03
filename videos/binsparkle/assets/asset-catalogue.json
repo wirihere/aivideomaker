@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-08-02 22:44",
+  "generated_at": "2026-08-03 00:14",
   "model": "openai:gpt@5-mini",
   "dir": "videos/binsparkle/assets",
-  "image_count": 14,
+  "image_count": 21,
   "images": [
     {
       "file": "01_dirty.png",
       "path": "videos/binsparkle/assets/01_dirty.png",
-      "subject": "a weathered green wheelie bin with lid open on a suburban curb",
-      "mood": "muted, slightly melancholic daylight",
+      "subject": "a weathered green wheelie bin on a suburban verge, lid open",
+      "mood": "quiet, overcast, slightly gritty",
       "dominant_colours": [
-        "#384a40",
-        "#89a65a",
-        "#e9e8df"
+        "#3f5a46",
+        "#a8b885",
+        "#e9e7df"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "A weathered green outdoor wheelie bin with its lid open on a suburban curb in front of a house.",
+      "alt_text": "A weathered green wheelie bin with its lid open on a suburban verge in front of a white house.",
       "good_for": [
-        "carousel slide",
         "story background",
+        "hero image",
         "thumbnail",
         "video beat"
       ]
@@ -27,37 +27,55 @@
     {
       "file": "02_smell.png",
       "path": "videos/binsparkle/assets/02_smell.png",
-      "subject": "a woman checking a mailbox on a sunny suburban street, looking displeased",
-      "mood": "irritated, squinting in harsh sunlight",
+      "subject": "woman opening a mailbox on a suburban street, looking displeased",
+      "mood": "annoyed, harsh midday sunlight",
       "dominant_colours": [
-        "#cbb695",
-        "#3b6b3b",
-        "#8fc5e6"
+        "#2f4f36",
+        "#c9b18b",
+        "#8fc8f0"
       ],
       "text_in_frame": "none",
-      "people": "one adult woman, approx. 40s–50s, casual tank top and denim shorts, stern/displeased demeanour",
-      "alt_text": "Middle-aged woman in tank top and shorts looks displeased while checking a suburban mailbox.",
+      "people": "1 woman, approximately 40–50, displeased expression, casual tank top and denim shorts",
+      "alt_text": "Woman in a tank top opens a mailbox on a sunny suburban street, looking displeased.",
       "good_for": [
-        "carousel slide",
-        "story background",
-        "thumbnail"
+        "thumbnail",
+        "hero image",
+        "story background"
       ]
     },
     {
       "file": "03_book.png",
       "path": "videos/binsparkle/assets/03_book.png",
-      "subject": "person holding a smartphone showing a booking form in a kitchen",
-      "mood": "calm, natural light, homey",
+      "subject": "person holding a phone showing a booking form in a kitchen",
+      "mood": "warm, calm, domestic",
       "dominant_colours": [
-        "#d9cbb3",
-        "#2f6b46",
-        "#ffffff"
+        "#d8c9ad",
+        "#eef0ef",
+        "#2e5f43"
       ],
       "text_in_frame": "Booking",
-      "people": "one person, late teens/young adult, calm, wearing a green sweater; only hands and side of head visible",
-      "alt_text": "Person holding a phone displaying a booking form in a bright home kitchen.",
+      "people": "one person (partial view: hands and side of head), young adult, wearing a green sweater, focused on phone",
+      "alt_text": "Person holding a phone displaying a booking form in a sunlit kitchen.",
       "good_for": [
-        "carousel slide",
+        "story background",
+        "hero image",
+        "thumbnail"
+      ]
+    },
+    {
+      "file": "04_scrub.png",
+      "path": "videos/binsparkle/assets/04_scrub.png",
+      "subject": "man power-washing a green wheelie bin outside a suburban house",
+      "mood": "friendly, domestic, practical",
+      "dominant_colours": [
+        "#3b7a3f",
+        "#2b9be6",
+        "#8f8f8f"
+      ],
+      "text_in_frame": "none",
+      "people": "1 adult male, approx 40s–50s, smiling, wearing a black polo, khaki pants and blue gloves, engaged in cleaning",
+      "alt_text": "Middle-aged man wearing blue gloves power-washing a green wheelie bin outside a suburban house.",
+      "good_for": [
         "story background",
         "video beat",
         "thumbnail",
@@ -65,79 +83,195 @@
       ]
     },
     {
-      "file": "04_scrub.png",
-      "path": "videos/binsparkle/assets/04_scrub.png",
-      "subject": "a middle-aged man washing a green wheelie bin with a hose",
-      "mood": "friendly, practical, clean",
-      "dominant_colours": [
-        "#3B7A3B",
-        "#2FA6FF",
-        "#B68A56"
-      ],
-      "text_in_frame": "none",
-      "people": "1 adult male, approx 40-55, smiling, wearing a black polo, tan cargo pants and blue rubber gloves",
-      "alt_text": "A smiling middle-aged man sprays soap inside a green wheelie bin with a hose in a suburban driveway.",
-      "good_for": [
-        "carousel slide",
-        "story background",
-        "video beat",
-        "hero image"
-      ]
-    },
-    {
       "file": "05_fresh.png",
       "path": "videos/binsparkle/assets/05_fresh.png",
       "subject": "a green wheelie bin on a suburban driveway, lid open",
-      "mood": "bright, clean morning light",
+      "mood": "bright, everyday suburban",
       "dominant_colours": [
-        "#1f6c30",
-        "#bfbfbf",
-        "#7ec0ff"
+        "#2E7D32",
+        "#BDBDBD",
+        "#87CEEB"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "Green wheelie bin with open lid standing on a suburban driveway under a blue sky.",
+      "alt_text": "Open green wheelie bin standing on a suburban driveway with houses and blue sky in the background.",
       "good_for": [
-        "carousel slide",
         "story background",
-        "video beat",
-        "thumbnail"
+        "thumbnail",
+        "hero image",
+        "carousel slide"
       ]
     },
     {
       "file": "06_photos.png",
       "path": "videos/binsparkle/assets/06_photos.png",
       "subject": "a hand holding a phone showing photos of a green wheelie bin with a blue lid",
-      "mood": "casual, bright daylight",
+      "mood": "bright, casual, natural light",
       "dominant_colours": [
-        "#7fb4e6",
-        "#2f6f3e",
-        "#e9c9b1"
+        "#2f6b3f",
+        "#3b88c9",
+        "#e7cbb6"
       ],
       "text_in_frame": "none",
-      "people": "1 adult (hand only), middle-aged appearing, neutral, no clothing visible",
-      "alt_text": "Hand holding a smartphone showing photos of a green wheelie bin with a blue lid in a driveway.",
+      "people": "one adult (only a hand visible), holding a smartphone",
+      "alt_text": "Hand holds a smartphone showing two photos of a green wheelie bin with a blue lid on a suburban street.",
       "good_for": [
         "carousel slide",
         "story background",
-        "thumbnail"
+        "thumbnail",
+        "hero image"
       ]
     },
     {
       "file": "07_end.png",
       "path": "videos/binsparkle/assets/07_end.png",
-      "subject": "three wheelie bins on a suburban curb in front of a house",
-      "mood": "calm, warm late-afternoon light",
+      "subject": "three wheelie bins at a suburban curb in front of a house",
+      "mood": "warm, quiet golden-hour light",
       "dominant_colours": [
-        "#2a73bf",
-        "#2f5e2e",
-        "#d9cdb7"
+        "#2B7BC9",
+        "#376B3A",
+        "#D7D2C6"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "Three colored wheelie bins lined on a suburban curb in front of a house at golden hour.",
+      "alt_text": "Three colorful curbside bins lined up in front of a residential house at golden hour.",
+      "good_for": [
+        "story background",
+        "carousel slide",
+        "thumbnail",
+        "hero image"
+      ]
+    },
+    {
+      "file": "char-01-proud.png",
+      "path": "videos/binsparkle/assets/char-01-proud.png",
+      "subject": "a green wheelie bin with cartoon eyes on a suburban curb, lid closed",
+      "mood": "playful, warm golden light",
+      "dominant_colours": [
+        "#0f4d30",
+        "#f4b86b",
+        "#7d7d7d"
+      ],
+      "text_in_frame": "none",
+      "people": "none",
+      "alt_text": "Green outdoor wheelie bin with cartoon eyes standing on a suburban curb at sunset.",
       "good_for": [
         "carousel slide",
+        "story background",
+        "thumbnail",
+        "hero image"
+      ]
+    },
+    {
+      "file": "char-02-content.png",
+      "path": "videos/binsparkle/assets/char-02-content.png",
+      "subject": "a green wheelie bin with cartoon eyes and a small smile on a suburban curb",
+      "mood": "playful, wistful, warm sunset light",
+      "dominant_colours": [
+        "#144228",
+        "#2f6b45",
+        "#e6c89a"
+      ],
+      "text_in_frame": "none",
+      "people": "none",
+      "alt_text": "Green wheelie bin with cartoon eyes and a tear-like streak sits on a suburban curb at sunset.",
+      "good_for": [
+        "story background",
+        "thumbnail",
+        "hero image"
+      ]
+    },
+    {
+      "file": "char-03-worried.png",
+      "path": "videos/binsparkle/assets/char-03-worried.png",
+      "subject": "a green wheelie bin with sad cartoon eyes on a suburban curb",
+      "mood": "wistful, overcast",
+      "dominant_colours": [
+        "#244e3d",
+        "#c9b79e",
+        "#bfc2c4"
+      ],
+      "text_in_frame": "none",
+      "people": "none",
+      "alt_text": "A green wheelie bin with sad cartoon eyes stands on a suburban curb under an overcast sky.",
+      "good_for": [
+        "story background",
+        "thumbnail",
+        "hero image"
+      ]
+    },
+    {
+      "file": "char-04-sad.png",
+      "path": "videos/binsparkle/assets/char-04-sad.png",
+      "subject": "a green wheelie bin with sleepy eye decals on a suburban curb",
+      "mood": "playful, weary",
+      "dominant_colours": [
+        "#2f4f3d",
+        "#c9c4bf",
+        "#dfe0df"
+      ],
+      "text_in_frame": "none",
+      "people": "none",
+      "alt_text": "Green wheelie bin with sleepy eyes standing on a suburban curb.",
+      "good_for": [
+        "thumbnail",
+        "hero image",
+        "story background"
+      ]
+    },
+    {
+      "file": "char-05-rockbottom.png",
+      "path": "videos/binsparkle/assets/char-05-rockbottom.png",
+      "subject": "a green wheelie bin with lid ajar and eye-like dark stains",
+      "mood": "eerie, cold atmosphere",
+      "dominant_colours": [
+        "#26422e",
+        "#7a8790",
+        "#2b1b17"
+      ],
+      "text_in_frame": "none",
+      "people": "none",
+      "alt_text": "A green outdoor trash bin with a lifted lid and dark stains that resemble sleepy eyes on a snowy curb.",
+      "good_for": [
+        "story background",
+        "hero image",
+        "thumbnail"
+      ]
+    },
+    {
+      "file": "char-06-rescued.png",
+      "path": "videos/binsparkle/assets/char-06-rescued.png",
+      "subject": "a green wheelie bin with googly eyes being sprayed by yellow-gloved hands",
+      "mood": "playful, sunny",
+      "dominant_colours": [
+        "#244b2c",
+        "#ffd400",
+        "#cfe9ff"
+      ],
+      "text_in_frame": "none",
+      "people": "1 person: only hands visible, adult, wearing yellow rubber cleaning gloves, spraying a hose",
+      "alt_text": "Yellow-gloved hands spray a green bin with googly eyes as water splashes in a sunny suburban street.",
+      "good_for": [
+        "carousel slide",
+        "story background",
+        "thumbnail",
+        "hero image"
+      ]
+    },
+    {
+      "file": "char-07-triumphant.png",
+      "path": "videos/binsparkle/assets/char-07-triumphant.png",
+      "subject": "a green wheelie bin with cartoon eyes on a suburban curb, lid open",
+      "mood": "playful, whimsical, warm light",
+      "dominant_colours": [
+        "#244a2e",
+        "#ffb66b",
+        "#dcd2c6"
+      ],
+      "text_in_frame": "none",
+      "people": "none",
+      "alt_text": "Green wheelie bin with cartoon eyes on a suburban curb at sunset.",
+      "good_for": [
         "story background",
         "thumbnail",
         "hero image"
@@ -147,34 +281,34 @@
       "file": "clean-01-house-bin.png",
       "path": "videos/binsparkle/assets/clean-01-house-bin.png",
       "subject": "a dirty green wheelie bin on a suburban curb, lid closed",
-      "mood": "warm, late-afternoon, slightly gritty",
+      "mood": "quiet, warm sunset",
       "dominant_colours": [
-        "#4a6b3b",
-        "#f7f7f5",
-        "#f0b06a"
+        "#5a7a44",
+        "#e7b56b",
+        "#f4f4f4"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "A dirty green wheelie bin sits on a suburban curb in front of a white house at golden hour.",
+      "alt_text": "Green wheelie bin on a suburban curb at sunset with a white house and flowered front yard behind.",
       "good_for": [
         "story background",
-        "video beat",
-        "thumbnail"
+        "thumbnail",
+        "carousel slide"
       ]
     },
     {
       "file": "clean-02-interior.png",
       "path": "videos/binsparkle/assets/clean-02-interior.png",
-      "subject": "an open green wheelie bin with grimy interior",
-      "mood": "gritty, unclean, utilitarian",
+      "subject": "a dirty green wheelie bin with lid open, empty interior",
+      "mood": "gritty, uninviting, utilitarian",
       "dominant_colours": [
-        "#2c5f2e",
-        "#201613",
-        "#c9b18a"
+        "#244d2b",
+        "#0f1512",
+        "#d6c29a"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "Open green trash bin with stained, grimy interior on a sidewalk.",
+      "alt_text": "Open green wheelie bin showing a stained, dirty interior on a pavement.",
       "good_for": [
         "story background",
         "video beat",
@@ -184,20 +318,19 @@
     {
       "file": "clean-03-scrub.png",
       "path": "videos/binsparkle/assets/clean-03-scrub.png",
-      "subject": "a green wheeled bin being scrubbed with a brush, water splashing",
-      "mood": "bright, active, clean",
+      "subject": "person stirring soapy water in a green wheeled bin on a driveway",
+      "mood": "clean, bright, active",
       "dominant_colours": [
-        "#2e8b3a",
-        "#ffd200",
-        "#d2c4ad"
+        "#2E8B3A",
+        "#FFD200",
+        "#D7D3CC"
       ],
       "text_in_frame": "none",
-      "people": "1 adult partially visible (arms and legs), wearing yellow rubber gloves and a blue shirt, cleaning",
-      "alt_text": "Person wearing yellow gloves scrubs a green wheeled bin with a brush, water splashing.",
+      "people": "one adult partially visible (arms and torso), wearing yellow rubber gloves and a blue shirt, actively scrubbing",
+      "alt_text": "Person wearing yellow gloves stirs sudsy water in a green wheeled bin on a sunlit driveway.",
       "good_for": [
-        "carousel slide",
         "story background",
-        "video beat",
+        "hero image",
         "thumbnail"
       ]
     },
@@ -205,57 +338,56 @@
       "file": "clean-04-fresh.png",
       "path": "videos/binsparkle/assets/clean-04-fresh.png",
       "subject": "a green wheelie bin on a suburban curb, lid closed",
-      "mood": "warm, calm, sunlit",
+      "mood": "warm, peaceful morning light",
       "dominant_colours": [
         "#4CAF50",
-        "#F5EBDD",
-        "#F3A946"
+        "#FFC66B",
+        "#EFEFEF"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "Green wheeled trash bin on a suburban curb in warm morning light.",
+      "alt_text": "A green wheelie bin on a curb outside a white suburban house in warm morning light.",
       "good_for": [
         "story background",
-        "carousel slide",
         "thumbnail",
-        "hero image"
+        "hero image",
+        "carousel slide"
       ]
     },
     {
       "file": "clean-05-sparkle.png",
       "path": "videos/binsparkle/assets/clean-05-sparkle.png",
-      "subject": "a green wheelie bin on a suburban curb at sunset",
-      "mood": "warm, peaceful, golden-hour light",
+      "subject": "a green wheelie bin on a suburban curb, lid closed",
+      "mood": "warm, tranquil golden-hour",
       "dominant_colours": [
-        "#2F8B3A",
-        "#FFC87C",
-        "#484848"
+        "#2f8f3a",
+        "#f4b85a",
+        "#c9b59a"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "Green wheelie bin on a suburban curb bathed in warm late-afternoon sunlight.",
+      "alt_text": "Green wheelie bin on a suburban curb at golden hour with houses and plants softly lit in the background.",
       "good_for": [
         "story background",
         "hero image",
-        "thumbnail",
-        "video beat"
+        "carousel slide",
+        "thumbnail"
       ]
     },
     {
       "file": "clean-06-brand-reveal.png",
       "path": "videos/binsparkle/assets/clean-06-brand-reveal.png",
-      "subject": "a green wheelie bin on a suburban verge, lid closed",
-      "mood": "warm, peaceful early morning light",
+      "subject": "a green wheelie bin on a suburban curb at sunrise",
+      "mood": "warm, peaceful morning light",
       "dominant_colours": [
-        "#2E7D32",
-        "#FFD54F",
-        "#E6DCCF"
+        "#2f8b3d",
+        "#f4c36b",
+        "#cfc7b0"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "Sunlit green wheelie bin with dewdrops on a suburban street in the early morning.",
+      "alt_text": "A green wheelie bin glistening with dew on a suburban curb in golden morning light.",
       "good_for": [
-        "carousel slide",
         "story background",
         "thumbnail",
         "hero image"
@@ -264,21 +396,21 @@
     {
       "file": "clean-07-before-after.png",
       "path": "videos/binsparkle/assets/clean-07-before-after.png",
-      "subject": "green wheelie bin split: dirty left, clean right",
-      "mood": "contrasting clean vs dirty, illustrative",
+      "subject": "a split-comparison of a dirty and clean green wheelie bin on a sidewalk",
+      "mood": "contrasting, clean vs dirty",
       "dominant_colours": [
-        "#6f8f5a",
-        "#2ca23e",
-        "#bfa376"
+        "#6B8E23",
+        "#2E8B57",
+        "#C4A27A"
       ],
       "text_in_frame": "none",
       "people": "none",
-      "alt_text": "Split image of a green wheelie bin showing dirty left and clean right on a suburban street.",
+      "alt_text": "Split-frame of a dirty green wheelie bin (left) and a clean green bin with droplets (right) on a sidewalk.",
       "good_for": [
         "carousel slide",
         "story background",
         "thumbnail",
-        "video beat"
+        "hero image"
       ]
     }
   ]
