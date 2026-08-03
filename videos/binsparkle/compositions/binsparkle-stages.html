@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Stages of a Dirty Bin</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="bsTile" x1="0" y1="0" x2="0.55" y2="1">
+    <stop offset="0" stop-color="#3f9463"/><stop offset="1" stop-color="#1d5634"/>
+  </linearGradient>
+  <linearGradient id="bsSun" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#fdd479"/><stop offset="1" stop-color="#f4b942"/>
+  </linearGradient>
+</defs></svg>
+
+<style>
+  body { margin: 0; background: #0f2b1d; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #0f2b1d; }
+
+  .slide { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .char { position: absolute; bottom: 340px; left: 50%; transform: translateX(-50%);
+          z-index: 3; max-height: 1200px; max-width: 920px; }
+
+  /* Bottom darkening so the caption reads on any photo */
+  .slide::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: linear-gradient(to top, rgba(8,20,14,0.92) 0%, rgba(8,20,14,0.5) 22%, rgba(8,20,14,0) 40%); }
+
+  /* Stage number block — top-left, the listicle signature */
+  .stage-num { position: absolute; top: 150px; left: 64px; z-index: 7; }
+  .stage-num .label { font-family: var(--card-font-ui); font-weight: 700; font-size: 32px;
+                      letter-spacing: 0.22em; color: #f4b942; margin: 0;
+                      text-shadow: 0 2px 12px rgba(0,0,0,0.6); }
+  .stage-num .of { font-family: var(--card-font-display); font-weight: 800;
+                   font-size: 150px; line-height: 0.9; letter-spacing: -0.04em;
+                   color: #fff; margin: 6px 0 0; text-shadow: 0 6px 30px rgba(0,0,0,0.6); }
+  .stage-num .of .total { font-size: 56px; color: rgba(255,255,255,0.55); vertical-align: super; }
+
+  /* Caption at the bottom — the stage title + line */
+  .cap { position: absolute; left: 64px; right: 64px; bottom: 150px; z-index: 5; }
+  .cap .title { font-family: var(--card-font-display); font-weight: 800;
+                font-size: 86px; line-height: 0.98; letter-spacing: -0.03em;
+                color: #fff; margin: 0; text-shadow: 0 4px 26px rgba(0,0,0,0.7); }
+  .cap .title em { font-style: normal; color: #f4b942; }
+  .cap .title i { font-style: normal; color: #c25a35; }
+  .cap .line { font-family: var(--card-font-ui); font-weight: 600;
+               font-size: 58px; line-height: 1.18; color: #e6efe8; margin: 22px 0 0;
+               text-shadow: 0 2px 16px rgba(0,0,0,0.7); }
+
+  .wordmark { position: absolute; top: 48px; left: 0; right: 0; z-index: 60;
+              display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .wordmark svg { width: 48px; height: 48px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.5)); }
+  .wordmark span { font-family: var(--card-font-display); font-weight: 800; font-size: 34px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  .ctapill { position: absolute; left: 50%; transform: translateX(-50%);
+             bottom: 60px; z-index: 8;
+             font-family: var(--card-font-ui); font-weight: 700; font-size: 42px;
+             color: #0f2b1d; background: #f4b942;
+             padding: 22px 54px; border-radius: 999px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.4); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div id="binsparkle-stages" class="comp" data-composition-id="binsparkle-stages"
+     data-start="0" data-duration="7" data-width="1080" data-height="1920">
+
+  <!-- Stage 1 — fresh start -->
+  <div class="slide clip" data-start="0" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/clean-04-fresh.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stage-num">
+      <p class="label">STAGE</p>
+      <p class="of">01<span class="total">/06</span></p>
+    </div>
+    <div class="cap">
+      <p class="title">the <em>fresh start.</em></p>
+      <p class="line">clean lid, clean conscience, no smell. enjoy it.</p>
+    </div>
+  </div>
+
+  <!-- Stage 2 — the first stain -->
+  <div class="slide clip" data-start="1" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/clean-02-interior.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stage-num">
+      <p class="label">STAGE</p>
+      <p class="of">02<span class="total">/06</span></p>
+    </div>
+    <div class="cap">
+      <p class="title">week one. <i>the first stain.</i></p>
+      <p class="line">a drip here, a smear there. you tell yourself it's fine.</p>
+    </div>
+  </div>
+
+  <!-- Stage 3 — the crust forms -->
+  <div class="slide clip" data-start="2" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/clean-01-house-bin.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stage-num">
+      <p class="label">STAGE</p>
+      <p class="of">03<span class="total">/06</span></p>
+    </div>
+    <div class="cap">
+      <p class="title">the <i>crust</i> forms.</p>
+      <p class="line">that layer on the bottom isn't coming off with a hose.</p>
+    </div>
+  </div>
+
+  <!-- Stage 4 — something's alive -->
+  <div class="slide clip" data-start="3" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-05-behind-garage.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-disgusted-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stage-num">
+      <p class="label">STAGE</p>
+      <p class="of">04<span class="total">/06</span></p>
+    </div>
+    <div class="cap">
+      <p class="title">something's <i>alive</i> in there.</p>
+      <p class="line">you stopped opening the lid a week ago. we understand.</p>
+    </div>
+  </div>
+
+  <!-- Stage 5 — the scrub (the turn) -->
+  <div class="slide clip" data-start="4" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/clean-03-scrub.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stage-num">
+      <p class="label">STAGE</p>
+      <p class="of">05<span class="total">/06</span></p>
+    </div>
+    <div class="cap">
+      <p class="title">the <em>scrub.</em></p>
+      <p class="line">pressure-washed, scrubbed, deodorised. at your place.</p>
+    </div>
+  </div>
+
+  <!-- Stage 6 — sparkle restored -->
+  <div class="slide clip" data-start="5" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/clean-05-sparkle.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stage-num">
+      <p class="label">STAGE</p>
+      <p class="of">06<span class="total">/06</span></p>
+    </div>
+    <div class="cap">
+      <p class="title"><em>sparkle</em> restored.</p>
+      <p class="line">back to stage one. the cycle resets. you're welcome.</p>
+    </div>
+  </div>
+
+  <!-- CTA — which stage is yours? -->
+  <div class="slide clip" data-start="6" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/clean-06-brand-reveal.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="cap" style="bottom: 170px;">
+      <p class="title">which stage <em>is yours at?</em></p>
+    </div>
+    <div class="ctapill">book a clean — binsparkle.nz</div>
+  </div>
+
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  window.__timelines["binsparkle-stages"] = gsap.timeline({ paused: true });
+</script>
+</body>
+</html>

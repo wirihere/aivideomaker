@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Invoice From Your Bin</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #e6dcc4; font-family: var(--brand-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden;
+          background: #ede4ce;
+          background-image: radial-gradient(ellipse at 50% 0%, #f4ecd8 0%, #e6dcc4 100%); }
+
+  /* paper grain */
+  .grain { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.5;
+           background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.06'/></svg>"); }
+
+  /* the invoice sheet */
+  .sheet { position: absolute; left: 50px; right: 50px; top: 70px; bottom: 70px; z-index: 5;
+           background: #fffdf6; border-radius: 8px;
+           box-shadow: 0 20px 60px rgba(60,45,20,0.18), 0 2px 0 rgba(0,0,0,0.04);
+           padding: 64px 72px 72px;
+           font-family: "JetBrains Mono", "Courier New", monospace; color: #1c2a1c; }
+  /* torn/receipt top edge feel via subtle dashed rule */
+
+  .head { display: flex; justify-content: space-between; align-items: flex-start; }
+  .head .brand { display: flex; align-items: center; gap: 20px; }
+  .head .stamp-mark { width: 96px; height: 96px; border-radius: 50%; overflow: hidden;
+                      background: #d8ecdd; border: 3px solid var(--leaf); position: relative;
+                      display: flex; align-items: center; justify-content: center; }
+  .head .stamp-mark img { width: 150%; height: 150%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .head .brand-name { font-family: var(--brand-display); font-weight: 800; font-size: 36px;
+                      color: var(--leaf-deep); line-height: 1; letter-spacing: -0.01em; }
+  .head .brand-name i { font-style: normal; color: var(--sunny-deep); }
+  .head .brand-sub { font-size: 22px; color: #8a8270; margin-top: 6px; }
+  .head .inv-no { text-align: right; font-size: 22px; color: #6b6655; line-height: 1.5; }
+  .head .inv-no b { color: var(--coral); font-weight: 700; }
+
+  .title-row { margin: 44px 0 30px; display: flex; align-items: baseline; justify-content: space-between;
+               border-bottom: 3px solid #1c2a1c; padding-bottom: 18px; }
+  .title-row .title { font-family: var(--brand-display); font-weight: 800; font-size: 96px;
+                      letter-spacing: -0.03em; color: #1c2a1c; line-height: 1; }
+  .title-row .date { font-size: 24px; color: #6b6655; }
+
+  .parties { font-size: 26px; line-height: 1.7; color: #3a4636; }
+  .parties b { color: #1c2a1c; font-weight: 700; }
+
+  .col-head { display: flex; gap: 24px; margin: 44px 0 18px; padding-bottom: 14px;
+              border-bottom: 2px dashed #c9c0a6; font-size: 22px; font-weight: 700;
+              color: #8a8270; letter-spacing: 0.08em; }
+  .col-head .c-item { flex: 1; }
+  .col-head .c-qty { width: 110px; text-align: center; }
+  .col-head .c-amt { width: 150px; text-align: right; }
+
+  .line { display: flex; gap: 24px; padding: 18px 0; border-bottom: 1px solid #ece4cc;
+          align-items: flex-start; }
+  .line .c-item { flex: 1; }
+  .line .name { font-weight: 700; font-size: 38px; color: #1c2a1c; line-height: 1.15; }
+  .line .desc { font-size: 28px; color: #5a6350; margin-top: 6px; line-height: 1.3; }
+  .line .c-qty { width: 110px; text-align: center; font-size: 26px; color: #6b6655; padding-top: 6px; }
+  .line .c-amt { width: 150px; text-align: right; font-size: 34px; font-weight: 700; color: #1c2a1c; padding-top: 4px; }
+
+  .subtotal { display: flex; justify-content: space-between; margin-top: 28px; padding-top: 22px;
+              border-top: 2px solid #1c2a1c; font-size: 36px; font-weight: 700; }
+  .subtotal .amt { color: #1c2a1c; }
+
+  .balance { margin-top: 26px; background: var(--sunny); border-radius: 14px; padding: 30px 36px;
+             display: flex; justify-content: space-between; align-items: center; gap: 24px;
+             box-shadow: 0 8px 24px rgba(244,185,66,0.35); }
+  .balance .lbl { font-family: var(--brand-display); font-weight: 800; font-size: 34px; color: #0f2b1d;
+                  letter-spacing: -0.01em; line-height: 1.1; }
+  .balance .val { font-family: var(--brand-display); font-weight: 800; font-size: 40px; color: #0f2b1d;
+                  text-align: right; line-height: 1.1; }
+  .balance .val i { font-style: normal; color: var(--leaf-deep); }
+
+  .closing { margin-top: 28px; font-size: 26px; color: #5a6350; font-style: italic; line-height: 1.4; }
+  .closing b { color: var(--leaf-deep); font-style: normal; }
+
+  /* wordmark corner */
+  .wordmark { position: absolute; top: 18px; right: 22px; z-index: 25;
+              font-family: var(--brand-display); font-weight: 800; font-size: 22px; color: var(--leaf-deep);
+              opacity: 0.85; }
+  .wordmark i { font-style: normal; color: var(--sunny-deep); }
+</style>
+</head>
+<body>
+
+<div id="invoice-video" class="comp" data-composition-id="invoice-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="46">
+
+  <div class="grain"></div>
+
+  <div class="sheet">
+    <div class="wordmark">bin<i>sparkle</i></div>
+
+    <!-- Header (always visible) -->
+    <div class="head">
+      <div class="brand">
+        <div class="stamp-mark"><img src="videos/binsparkle/assets/cutouts/char2-quarter-cheeky-dirty-cutout.png" alt=""></div>
+        <div>
+          <div class="brand-name">your wheelie bin</div>
+          <div class="brand-sub">sole trader · est. the day you moved in</div>
+        </div>
+      </div>
+      <div class="inv-no">INVOICE NO.<br><b>INV-2026-YEAHNAHMATE</b></div>
+    </div>
+
+    <div class="title-row">
+      <div class="title">INVOICE.</div>
+      <div class="date">fyi, this is overdue</div>
+    </div>
+
+    <div class="parties">
+      <b>FROM:</b> your wheelie bin, out by the fence, in all weather.<br>
+      <b>TO:</b> the homeowner (upstairs, warm, has never once looked me in the lid).
+    </div>
+
+    <div class="col-head">
+      <div class="c-item">ITEM</div>
+      <div class="c-qty">QTY</div>
+      <div class="c-amt">AMOUNT</div>
+    </div>
+
+    <!-- Line items (fade in sequentially) -->
+    <div class="line" id="i1">
+      <div class="c-item"><div class="name">Prawn shells</div><div class="desc">Extended cold storage, 19 days, through a heatwave, no lid rotation.</div></div>
+      <div class="c-qty">1 bag</div><div class="c-amt">$0.00</div>
+    </div>
+    <div class="line" id="i2">
+      <div class="c-item"><div class="name">Rubbish bag placement</div><div class="desc">Balanced on the rim, not inside. Fell out on collection day. Blamed the wind.</div></div>
+      <div class="c-qty">1 unit</div><div class="c-amt">$0.00</div>
+    </div>
+    <div class="line" id="i3">
+      <div class="c-item"><div class="name">Full nappy service</div><div class="desc">No warning. No bag. Just faith.</div></div>
+      <div class="c-qty">6 units</div><div class="c-amt">$0.00</div>
+    </div>
+    <div class="line" id="i4">
+      <div class="c-item"><div class="name">Emergency liquid overflow</div><div class="desc">Something leaked. Neither of us knows what. It has bonded to my base.</div></div>
+      <div class="c-qty">1.5 L</div><div class="c-amt">$0.00</div>
+    </div>
+    <div class="line" id="i5">
+      <div class="c-item"><div class="name">Retrieval-day sprint</div><div class="desc">Wheeled out at 6:58am at a full jog, tipped on the kerb, left leaning like a drunk uncle.</div></div>
+      <div class="c-qty">1 event</div><div class="c-amt">$0.00</div>
+    </div>
+    <div class="line" id="i6">
+      <div class="c-item"><div class="name">Recycling I took the fall for</div><div class="desc">Greasy pizza box, "close enough."</div></div>
+      <div class="c-qty">ongoing</div><div class="c-amt">$0.00</div>
+    </div>
+
+    <!-- Totals (appear after the last item) -->
+    <div class="subtotal" id="subtotal">
+      <div>SUBTOTAL</div><div class="amt">$0.00</div>
+    </div>
+    <div class="balance" id="balance">
+      <div class="lbl">BALANCE DUE</div>
+      <div class="val">1× <i>BinSparkle</i><br>clean</div>
+    </div>
+    <div class="closing" id="closing">
+      Pay at <b>binsparkle.nz.</b> Terms: net now, mate. I've waited long enough.
+    </div>
+  </div>
+
+  <!-- SFX: a soft tick/print as each line lands (retimed to 3 wps holds) -->
+  <audio id="tick1" class="clip" src="assets/sfx/tick.wav" data-start="1.2"  data-duration="0.3" data-track-index="9" data-volume="0.35"></audio>
+  <audio id="tick2" class="clip" src="assets/sfx/tick.wav" data-start="7.2"  data-duration="0.3" data-track-index="9" data-volume="0.35"></audio>
+  <audio id="tick3" class="clip" src="assets/sfx/tick.wav" data-start="14.2" data-duration="0.3" data-track-index="9" data-volume="0.35"></audio>
+  <audio id="tick4" class="clip" src="assets/sfx/tick.wav" data-start="19.2" data-duration="0.3" data-track-index="9" data-volume="0.35"></audio>
+  <audio id="tick5" class="clip" src="assets/sfx/tick.wav" data-start="25.2" data-duration="0.3" data-track-index="9" data-volume="0.35"></audio>
+  <audio id="tick6" class="clip" src="assets/sfx/tick.wav" data-start="33.2" data-duration="0.3" data-track-index="9" data-volume="0.35"></audio>
+  <audio id="stamp" class="clip" src="assets/sfx/impact-deep.wav" data-start="39.0" data-duration="0.6" data-track-index="10" data-volume="0.5"></audio>
+
+</div>
+
+<script>
+  // All line items + totals start hidden; header/parties are visible from t=0.
+  gsap.set(["#i1","#i2","#i3","#i4","#i5","#i6","#subtotal","#balance","#closing"], { opacity: 0, y: 16 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Each item fades/slides in. Gap = reading time (words/3 + 1s, Rule 2 @ 3 wps).
+  tl.to("#i1", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 1.0);
+  tl.to("#i2", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 7.0);
+  tl.to("#i3", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 14.0);
+  tl.to("#i4", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 19.0);
+  tl.to("#i5", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 25.0);
+  tl.to("#i6", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 33.0);
+  // Totals + punchline after the last item
+  tl.to("#subtotal", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 38.0);
+  tl.to("#balance", { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.5)" }, 39.0);
+  tl.to("#closing", { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, 40.0);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["invoice-video"] = tl;
+</script>
+</body>
+</html>

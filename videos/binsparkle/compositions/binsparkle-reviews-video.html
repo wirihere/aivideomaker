@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Reviews From Your Bin</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #e8efd9; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden;
+          background: #f4f1e8;
+          background-image: radial-gradient(ellipse at 50% 0%, #faf6ee 0%, #ede7d6 100%); }
+
+  /* ---- persistent reviews-page header ---- */
+  .page-head { position: absolute; top: 0; left: 0; right: 0; height: 250px; z-index: 20;
+               display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+               padding-bottom: 26px; }
+  .page-head .kicker { font-family: var(--card-font-ui); font-weight: 700; font-size: 26px;
+                       letter-spacing: 0.28em; color: var(--leaf); margin: 0 0 10px; }
+  .page-head .title { font-family: var(--card-font-display); font-weight: 800; font-size: 64px;
+                      color: var(--ink); letter-spacing: -0.02em; margin: 0; line-height: 1; }
+  .page-head .title em { font-style: normal; color: var(--leaf); }
+  .page-head .sub { font-family: var(--card-font-ui); font-size: 30px; color: #6b7a64; margin-top: 12px; }
+  .head-rule { position: absolute; left: 60px; right: 60px; bottom: 0; height: 2px;
+               background: rgba(45,70,40,0.12); }
+
+  /* wordmark (top-right, subtle) */
+  .wordmark { position: absolute; top: 46px; right: 46px; z-index: 25;
+              display: flex; align-items: center; gap: 10px;
+              font-family: var(--card-font-display); font-weight: 800; font-size: 30px;
+              color: var(--leaf-deep); }
+  .wordmark i { font-style: normal; color: var(--sunny-deep); }
+  .wordmark svg { width: 32px; height: 32px; }
+
+  /* ---- review card ---- */
+  .card-slot { position: absolute; left: 50px; right: 50px; top: 300px; bottom: 150px; z-index: 10; }
+  .review { position: absolute; inset: 0;
+            background: #ffffff; border-radius: 36px;
+            box-shadow: 0 18px 50px rgba(30,50,30,0.14), 0 2px 0 rgba(0,0,0,0.03);
+            padding: 56px 60px 60px;
+            display: flex; flex-direction: column; }
+  .review .r-top { display: flex; align-items: center; gap: 26px; }
+  .review .avatar { width: 130px; height: 130px; border-radius: 50%; overflow: hidden;
+                    background: #d8ecdd; border: 3px solid var(--leaf); flex: 0 0 130px;
+                    display: flex; align-items: center; justify-content: center; position: relative; }
+  .review .avatar img { width: 145%; height: 145%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .review .who { flex: 1; }
+  .review .who .name { font-family: var(--card-font-display); font-weight: 800; font-size: 50px;
+                       color: var(--ink); line-height: 1.0; letter-spacing: -0.015em; }
+  .review .who .loc { font-family: var(--card-font-ui); font-size: 32px; color: #7a8a72; margin-top: 8px; }
+  .review .verified { font-family: var(--card-font-ui); font-weight: 700; font-size: 24px;
+                      color: var(--leaf-deep); background: var(--leaf-soft);
+                      padding: 10px 22px; border-radius: 999px; letter-spacing: 0.04em; }
+
+  .stars { margin: 40px 0 18px; font-size: 76px; line-height: 1; letter-spacing: 0.06em; }
+  .stars .on { color: var(--sunny); }
+  .stars .off { color: #d8d2c2; }
+  .stars .label { font-family: var(--card-font-ui); font-weight: 700; font-size: 30px;
+                  color: #8a8270; margin-left: 14px; vertical-align: middle; letter-spacing: 0.02em; }
+
+  .review .r-title { font-family: var(--card-font-display); font-weight: 800; font-size: 72px;
+                     color: var(--ink); line-height: 1.02; letter-spacing: -0.02em;
+                     margin: 6px 0 26px; }
+  .review .r-title em { font-style: normal; color: var(--coral); }
+  .review .body { font-family: var(--card-font-ui); font-weight: 500; font-size: 50px;
+                  line-height: 1.28; color: #2a3a2a; letter-spacing: -0.005em; }
+  .review .body i { font-style: italic; color: var(--leaf-deep); }
+
+  /* CTA pill (appears on the last review) */
+  .cta-pill { position: absolute; left: 50%; transform: translateX(-50%); bottom: 50px; z-index: 30;
+              font-family: var(--card-font-display); font-weight: 800; font-size: 46px;
+              color: var(--leaf-deep); background: var(--sunny);
+              padding: 22px 56px; border-radius: 999px; white-space: nowrap;
+              box-shadow: 0 10px 30px rgba(244,185,66,0.5); }
+</style>
+</head>
+<body>
+
+<div id="reviews-video" class="comp" data-composition-id="reviews-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="46">
+
+  <!-- Header (persistent) -->
+  <div class="page-head">
+    <p class="kicker">REVIEWS</p>
+    <h1 class="title">your bin has <em>notes.</em></h1>
+    <p class="sub">7 reviews · verified bin</p>
+    <div class="head-rule"></div>
+  </div>
+  <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>bin<i>sparkle</i></div>
+
+  <!-- Review cards (one visible per timestamp; GSAP slides them through) -->
+  <div class="card-slot">
+    <!-- R1 — pie -->
+    <div class="review" id="r1">
+      <div class="r-top">
+        <div class="avatar"><img src="videos/binsparkle/assets/cutouts/char2-front-disgusted-dirty-cutout.png" alt=""></div>
+        <div class="who"><div class="name">your bin</div><div class="loc">Nawton · week 1</div></div>
+        <div class="verified">✓ verified bin</div>
+      </div>
+      <div class="stars"><span class="on">★</span><span class="off">★★★★</span></div>
+      <h2 class="r-title">worst tenant i've ever had.</h2>
+      <p class="body">you left a half-eaten pie in me since the rugby. we lost that game. i've been reliving it every day since.</p>
+    </div>
+
+    <!-- R2 — nappies -->
+    <div class="review" id="r2">
+      <div class="r-top">
+        <div class="avatar"><img src="videos/binsparkle/assets/cutouts/char2-front-sad-dirty-cutout.png" alt=""></div>
+        <div class="who"><div class="name">your bin</div><div class="loc">Dinsdale · week 2</div></div>
+        <div class="verified">✓ verified bin</div>
+      </div>
+      <div class="stars"><span class="on">★</span><span class="off">★★★★</span></div>
+      <h2 class="r-title">i am <em>not</em> a compost heap.</h2>
+      <p class="body">three nappies. no bag. i want you to sit with what you've done.</p>
+    </div>
+
+    <!-- R3 — lid open -->
+    <div class="review" id="r3">
+      <div class="r-top">
+        <div class="avatar"><img src="videos/binsparkle/assets/cutouts/char2-side-annoyed-dirty-cutout.png" alt=""></div>
+        <div class="who"><div class="name">your bin</div><div class="loc">Fairfield · week 3</div></div>
+        <div class="verified">✓ verified bin</div>
+      </div>
+      <div class="stars"><span class="on">★★</span><span class="off">★★★</span></div>
+      <h2 class="r-title">the lid is <em>not</em> optional.</h2>
+      <p class="body">left me open in the rain again mate. now i'm a soup. a bad soup. flies rate me higher than you do.</p>
+    </div>
+
+    <!-- R4 — christmas ham -->
+    <div class="review" id="r4">
+      <div class="r-top">
+        <div class="avatar"><img src="videos/binsparkle/assets/cutouts/char2-side-thinking-dirty-cutout.png" alt=""></div>
+        <div class="who"><div class="name">your bin</div><div class="loc">Rototuna · week 4</div></div>
+        <div class="verified">✓ verified bin</div>
+      </div>
+      <div class="stars"><span class="on">★</span><span class="off">★★★★</span></div>
+      <h2 class="r-title">the christmas ham incident.</h2>
+      <p class="body">it is march. the ham bone is still here. i can hear it. we don't talk anymore.</p>
+    </div>
+
+    <!-- R5 — pizza boxes -->
+    <div class="review" id="r5">
+      <div class="r-top">
+        <div class="avatar"><img src="videos/binsparkle/assets/cutouts/char2-quarter-worried-dirty-cutout.png" alt=""></div>
+        <div class="who"><div class="name">your bin</div><div class="loc">Hillcrest · week 5</div></div>
+        <div class="verified">✓ verified bin</div>
+      </div>
+      <div class="stars"><span class="on">★★</span><span class="off">★★★</span></div>
+      <h2 class="r-title">pizza box stacked wrong. <em>again.</em></h2>
+      <p class="body">you jammed six boxes in sideways so the lid won't shut. it's not a puzzle. i'm not impressed. neither is the neighbour.</p>
+    </div>
+
+    <!-- R6 — the turn -->
+    <div class="review" id="r6">
+      <div class="r-top">
+        <div class="avatar" style="border-color:var(--sunny);"><img src="videos/binsparkle/assets/cutouts/char2-front-surprised-cutout.png" alt=""></div>
+        <div class="who"><div class="name">your bin</div><div class="loc">Chartwell · week 6</div></div>
+        <div class="verified">✓ verified bin</div>
+      </div>
+      <div class="stars"><span class="on">★★★★★</span></div>
+      <h2 class="r-title">something <em>happened.</em></h2>
+      <p class="body">a bloke turned up, pressure-washed me, scrubbed every wall and the base, deodorised the lot. i smell like a bin should. who booked this. was it you.</p>
+    </div>
+
+    <!-- R7 — redemption -->
+    <div class="review" id="r7">
+      <div class="r-top">
+        <div class="avatar" style="border-color:var(--sunny);"><img src="videos/binsparkle/assets/cutouts/char2-front-happy-cutout.png" alt=""></div>
+        <div class="who"><div class="name">your bin</div><div class="loc">Flagstaff · week 7</div></div>
+        <div class="verified">✓ verified bin</div>
+      </div>
+      <div class="stars"><span class="on">★★★★★</span></div>
+      <h2 class="r-title">i take it all back.</h2>
+      <p class="body">clean walls. no ham. i actually look forward to bin night now. good on ya for sorting it at <i>binsparkle.nz.</i> we're mates again, mate.</p>
+    </div>
+  </div>
+
+  <!-- CTA (appears on the last review) -->
+  <div class="cta-pill" id="cta" style="opacity:0;">book your clean — binsparkle.nz</div>
+
+  <!-- SFX: a star-ding per review landing (retimed to the 7s holds) -->
+  <audio id="ding1" class="clip" src="assets/sfx/ding.wav" data-start="0.9"  data-duration="0.6" data-track-index="9" data-volume="0.4"></audio>
+  <audio id="ding2" class="clip" src="assets/sfx/ding.wav" data-start="7.5"  data-duration="0.6" data-track-index="9" data-volume="0.4"></audio>
+  <audio id="ding3" class="clip" src="assets/sfx/ding.wav" data-start="14.5" data-duration="0.6" data-track-index="9" data-volume="0.4"></audio>
+  <audio id="ding4" class="clip" src="assets/sfx/ding.wav" data-start="21.5" data-duration="0.6" data-track-index="9" data-volume="0.4"></audio>
+  <audio id="ding5" class="clip" src="assets/sfx/ding.wav" data-start="28.5" data-duration="0.6" data-track-index="9" data-volume="0.4"></audio>
+  <audio id="ding6" class="clip" src="assets/sfx/ding.wav" data-start="35.5" data-duration="0.6" data-track-index="9" data-volume="0.55"></audio>
+  <audio id="ding7" class="clip" src="assets/sfx/sweep-rise.wav" data-start="42.5" data-duration="0.8" data-track-index="10" data-volume="0.5"></audio>
+
+</div>
+
+<script>
+  // All reviews start off-screen below; only r1 visible after it slides in.
+  gsap.set(["#r2","#r3","#r4","#r5","#r6","#r7"], { y: 1900, opacity: 0 });
+  gsap.set("#r1", { y: 1900, opacity: 0 });
+  gsap.set("#cta", { y: 40, opacity: 0 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Helper: bring a review in from below, push the previous one up + out.
+  function show(enterId, exitId, t) {
+    if (exitId) {
+      tl.to(exitId, { y: -1900, opacity: 0, duration: 0.5, ease: "power2.in" }, t);
+    }
+    tl.set(enterId, { y: 1900, opacity: 0 }, t);
+    tl.to(enterId, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, t + 0.05);
+  }
+
+  // R1 in at 0.4
+  tl.to("#r1", { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 0.4);
+  // 7s holds — recalibrated (word count / 4 + 1s, per content-creation Rule 2)
+  show("#r2", "#r1", 7.0);
+  show("#r3", "#r2", 14.0);
+  show("#r4", "#r3", 21.0);
+  show("#r5", "#r4", 28.0);
+  show("#r6", "#r5", 35.0);
+  show("#r7", "#r6", 42.0);
+  // CTA at 43.2
+  tl.to("#cta", { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 43.2);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["reviews-video"] = tl;
+</script>
+</body>
+</html>

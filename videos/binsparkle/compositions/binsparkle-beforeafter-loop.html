@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Before/After (loop unit)</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #111; }
+
+  .layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #dirty-layer { z-index: 2; clip-path: inset(0 0 0 0); }
+  #clean-bg { z-index: 1; }
+
+  .scrim { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+           background: linear-gradient(to top, rgba(8,18,12,0.86) 0%, rgba(8,18,12,0.45) 22%, rgba(8,18,12,0) 44%); }
+
+  .wipe-line { position: absolute; top: 0; bottom: 0; left: 0; width: 6px; z-index: 5;
+               background: #f4b942; box-shadow: 0 0 24px rgba(244,185,66,0.9); opacity: 0; }
+  .wipe-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                 width: 96px; height: 96px; border-radius: 50%; background: #f4b942;
+                 display: flex; align-items: center; justify-content: center;
+                 color: #0f2b1d; font-size: 44px; font-weight: 800;
+                 box-shadow: 0 6px 26px rgba(0,0,0,0.5); }
+
+  /* static labels (cross-fade with the state, no entrance anim → seamless loop) */
+  .label { position: absolute; left: 0; right: 0; bottom: 300px; z-index: 6; text-align: center; }
+  .label .word { font-family: var(--brand-display); font-weight: 800; font-size: 210px;
+                 line-height: 0.9; letter-spacing: -0.04em; margin: 0;
+                 text-shadow: 0 8px 44px rgba(0,0,0,0.75); }
+  #label-before .word { color: #fff; }
+  #label-after .word { color: #f4b942; }
+  .label .sub { font-family: var(--brand-ui); font-weight: 600; font-size: 46px; color: #e6efe8;
+                margin-top: 22px; text-shadow: 0 4px 22px rgba(0,0,0,0.8); }
+
+  .wordmark { position: absolute; top: 60px; left: 0; right: 0; z-index: 10;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 44px; height: 44px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.6)); }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 36px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  /* persistent CTA banner (always on — this is a loop, no pop-in ending) */
+  .ctapill { position: absolute; left: 50%; transform: translateX(-50%); bottom: 70px; z-index: 9;
+             font-family: var(--brand-ui); font-weight: 700; font-size: 42px; color: #0f2b1d;
+             background: #f4b942; padding: 22px 54px; border-radius: 999px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.5); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div id="ba-loop" class="comp" data-composition-id="ba-loop"
+     data-width="1080" data-height="1920" data-start="0" data-duration="9">
+
+  <img id="clean-bg" class="layer" src="videos/binsparkle/assets/ba-clean.png" alt="">
+  <img id="dirty-layer" class="layer" src="videos/binsparkle/assets/ba-dirty.png" alt="">
+
+  <div class="scrim"></div>
+
+  <div class="wipe-line" id="wipe-line"><div class="wipe-handle">↔</div></div>
+
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#3f9463"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#3f9463"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <div class="label" id="label-before">
+    <p class="word">before.</p>
+    <p class="sub">this is your bin on a monday.</p>
+  </div>
+  <div class="label" id="label-after" style="opacity:0;">
+    <p class="word">after.</p>
+    <p class="sub">one BinSparkle clean.</p>
+  </div>
+
+  <div class="ctapill">book at binsparkle.nz</div>
+
+</div>
+
+<script>
+  const tl = gsap.timeline({ paused: true });
+
+  // Forward wipe: dirty → clean (3.5 → 4.5)
+  tl.to("#wipe-line", { opacity: 1, duration: 0.2 }, 3.5)
+    .to("#dirty-layer", { clipPath: "inset(0 0 0 100%)", duration: 1.0, ease: "power2.inOut" }, 3.5)
+    .to("#wipe-line", { left: "100%", duration: 1.0, ease: "power2.inOut" }, 3.5)
+    .to("#label-before", { opacity: 0, duration: 0.35 }, 3.6)
+    .to("#label-after", { opacity: 1, duration: 0.35 }, 3.9)
+    .to("#wipe-line", { opacity: 0, duration: 0.25 }, 4.4);
+
+  // Reverse wipe: clean → dirty (8.0 → 9.0) — returns to the start frame for a seamless loop
+  tl.to("#wipe-line", { opacity: 1, left: "100%", duration: 0.2 }, 8.0)
+    .to("#dirty-layer", { clipPath: "inset(0 0 0 0)", duration: 1.0, ease: "power2.inOut" }, 8.0)
+    .to("#wipe-line", { left: "0%", duration: 1.0, ease: "power2.inOut" }, 8.0)
+    .to("#label-after", { opacity: 0, duration: 0.35 }, 8.1)
+    .to("#label-before", { opacity: 1, duration: 0.35 }, 8.4)
+    .to("#wipe-line", { opacity: 0, duration: 0.25 }, 8.9);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["ba-loop"] = tl;
+</script>
+</body>
+</html>

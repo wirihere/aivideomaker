@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — A Week in the Life (Video)</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="bsTile" x1="0" y1="0" x2="0.55" y2="1">
+    <stop offset="0" stop-color="#3f9463"/><stop offset="1" stop-color="#1d5634"/>
+  </linearGradient>
+  <linearGradient id="bsSun" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#fdd479"/><stop offset="1" stop-color="#f4b942"/>
+  </linearGradient>
+</defs></svg>
+
+<style>
+  body { margin: 0; background: #0f2b1d; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #0f2b1d; }
+
+  .card { position: absolute; inset: 0; z-index: 5; overflow: hidden; will-change: transform, opacity; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgba(9,26,18,0.55) 0%, rgba(9,26,18,0) 18%),
+      linear-gradient(to top, rgba(9,26,18,0.7) 0%, rgba(9,26,18,0.34) 16%, rgba(9,26,18,0) 32%); }
+  .char { position: absolute; bottom: 320px; left: 50%; transform: translateX(-50%);
+          z-index: 3; max-height: 1180px; max-width: 900px; }
+
+  .day { position: absolute; top: 150px; left: 70px; z-index: 7;
+         font-family: var(--card-font-display); font-weight: 800; font-size: 44px;
+         letter-spacing: 0.02em; color: #0f2b1d;
+         background: #f4b942; padding: 16px 34px; border-radius: 18px;
+         box-shadow: 0 8px 26px rgba(0,0,0,0.35); }
+  .day.small { font-size: 34px; padding: 14px 28px; }
+
+  .bubble { position: absolute; z-index: 5; left: 70px; right: 70px;
+            background: rgba(250,246,238,0.97);
+            border-radius: 48px; padding: 50px 58px 58px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3); transform-origin: bottom center; }
+  .bubble.top { top: 270px; }
+  .bubble.mid { top: 300px; }
+  .bubble .quote { font-family: var(--card-font-display); font-weight: 800;
+                   font-size: 84px; line-height: 1.04; letter-spacing: -0.02em;
+                   color: #0d2218; margin: 0; }
+  .bubble .quote em { font-style: normal; color: #2f7a4d; }
+  .bubble .quote i { font-style: normal; color: #c25a35; }
+  .bubble::after { content: ""; position: absolute; bottom: -30px; left: 50%;
+                   transform: translateX(-50%);
+                   width: 0; height: 0;
+                   border-left: 30px solid transparent;
+                   border-right: 30px solid transparent;
+                   border-top: 30px solid rgba(250,246,238,0.97); }
+
+  .wordmark { position: absolute; top: 48px; left: 0; right: 0; z-index: 60;
+              display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .wordmark svg { width: 48px; height: 48px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.5)); }
+  .wordmark span { font-family: var(--card-font-display); font-weight: 800; font-size: 34px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  .bottom-cta { position: absolute; left: 0; right: 0; bottom: 170px; z-index: 5; text-align: center; }
+  .bottom-cta .line { font-family: var(--card-font-display); font-weight: 800;
+                      font-size: 90px; line-height: 1.0; letter-spacing: -0.03em;
+                      color: #fff; margin: 0; text-shadow: 0 4px 30px rgba(0,0,0,0.7); }
+  .bottom-cta .line em { font-style: normal; color: #f4b942; }
+  .ctapill { position: absolute; left: 50%; transform: translateX(-50%);
+             bottom: 60px; z-index: 6;
+             font-family: var(--card-font-ui); font-weight: 700; font-size: 42px;
+             color: #0f2b1d; background: #f4b942;
+             padding: 22px 54px; border-radius: 999px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.4); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div id="week-video" class="comp" data-composition-id="week-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <audio id="bgm" class="clip" src="assets/music/binsparkle-bed.mp3" data-start="0" data-duration="27" data-track-index="8" data-volume="0.10" loop></audio>
+
+  <!-- Card 1 — MON fresh -->
+  <div class="card clip" id="card1" data-start="0" data-duration="4.0" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-01-sunny-curb.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-happy-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="day" id="day1">MON</div>
+    <div class="bubble top" id="bubble1"><p class="quote">monday. <em>feeling brand new.</em></p></div>
+  </div>
+  <audio id="sfx1" class="clip" src="assets/sfx/ding.wav" data-start="0.5" data-duration="0.5" data-track-index="12" data-volume="0.6"></audio>
+
+  <!-- Card 2 — TUE first nappy -->
+  <div class="card clip" id="card2" data-start="3.7" data-duration="4.0" data-track-index="1">
+    <img class="bg" src="videos/binsparkle/assets/bg-06-spring-garden.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-cheeky-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="day" id="day2">TUE</div>
+    <div class="bubble mid" id="bubble2"><p class="quote">tuesday. first nappy's in. <i>we don't talk about it.</i></p></div>
+  </div>
+
+  <!-- Card 3 — THU smell begins -->
+  <div class="card clip" id="card3" data-start="7.4" data-duration="4.0" data-track-index="2">
+    <img class="bg" src="videos/binsparkle/assets/bg-08-summer-heat.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-side-thinking-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="day" id="day3">THU</div>
+    <div class="bubble top" id="bubble3"><p class="quote">thursday. the smell starts. <i>i can't unsmell me.</i></p></div>
+  </div>
+
+  <!-- Card 4 — FRI overflow -->
+  <div class="card clip" id="card4" data-start="11.1" data-duration="4.0" data-track-index="3">
+    <img class="bg" src="videos/binsparkle/assets/bg-05-behind-garage.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-disgusted-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="day" id="day4">FRI</div>
+    <div class="bubble mid" id="bubble4"><p class="quote">friday. someone <i>crammed a pizza box</i> in. lid won't shut.</p></div>
+  </div>
+
+  <!-- Card 5 — SAT rock bottom -->
+  <div class="card clip" id="card5" data-start="14.8" data-duration="4.0" data-track-index="4">
+    <img class="bg" src="videos/binsparkle/assets/bg-04-storm.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-sad-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="day" id="day5">SAT</div>
+    <div class="bubble top" id="bubble5"><p class="quote">saturday. thirty degrees. <i>the maggots found me.</i></p></div>
+  </div>
+
+  <!-- Card 6 — SUN eve hopeful -->
+  <div class="card clip" id="card6" data-start="18.5" data-duration="4.0" data-track-index="5">
+    <img class="bg" src="videos/binsparkle/assets/bg-07-winter-frost.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-worried-dirty-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="day small" id="day6">SUN EVE</div>
+    <div class="bubble mid" id="bubble6"><p class="quote">sunday night. bin day tomorrow. <em>please. i've changed.</em></p></div>
+  </div>
+
+  <!-- Card 7 — CTA monday redeemed -->
+  <div class="card clip" id="card7" data-start="22.2" data-duration="4.8" data-track-index="6">
+    <img class="bg" src="videos/binsparkle/assets/bg-02-golden-driveway.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-proud-cutout.png" alt="">
+    <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg><span>bin<i>sparkle</i></span></div>
+    <div class="day" id="day7">MON</div>
+    <div class="bottom-cta" id="cta">
+      <p class="line">break the cycle.</p>
+      <p class="line"><em>book a clean.</em></p>
+    </div>
+    <div class="ctapill">binsparkle.nz</div>
+  </div>
+
+</div>
+
+<script>
+  gsap.set(["#card2","#card3","#card4","#card5","#card6","#card7"], { opacity: 0 });
+  gsap.set(["#bubble1","#bubble2","#bubble3","#bubble4","#bubble5","#bubble6"], { scale: 0, opacity: 0 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Card 1: bubble pops, day badge slides in
+  tl.to("#bubble1", { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 0.6);
+  tl.fromTo("#day1", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 0.4);
+
+  // Card 2: cross-dissolve at 3.7
+  tl.to("#card1", { opacity: 0, scale: 0.98, duration: 0.35, ease: "power1.inOut" }, 3.7);
+  tl.to("#card2", { opacity: 1, duration: 0.35, ease: "power2.out" }, 3.75);
+  tl.fromTo("#day2", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 4.1);
+  tl.to("#bubble2", { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 4.3);
+
+  // Card 3: dissolve at 7.4
+  tl.to("#card2", { opacity: 0, scale: 0.98, duration: 0.35, ease: "power1.inOut" }, 7.4);
+  tl.to("#card3", { opacity: 1, duration: 0.35, ease: "power2.out" }, 7.45);
+  tl.fromTo("#day3", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 7.8);
+  tl.to("#bubble3", { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 8.0);
+
+  // Card 4: dissolve at 11.1
+  tl.to("#card3", { opacity: 0, scale: 0.98, duration: 0.35, ease: "power1.inOut" }, 11.1);
+  tl.to("#card4", { opacity: 1, duration: 0.35, ease: "power2.out" }, 11.15);
+  tl.fromTo("#day4", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 11.5);
+  tl.to("#bubble4", { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 11.7);
+
+  // Card 5: dissolve at 14.8
+  tl.to("#card4", { opacity: 0, scale: 0.98, duration: 0.35, ease: "power1.inOut" }, 14.8);
+  tl.to("#card5", { opacity: 1, duration: 0.35, ease: "power2.out" }, 14.85);
+  tl.fromTo("#day5", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 15.2);
+  tl.to("#bubble5", { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 15.4);
+
+  // Card 6: dissolve at 18.5
+  tl.to("#card5", { opacity: 0, scale: 0.98, duration: 0.35, ease: "power1.inOut" }, 18.5);
+  tl.to("#card6", { opacity: 1, duration: 0.35, ease: "power2.out" }, 18.55);
+  tl.fromTo("#day6", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 18.9);
+  tl.to("#bubble6", { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, 19.1);
+
+  // Card 7: CTA at 22.2
+  tl.to("#card6", { opacity: 0, scale: 0.98, duration: 0.4, ease: "power1.inOut" }, 22.2);
+  tl.to("#card7", { opacity: 1, duration: 0.5, ease: "power2.out" }, 22.3);
+  tl.fromTo("#day7", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.6)" }, 22.7);
+  tl.fromTo("#cta", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 22.9);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["week-video"] = tl;
+</script>
+</body>
+</html>

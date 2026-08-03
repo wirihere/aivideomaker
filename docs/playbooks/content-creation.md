@@ -19,21 +19,55 @@ code that feels like it should already exist, STOP and look harder.
 
 ---
 
-## Rule 2 — Default to 2.5s holds per slide
+## Rule 2 — Set hold time from the word count, then add a second
 
-**Minimum 2.5 seconds per slide.** Shorter and the viewer can't read the text.
+**Hold time is not a flat guess — derive it from how much text is on the slide.**
+A viewer needs to *finish reading* before the cut, with a beat to spare. The
+formula:
 
-Vary the rhythm so it doesn't feel mechanical:
-- Short text (1-2 words): 2.0–2.5s
-- Medium text (one line): 2.5–3.0s
-- Long text (2+ lines, profile info): 3.0–3.5s
-- CTA / ending: 3.5s+
+> **hold ≈ (word count ÷ 3) + 1 second, minimum 4s.**
 
-Match the hold time to the reading time. A viewer reading at normal speed
-should finish the text with about half a second to spare before the transition.
+Reading rate is ~3 words/sec for social video. That's slower than it sounds —
+people skimming a feed read at this pace, not print pace. The +1s is the buffer
+so the slide doesn't feel cut off.
 
-Never make the user tell you "it's too fast." Start slow, they'll say "speed
-it up" if needed.
+**Calibration (learned the hard way, across three rounds of viewing):**
+- ÷5 + 1s → "still very fast reading"
+- ÷4 + 1s → still slightly fast
+- **÷3 + 1s → landed.** This is the rate.
+
+If the user ever says a slide is too fast, the reading rate (the divisor) is the
+thing to drop, not just the buffer.
+
+Worked examples from real slides:
+
+| Slide text | Words | Reading (÷3) | + buffer | Hold |
+|---|---:|---:|---:|---:|
+| A hook line ("you're a bin.") | 3 | 1s | +1 | **4s** (min) |
+| A chat message (one line) | 12 | 4s | +1 | **5s** |
+| A review title + body (~24 words) | 24 | 8s | +1 | **9s** |
+| A long review body (~30 words) | 30 | 10s | +1 | **11s** |
+| CTA / final slide | — | — | — | **5s+** (let it sit) |
+
+**Count the words, do the sum, set the hold.** Don't default every slide to the
+same number — a 30-word review held for 5s is too fast, and a 4-word hook held
+for 8s is too slow. Vary it with the content.
+
+This applies to **video** slide holds. Carousels are swipe-paced (the viewer
+controls the hold), so it doesn't apply to `render:still` slides — but the
+reading-time logic still tells you whether a slide has too much text to scan
+at a glance.
+
+**Write short for video.** Because hold time scales with word count, long copy
+makes a slow video — a 30-word slide held correctly is ~11s, and seven of those
+is a 75-second reel nobody finishes. Aim for **≤12 words per slide** on video
+(holds stay under ~5s). If a concept needs long copy to land (reviews, invoices,
+chat), it's often better as a **carousel** (swipe-paced) than a video. The
+verbal concepts (texts, reviews, invoice) all ran long as video — lean visual
+and low-word-count for video, save the wordy ones for carousels.
+
+Never make the user tell you "it's too fast." Start at the formula's number;
+they'll say "speed it up" or "hold it longer" if the rate is off.
 
 ---
 
@@ -108,12 +142,39 @@ When generating images you plan to cut out (character art, objects):
 | Platform | Hashtags | Tone | Length |
 |---|---|---|---|
 | **Facebook** | 3–5 | Social, warm | Medium (3-5 lines) |
-| **Instagram** | 15–20 | Energetic, emoji-heavy | Longer (5-8 lines) |
+| **Instagram** | 15–20 | Energetic, plain-spoken | Longer (5-8 lines) |
 | **Threads** | 0–1 | Conversational, authentic | Short (1-3 lines) |
 | **Local Client Finder** | 2–3 | Direct, recruitment-focused | Short |
 
 The caption does as much work as the visual. Spend time on it. Use the
 `post` command's config file to specify different captions per channel.
+
+### Emoji rule — defer to the brand voice, not the platform template
+
+**BinSparkle's site has no emojis.** That was verified during the
+`script-and-copy.md` copy probe, and the default for this brand is **no
+emojis** (or at most one, only where a playful character-driven post
+genuinely warrants it). The "emoji-heavy" Instagram default that lived in
+this table earlier is a generic platform template — it does **not** apply
+here. Brand voice wins over platform convention every time. If you're
+tempted to scatter emojis through a caption, re-read
+`script-and-copy.md` → "Image-post specific notes" first.
+
+### How to actually write a caption — use the copy expert
+
+**Do not hand-write captions into the post config.** Run them through
+[`script-and-copy.md`](script-and-copy.md) — it has the model ladder
+(Claude Opus 4.8 is the daily pick, ~$0.016), the tested prompt template,
+and the craft rubric. The process:
+
+1. Fill the prompt template with brand context **verbatim** (real taglines
+   scraped from binsparkle.nz, real product facts, the no-emoji constraint).
+2. Generate via `textInference` at the chosen tier.
+3. Score against the 8-question rubric; revise surgically on any "no".
+4. For hero posts, run the generate-critique-with-different-model loop.
+
+The reference bar is `videos/binsparkle/SCRIPT-fullcare.md`. A caption that
+doesn't clear that bar isn't finished.
 
 ---
 

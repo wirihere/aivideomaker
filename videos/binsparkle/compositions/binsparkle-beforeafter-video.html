@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Before / After</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #111; }
+
+  /* two full-frame photo layers; dirty on top, wiped away to reveal clean */
+  .layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #dirty-layer { z-index: 2; clip-path: inset(0 0 0 0); }
+  #clean-bg { z-index: 1; }
+
+  /* scrim for text legibility on either photo */
+  .scrim { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+           background: linear-gradient(to top, rgba(8,18,12,0.86) 0%, rgba(8,18,12,0.45) 20%, rgba(8,18,12,0) 42%); }
+
+  /* the wipe line (the before/after slider handle) */
+  .wipe-line { position: absolute; top: 0; bottom: 0; left: 0; width: 6px; z-index: 5;
+               background: #f4b942; box-shadow: 0 0 24px rgba(244,185,66,0.9); opacity: 0; }
+  .wipe-handle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                 width: 96px; height: 96px; border-radius: 50%; background: #f4b942;
+                 display: flex; align-items: center; justify-content: center;
+                 color: #0f2b1d; font-size: 44px; font-weight: 800;
+                 box-shadow: 0 6px 26px rgba(0,0,0,0.5); }
+
+  /* the big one-word labels */
+  .label { position: absolute; left: 0; right: 0; bottom: 280px; z-index: 6; text-align: center; }
+  .label .word { font-family: var(--brand-display); font-weight: 800; font-size: 200px;
+                 line-height: 0.9; letter-spacing: -0.04em; margin: 0;
+                 color: #fff; text-shadow: 0 8px 40px rgba(0,0,0,0.7); }
+  .label .word.before { color: #fff; }
+  .label .word.after { color: #f4b942; }
+  .label .sub { font-family: var(--brand-ui); font-weight: 600; font-size: 44px; color: #e6efe8;
+                margin-top: 22px; text-shadow: 0 4px 22px rgba(0,0,0,0.8); }
+
+  /* wordmark */
+  .wordmark { position: absolute; top: 60px; left: 0; right: 0; z-index: 10;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 44px; height: 44px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.6)); }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 36px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  /* CTA (appears at the end) */
+  .cta-block { position: absolute; left: 0; right: 0; bottom: 150px; z-index: 8; text-align: center; }
+  .cta-block .line1 { font-family: var(--brand-display); font-weight: 800; font-size: 96px;
+                      line-height: 0.96; letter-spacing: -0.03em; color: #fff; margin: 0;
+                      text-shadow: 0 6px 36px rgba(0,0,0,0.8); }
+  .cta-block .line1 em { font-style: normal; color: #f4b942; }
+  .ctapill { position: absolute; left: 50%; transform: translateX(-50%); bottom: 60px; z-index: 9;
+             font-family: var(--brand-ui); font-weight: 700; font-size: 44px; color: #0f2b1d;
+             background: #f4b942; padding: 22px 56px; border-radius: 999px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.5); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div id="ba-video" class="comp" data-composition-id="ba-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="15">
+
+  <!-- clean underneath, dirty on top (wiped away) -->
+  <img id="clean-bg" class="layer" src="videos/binsparkle/assets/ba-clean.png" alt="">
+  <img id="dirty-layer" class="layer" src="videos/binsparkle/assets/ba-dirty.png" alt="">
+
+  <div class="scrim"></div>
+
+  <!-- the wipe slider line + handle (visible only during the wipe) -->
+  <div class="wipe-line" id="wipe-line"><div class="wipe-handle">↔</div></div>
+
+  <!-- wordmark -->
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#3f9463"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#3f9463"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <!-- "before." label (on the dirty state) -->
+  <div class="label" id="label-before">
+    <p class="word before">before.</p>
+    <p class="sub">this is your bin on a monday.</p>
+  </div>
+
+  <!-- "after." label (revealed on the clean state) -->
+  <div class="label" id="label-after" style="opacity:0;">
+    <p class="word after">after.</p>
+    <p class="sub">one BinSparkle clean.</p>
+  </div>
+
+  <!-- CTA (end) -->
+  <div class="cta-block" id="cta" style="opacity:0;">
+    <p class="line1">filthy to <em>gleaming.</em></p>
+  </div>
+  <div class="ctapill" id="ctapill" style="opacity:0;">book at binsparkle.nz</div>
+
+  <!-- SFX: whoosh during the wipe, ding on the reveal -->
+  <audio id="whoosh" class="clip" src="assets/sfx/whoosh.mp3" data-start="4.0" data-duration="1.0" data-track-index="9" data-volume="0.5"></audio>
+  <audio id="reveal-ding" class="clip" src="assets/sfx/ding.wav" data-start="5.1" data-duration="0.6" data-track-index="10" data-volume="0.55"></audio>
+
+</div>
+
+<script>
+  // Pre-hide label text (containers handle their own opacity)
+  gsap.set(["#label-before .word", "#label-before .sub"], { opacity: 0, y: 24 });
+  gsap.set("#label-after .word", { scale: 0.7 });
+  gsap.set(["#cta .line1", "#ctapill"], { opacity: 0 });
+  gsap.set("#ctapill", { scale: 0.85 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // 0-4s: dirty bin, "before." label in
+  tl.to("#label-before .word", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.6)
+    .to("#label-before .sub", { opacity: 1, y: 0, duration: 0.5 }, 1.1);
+
+  // 4-5s: the wipe — dirty layer clips away left-to-right, slider line sweeps across
+  tl.to("#wipe-line", { opacity: 1, duration: 0.2 }, 4.0)
+    .to("#dirty-layer", { clipPath: "inset(0 0 0 100%)", duration: 1.1, ease: "power2.inOut" }, 4.0)
+    .to("#wipe-line", { left: "100%", duration: 1.1, ease: "power2.inOut" }, 4.0)
+    .to("#label-before", { opacity: 0, duration: 0.35 }, 4.2)
+    .to("#wipe-line", { opacity: 0, duration: 0.3 }, 5.1);
+
+  // 5-9s: clean revealed, "after." label in
+  tl.to("#label-after", { opacity: 1, duration: 0.5 }, 5.3)
+    .to("#label-after .word", { scale: 1, duration: 0.6, ease: "back.out(1.7)" }, 5.3)
+    .fromTo("#label-after .sub", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5 }, 5.9);
+
+  // 9-15s: CTA
+  tl.to("#label-after", { opacity: 0, y: -20, duration: 0.4 }, 9.2)
+    .to("#cta .line1", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 9.5)
+    .fromTo("#cta .line1", { y: 30 }, { y: 0, duration: 0.5, ease: "power3.out" }, 9.5)
+    .to("#ctapill", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.5)" }, 10.1);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["ba-video"] = tl;
+</script>
+</body>
+</html>

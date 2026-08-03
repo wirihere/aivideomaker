@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Texts From Your Bin (Video)</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #07140d; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden;
+          background: #0a1f13;
+          background-image: radial-gradient(ellipse at 50% 0%, #123023 0%, #0a1f13 55%); }
+
+  /* ---- iMessage-style chat header ---- */
+  .chat-header { position: absolute; top: 0; left: 0; right: 0; height: 230px; z-index: 20;
+                 display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+                 padding-bottom: 22px; }
+  .avatar-row { display: flex; align-items: center; gap: 22px; }
+  .avatar { width: 116px; height: 116px; border-radius: 50%; overflow: hidden;
+            background: #1a3a26; border: 3px solid #2f7a4d; position: relative;
+            display: flex; align-items: center; justify-content: center; }
+  .avatar img { width: 130%; height: 130%; object-fit: cover; position: absolute; top: 0; left: 0; }
+  .avatar-name { font-family: var(--card-font-display); font-weight: 800; font-size: 52px;
+                 color: #fff; letter-spacing: -0.01em; line-height: 1; }
+  /* status spans stacked — toggle by opacity (seek-safe, no DOM mutation) */
+  .avatar-status { font-family: var(--card-font-ui); font-size: 30px; margin-top: 8px; line-height: 1;
+                   position: relative; height: 32px; width: 220px; text-align: left; }
+  .avatar-status span { position: absolute; left: 0; top: 0; }
+  .avatar-status .im { color: #9bbfa6; }
+  .avatar-status .typing { color: #f4b942; }
+  .avatar-status .online { color: #7fd1a1; }
+  .header-rule { position: absolute; left: 60px; right: 60px; bottom: 0; height: 2px;
+                 background: rgba(255,255,255,0.08); }
+
+  /* ---- wordmark ---- */
+  .wordmark { position: absolute; top: 50px; right: 50px; z-index: 25;
+              display: flex; align-items: center; gap: 10px;
+              font-family: var(--card-font-display); font-weight: 800; font-size: 30px;
+              color: #fff; opacity: 0.9; }
+  .wordmark i { font-style: normal; color: #f4b942; }
+  .wordmark svg { width: 34px; height: 34px; }
+
+  /* ---- message thread ---- */
+  .thread { position: absolute; left: 0; right: 0; top: 250px; bottom: 200px; z-index: 10;
+            padding: 30px 56px; display: flex; flex-direction: column; justify-content: flex-end;
+            gap: 26px; }
+  .bubble { max-width: 78%; padding: 30px 38px; font-size: 58px; line-height: 1.18;
+            font-weight: 500; letter-spacing: -0.005em; }
+  .bubble.bin { align-self: flex-start; background: #faf6ee; color: #0d2218;
+                border-radius: 40px 40px 40px 14px;
+                box-shadow: 0 4px 18px rgba(0,0,0,0.25); transform-origin: bottom center; }
+  .bubble.you { align-self: flex-end; background: #2f7a4d; color: #fff;
+                border-radius: 40px 40px 14px 40px;
+                box-shadow: 0 4px 18px rgba(0,0,0,0.3); transform-origin: bottom right; }
+  .bubble .em { color: #c25a35; font-weight: 700; }
+  .bubble.you .em { color: #f4b942; font-weight: 700; }
+
+  /* ---- input bar: two stacked states, cross-faded (seek-safe) ---- */
+  .input-slot { position: absolute; left: 40px; right: 40px; bottom: 50px; height: 110px; z-index: 20; }
+  .input-bar { position: absolute; inset: 0; background: #143020; border-radius: 55px;
+               border: 2px solid rgba(255,255,255,0.08); display: flex; align-items: center;
+               padding: 0 36px; gap: 24px; }
+  .input-bar .field { flex: 1; font-family: var(--card-font-ui); font-size: 40px; color: #6e8c79; }
+  .input-bar .send { width: 78px; height: 78px; border-radius: 50%; background: #2f7a4d;
+                     display: flex; align-items: center; justify-content: center;
+                     color: #fff; font-size: 38px; }
+  .input-cta { position: absolute; inset: 0; background: #f4b942; border-radius: 55px;
+               display: flex; align-items: center; justify-content: center;
+               font-family: var(--card-font-display); font-weight: 800; font-size: 46px;
+               color: #0f2b1d; letter-spacing: -0.01em;
+               box-shadow: 0 8px 30px rgba(244,185,66,0.4); }
+</style>
+</head>
+<body>
+
+<div id="texts-video" class="comp" data-composition-id="texts-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="26">
+
+  <!-- Chat header -->
+  <div class="chat-header">
+    <div class="avatar-row">
+      <div class="avatar">
+        <img id="av1" src="videos/binsparkle/assets/cutouts/char2-quarter-cheeky-dirty-cutout.png" alt="">
+        <img id="av2" src="videos/binsparkle/assets/cutouts/char2-front-disgusted-dirty-cutout.png" alt="" style="opacity:0;">
+        <img id="av3" src="videos/binsparkle/assets/cutouts/char2-front-happy-cutout.png" alt="" style="opacity:0;">
+      </div>
+      <div>
+        <div class="avatar-name">your bin</div>
+        <div class="avatar-status">
+          <span class="im" id="st-im">iMessage</span>
+          <span class="typing" id="st-typing" style="opacity:0;">typing…</span>
+          <span class="online" id="st-online" style="opacity:0;">online</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-rule"></div>
+  </div>
+
+  <div class="wordmark"><svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#3f9463"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#3f9463"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>bin<i>sparkle</i></div>
+
+  <!-- Message thread -->
+  <div class="thread">
+    <div class="bubble bin" id="m1">we need to talk. it's been a <span class="em">long week</span> for me.</div>
+    <div class="bubble you" id="m2">you're a bin.</div>
+    <div class="bubble bin" id="m3">a bin who's held your <span class="em">prawn shells since the 4th.</span> it's the 19th.</div>
+    <div class="bubble you" id="m4">oh no.</div>
+    <div class="bubble bin" id="m5">oh no is right. <span class="em">something down the bottom just moved</span> and it wasn't me.</div>
+    <div class="bubble you" id="m6">ok booking a clean at <span class="em">binsparkle.nz</span> right now.</div>
+    <div class="bubble bin" id="m7">pressure washed, scrubbed, deodorised. <span class="em">i feel reborn, mate.</span> the prawns have passed on.</div>
+  </div>
+
+  <!-- Input bar → cross-fades to CTA -->
+  <div class="input-slot">
+    <div class="input-bar" id="inputbar">
+      <div class="field">Message…</div>
+      <div class="send">↑</div>
+    </div>
+    <div class="input-cta" id="inputcta" style="opacity:0;">book at binsparkle.nz</div>
+  </div>
+
+  <!-- Sound effects: typing ticks, send swooshes, receive dings -->
+  <!-- Typing (before each bin message) -->
+  <audio id="tick1" class="clip" src="assets/sfx/tick-soft.wav" data-start="0.3"  data-duration="0.8" data-track-index="8"  data-volume="0.3"></audio>
+  <audio id="tick2" class="clip" src="assets/sfx/tick-soft.wav" data-start="7.2"  data-duration="0.8" data-track-index="8"  data-volume="0.3"></audio>
+  <audio id="tick3" class="clip" src="assets/sfx/tick-soft.wav" data-start="14.0" data-duration="0.8" data-track-index="8"  data-volume="0.3"></audio>
+  <audio id="tick4" class="clip" src="assets/sfx/tick-soft.wav" data-start="21.0" data-duration="0.8" data-track-index="8"  data-volume="0.3"></audio>
+  <!-- Received (bin messages land) -->
+  <audio id="rec1"  class="clip" src="assets/sfx/ding.wav" data-start="1.0"  data-duration="0.6" data-track-index="9" data-volume="0.45"></audio>
+  <audio id="rec2"  class="clip" src="assets/sfx/ding.wav" data-start="8.0"  data-duration="0.6" data-track-index="9" data-volume="0.45"></audio>
+  <audio id="rec3"  class="clip" src="assets/sfx/ding.wav" data-start="15.0" data-duration="0.6" data-track-index="9" data-volume="0.45"></audio>
+  <audio id="rec4"  class="clip" src="assets/sfx/ding.wav" data-start="22.0" data-duration="0.6" data-track-index="9" data-volume="0.55"></audio>
+  <!-- Sent (your messages land) -->
+  <audio id="snd1"  class="clip" src="assets/sfx/whoosh-soft.wav" data-start="4.5"  data-duration="0.5" data-track-index="10" data-volume="0.35"></audio>
+  <audio id="snd2"  class="clip" src="assets/sfx/whoosh-soft.wav" data-start="11.5" data-duration="0.5" data-track-index="10" data-volume="0.35"></audio>
+  <audio id="snd3"  class="clip" src="assets/sfx/whoosh-soft.wav" data-start="18.5" data-duration="0.5" data-track-index="10" data-volume="0.35"></audio>
+
+</div>
+
+<script>
+  // Pre-hide all bubbles + alt avatars + CTA
+  gsap.set(["#m1","#m2","#m3","#m4","#m5","#m6","#m7"], { opacity: 0, y: 24, scale: 0.92 });
+  gsap.set("#inputcta", { opacity: 0, scale: 0.94 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // ===== Message 1 (bin) — typing 0.3→0.95, lands at 1.0 =====
+  tl.to("#st-im", { opacity: 0, duration: 0.2 }, 0.3);
+  tl.to("#st-typing", { opacity: 1, duration: 0.2 }, 0.3);
+  tl.to("#st-typing", { opacity: 0, duration: 0.2 }, 0.95);
+  tl.to("#st-im", { opacity: 1, duration: 0.2 }, 0.95);
+  tl.to("#m1", { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.5)" }, 1.0);
+
+  // ===== Message 2 (you) at 4.5 =====
+  tl.to("#m2", { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, 4.5);
+
+  // ===== Message 3 (bin) — typing 7.2→7.95, lands at 8.0 =====
+  tl.to("#st-im", { opacity: 0, duration: 0.2 }, 7.2);
+  tl.to("#st-typing", { opacity: 1, duration: 0.2 }, 7.2);
+  tl.to("#st-typing", { opacity: 0, duration: 0.2 }, 7.95);
+  tl.to("#st-im", { opacity: 1, duration: 0.2 }, 7.95);
+  tl.to("#m3", { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.5)" }, 8.0);
+
+  // ===== Message 4 (you) at 11.5 =====
+  tl.to("#m4", { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, 11.5);
+
+  // ===== Message 5 (bin) — avatar → disgusted, typing 14.0→14.95, lands at 15.0 =====
+  tl.to("#av1", { opacity: 0, duration: 0.3 }, 14.3);
+  tl.to("#av2", { opacity: 1, duration: 0.3 }, 14.4);
+  tl.to("#st-im", { opacity: 0, duration: 0.2 }, 14.0);
+  tl.to("#st-typing", { opacity: 1, duration: 0.2 }, 14.0);
+  tl.to("#st-typing", { opacity: 0, duration: 0.2 }, 14.95);
+  tl.to("#st-im", { opacity: 1, duration: 0.2 }, 14.95);
+  tl.to("#m5", { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.5)" }, 15.0);
+
+  // ===== Message 6 (you, booking) at 18.5 =====
+  tl.to("#m6", { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, 18.5);
+
+  // ===== Message 7 (bin, reborn) — avatar → happy, status → online, typing 21.0→21.95, lands at 22.0 =====
+  tl.to("#av2", { opacity: 0, duration: 0.3 }, 21.3);
+  tl.to("#av3", { opacity: 1, duration: 0.3 }, 21.4);
+  tl.to("#st-im", { opacity: 0, duration: 0.2 }, 21.0);
+  tl.to("#st-typing", { opacity: 1, duration: 0.2 }, 21.0);
+  tl.to("#st-typing", { opacity: 0, duration: 0.2 }, 21.95);
+  tl.to("#st-online", { opacity: 1, duration: 0.2 }, 21.95);
+  tl.to("#m7", { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.5)" }, 22.0);
+
+  // ===== CTA cross-fade at 23.2 =====
+  tl.to("#inputbar", { opacity: 0, scale: 0.96, duration: 0.35, ease: "power2.in" }, 23.2);
+  tl.to("#inputcta", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 23.3);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["texts-video"] = tl;
+</script>
+</body>
+</html>

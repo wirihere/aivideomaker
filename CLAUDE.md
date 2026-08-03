@@ -1,53 +1,47 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-03, end of session
+## ▶ Start here — written 2026-08-04 (end of session, server time Aug 3 12:06 UTC / Aug 4 00:06 NZST)
+
+**The content-creation system is now calibrated end-to-end.** This session tuned the playbooks so a fresh session can turn a one-line concept into a carousel + video without re-deriving anything. The standing job: **keep building BinSparkle concepts in the same loop, each totally different.** The user asked for "~10 more" — run the loop ten times.
 
 **READ FIRST (in order):**
-1. [`videos/binsparkle/MANIFEST.md`](videos/binsparkle/MANIFEST.md) — the brand state file
-2. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) — the 9 rules (mandatory)
-3. The **tool map** below in this file — every command, asset, and playbook
+1. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) — the 9 rules. **Rule 2 and Rule 7 are the freshly-calibrated ones** (word-count holds @ 3 wps; no emojis; captions via the copy expert). Non-optional.
+2. [`docs/playbooks/script-and-copy.md`](docs/playbooks/script-and-copy.md) — the copy expert (model ladder + prompt template). All scripts/captions through Claude Opus 4.8 via `textInference`, never hand-written.
+3. [`videos/binsparkle/MANIFEST.md`](videos/binsparkle/MANIFEST.md) — brand, assets, compositions list.
+4. The exemplars + loop below.
 
-**Verify before you trust this.** Postiz data was verified live at end of
-session (2026-08-03 ~20:40 UTC). Repo heads confirmed pushed. Re-query
-Postiz (the command is in `posts.md`) if any post state looks stale.
+**Verify before you trust this.** Postiz queue re-queried live at Aug 3 12:06 UTC: **all queued posts are future-dated, none overdue.** First due is **Aug 3 20:30 UTC (Aug 4 08:30 NZST)** — re-query after that time to confirm it actually published (this is the first real test of the scheduler; a prior session flagged it). Query: pipe `scratch/verify-all-posts.sql` over SSH (command pattern in `videos/binsparkle/posts.md`). The POV video I scheduled this session is correctly queued for Aug 6 18:00 NZST across FB + IG + Threads.
 
-### What shipped this session
-- **Manifest + asset catalogue + posts ledger** — the discoverability layer. 53 images vision-described. Any session can now find every asset.
-- **`gen:image` + `describe:assets` + `post` commands** — one-command image generation, catalogue refresh, and posting.
-- **Character toolkit: 24 transparent cut-outs** (12 clean + 12 dirty, 3 angles each) + 8 background scenes. All in `videos/binsparkle/assets/cutouts/`.
-- **5 compositions** built (hero story carousel, Tinder carousel v2, "say" carousel, Tinder swipe video, speech bubble video).
-- **Content creation playbook** (9 rules) + **tool map** in CLAUDE.md.
-- **Postiz playbook corrected** (wrong API path `/api/public/v1` → `/public/v1`; IPv6 networking trap documented).
+### The loop — run once per concept
+1. **Invent a totally-different format.** See exemplars below for what's been done — don't repeat a format.
+2. **Copy via the expert:** `node scratch/gen-<name>-copy.mjs` (model it on `scratch/gen-reviews-copy.mjs`). ~$0.03/concept. Outputs the on-screen text + 3 platform captions.
+3. **Build ONE composition** at `videos/binsparkle/compositions/binsparkle-<name>-video.html`. Derive **both** outputs from it: `render:still` (carousel slides — capture at each beat's hold-midpoint) + `render:comp` (video). Do not build separate carousel/video comps (they duplicate media and lint-warn).
+4. **Time holds to Rule 2: word count ÷ 3 + 1s, min 4s.** **Write short for video — ≤12 words/slide.** Wordy concepts are better as carousels.
+5. `npx hyperframes lint` → `render:still` + `render:comp` → `to-yuv420` (every render).
+6. **Judge:** `judge:still` + `judge:video`. ⚠️ **The rubric is built for photo-ads and false-positives on UI-format pieces** (chat/reviews/invoice) — "no real bin," "text <80px," "static holds" are expected misses there. The one real gap to watch for across all formats: **no dedicated end card** (clean wordmark + CTA held ~2s).
+7. Hand to the user for critique; fold findings back into the playbook.
 
-### Content calendar (verified against Postiz 2026-08-03)
-
-| When (NZST) | What | Channel | State |
-|---|---|---|---|
-| Aug 3 (today) | Hero story carousel (8 slides) | FB + IG + Threads | ✅ PUBLISHED |
-| Aug 4, 8:30am | Tinder carousel (7 slides) | FB + IG + Threads | ⏳ QUEUED |
-| Aug 4, 1:30pm | "What your bin would say" carousel (7 slides) | FB + IG + Threads | ⏳ QUEUED |
-| Aug 4, 6pm | Tinder swipe video (20s) | FB + IG + Threads | ⏳ QUEUED |
-| Aug 5, 6pm | Speech bubble video (22s) | FB + IG + Threads | ⏳ QUEUED |
-
-Plus 4 carousels + 1 test post from the prior session (Aug 2) — all published.
-
-### Meta app status
-Confirmed LIVE (user verified 2026-08-03). Posts are public. ✓
+### Exemplars — 7 concepts built this session (do not repeat these formats)
+`week` (day badges + speech bubbles) · `stages` (numbered listicle, photo set) · `pov` (centered meme text) · `texts` (iMessage chat UI) · `reviews` (reviews page, bin reviews *you*) · `invoice` (printed receipt) · **`before/after`** (matched photo pair + wipe reveal — the strongest; the bin is the hero, ~8 words total). The before/after is the bar for "visual + low-word-count." Lean that way for video; save wordy concepts for carousels.
 
 ### Open jobs (next session)
-1. **Check the Aug 4 morning carousel actually published.** It's the first scheduled post — if it didn't go out, the scheduling pipeline has a bug.
-2. **Build the remaining 3 carousel concepts** ("week in the life", "stages of a dirty bin", "POV: you're a bin") — we had 5 concepts, built 2.
-3. **Optimise `describe:assets`** — 53 images takes 10+ minutes. Needs parallel calls or skip-unchanged logic.
-4. **Fetch more SFX** — only whoosh + ding. A pop, chime, swoosh would add polish. Use `fetch-pixabay-sfx.mjs`.
-5. **Update the posts ledger** (`videos/binsparkle/posts.md`) with all scheduled posts — it's behind.
+1. **Build ~10 more concepts** in the loop above. Each totally different; hand each to the user for critique before the next.
+2. **Formalize the copy-gen command.** It's `scratch/gen-*-copy.mjs` one-offs. Make it `npm run gen:copy` so Rule 7 points at a real command, not scratch scripts.
+3. **Judge rubric needs a UI/screen mode.** Two UI-format pieces tripped the same false positives. Add a rubric variant that doesn't demand a "real bin" or ≥80px text for chat/UI content.
+4. **End cards.** Add a standard clean end-card pattern (wordmark + one CTA, held ~2s) — currently missing on most pieces.
+5. The `texts` / `reviews` / `invoice` videos render at the **old hold rates** (3.5–5s, pre-3wps). Fine as carousels; re-time to ÷3+1s if reviving any as video.
 
 ### Traps
-1. Postiz API path is `/public/v1` (no `/api/`). The playbook was wrong; now corrected.
-2. VPS can't reach its own public URL (IPv6). Use Docker internal IP — the `post` command handles this automatically.
-3. Audio elements in compositions MUST have `id` attributes or they're silent.
-4. Every render needs `to-yuv420` after.
-5. The `post` command's bash script had a duplicate-post bug on first run (unclosed quote created posts before erroring). Fixed, but always check for duplicates after posting.
+1. **Hold rate is 3 words/sec + 1s** (calibrated 5→4→3 across this session — user-verified). If "too fast," drop the divisor, not the buffer.
+2. **Mirelo SFX is a dead end** on this account: `mirelo:sfx@1.6` rejects the call; `mirelo:1@1` is audio-to-audio (ignores text prompts, returned a frog, $0.10/call). Logged in `scripts/lib/runware-models.mjs` TRAPS. Use the curated `assets/sfx/` or Pixabay.
+3. **One composition → carousel + video.** `render-still.mjs` was built for this. Capture carousel slides at each beat's hold-midpoint.
+4. **PowerShell → SSH → psql quoting mangles camelCase SQL.** Pipe SQL over stdin from a file (see `videos/binsparkle/posts.md`). Never `-c` over SSH.
+5. `index.html` is the render entry point. Lint-by-swap then `git checkout -- index.html`.
+6. Audio elements MUST have `id` attributes or they're silent. Every render needs `to-yuv420` after.
+
+### Stray artifact
+`renders/binsparkle/binsparkle-beforeafter-10loops-graded-yuv420.mp4` (90s, 10× seamless loop) exists from a misread of "ten loops" (the user meant 10 *concepts*, not 10 replays). Gitignored; harmless. Keep as an ambient/display asset or delete.
 <!-- NEXT-SESSION:END -->
 
 ## Tool map — READ BEFORE BUILDING ANYTHING

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — POV: You're a Bin</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="bsTile" x1="0" y1="0" x2="0.55" y2="1">
+    <stop offset="0" stop-color="#3f9463"/><stop offset="1" stop-color="#1d5634"/>
+  </linearGradient>
+  <linearGradient id="bsSun" x1="0" y1="0" x2="0.6" y2="1">
+    <stop offset="0" stop-color="#fdd479"/><stop offset="1" stop-color="#f4b942"/>
+  </linearGradient>
+</defs></svg>
+
+<style>
+  body { margin: 0; background: #0f2b1d; font-family: var(--card-font-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: #0f2b1d; }
+
+  .slide { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+  .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .char { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+          z-index: 3; max-height: 1320px; max-width: 980px; opacity: 0.92; }
+
+  /* Full-frame darkening so big text reads anywhere */
+  .slide::after { content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(8,20,14,0.35) 0%, rgba(8,20,14,0.82) 100%); }
+
+  /* POV tag + statement — centered, meme-style, the hero of this carousel */
+  .stack { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+           z-index: 5; text-align: center; padding: 0 64px; }
+  .stack .tag { display: inline-block; font-family: var(--card-font-ui); font-weight: 700;
+                font-size: 38px; letter-spacing: 0.24em; color: #0f2b1d;
+                background: #f4b942; padding: 14px 34px; border-radius: 14px;
+                box-shadow: 0 8px 26px rgba(0,0,0,0.4); margin-bottom: 44px; }
+  .stack .line { font-family: var(--card-font-display); font-weight: 800;
+                 font-size: 108px; line-height: 0.96; letter-spacing: -0.035em;
+                 color: #fff; margin: 0; text-shadow: 0 6px 40px rgba(0,0,0,0.85); }
+  .stack .line em { font-style: normal; color: #f4b942; }
+  .stack .line i { font-style: normal; color: #c25a35; }
+  .stack .sub { font-family: var(--card-font-ui); font-weight: 600;
+                font-size: 60px; line-height: 1.2; color: #e6efe8; margin: 36px 0 0;
+                text-shadow: 0 4px 22px rgba(0,0,0,0.8); }
+
+  .wordmark { position: absolute; top: 48px; left: 0; right: 0; z-index: 60;
+              display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .wordmark svg { width: 48px; height: 48px; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.5)); }
+  .wordmark span { font-family: var(--card-font-display); font-weight: 800; font-size: 34px;
+    color: #fff; letter-spacing: -0.015em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); }
+  .wordmark span i { font-style: normal; color: #f4b942; }
+
+  .ctapill { position: absolute; left: 50%; transform: translateX(-50%);
+             bottom: 70px; z-index: 8;
+             font-family: var(--card-font-ui); font-weight: 700; font-size: 44px;
+             color: #0f2b1d; background: #f4b942;
+             padding: 22px 58px; border-radius: 999px;
+             box-shadow: 0 8px 30px rgba(0,0,0,0.5); white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<div id="binsparkle-pov" class="comp" data-composition-id="binsparkle-pov"
+     data-start="0" data-duration="7" data-width="1080" data-height="1920">
+
+  <!-- Slide 1 — the hook -->
+  <div class="slide clip" data-start="0" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-05-behind-garage.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-proud-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stack">
+      <span class="tag">POV</span>
+      <p class="line">you're <em>a bin.</em></p>
+    </div>
+  </div>
+
+  <!-- Slide 2 — rough week -->
+  <div class="slide clip" data-start="1" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-03-rainy-curb.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-sad-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stack">
+      <p class="line">you had a <i>rough</i> week.</p>
+    </div>
+  </div>
+
+  <!-- Slide 3 — lid left open -->
+  <div class="slide clip" data-start="2" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-08-summer-heat.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-side-annoyed-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stack">
+      <p class="line">someone left your <i>lid open.</i></p>
+      <p class="sub">again.</p>
+    </div>
+  </div>
+
+  <!-- Slide 4 — the neighbour's dog -->
+  <div class="slide clip" data-start="3" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-06-spring-garden.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-quarter-worried-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stack">
+      <p class="line">the neighbour's dog <i>said hi.</i></p>
+    </div>
+  </div>
+
+  <!-- Slide 5 — smell yourself -->
+  <div class="slide clip" data-start="4" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-04-storm.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-side-embarrassed-dirty-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stack">
+      <p class="line">you've started to <i>smell yourself.</i></p>
+    </div>
+  </div>
+
+  <!-- Slide 6 — the turn -->
+  <div class="slide clip" data-start="5" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-01-sunny-curb.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-surprised-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stack">
+      <p class="line">then someone books a <em>binsparkle</em> clean.</p>
+    </div>
+  </div>
+
+  <!-- Slide 7 — CTA -->
+  <div class="slide clip" data-start="6" data-duration="1" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/bg-02-golden-driveway.png" alt="">
+    <img class="char" src="videos/binsparkle/assets/cutouts/char2-front-happy-cutout.png" alt="">
+    <div class="wordmark">
+      <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="url(#bsTile)"/><rect x="6" y="12" width="52" height="9" rx="4" fill="url(#bsTile)"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="url(#bsSun)"/></g></svg>
+      <span>bin<i>sparkle</i></span>
+    </div>
+    <div class="stack">
+      <p class="line">be the bin <em>you want to be.</em></p>
+    </div>
+    <div class="ctapill">binsparkle.nz</div>
+  </div>
+
+</div>
+
+<script>
+  window.__timelines = window.__timelines || {};
+  window.__timelines["binsparkle-pov"] = gsap.timeline({ paused: true });
+</script>
+</body>
+</html>

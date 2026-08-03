@@ -42,6 +42,22 @@ Times shown in NZST (UTC+12). Verified against Postiz Postgres 2026-08-03.
   deleted; it failed before publishing. Likely the Facebook identity-checkpoint
   (code 368) documented in `automation-template/postiz.md`.
 
+## Scheduled (queued, not yet live)
+
+Posts created in Postiz with `state=QUEUE`. The publishDate is when they go
+live. Re-query the DB (command at the top of this file) to confirm they flip
+to `PUBLISHED` — don't trust this table alone.
+
+| publishDate (NZ) | platform | channel | format | imgs | copy summary | postiz postId | ref slug |
+|---|---|---|---|---|---|---|---|
+| 2026-08-06 18:00 | Facebook | Bin Sparkle | video | 1 | **POV** — "POV: you're the bin 😅 … Be the bin you want to be ✨ binsparkle.nz" | `cmsd2u0e8000slj65ot2ifg9g` | — |
+| 2026-08-06 18:00 | Instagram | zypri | video | 1 | **POV** — "POV: you're a bin and you've had a WEEK 😩🚮 … binsparkle.nz" | `cmsd2u0f9000tlj653g23jpd2` | — |
+| 2026-08-06 18:00 | Threads | binsparklenz | video | 1 | **POV** — "POV: you're a bin and you've had a week… ✨ binsparkle.nz" | `cmsd2u0fv000ulj65bya197d2` | — |
+
+- **Source video:** `renders/binsparkle/binsparkle_2026-08-03_22-07-26-graded-yuv420.mp4` (POV video, 27s, 8.26 MB). Composition: `videos/binsparkle/compositions/binsparkle-pov-video.html`.
+- **Verified queued** against Postiz Postgres 2026-08-03 10:19 UTC — all three `state=QUEUE`, `publishDate=2026-08-06 06:00:00` UTC, 1 image each, no duplicates.
+- **Captions differ per channel** per content-creation.md Rule 7 (FB warm/medium, IG energetic/long with 20 hashtags, Threads short/conversational).
+
 ## How to add a row
 
 Fill every column. If you don't know a value, write `unknown` and flag it —
