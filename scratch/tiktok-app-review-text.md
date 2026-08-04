@@ -19,8 +19,23 @@
 - **Content Posting API** — enable **Direct Post** (not just Upload/draft)
 
 ## Scopes
-- Keep: `user.info.basic`, `user.info.profile`, `video.upload`, `video.publish` (video.publish appears after Direct Post is enabled)
-- **Drop:** `user.info.stats`, `video.list` (not used by Postiz; leftover scopes delay review)
+Postiz's TikTok authorize request sends **all six** (verified from the actual
+authorize URL this session) — keep ALL of them on the app:
+- `user.info.basic`, `user.info.profile`, `video.upload`, `video.publish`,
+  `video.list`, `user.info.stats`
+
+**CORRECTION (2026-08-05):** an earlier version of this note said to drop
+`video.list` + `user.info.stats`. That was wrong — Postiz requires them.
+Dropping them breaks the OAuth. They're added + saved.
+
+**Catch:** `video.list` + `user.info.stats` are rejected (`unauthorized_client`)
+until the app passes TikTok review — even though they're added. See
+`docs/tiktok-oauth-blocker-2026-08-05.md` for the workaround (custom Postiz
+image that drops those two from the *request* so the OAuth works pre-review,
+then revert after approval).
+
+`video.create` (mentioned in old Postiz docs) is NOT addable in the current
+dashboard and Postiz doesn't request it — ignore it.
 
 ## "Explain how each product and scope works" (≤1000 chars)
 ```

@@ -1,54 +1,54 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-04 (end of session, server time Aug 4 ~03:30 UTC / ~15:30 NZST)
+## ▶ Start here — written 2026-08-05 (end of session, ~08:45 UTC; server time crossed Aug 4→5)
 
-**Two threads: (A) TikTok setup = the active job; (B) keep building BinSparkle concepts = the standing loop.** This session shipped a new concept ("wanted poster"), scheduled 12 posts, and **proved the auto-poster works end-to-end** — FB + IG + Threads all publishing live (Threads was the previously-unproven one). TikTok was started but is a bigger infra job, so it's the primary next job.
+**One line:** Postiz moved to `postiz.binsparkle.nz` (done, live, both domains healthy). TikTok app fully configured BUT the OAuth connection is blocked by a scope-approval gate — that's the active job. BinSparkle content loop kept running (17 PUBLISHED / 21 QUEUE / 1 ERROR at last check).
 
 **READ FIRST:**
-1. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) — the 11 rules (Rule 2 timing, Rule 7 captions + emojis-approved, Rule 10 fill-the-frame, Rule 11 ship-from-`final/`). Non-optional.
-2. [`videos/binsparkle/posts.md`](videos/binsparkle/posts.md) — posts ledger. **The Postgres DB is truth, not this file** — re-query.
-3. [`automation-template/postiz.md`](../automation-template/postiz.md) — the Postiz posting recipe + traps. Read before any posting work.
-4. [`scratch/tiktok-app-review-text.md`](scratch/tiktok-app-review-text.md) — the TikTok app field values + review text (saved this session).
-5. The TikTok migration plan below.
+1. [`docs/tiktok-oauth-blocker-2026-08-05.md`](docs/tiktok-oauth-blocker-2026-08-05.md) — the TikTok blocker diagnosis + custom-image fix plan. **Non-optional** before touching TikTok.
+2. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) — the 11 rules (Rule 2 timing, Rule 7 captions, Rule 10 fill-the-frame, Rule 11 ship-from-`final/`).
+3. [`videos/binsparkle/posts.md`](videos/binsparkle/posts.md) — posts ledger. **Postgres is truth** — re-query.
+4. [`scratch/tiktok-app-review-text.md`](scratch/tiktok-app-review-text.md) — TikTok app field values + review text (scope list **CORRECTED** this session).
+5. [`automation-template/postiz.md`](../automation-template/postiz.md) — Postiz recipe + traps (updated: new domain, Threads-redirect note corrected).
 
-**Verify before you trust this.** Scheduler proven live 2026-08-04 ~03:00 UTC: the Aug 4 batches (Tinder 08:30, bin-talks 13:30) + the earlier "week" batch all `PUBLISHED` on FB + IG + Threads with real URLs. **21 posts `QUEUE`'d through Aug 8** (dating + bin-talks-repeat + POV + wanted + texts + invoice + reviews). Re-query: pipe `scratch/verify-all-posts.sql` over SSH (pattern in posts.md). The counts move as posts publish — re-check before relying on them.
+**Verify before you trust this.** Figures last checked 2026-08-05 ~08:45 UTC against the live system: Postiz 307 on both `postiz.binsparkle.nz` and the old Hostinger domain; 21 QUEUE / 17 PUBLISHED / 1 ERROR posts (the ERROR row was NOT investigated this session — check it). Re-query Postgres by piping SQL over stdin (never `-c` — camelCase mangles). Counts move as posts publish.
 
-### Job A — TikTok setup (active, multi-step)
-**Goal:** post to TikTok from Postiz **and** enable multiple TikTok channels (BinSparkle now, other brands later) through one verified setup. TikTok is harder than FB/IG/Threads: it pulls media by URL (`pull_by_url`) so the serving domain must be TikTok-verified, and posts are forced **private** until the app passes review (days/weeks; 5 users/24hr cap pre-audit).
+### CORRECTIONS to the prior block (these steered us wrong — read first)
+- **Do NOT drop `video.list` + `user.info.stats` from the TikTok app.** The prior block said to drop them. That is wrong: Postiz's TikTok authorize request requires **all six** scopes — `video.list, user.info.basic, video.publish, video.upload, user.info.profile, user.info.stats`. We dropped them, the OAuth failed, we added them back.
+- The OAuth failure is **not** the client_key (TikTok's error page is misleading). It's that `video.list` + `user.info.stats` aren't usable until the app passes TikTok review.
 
-**Already done by the user** (TikTok dev portal, Individual ownership, app "Bin Sparkle"): app created + Client key/secret obtained; Login Kit added; Content Posting API added (but **Direct Post NOT enabled** — only draft/upload); scopes `user.info.basic`, `user.info.profile`, `video.upload` added (+ `user.info.stats` + `video.list` which should be **dropped**). Icon generated at `videos/binsparkle/assets/brand/app-icon-1024.png`. Description + TOS/privacy ready.
+### Job A — TikTok: unblock the OAuth (active)
+**DONE this session:** domain `binsparkle.nz` verified on TikTok (DNS TXT in Cloudflare — covers `postiz` subdomain); app "Bin Sparkle" (App ID `7669999780248422407`, client_key `awh1d34mv4ewxvmm`) configured — Login Kit + Content Posting API (**Direct Post ON**) + Display API + Share Kit; all 6 scopes added+saved; Login Kit redirect URI = `https://postiz.binsparkle.nz/integrations/social/tiktok`; `TIKTOK_CLIENT_ID`/`TIKTOK_CLIENT_SECRET` in the Postiz compose (recreated, healthy). App status = **Draft** (not submitted).
 
-**The migration, in order:**
-1. **Move Postiz to `postiz.binsparkle.nz`** (so media is served from a TikTok-verifiable domain). Current `postiz.srv1178347.hstgr.cloud` can't be DNS-verified (Hostinger owns `hstgr.cloud`).
-   - **Cloudflare (user):** A record `postiz` → `72.61.208.103`, DNS-only (grey cloud) first so Traefik issues its own cert.
-   - **VPS `/root/postiz/docker-compose.yml`:** add ` || Host(\`postiz.binsparkle.nz\`)` to the `traefik.http.routers.postiz.rule`; change `MAIN_URL`, `FRONTEND_URL`, `NEXT_PUBLIC_BACKEND_URL` → `https://postiz.binsparkle.nz`; `docker compose up -d postiz`.
-   - **Meta app (FB/IG) + Threads app:** add `https://postiz.binsparkle.nz/integrations/social/{facebook,instagram,threads}` to their redirect URIs (existing channels keep working — tokens are stored — but reconnects need the new domain).
-   - Confirm `https://postiz.binsparkle.nz` loads Postiz over HTTPS before continuing.
-2. **Finish the TikTok app:** enable **Direct Post**; add `video.publish` scope; drop `user.info.stats` + `video.list`; set Login Kit redirect URI → `https://postiz.binsparkle.nz/integrations/social/tiktok`; **verify domain `binsparkle.nz`** via the DNS-record method (TikTok gives a TXT → user adds it in Cloudflare → covers all subdomains incl. `postiz`).
-3. **Add `TIKTOK_CLIENT_ID` + `TIKTOK_CLIENT_SECRET`** to the Postiz compose env (user pastes them) + `docker compose up -d postiz`.
-4. **Connect TikTok in Postiz** (Add Channel → TikTok → authorise `@binsparkle`). Do one test post — it'll be **private (SELF_ONLY)** until review.
-5. **Record the demo video** (connect → compose → upload → publish → result) + submit for review. Public posting unlocks only after TikTok approves.
-6. **Post-review:** add MORE TikTok channels (other accounts/brands) via Add Channel — all post through the same verified `postiz.binsparkle.nz`.
+**The blocker:** Postiz sends the 6-scope authorize URL; TikTok returns `unauthorized_client` because `video.list` + `user.info.stats` need review. Proven empirically: a 4-scope authorize URL succeeds (TikTok shows its login page), the 6-scope one fails instantly. Adding the Display API product did NOT fix it.
+
+**The fix (next session, in order — full detail in the blocker doc):**
+1. Build a **custom Postiz image** that strips `video.list` + `user.info.stats` from the TikTok scope request. The running container's code is opaque (greps for `video.list`/`tiktok`/`auth/authorize` find nothing; the backend dir PM2 reports reads empty), so get the source from the upstream `gitroomhq/postiz-app` repo, find the TikTok provider scope list, remove those two, build, point the compose at the custom image. **First spend 10 min checking whether the scope list is env/DB-configurable** before building.
+2. Recreate Postiz → the 4-scope OAuth works → Add Channel → TikTok → connect `@binsparkle`.
+3. ONE test post (**private/SELF_ONLY** pre-review; 5 posts/24hr cap).
+4. **Record the real demo video** with ShareX (connect → compose → publish → result; domain shown must be `postiz.binsparkle.nz`). **Can't fake it** — TikTok reviewers check; a staged success can ban the app.
+5. Replace the **placeholder demo video** (a stand-in BinSparkle MP4 is uploaded to the app) with the real one; fill the review explanation (text in scratch); **Submit for review**.
+6. Post-review: revert to stock Postiz (all 6 scopes now approved) + public posting unlocks.
 
 ### Job B — keep building BinSparkle concepts (standing loop)
-The library runs out after Aug 8. Run the loop in `content-creation.md`. This session's exemplar is the **wanted poster** (`videos/binsparkle/compositions/binsparkle-wanted-video.html`) — character-driven, low-word, before/after payoff. **Do not repeat these formats:** week, stages, pov, texts, reviews, invoice, before/after, tinder, say, **wanted**.
+Posts run out after Aug 8. Run the loop in `content-creation.md`. **Do not repeat:** week, stages, pov, texts, reviews, invoice, before/after, tinder, say, **wanted**.
 
-### Open items (need a human decision)
-1. **Aug 5 "bin talks" repeat** — the same "if your bin could talk" joke published Aug 4 13:30 NZST AND is queued again Aug 5 18:00 (same channels). Drop the repeat or leave it? (User hasn't decided.)
-2. **wanted-video frame-border overflow** — an element bleeds over the decorative frame border. User saw it, said don't fix, just avoid next time (noted in Rule 10).
+### Open items (human decisions)
+1. **1 ERROR post** in the queue — check it (likely the FB identity checkpoint, error code 368).
+2. **Share Kit** still added to the TikTok app but unused — remove before review.
+3. **Aug 5 "bin talks" repeat** — still undecided (same joke published Aug 4 + queued Aug 5).
 
-### Traps (TikTok + carry-forward)
-1. **TikTok `pull_by_url` needs a verified serving domain** — the whole reason for the `postiz.binsparkle.nz` migration. `postiz.srv1178347.hstgr.cloud` can't be DNS-verified.
-2. **Changing Postiz `MAIN_URL`** doesn't break existing FB/IG/Threads (tokens stored), but their redirect URIs in the Meta + Threads dev apps must include the new domain for future reconnects.
-3. **TikTok pre-audit = private posts** (SELF_ONLY), 5 users/24hr, accounts must be private. No public TikTok reach until review approves.
-4. **TikTok demo video must show the real flow** — record AFTER connecting + a test post. Don't submit review until the video + the 1000-char explanation (draft in `scratch/tiktok-app-review-text.md`) are both ready.
-5. **`render:comp` / `render:still` now default to `renders/<brand>/<concept>/`** (new this session). Ship deliverables from a `final/` subfolder (Rule 11) — the `-graded.mp4` is yuv444p (VLC-only); the `-graded-yuv420.mp4` plays everywhere.
-6. **PowerShell → SSH → psql quoting mangles camelCase SQL.** Pipe SQL over stdin from a file. Never `-c`.
-7. `index.html` is the render entry point — lint-by-swap then `git checkout -- index.html`. Audio elements MUST have `id` or they're silent.
-
-### Stray artifact
-`renders/binsparkle/binsparkle-beforeafter-10loops-graded-yuv420.mp4` (90s loop) — gitignored, harmless. Keep or delete.
+### Traps
+1. **TikTok `unauthorized_client` = scope/approval gate, NOT the client_key.** The error page says "client_key" — misleading. The key is valid (verified by a direct authorize-URL test that returned the normal login page).
+2. **Postiz's TikTok scope list is not findable in the running container** — every grep returns nothing; the PM2-reported backend dir (`/app/apps/backend`) reads empty. Source only reachable via the upstream repo / a custom build.
+3. **TikTok demo video can't be faked** — record the real flow (needs the custom-image fix first).
+4. **Cloudflare DNS edits need the global key** (`CLOUDFLARE_API_KEY` + `CLOUDFLARE_EMAIL` in `automation-template/.env`) — the default `CLOUDFLARE_API_TOKEN` can't edit DNS (code 10000). Documented in `automation-template/cloudflare.md`.
+5. **Postiz moved to `postiz.binsparkle.nz`** — old `postiz.srv1178347.hstgr.cloud` still routes. Meta app redirect list has BOTH domains. Compose on VPS has `TIKTOK_CLIENT_ID`/`SECRET` + a `docker-compose.yml.bak-*` backup.
+6. **Browser-debug CDP jams** after many Playwright attach/detach cycles — restart Chrome: kill `.chrome-debug-profile-meta` chrome procs, relaunch with `--remote-debugging-port=9222 --user-data-dir=C:\Users\wirih\.chrome-debug-profile-meta`.
+7. PowerShell → SSH → psql quoting mangles camelCase SQL — pipe over stdin from a file.
+8. `video.create` scope is NOT addable in the current TikTok dashboard and Postiz doesn't request it — ignore it (old Postiz docs mention it; outdated).
+9. `render:comp`/`render:still` default to `renders/<brand>/<concept>/`. Ship from `final/`. `-graded.mp4` is yuv444p (VLC-only); `-graded-yuv420.mp4` plays everywhere. `index.html` is the render entry point — lint-by-swap then `git checkout -- index.html`. Audio elements MUST have `id`.
 <!-- NEXT-SESSION:END -->
 
 ## Tool map — READ BEFORE BUILDING ANYTHING
