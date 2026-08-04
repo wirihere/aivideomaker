@@ -1,0 +1,17 @@
+{
+  "schedule": "2026-08-08T06:00:00.000Z",
+  "files": [
+    "renders/binsparkle/reviews/binsparkle-reviews-video-t4.4.png",
+    "renders/binsparkle/reviews/binsparkle-reviews-video-t11.0.png",
+    "renders/binsparkle/reviews/binsparkle-reviews-video-t18.0.png",
+    "renders/binsparkle/reviews/binsparkle-reviews-video-t25.0.png",
+    "renders/binsparkle/reviews/binsparkle-reviews-video-t32.0.png",
+    "renders/binsparkle/reviews/binsparkle-reviews-video-t39.0.png",
+    "renders/binsparkle/reviews/binsparkle-reviews-video-t45.5.png"
+  ],
+  "channels": ["fb", "ig", "threads"],
+  "fb_caption": "Turns out your wheelie bin has opinions. And notes. And a long memory about that ham bone from Christmas. We read the reviews so you don't have to — then we pressure wash, scrub and deodorise the lot, right at your place. Make peace with your bin at binsparkle.nz.\n\n#Hamilton #WheelieBin #BinCleaning #LocalHamilton",
+  "ig_caption": "Your bin has been keeping receipts. The half-eaten pie since the rugby. The pizza boxes jammed in sideways. The lid left open in the rain. It's all in the reviews, mate. Good news: one clean and it takes it all back. Pressure washed, scrubbed, deodorised, at your place. Book at binsparkle.nz.\n\n#Hamilton #HamiltonNZ #WheelieBin #WheelieBinCleaning #BinCleaning #Waikato #LocalBusiness #HamiltonLocal #CleanBin #Rototuna #Chartwell #SortedMate #KiwiLife #SmellGone",
+  "threads_caption": "your wheelie bin has left you a review and honestly it's brutal. the ham bone knows what it did. sort it: binsparkle.nz",
+  "threads_file": 0
+}

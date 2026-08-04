@@ -415,9 +415,12 @@ caption. A few patterns held across models:
 - **On-image text wants 3-5 words, not a sentence.** The strongest on-image
   lines in the probe were noun-heavy staccato: "Kerb. Pyjamas. Wheelie bin.
   *Again?*" (Fable 5) and "Out. In. Washed." (multiple models).
-- **No emojis unless the brand uses them.** Bin Sparkle's site has none.
-  Sonnet 4.6 adding 👉 to the caption read off-brand. The default is no
-  emoji unless the brand's own posts use them.
+- **Emojis: approved for BinSparkle (reversed 2026-08-04).** The original
+  probe found the site has none and Sonnet 4.6's 👉 read off-brand, so the
+  default was "no emojis." The user has since reversed this — the warm,
+  character-driven tone suits emojis on social. Use them where they land;
+  don't stuff every line. The reversal is recorded in
+  `content-creation.md` Rule 7.
 
 For static image posts, the workflow is identical to video — same prompt
 template, same model ladder. The only swap is the deliverable spec.

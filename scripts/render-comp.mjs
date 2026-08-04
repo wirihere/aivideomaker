@@ -30,6 +30,10 @@
 //   npm run render:comp -- --comp=videos/binsparkle/compositions/binsparkle-customer.html
 //   npm run render:comp -- --comp=videos/.../customer.html --judge   # + auto-critique the output
 //
+// Output folder: renders/<brand>/<concept>/ by default (concept derived from the
+// comp filename, e.g. binsparkle-wanted-video.html → renders/binsparkle/wanted/).
+// Override with --out=<dir>. A concept's stills (render-still) + video land together.
+//
 // --judge (opt-in): after the render lands, auto-runs judge-video.mjs on the
 // newest output. Cost-guarded by the daily cap (RUNWARE_DAILY_CAP, default $2).
 //
@@ -58,7 +62,12 @@ Example:
   process.exit(2);
 }
 const compPath = argv[compIdx].slice("--comp=".length);
-const renderArgs = argv.filter((_, i) => i !== compIdx); // keep "--" + passthrough verbatim
+// Parse optional --out=<dir> to override the per-concept output folder. Stripped
+// from the args forwarded to render.mjs (render.mjs doesn't understand --out).
+const outIdx = argv.findIndex(a => a.startsWith("--out="));
+const outOverride = outIdx >= 0 ? argv[outIdx].slice("--out=".length) : null;
+const dropIdx = new Set([compIdx, outIdx]);
+const renderArgs = argv.filter((_, i) => !dropIdx.has(i)); // keep "--" + passthrough verbatim
 
 const compAbs = path.resolve(projectRoot, compPath);
 const compRel = path.relative(projectRoot, compAbs).replace(/\\/g, "/");
@@ -68,6 +77,11 @@ if (!compRel.startsWith("videos/") || !fs.existsSync(compAbs) || !compAbs.endsWi
 }
 const slugMatch = compRel.match(/^videos\/([^/]+)\//);
 const slug = slugMatch ? slugMatch[1] : "aivideomaker";
+// Per-concept output folder by default: renders/<brand>/<concept>/ — so a
+// concept's video + stills (render-still) land together. Concept is derived
+// from the comp filename by stripping "<slug>-" and "-video".
+const compBase = path.basename(compRel, ".html");
+const concept = compBase.replace(new RegExp(`^${slug}-`), "").replace(/-video$/, "") || compBase;
 
 const indexPath = path.join(projectRoot, "index.html");
 const bakPath = path.join(projectRoot, `.index.html.bak.${process.pid}`);
@@ -106,8 +120,8 @@ try {
   });
   if (code !== 0) throw new Error(`render.mjs exited ${code}`);
 
-  // Namespace the new outputs into renders/<slug>/ with the brand name.
-  const slugDir = path.join(rendersDir, slug);
+  // Namespace the new outputs into renders/<slug>/<concept>/ with the brand name.
+  const slugDir = outOverride ? path.resolve(projectRoot, outOverride) : path.join(rendersDir, slug, concept);
   fs.mkdirSync(slugDir, { recursive: true });
   const afterFiles = snapshotRendersRoot();
   let moved = 0;

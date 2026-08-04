@@ -1,0 +1,17 @@
+{
+  "schedule": "2026-08-07T21:00:00.000Z",
+  "files": [
+    "renders/binsparkle/invoice/binsparkle-invoice-video-t3.0.png",
+    "renders/binsparkle/invoice/binsparkle-invoice-video-t8.0.png",
+    "renders/binsparkle/invoice/binsparkle-invoice-video-t13.0.png",
+    "renders/binsparkle/invoice/binsparkle-invoice-video-t17.5.png",
+    "renders/binsparkle/invoice/binsparkle-invoice-video-t23.0.png",
+    "renders/binsparkle/invoice/binsparkle-invoice-video-t28.0.png",
+    "renders/binsparkle/invoice/binsparkle-invoice-video-t35.0.png"
+  ],
+  "channels": ["fb", "ig", "threads"],
+  "fb_caption": "Your bin has done the maths. Nineteen days of prawn shells. A nappy with no warning. That mystery leak neither of you will claim. It's not asking for money — the balance due is one BinSparkle clean. Pressure wash, scrub, deodorise, at your place. Sort it at binsparkle.nz.\n\n#Hamilton #BinSparkle #WheelieBin #HamiltonNZ",
+  "ig_caption": "Statement received. From: your wheelie bin, sole trader. To: you, who has never once looked it in the lid. Line items include extended prawn storage, one nappy delivered on faith, and a mystery leak that bonded to its base. Every charge: $0.00. Balance due: 1× BinSparkle clean. Pressure wash, scrub, deodorise, at your place. Settle up at binsparkle.nz.\n\n#BinSparkle #Hamilton #HamiltonNZ #WheelieBin #WheelieBinCleaning #KiwiHome #Waikato #BinCleaning #LocalHamilton #CleanBin #HamiltonLocal #DeodoriseThis #SortedMate #NZ",
+  "threads_caption": "Your bin just sent you an itemised invoice. Every line is $0.00. Balance due: one BinSparkle clean. Settle up at binsparkle.nz.",
+  "threads_file": 0
+}

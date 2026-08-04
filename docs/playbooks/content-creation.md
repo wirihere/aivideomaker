@@ -149,16 +149,15 @@ When generating images you plan to cut out (character art, objects):
 The caption does as much work as the visual. Spend time on it. Use the
 `post` command's config file to specify different captions per channel.
 
-### Emoji rule — defer to the brand voice, not the platform template
+### Emoji rule — emojis approved for BinSparkle
 
-**BinSparkle's site has no emojis.** That was verified during the
-`script-and-copy.md` copy probe, and the default for this brand is **no
-emojis** (or at most one, only where a playful character-driven post
-genuinely warrants it). The "emoji-heavy" Instagram default that lived in
-this table earlier is a generic platform template — it does **not** apply
-here. Brand voice wins over platform convention every time. If you're
-tempted to scatter emojis through a caption, re-read
-`script-and-copy.md` → "Image-post specific notes" first.
+**Emojis are approved for BinSparkle.** Reversed 2026-08-04 by the user.
+The brand voice is warm and character-driven, and emojis fit the playful,
+bin-as-a-character posts (the bin's "Tinder profile", "if your bin could
+talk"). The earlier default — "no emojis because the site has none" — was
+too strict for social and fought the tone; it's retired. Use them where
+they earn the spot: one or two well-placed beats a wall of them. Brand
+voice still leads; the generic platform template still doesn't.
 
 ### How to actually write a caption — use the copy expert
 
@@ -168,7 +167,7 @@ tempted to scatter emojis through a caption, re-read
 and the craft rubric. The process:
 
 1. Fill the prompt template with brand context **verbatim** (real taglines
-   scraped from binsparkle.nz, real product facts, the no-emoji constraint).
+   scraped from binsparkle.nz, real product facts, the emojis-approved rule from Rule 7).
 2. Generate via `textInference` at the chosen tier.
 3. Score against the 8-question rubric; revise surgically on any "no".
 4. For hero posts, run the generate-critique-with-different-model loop.
@@ -211,6 +210,58 @@ Config format:
   "threads_caption": "..."
 }
 ```
+
+---
+
+## Rule 10 — Fill the frame (no dead zones)
+
+A vertical social frame is 1080×1920, and only the middle band (y≈220–1500)
+is safe for must-read text. Large empty bands read as "unfinished." Before
+calling a composition done, scan a rendered still top-to-bottom:
+
+- **No dead band wider than ~250px** inside the safe area between elements.
+  Content ending at mid-frame with an empty bottom third is a fail.
+- **Fixes, in order:** (1) make the hero bigger — the subject should
+  dominate the frame; (2) push text blocks into the lower safe area;
+  (3) add a permanent branded footer (URL strip, reward line, rule + small
+  caps) to anchor the bottom.
+- **The hook frame matters most** — the first thing a viewer sees should
+  fill the frame, not a small photo floating in whitespace.
+- **But don't spill OVER the frame border.** The flip side of "fill": no
+  element should bleed past the canvas edge or over a decorative border
+  (the wanted-poster has an inset double-line frame at 46px). Rotated or
+  translated elements (stamps, badges, pills) are the usual culprits —
+  check their bounding box *after* the transform, not just their CSS
+  position. The wanted-video (2026-08-04) had an element crossing the
+  border in the rendered video; flagged by the user, deliberately NOT
+  fixed yet.
+
+This is separate from the platform safe-zone rule (Rule 7 / judge R4): safe
+zones say where text must NOT go (the UI overlay); this says where content
+SHOULD go (fill the canvas). The wanted-poster (2026-08-04) was the trigger
+— a top-heavy layout left ~600px empty at the bottom; fixed with a bigger
+mugshot hero, text pushed into the lower third, and a permanent footer.
+
+---
+
+## Rule 11 — Ship from a `final/` folder
+
+Every concept's renders land in `renders/<brand>/<concept>/` automatically
+(stills + video variants). The raw and `-graded` (yuv444p) MP4s are
+intermediates — **only the `-graded-yuv420.mp4` plays in normal players**.
+Three MP4 variants with similar names is confusing, and opening the wrong
+one looks like "the video doesn't work."
+
+So before calling a concept done, assemble a **`final/`** subfolder holding
+only the deliverables, clearly named:
+
+    renders/<brand>/<concept>/final/
+      ├─ slide-1-<beat>.png, slide-2-<beat>.png, …   (the carousel stills)
+      └─ <concept>-video.mp4                          (the yuv420, renamed)
+
+The video in `final/` is the one that plays everywhere — hand that file out,
+not the `-graded.mp4`. Currently this is a manual copy/rename step after
+`render:still` + `to-yuv420`; a wrapper to automate it is open.
 
 ---
 

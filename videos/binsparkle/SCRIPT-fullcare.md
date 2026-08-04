@@ -160,8 +160,9 @@ coffee in hand, fresh bin at the curb. The transformation is the product.
 - Middle paragraph is the verbatim service definition from the site
   (Hopkins facts-not-adjectives again — let the product describe itself).
 - "From $55 a month" mirrors the video CTA exactly.
-- No emojis, no hashtags — the brand's own voice on the site uses neither,
-  and they'd read as off-brand here.
+- No emojis, no hashtags in THIS example — a deliberate clean-caption
+  style. (Updated 2026-08-04: emojis are now approved brand-wide per
+  `content-creation.md` Rule 7; this caption stays clean by choice, not rule.)
 - 53 words. Reads in ~12 seconds. The link is the whole CTA.
 
 ---

@@ -48,15 +48,46 @@ Posts created in Postiz with `state=QUEUE`. The publishDate is when they go
 live. Re-query the DB (command at the top of this file) to confirm they flip
 to `PUBLISHED` — don't trust this table alone.
 
+**27 queued posts** across Aug 4–8 NZST, 3 channels each (FB Bin Sparkle,
+IG zypri, Threads binsparklenz). Verified against Postiz Postgres
+2026-08-04 (~19:30 UTC): all 27 `state=QUEUE`.
+
 | publishDate (NZ) | platform | channel | format | imgs | copy summary | postiz postId | ref slug |
 |---|---|---|---|---|---|---|---|
+| 2026-08-04 08:30 | Facebook | Bin Sparkle | carousel | 7 | **Tinder profile** — "Your bin's Tinder profile just dropped. Bio: 'i've got depth, character, and a thriving ecosystem' … Book YOUR bin a date: binsparkle.nz" | `cmscya1a7000dlj65d6coarw8` | — |
+| 2026-08-04 08:30 | Instagram | zypri | carousel | 7 | **Tinder profile** — "Your bin's Tinder profile just dropped … Book YOUR bin a date: binsparkle.nz" | `cmscya1dr000elj65jy25k08e` | — |
+| 2026-08-04 08:30 | Threads | binsparklenz | single | 1 | **Tinder profile** — "Your bin's Tinder profile: 'i've got depth, character, and a thriving ecosystem.' We matched. binsparkle.nz" | `cmscya1gd000flj658s7j9z0j` | — |
+| 2026-08-04 13:30 | Facebook | Bin Sparkle | carousel | 7 | **Bin talks (roast)** — "If your bin could talk… Spoiler: it would ROAST you … Book a clean: binsparkle.nz" | `cmscya392000glj65x1q1tnuk` | — |
+| 2026-08-04 13:30 | Instagram | zypri | carousel | 7 | **Bin talks (roast)** — "If your bin could talk… 'go ahead pretend i'm not here' / '35 degrees and you left me like THIS?' … binsparkle.nz" | `cmscya3a7000hlj65fohm54vn` | — |
+| 2026-08-04 13:30 | Threads | binsparklenz | single | 1 | **Bin talks** — "'even I can't handle what's inside me right now.' — your bin, probably. binsparkle.nz" | `cmscya3bt000ilj65ul1pxk1f` | — |
+| 2026-08-04 18:00 | Facebook | Bin Sparkle | single | 1 | **Dating profile** — "Swipe left, swipe left… Your bin's dating profile is something else. But every bin deserves love. binsparkle.nz" | `cmsd08z5v000mlj651y1uv0pt` | — |
+| 2026-08-04 18:00 | Instagram | zypri | single | 1 | **Dating profile** — "Swipe left… 'thriving ecosystem' / 'red flag: open at own risk' … binsparkle.nz" | `cmsd08z6p000nlj65mvrcyu2v` | — |
+| 2026-08-04 18:00 | Threads | binsparklenz | single | 1 | **Dating profile** — "your bin's dating profile just dropped. binsparkle.nz" | `cmsd08z7i000olj65ejexfkvr` | — |
+| 2026-08-05 18:00 | Facebook | Bin Sparkle | single | 1 | **Bin talks (roast)** — "If your bin could talk… Spoiler: it would ROAST you … binsparkle.nz" *(same angle as 08-04 13:30 — see note)* | `cmsd09uu8000plj65ez32nqmm` | — |
+| 2026-08-05 18:00 | Instagram | zypri | single | 1 | **Bin talks (roast)** — "If your bin could talk… it would ROAST you … binsparkle.nz" *(same angle as 08-04 13:30 — see note)* | `cmsd09uv3000qlj65amr7tgoa` | — |
+| 2026-08-05 18:00 | Threads | binsparklenz | single | 1 | **Bin talks** — "if your bin could talk… it's not happy. binsparkle.nz" | `cmsd09ux2000rlj65cs3fop6d` | — |
 | 2026-08-06 18:00 | Facebook | Bin Sparkle | video | 1 | **POV** — "POV: you're the bin 😅 … Be the bin you want to be ✨ binsparkle.nz" | `cmsd2u0e8000slj65ot2ifg9g` | — |
 | 2026-08-06 18:00 | Instagram | zypri | video | 1 | **POV** — "POV: you're a bin and you've had a WEEK 😩🚮 … binsparkle.nz" | `cmsd2u0f9000tlj653g23jpd2` | — |
 | 2026-08-06 18:00 | Threads | binsparklenz | video | 1 | **POV** — "POV: you're a bin and you've had a week… ✨ binsparkle.nz" | `cmsd2u0fv000ulj65bya197d2` | — |
+| 2026-08-07 09:00 | Facebook | Bin Sparkle | carousel | 4 | **Wanted** — "Your bin's on the run, mate… One BinSparkle clean — pressure wash, scrub, deodorise… binsparkle.nz" | `cmsdru5xa000vlj6535tzqtbr` | — |
+| 2026-08-07 09:00 | Instagram | zypri | video | 1 | **Wanted** — "WANTED: one lovable rogue… Book the pardon at binsparkle.nz" | `cmsdrutph000xlj65rdpbvyui` | — |
+| 2026-08-07 09:00 | Threads | binsparklenz | single | 1 | **Wanted** — "Your wheelie bin's wanted… One clean clears its name. binsparkle.nz" | `cmsdru610000wlj65uxwf5dyd` | — |
+| 2026-08-07 18:00 | Facebook | Bin Sparkle | carousel | 7 | **Texts** — "Your bin has thoughts… prawn shells you forgot on the 4th… binsparkle.nz" | `cmsdrvoy6000ylj65nzd5k9rw` | — |
+| 2026-08-07 18:00 | Instagram | zypri | carousel | 7 | **Texts** — "Somewhere in your wheelie bin, something has started a whole new life… binsparkle.nz" | `cmsdrvoz8000zljj653q7xdp9g` | — |
+| 2026-08-07 18:00 | Threads | binsparklenz | single | 1 | **Texts** — "your bin has your number… sort the poor thing out at binsparkle.nz" | `cmsdrvp050010lj65bm0pdps5` | — |
+| 2026-08-08 09:00 | Facebook | Bin Sparkle | carousel | 7 | **Invoice** — "Your bin has done the maths… balance due is one BinSparkle clean… binsparkle.nz" | `cmsdrwiwx0011lj65h4ogkqvo` | — |
+| 2026-08-08 09:00 | Instagram | zypri | carousel | 7 | **Invoice** — "Statement received… Every charge: $0.00… Settle up at binsparkle.nz" | `cmsdrwixx0012lj653tbt38y6` | — |
+| 2026-08-08 09:00 | Threads | binsparklenz | single | 1 | **Invoice** — "Your bin just sent you an itemised invoice… binsparkle.nz" | `cmsdrwiyw0013lj65089j34k4` | — |
+| 2026-08-08 18:00 | Facebook | Bin Sparkle | carousel | 7 | **Reviews** — "Turns out your wheelie bin has opinions… Make peace with your bin at binsparkle.nz" | `cmsdrxbmf0014lj65s5ychwop` | — |
+| 2026-08-08 18:00 | Instagram | zypri | carousel | 7 | **Reviews** — "Your bin has been keeping receipts… one clean and it takes it all back… binsparkle.nz" | `cmsdrxbms0015lj65v2ftcs67` | — |
+| 2026-08-08 18:00 | Threads | binsparklenz | single | 1 | **Reviews** — "your wheelie bin has left you a review and honestly it's brutal… binsparkle.nz" | `cmsdrxbne0016lj653dnkso75` | — |
 
-- **Source video:** `renders/binsparkle/binsparkle_2026-08-03_22-07-26-graded-yuv420.mp4` (POV video, 27s, 8.26 MB). Composition: `videos/binsparkle/compositions/binsparkle-pov-video.html`.
-- **Verified queued** against Postiz Postgres 2026-08-03 10:19 UTC — all three `state=QUEUE`, `publishDate=2026-08-06 06:00:00` UTC, 1 image each, no duplicates.
-- **Captions differ per channel** per content-creation.md Rule 7 (FB warm/medium, IG energetic/long with 20 hashtags, Threads short/conversational).
+- **First scheduler test:** the 2026-08-04 08:30 NZST batch (publishDate `2026-08-03 20:30:00` UTC) is the first real publish through the Postiz scheduler. Re-query the DB after that time to confirm those three flipped `QUEUE → PUBLISHED`. If they haven't, the scheduler isn't firing — check the postiz container + cron.
+- **"Bin talks" angle posts twice** — the same "if your bin could talk / ROAST you" joke is queued for **2026-08-04 13:30 AND 2026-08-05 18:00**, same channels. Likely over-scheduled; will read repetitive on the feed. Decide: drop the 08-05 re-run, or swap it for a different angle.
+- **POV source video:** `renders/binsparkle/binsparkle_2026-08-03_22-07-26-graded-yuv420.mp4` (27s, 8.26 MB). Composition: `videos/binsparkle/compositions/binsparkle-pov-video.html`.
+- **Format labels:** 7-img = carousel; 1-img = single image (POV's 1 entry is the video file in the image array). The 1-img Tinder/dating/talk posts are assumed single-image — re-query the `image` JSON to confirm if reusing.
+- **Captions differ per channel** per content-creation.md Rule 7 (FB warm/medium, IG energetic/long with hashtags, Threads short/conversational).
+- **Hybrid posting model (from 2026-08-04):** each concept is shaped per platform — FB gets the carousel, IG gets the carousel (or the video for video concepts like wanted/POV), Threads gets a single hero slide + short line. Same gag, platform-native format. Pacing ≈ 2 concepts/day. Single-image text posts are also in the mix where a one-frame hero lands better. **Local Client Finder is NOT in use** (dropped 2026-08-04) — three channels only: FB Bin Sparkle, IG zypri, Threads binsparklenz.
 
 ## How to add a row
 

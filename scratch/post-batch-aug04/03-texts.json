@@ -1,0 +1,17 @@
+{
+  "schedule": "2026-08-07T06:00:00.000Z",
+  "files": [
+    "renders/binsparkle/texts/binsparkle-texts-video-t2.8.png",
+    "renders/binsparkle/texts/binsparkle-texts-video-t6.3.png",
+    "renders/binsparkle/texts/binsparkle-texts-video-t9.8.png",
+    "renders/binsparkle/texts/binsparkle-texts-video-t13.3.png",
+    "renders/binsparkle/texts/binsparkle-texts-video-t16.8.png",
+    "renders/binsparkle/texts/binsparkle-texts-video-t20.3.png",
+    "renders/binsparkle/texts/binsparkle-texts-video-t24.5.png"
+  ],
+  "channels": ["fb", "ig", "threads"],
+  "fb_caption": "Your bin has thoughts. Mostly about the prawn shells you forgot on the 4th. If yours could text, it'd be begging too. Pressure wash, scrub every wall, deodorise, done right at your place. Book it and give the poor thing some peace. binsparkle.nz #Hamilton #WheelieBin #BinCleaning #LocalHamilton",
+  "ig_caption": "Somewhere in your wheelie bin, something has started a whole new life. Your bin knows. Your bin is not happy about it. Give it the full treatment: pressure washed, scrubbed top to base, deodorised, sorted at your place. Book at binsparkle.nz before it texts you back. #Hamilton #HamiltonNZ #WheelieBin #BinCleaning #BinCleaningService #CleanBins #StinkyBins #LocalBusiness #Waikato #HamiltonLocal #KiwiHomes #HomeServices #NoMoreStink #BookOnline #SortedMate",
+  "threads_caption": "your bin has your number and it is not thrilled about the prawns. sort the poor thing out at binsparkle.nz",
+  "threads_file": 0
+}

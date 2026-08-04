@@ -1,47 +1,54 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-04 (end of session, server time Aug 3 12:06 UTC / Aug 4 00:06 NZST)
+## ▶ Start here — written 2026-08-04 (end of session, server time Aug 4 ~03:30 UTC / ~15:30 NZST)
 
-**The content-creation system is now calibrated end-to-end.** This session tuned the playbooks so a fresh session can turn a one-line concept into a carousel + video without re-deriving anything. The standing job: **keep building BinSparkle concepts in the same loop, each totally different.** The user asked for "~10 more" — run the loop ten times.
+**Two threads: (A) TikTok setup = the active job; (B) keep building BinSparkle concepts = the standing loop.** This session shipped a new concept ("wanted poster"), scheduled 12 posts, and **proved the auto-poster works end-to-end** — FB + IG + Threads all publishing live (Threads was the previously-unproven one). TikTok was started but is a bigger infra job, so it's the primary next job.
 
-**READ FIRST (in order):**
-1. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) — the 9 rules. **Rule 2 and Rule 7 are the freshly-calibrated ones** (word-count holds @ 3 wps; no emojis; captions via the copy expert). Non-optional.
-2. [`docs/playbooks/script-and-copy.md`](docs/playbooks/script-and-copy.md) — the copy expert (model ladder + prompt template). All scripts/captions through Claude Opus 4.8 via `textInference`, never hand-written.
-3. [`videos/binsparkle/MANIFEST.md`](videos/binsparkle/MANIFEST.md) — brand, assets, compositions list.
-4. The exemplars + loop below.
+**READ FIRST:**
+1. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) — the 11 rules (Rule 2 timing, Rule 7 captions + emojis-approved, Rule 10 fill-the-frame, Rule 11 ship-from-`final/`). Non-optional.
+2. [`videos/binsparkle/posts.md`](videos/binsparkle/posts.md) — posts ledger. **The Postgres DB is truth, not this file** — re-query.
+3. [`automation-template/postiz.md`](../automation-template/postiz.md) — the Postiz posting recipe + traps. Read before any posting work.
+4. [`scratch/tiktok-app-review-text.md`](scratch/tiktok-app-review-text.md) — the TikTok app field values + review text (saved this session).
+5. The TikTok migration plan below.
 
-**Verify before you trust this.** Postiz queue re-queried live at Aug 3 12:06 UTC: **all queued posts are future-dated, none overdue.** First due is **Aug 3 20:30 UTC (Aug 4 08:30 NZST)** — re-query after that time to confirm it actually published (this is the first real test of the scheduler; a prior session flagged it). Query: pipe `scratch/verify-all-posts.sql` over SSH (command pattern in `videos/binsparkle/posts.md`). The POV video I scheduled this session is correctly queued for Aug 6 18:00 NZST across FB + IG + Threads.
+**Verify before you trust this.** Scheduler proven live 2026-08-04 ~03:00 UTC: the Aug 4 batches (Tinder 08:30, bin-talks 13:30) + the earlier "week" batch all `PUBLISHED` on FB + IG + Threads with real URLs. **21 posts `QUEUE`'d through Aug 8** (dating + bin-talks-repeat + POV + wanted + texts + invoice + reviews). Re-query: pipe `scratch/verify-all-posts.sql` over SSH (pattern in posts.md). The counts move as posts publish — re-check before relying on them.
 
-### The loop — run once per concept
-1. **Invent a totally-different format.** See exemplars below for what's been done — don't repeat a format.
-2. **Copy via the expert:** `node scratch/gen-<name>-copy.mjs` (model it on `scratch/gen-reviews-copy.mjs`). ~$0.03/concept. Outputs the on-screen text + 3 platform captions.
-3. **Build ONE composition** at `videos/binsparkle/compositions/binsparkle-<name>-video.html`. Derive **both** outputs from it: `render:still` (carousel slides — capture at each beat's hold-midpoint) + `render:comp` (video). Do not build separate carousel/video comps (they duplicate media and lint-warn).
-4. **Time holds to Rule 2: word count ÷ 3 + 1s, min 4s.** **Write short for video — ≤12 words/slide.** Wordy concepts are better as carousels.
-5. `npx hyperframes lint` → `render:still` + `render:comp` → `to-yuv420` (every render).
-6. **Judge:** `judge:still` + `judge:video`. ⚠️ **The rubric is built for photo-ads and false-positives on UI-format pieces** (chat/reviews/invoice) — "no real bin," "text <80px," "static holds" are expected misses there. The one real gap to watch for across all formats: **no dedicated end card** (clean wordmark + CTA held ~2s).
-7. Hand to the user for critique; fold findings back into the playbook.
+### Job A — TikTok setup (active, multi-step)
+**Goal:** post to TikTok from Postiz **and** enable multiple TikTok channels (BinSparkle now, other brands later) through one verified setup. TikTok is harder than FB/IG/Threads: it pulls media by URL (`pull_by_url`) so the serving domain must be TikTok-verified, and posts are forced **private** until the app passes review (days/weeks; 5 users/24hr cap pre-audit).
 
-### Exemplars — 7 concepts built this session (do not repeat these formats)
-`week` (day badges + speech bubbles) · `stages` (numbered listicle, photo set) · `pov` (centered meme text) · `texts` (iMessage chat UI) · `reviews` (reviews page, bin reviews *you*) · `invoice` (printed receipt) · **`before/after`** (matched photo pair + wipe reveal — the strongest; the bin is the hero, ~8 words total). The before/after is the bar for "visual + low-word-count." Lean that way for video; save wordy concepts for carousels.
+**Already done by the user** (TikTok dev portal, Individual ownership, app "Bin Sparkle"): app created + Client key/secret obtained; Login Kit added; Content Posting API added (but **Direct Post NOT enabled** — only draft/upload); scopes `user.info.basic`, `user.info.profile`, `video.upload` added (+ `user.info.stats` + `video.list` which should be **dropped**). Icon generated at `videos/binsparkle/assets/brand/app-icon-1024.png`. Description + TOS/privacy ready.
 
-### Open jobs (next session)
-1. **Build ~10 more concepts** in the loop above. Each totally different; hand each to the user for critique before the next.
-2. **Formalize the copy-gen command.** It's `scratch/gen-*-copy.mjs` one-offs. Make it `npm run gen:copy` so Rule 7 points at a real command, not scratch scripts.
-3. **Judge rubric needs a UI/screen mode.** Two UI-format pieces tripped the same false positives. Add a rubric variant that doesn't demand a "real bin" or ≥80px text for chat/UI content.
-4. **End cards.** Add a standard clean end-card pattern (wordmark + one CTA, held ~2s) — currently missing on most pieces.
-5. The `texts` / `reviews` / `invoice` videos render at the **old hold rates** (3.5–5s, pre-3wps). Fine as carousels; re-time to ÷3+1s if reviving any as video.
+**The migration, in order:**
+1. **Move Postiz to `postiz.binsparkle.nz`** (so media is served from a TikTok-verifiable domain). Current `postiz.srv1178347.hstgr.cloud` can't be DNS-verified (Hostinger owns `hstgr.cloud`).
+   - **Cloudflare (user):** A record `postiz` → `72.61.208.103`, DNS-only (grey cloud) first so Traefik issues its own cert.
+   - **VPS `/root/postiz/docker-compose.yml`:** add ` || Host(\`postiz.binsparkle.nz\`)` to the `traefik.http.routers.postiz.rule`; change `MAIN_URL`, `FRONTEND_URL`, `NEXT_PUBLIC_BACKEND_URL` → `https://postiz.binsparkle.nz`; `docker compose up -d postiz`.
+   - **Meta app (FB/IG) + Threads app:** add `https://postiz.binsparkle.nz/integrations/social/{facebook,instagram,threads}` to their redirect URIs (existing channels keep working — tokens are stored — but reconnects need the new domain).
+   - Confirm `https://postiz.binsparkle.nz` loads Postiz over HTTPS before continuing.
+2. **Finish the TikTok app:** enable **Direct Post**; add `video.publish` scope; drop `user.info.stats` + `video.list`; set Login Kit redirect URI → `https://postiz.binsparkle.nz/integrations/social/tiktok`; **verify domain `binsparkle.nz`** via the DNS-record method (TikTok gives a TXT → user adds it in Cloudflare → covers all subdomains incl. `postiz`).
+3. **Add `TIKTOK_CLIENT_ID` + `TIKTOK_CLIENT_SECRET`** to the Postiz compose env (user pastes them) + `docker compose up -d postiz`.
+4. **Connect TikTok in Postiz** (Add Channel → TikTok → authorise `@binsparkle`). Do one test post — it'll be **private (SELF_ONLY)** until review.
+5. **Record the demo video** (connect → compose → upload → publish → result) + submit for review. Public posting unlocks only after TikTok approves.
+6. **Post-review:** add MORE TikTok channels (other accounts/brands) via Add Channel — all post through the same verified `postiz.binsparkle.nz`.
 
-### Traps
-1. **Hold rate is 3 words/sec + 1s** (calibrated 5→4→3 across this session — user-verified). If "too fast," drop the divisor, not the buffer.
-2. **Mirelo SFX is a dead end** on this account: `mirelo:sfx@1.6` rejects the call; `mirelo:1@1` is audio-to-audio (ignores text prompts, returned a frog, $0.10/call). Logged in `scripts/lib/runware-models.mjs` TRAPS. Use the curated `assets/sfx/` or Pixabay.
-3. **One composition → carousel + video.** `render-still.mjs` was built for this. Capture carousel slides at each beat's hold-midpoint.
-4. **PowerShell → SSH → psql quoting mangles camelCase SQL.** Pipe SQL over stdin from a file (see `videos/binsparkle/posts.md`). Never `-c` over SSH.
-5. `index.html` is the render entry point. Lint-by-swap then `git checkout -- index.html`.
-6. Audio elements MUST have `id` attributes or they're silent. Every render needs `to-yuv420` after.
+### Job B — keep building BinSparkle concepts (standing loop)
+The library runs out after Aug 8. Run the loop in `content-creation.md`. This session's exemplar is the **wanted poster** (`videos/binsparkle/compositions/binsparkle-wanted-video.html`) — character-driven, low-word, before/after payoff. **Do not repeat these formats:** week, stages, pov, texts, reviews, invoice, before/after, tinder, say, **wanted**.
+
+### Open items (need a human decision)
+1. **Aug 5 "bin talks" repeat** — the same "if your bin could talk" joke published Aug 4 13:30 NZST AND is queued again Aug 5 18:00 (same channels). Drop the repeat or leave it? (User hasn't decided.)
+2. **wanted-video frame-border overflow** — an element bleeds over the decorative frame border. User saw it, said don't fix, just avoid next time (noted in Rule 10).
+
+### Traps (TikTok + carry-forward)
+1. **TikTok `pull_by_url` needs a verified serving domain** — the whole reason for the `postiz.binsparkle.nz` migration. `postiz.srv1178347.hstgr.cloud` can't be DNS-verified.
+2. **Changing Postiz `MAIN_URL`** doesn't break existing FB/IG/Threads (tokens stored), but their redirect URIs in the Meta + Threads dev apps must include the new domain for future reconnects.
+3. **TikTok pre-audit = private posts** (SELF_ONLY), 5 users/24hr, accounts must be private. No public TikTok reach until review approves.
+4. **TikTok demo video must show the real flow** — record AFTER connecting + a test post. Don't submit review until the video + the 1000-char explanation (draft in `scratch/tiktok-app-review-text.md`) are both ready.
+5. **`render:comp` / `render:still` now default to `renders/<brand>/<concept>/`** (new this session). Ship deliverables from a `final/` subfolder (Rule 11) — the `-graded.mp4` is yuv444p (VLC-only); the `-graded-yuv420.mp4` plays everywhere.
+6. **PowerShell → SSH → psql quoting mangles camelCase SQL.** Pipe SQL over stdin from a file. Never `-c`.
+7. `index.html` is the render entry point — lint-by-swap then `git checkout -- index.html`. Audio elements MUST have `id` or they're silent.
 
 ### Stray artifact
-`renders/binsparkle/binsparkle-beforeafter-10loops-graded-yuv420.mp4` (90s, 10× seamless loop) exists from a misread of "ten loops" (the user meant 10 *concepts*, not 10 replays). Gitignored; harmless. Keep as an ambient/display asset or delete.
+`renders/binsparkle/binsparkle-beforeafter-10loops-graded-yuv420.mp4` (90s loop) — gitignored, harmless. Keep or delete.
 <!-- NEXT-SESSION:END -->
 
 ## Tool map — READ BEFORE BUILDING ANYTHING

@@ -1,0 +1,13 @@
+{
+  "schedule": "2026-08-06T21:00:00.000Z",
+  "files": [
+    "renders/binsparkle/wanted/final/slide-1-poster.png",
+    "renders/binsparkle/wanted/final/slide-2-charges.png",
+    "renders/binsparkle/wanted/final/slide-3-reward.png",
+    "renders/binsparkle/wanted/final/slide-4-cta.png"
+  ],
+  "channels": ["fb", "threads"],
+  "fb_caption": "Your bin's on the run, mate. Wanted for crimes against your driveway and the whole street's nose. Lid open since the Chiefs game? Yeah, we know. One BinSparkle clean — pressure wash, scrub, deodorise — and it's a free bin again. Sorted. 🚮 binsparkle.nz\n\n#Hamilton #WheelieBin #BinCleaning #SortedMate #LocalHamilton",
+  "threads_caption": "Your wheelie bin's wanted. Crimes: lid open since the rugby, smell felonies, harbouring maggots. One clean clears its name. binsparkle.nz 🚮",
+  "threads_file": 0
+}

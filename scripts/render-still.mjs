@@ -94,7 +94,11 @@ if (aspectFlag && !/^\d+:\d+$/.test(aspectFlag)) {
   console.error(`✗ invalid --aspect="${aspectFlag}". Use W:H like 1:1, 4:5, 9:16, 2:3, 16:9.`);
   process.exit(2);
 }
-const outDir = typeof flags.out === "string" ? path.resolve(projectRoot, flags.out) : path.join(projectRoot, "renders", slug);
+// Per-concept output folder by default: renders/<slug>/<concept>/ — so a
+// concept's stills + video (render-comp) land together. Concept is derived
+// from the comp filename by stripping "<slug>-" and "-video".
+const concept = angleName.replace(new RegExp(`^${slug}-`), "").replace(/-video$/, "") || angleName;
+const outDir = typeof flags.out === "string" ? path.resolve(projectRoot, flags.out) : path.join(projectRoot, "renders", slug, concept);
 
 // --- minimal static server rooted at projectRoot -------------------------
 // Root-relative paths in the composition (design/..., videos/<brand>/...,
