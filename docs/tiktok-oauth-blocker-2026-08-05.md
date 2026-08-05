@@ -1,5 +1,61 @@
 # TikTok OAuth blocker — diagnosis & fix plan
 
+> **⚠ CORRECTION (2026-08-05, session 2 — supersedes everything below):**
+> **The scopes were NEVER the cause. The `unauthorized_client` / `error_type=client_key`
+> error is because the app is in **Draft** (never submitted). TikTok refuses the
+> *Production* client_key for any unreviewed app — for BOTH the 4-scope and 6-scope
+> authorize URLs (proven by direct browser tests this session: both fail identically).
+> The prior session's "4 scopes → login page" claim was wrong.
+>
+> **The real path is the Sandbox environment** (TikTok's own text: *"If your app has not
+> been approved before, you are required to use a sandbox environment on the Developer
+> Portal to demonstrate the integration."*). Sandbox has its own client_key/secret + a
+> **Target Users** allow-list; it's the only thing that works pre-review (same pattern as
+> the Threads "tester" step).
+>
+> **Current state (verified):**
+> - Production app is **intact** (a stray automation click checked platform checkboxes
+>   on Production, but it was reloaded before saving — unsaved-banner gone, Web platform
+>   + Direct Post confirmed present).
+> - A **Sandbox named "binsparkle" exists but is EMPTY** (id `7670243788380768263`,
+>   url `.../sandbox/7670243788380768263`). It was created without cloning, so it has no
+>   basic-info, no products, no scopes, no redirect URI.
+> - The Postiz 4-scope patch from earlier this session is **still applied** in the
+>   container (harmless, but based on the wrong premise — **revert to stock** when
+>   swapping to Sandbox creds; see end).
+>
+> **Fastest finish (human clicks — the portal fought blind automation hard):**
+> 1. TikTok dev portal → app "Bin Sparkle" → **Sandbox** tab → open the empty
+>    "binsparkle" sandbox → **Delete Sandbox** (clean slate).
+> 2. **Create Sandbox** → name `binsparkle` → **CHECK "Clone from Production or an
+>    existing Sandbox"** → **Confirm**. This copies Production's basic info, Login Kit
+>    (+ redirect URI `https://postiz.binsparkle.nz/integrations/social/tiktok`),
+>    Content Posting API (Direct Post) and all scopes.
+> 3. In the cloned sandbox → **Sandbox settings → Target Users → Add account** → add
+>    `@binsparkle` (accept the invite in the TikTok app if prompted).
+> 4. **Apply changes.**
+> 5. Reveal the **Sandbox Client key + Client secret** → swap them into Postiz
+>    (`TIKTOK_CLIENT_ID`/`TIKTOK_CLIENT_SECRET` in `/root/postiz/docker-compose.yml`),
+>    **revert the scope patch** (restore `video.list` + `user.info.stats` to the two
+>    `tiktok.provider.js` files — backups are `*.bak-4scope`; or just
+>    `docker compose up -d --force-recreate postiz` to restore stock), recreate Postiz,
+>    then connect `@binsparkle` and do one test post.
+> 6. Record the demo → submit for review → after approval, switch Postiz back to the
+>    Production client_key.
+>
+> **Traps learned this session:**
+> - The TikTok portal is a React app; chip inputs (redirect URI) and the clone checkbox
+>  are very hard to drive blind. The clone is a single checkbox for a human.
+> - `docker restart postiz` reloads code from the (patched) files; `pm2 restart` does
+>  NOT reach the real backend (it runs outside PM2, parent = PID 1).
+> - Sandbox cloned empty when the "Clone from Production" checkbox is left unchecked.
+>
+> ***Everything below this banner is the PRIOR (scope-based, now-disproven) analysis,
+> kept for the evidence trail only. Do not act on it.***
+
+> ~~STATUS (updated 2026-08-05, later session): the in-container patch is APPLIED and
+> Postiz is healthy.~~ The patch is applied but irrelevant — see correction above.
+>
 > Written 2026-08-05, end of session. The TikTok app is fully configured but the
 > OAuth connection is blocked by a TikTok scope/approval gate. This doc is the
 > full evidence + the concrete fix for the next session.
@@ -119,6 +175,72 @@ avoid a custom image):
 Revert the compose to stock `ghcr.io/gitroomhq/postiz-app:latest` + recreate.
 All six scopes now work; public posting unlocks (subject to TikTok's separate
 content-visibility audit — posts stay private until that passes too).
+
+## Fix actually applied (2026-08-05, later session)
+
+**The image build was NOT needed.** The scope list is **hardcoded** in Postiz's
+source — not env/DB configurable. Confirmed by cloning
+`gitroomhq/postiz-app` (cloned to `C:\Users\wirih\repos\postiz-app`):
+
+- File: `libraries/nestjs-libraries/src/integrations/social/tiktok.provider.ts`,
+  lines 37–44 — a static `scopes = [...]` class property. The only scope-related
+  env var (`POSTIZ_OAUTH_SCOPE`) is for Postiz's *own* login, not TikTok.
+- The same array drives **both** the authorize URL (`generateAuthUrl` →
+  `this.scopes.join(',')`) and the grant check (`authenticate` →
+  `this.checkScopes(this.scopes, scope)`). Editing the one array fixes both.
+- `checkScopes` (`social.abstract.ts:463`) throws `NotEnoughScopes` if any
+  required scope is missing from the granted set — so the array MUST be cut to
+  4, not just the URL. One edit covers it.
+
+**What was done (live, on the VPS container):** the prior session's
+"container grep found nothing" was the **PowerShell→SSH→bash quoting trap**
+(documented in `automation-template/postiz.md`), not a real dead-end. The
+compiled TikTok provider is present in **two** files inside the running
+`postiz` container (backend handles the OAuth handshake; orchestrator runs the
+publishing worker — both reference `this.scopes`, both patched for
+consistency):
+
+- `/app/apps/backend/dist/libraries/nestjs-libraries/src/integrations/social/tiktok.provider.js`
+- `/app/apps/orchestrator/dist/libraries/nestjs-libraries/src/integrations/social/tiktok.provider.js`
+
+Both are 721 lines and identical. Removed the two lines `'video.list',` and
+`'user.info.stats',` from the `this.scopes = [...]` block via
+`sed -i "/'video\.list',/d; /'user\.info\.stats',/d"`. Backups saved beside
+them as `*.bak-4scope`. Then `pm2 restart backend orchestrator`. Verified:
+"Nest application successfully started" on port 3000; `https://postiz.binsparkle.nz/` → 307.
+
+**The 4 scopes now requested:** `user.info.basic`, `video.publish`,
+`video.upload`, `user.info.profile` — the four TikTok allows pre-review
+(proven by the direct authorize-URL tests in §"The blocker").
+
+**Side effect (acceptable):** Postiz's `analytics()` / `missing()` /
+`postAnalytics()` call the `video/list/` and `user/info/` endpoints that need
+the two removed scopes. Those methods are all wrapped in try/catch returning
+`[]`, so analytics silently degrades pre-review. Core posting is unaffected.
+
+**This patch is ephemeral** — it lives only in this container's writable
+layer. It survives `docker restart postiz` but is lost on
+`docker compose up -d` (recreate) or an image pull. That is fine: the plan
+reverts to stock Postiz after TikTok review anyway. **Do NOT pull/recreate
+Postiz before the TikTok connection + test post are done**, or re-apply the
+patch (the `.bak-4scope` files are the revert point; to re-apply, re-run the
+sed against the live files).
+
+**Revert (back to 6-scope stock):** after TikTok approves the app,
+`docker compose up -d --force-recreate postiz` (or pull latest) restores the
+original files; all six scopes then work.
+
+**Next concrete steps:**
+1. Postiz → Add Channel → TikTok → log in as @binsparkle. TikTok should now
+   show its **login page** (not `unauthorized_client`). Completing it lands on
+   Postiz with `?added=…&msg=Channel Added`.
+2. ONE test post (it publishes **private/SELF_ONLY** pre-review; TikTok caps
+   at 5 pending posts / 24hr — don't fire several).
+3. Record the real demo with ShareX (the full flow, domain shown =
+   `postiz.binsparkle.nz`), swap the placeholder demo video, paste the review
+   text from `scratch/tiktok-app-review-text.md`, remove the unused Share Kit
+   product, submit for review.
+4. Post-approval: revert to stock Postiz.
 
 ## Credentials / IDs (for the next session)
 
