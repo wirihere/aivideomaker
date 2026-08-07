@@ -1,39 +1,39 @@
 # HyperFrames Composition Project
 
 <!-- NEXT-SESSION:START -->
-## ▶ Start here — written 2026-08-05 (end of session, ~23:55 UTC; NZ ~noon Aug 5)
+## ▶ Start here — written 2026-08-07, end of session (~11:35 UTC; NZ ~11:35pm Aug 7)
 
-**One line:** TikTok is unblocked + connected + the app is **submitted for review**. Posting works pre-review via the Sandbox key + `UPLOAD` (inbox → manual phone publish). Two temporary Postiz patches are live (revert after approval). A ntfy notify-on-publish cron + 6 scheduled TikTok posts (NZ Aug 6–8, 9am+6pm) are in place. **Open: the ntfy phone-buzz isn't sounding** (messages arrive silent).
+**One line:** Bin Sparkle social posting now runs through **Zernio** — TikTok AND LinkedIn both connected, posting proven for both. Postiz TikTok fully removed. LinkedIn Company Page (id `139354212`) is up with About saved; cover + Bin Day job listing built, waiting on the user to upload/post.
 
-**READ FIRST:**
-1. [`../automation-template/social-tiktok.md`](../automation-template/social-tiktok.md) — **canonical TikTok playbook** (root cause, Sandbox setup, posting, instance state, traps). Its "This instance — current state" is the detail.
-2. [`docs/tiktok-oauth-blocker-2026-08-05.md`](docs/tiktok-oauth-blocker-2026-08-05.md) — evidence trail (top banner = corrected diagnosis; below it = the disproven scope theory, kept for trail only).
-3. [`docs/playbooks/content-creation.md`](docs/playbooks/content-creation.md) + [`videos/binsparkle/posts.md`](videos/binsparkle/posts.md) — content loop + ledger. **Postgres is truth — re-query.**
+**Two repos touched this session:** `aivideomaker` (scripts, brand assets, this file) and `automation-template` (`zernio.md`, superseded `social-tiktok.md`, README, vision section in `playwright-long-session.md`). `zernio-docs/` (holds the API key) is NOT a git repo.
 
-**Verify before you trust this.** Server-side figures re-checked 2026-08-05 ~23:55 UTC against the live VPS: Postiz 307 / v1.47.0 / backend pid 240; compose `TIKTOK_CLIENT_ID` = sandbox key `sbawae2jpslc09lcum`; `contentPostingMethod()` returns `'UPLOAD'` (patched, `*.bak-upload` backup); TikTok Integration `binsparkle` connected, disabled=f, token exp ~2026-08-05 19:04 UTC (auto-refresh); 6 TikTok posts QUEUE, first 2026-08-05 21:00 UTC (NZ Aug 6 09:00); ntfy cron `*/10 * * * * /root/tiktok-notify.sh` installed, `/root/.ntfy-env` + `/root/tiktok-notify.sh` present. **App "In review" was verified at submission (~2026-08-04 23:43 UTC) via the portal only** — re-check the portal (not the DB). **The notify cron has NOT yet fired on a real publish** (first one hours away) — confirm it pings when the 21:00 UTC post lands, and that the phone actually sounds (see Open #1).
+**Verify before you trust this** (figures re-checked 2026-08-07 ~11:34 UTC against the live APIs):
+- `GET https://zernio.com/api/v1/accounts/health` (key in `../zernio-docs/.env`) → tiktok `binsparkle` + linkedin `Bin Sparkle`, both `canPost:true`. IDs: tiktok `6a75223cd0fe733d1ae1e045`, linkedin `6a757a4bd0fe733d1aef10f0`.
+- `GET /v1/posts?limit=10` → tiktok `…7b7b` published; **tiktok `…dadc` + `…486e` still SCHEDULED** (fire NZ Aug 8 9am + 6pm) — had NOT fired at handoff; scheduled path still unproven. linkedin `…f044` published.
+- Postiz (VPS ssh + psql): tiktok `disabled=t`; compose `TIKTOK_CLIENT_ID=awh1d34mv4ewxvmm` (Production, reverted); container healthy. (FB/IG/Threads `disabled=f`, carried forward — not re-checked this session.)
 
-### Open items (human decisions)
-1. **ntfy phone buzz (UNRESOLVED)** — messages arrive in the ntfy app but the phone doesn't sound; server→ntfy publish returns 200. Likely the per-topic notification-sound setting in the ntfy app or a silenced Android channel. Topic `binsparkle-tiktok-83d7ee36f01440ec` @ `ntfy.srv1178347.hstgr.cloud`. Test: `. /root/.ntfy-env; curl -H "Authorization: Bearer $NTFY_TOKEN" -H "Priority: 5" -d test "$NTFY_SERVER/$NTFY_TOPIC"`.
-2. **TikTok review** — waiting on TikTok (days–weeks). On approval: (a) revert the UPLOAD patch (`docker compose up -d --force-recreate postiz`, or restore `tiktok.provider.js` from `*.bak-upload`), (b) swap Postiz `TIKTOK_CLIENT_ID/SECRET` back to Production (`awh1d34mv4ewxvmm` + Production secret), → posts then use `DIRECT_POST` (fully automatic, no phone step, no 5/24h cap).
-3. **Stray TikTok test posts** in Postiz (junk "sadfffds"; a couple ERROR'd on DIRECT_POST) — optional cleanup; re-query the `Post` table for the tiktok integration.
-4. **BinSparkle content loop** — FB/IG/Threads posts run out after Aug 8; TikTok now also scheduled Aug 6–8. Run `content-creation.md` to extend.
+### Commands
+- **`npm run post:zernio -- --config=<json>`** — posts TikTok OR LinkedIn. Config `{ platform:"tiktok"|"linkedin", caption, media?, schedule:"now"|"YYYY-MM-DDTHH:mm:ss", timezone }`. LinkedIn media is optional (text posts work). How-to: `../automation-template/zernio.md`.
+- **`npm run look -- <screenshot.png> "<question>"`** — vision via Runware (~$0.002/look). Use it to read any screenshot/UI (the running model has no image input).
 
-### What was NOT done / why
-- Did NOT verify the notify cron end-to-end (first scheduled publish is hours away).
-- Did NOT remove the unused Display API product (review already submitted; harmless).
-- Did NOT clean the stray TikTok test posts (Open #3).
+### Next jobs (in order)
+1. **Confirm the 2 scheduled TikTok posts fired** (NZ Aug 8 9am + 6pm). The single most important check — scheduled Zernio posting is otherwise unproven.
+2. **Finish the LinkedIn page** (manual, user is doing): upload cover (`linkedin-cover-4200x700.png` / Desktop `linkedin-cover.png`; editable source `videos/binsparkle/assets/brand/linkedin-cover.html` + `scripts/render-linkedin-cover.mjs`), set Location (Hamilton, NZ — the country dropdown won't accept Playwright clicks, do it by hand), logo (`…/brand/app-icon-1024.png`), Custom button → Visit website, Specialties.
+3. **Post the Bin Day job listing when ready** (held at `videos/binsparkle/linkedin/bin-day-job-listing.md`) → page Jobs tab (free). Scoped to Hamilton for now.
+4. **Write the Bin Sparkle LinkedIn playbook** — the content research (2 audiences, PDF carousels, Tue/Thu ~11am NZ, recruitment pitch = keep 75%/$0/weekly) is in this session's conversation, not yet written down.
 
-### Traps (TikTok-specific; general rules in ship-safely/rules/core.md)
-1. **The "scopes"/"custom-image" theory was WRONG.** Pre-review, 4-scope and 6-scope authorize URLs fail identically (`unauthorized_client`/`error_type=client_key`). Real cause: app Draft → Production key refused → **Sandbox** is the only pre-review path. Ignore any old note saying drop scopes or build a custom image.
-2. **Pre-review posting:** `DIRECT_POST` blocked ("App not approved for public posting"); `UPLOAD` → inbox draft → owner publishes from TikTok app within 24h; **5 pending/24h** cap. Postiz is patched to default `UPLOAD` until approved (revert → Open #2).
-3. **Postiz v1.47.0:** Public API base is **`/api/public/v1`** (old `/public/v1` → 307 /auth). TikTok post DTO needs the full settings object + media as `{id,path}` + a `date`.
-4. **Postiz backend runs OUTSIDE PM2** (parent → container PID 1). `pm2 restart` is useless; use `docker restart postiz` (keeps patches) or `docker compose up -d --force-recreate postiz` (wipes patches → stock).
-5. **Two temporary Postiz patches live** (revert after approval): `contentPostingMethod()→'UPLOAD'` in both `tiktok.provider.js` (+ `*.bak-upload`), and Sandbox creds in the compose. The earlier 4-scope patch was reverted (stock 6-scope now).
-6. **ntfy self-hosted** @ `ntfy.srv1178347.hstgr.cloud`; topic `binsparkle-tiktok-83d7ee36f01440ec`; token in `/root/.ntfy-env` (from `automation-template/.env` `NTFY_TOKEN_BINSPARKLE`); notifier `/root/tiktok-notify.sh` + cron `*/10` (queries Postiz for TikTok PUBLISHED + releaseId='missing' in last 25 min, dedupes via `/root/tiktok-notified.txt`).
-7. **PowerShell→SSH→psql** mangles camelCase SQL — pipe over stdin. **PowerShell→SSH→bash** mangles quoting — pipe the script over stdin.
-8. **TikTok portal is a React SPA** — fiddly to drive blind (chip inputs, the Sandbox "Clone from Production" checkbox). CDP `Page.captureScreenshot` works; `startScreencast` is change-based (useless on static pages).
-9. **VPS reaches `postiz.binsparkle.nz`** (DNS-only A, IPv4) but NOT the old `postiz.srv1178347.hstgr.cloud` (IPv6 loopback fail). ntfy is still on the old `srv1178347` domain and works.
-10. `render:comp`/`render:still` ship from `final/`; `-graded.mp4`=yuv444p (VLC-only), use `-yuv420`. Cloudflare DNS edits need the global key, not the default token.
+### Open / held
+- Stale ntfy `tiktok-notify.sh` cron on the VPS (watched Postiz TikTok) — dead; remove or repoint at a Zernio webhook.
+- Move `ZERNIO_API_KEY` to `../automation-template/.env` (creds convention).
+- TikTok app "In review" in the portal — moot now (using Zernio's app).
+- FB/IG/Threads still post via Postiz (`npm run post`); content runs out after Aug 8.
+
+### Traps
+1. **LinkedIn cover = 4200×700** (min AND recommended, 6:1). The old 1128×191 / 2256×382 are BELOW the minimum and get rejected — that stale trap in `social-tiktok.md` is now corrected.
+2. **LinkedIn: links in the body cut reach** (put URL in first comment); native text/image/PDF-carousel posts; best Tue–Thu ~11am–1pm NZ.
+3. **No vision in this opencode config** (glm-5.2, no image input) — use `npm run look` for screenshots.
+4. (carried) Zernio pulls media from a public URL; `tiktokSettings` at top level; Postiz API base `/public/v1` (internal IP) vs `/api/public/v1` (public); `pm2 restart` useless on Postiz; PowerShell→SSH quoting → pipe over stdin.
+5. **TikTok-via-Postiz is HISTORY** — the Sandbox/UPLOAD saga in `social-tiktok.md` (superseded) + `docs/tiktok-oauth-blocker-2026-08-05.md`. Don't follow those steps.
 <!-- NEXT-SESSION:END -->
 
 ## Tool map — READ BEFORE BUILDING ANYTHING

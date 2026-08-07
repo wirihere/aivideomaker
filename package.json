@@ -35,6 +35,8 @@
     "describe:assets": "node scripts/describe-assets.mjs",
     "gen:image": "node scripts/gen-image.mjs",
     "post": "node scripts/post-to-postiz.mjs",
+    "post:zernio": "node scripts/post-to-zernio.mjs",
+    "look": "node scripts/look.mjs",
     "runware:usage": "node scripts/lib/runware-vision.mjs usage",
     "runware:models": "node scripts/lib/runware-models.mjs",
     "render:vite": "node scripts/render-vite.mjs",
