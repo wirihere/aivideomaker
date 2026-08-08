@@ -14,16 +14,30 @@
 
 ## The model
 
-**FLUX.2 [dev]** (`runware:400@1`) — **~$0.016/image** at social size
-(1088×1920), **$0.009/image** at square (1024×1024). Verified 2026-08-03.
-Pricing scales with resolution (serverless = GPU-seconds).
+**Pick by whether the image has to pass as a real photograph.**
 
-This is the default for ALL image generation — carousels, stories, character
-bases, thumbnails, hero stills.
+**Must look like a real photo of real people** (website hero, team shot,
+customer-facing marketing) → **Nano Banana Pro** (`google:4@2`), **$0.138/image**
+at 2752×1536. Verified 2026-08-08. Nothing else is close: real skin texture,
+worn clothing, believable light, and it does not invent logos.
 
-Escalate to **FLUX.2 [pro]** (`bfl:5@1`, $0.030/image at square, scales with
-resolution) only for hero work where the extra detail is visible. For social
-content, dev is indistinguishable.
+**Photo-real scenes, animals, empty spaces** → **Seedream 4.5**
+(`bytedance:seedream@4.5`), **$0.040/image** at 2688×1536. Verified 2026-08-08.
+A quarter of the price and nearly as convincing when no face carries the shot.
+
+**Bulk social content where the AI look is acceptable** → **FLUX.2 [dev]**
+(`runware:400@1`), **~$0.016/image** at social size (1088×1920), $0.009 at
+square. Verified 2026-08-03.
+
+**Do not use the FLUX family for photo-real people.** Head-to-head on an
+identical prompt (2026-08-08): FLUX pro and FLUX max both produced an orange
+golden-hour cast, smooth waxy skin, and invented lettering on the uniforms.
+FLUX.2 [max] (`bfl:7@1`, $0.100) looked *worse* than pro at more than double
+the price — it has no known use yet.
+
+**Sizes are per-family and the CLI gets them wrong.** `gen-image.mjs` clamps to
+2048px, which breaks both of the good models. See trap 0 in
+`docs/runware-models.md` before your first non-FLUX call.
 
 Full model details, pricing, and the verified dates: `docs/runware-models.md`
 § Image-gen.

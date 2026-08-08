@@ -64,7 +64,16 @@ outputs, and the reusable prompt template: `docs/playbooks/script-and-copy.md`.
 | AIR id | Name | Price | Best for | Avoid for | Verified |
 |---|---|---|---|---|---|
 | `runware:400@1` | FLUX.2 [dev] | $0.009 / image (1024²) · $0.016 / image (1088×1920 social) | **Default** for all social content — carousels, stories, thumbnails, base character images. Serverless (GPU-billed). | Hero shots where maximum detail and prompt adherence matter (use Pro). | 2026-08-03 |
-| `bfl:5@1` | FLUX.2 [pro] | $0.030 / image (1024²) · scales with resolution | Top-quality generation. Better prompt adherence and fine detail than dev. | Routine social content (dev is 3× cheaper at square and fine for carousels/stories). | 2026-08-03 |
+| `bfl:5@1` | FLUX.2 [pro] | $0.030 / image (1024²) · $0.045 (1792×1024) · scales with resolution | Top-quality generation. Better prompt adherence and fine detail than dev. | Routine social content (dev is 3× cheaper at square and fine for carousels/stories). **Photo-real people** — see the note below. | 2026-08-08 |
+| `bfl:7@1` | FLUX.2 [max] | $0.100 / image (1792×1024) | Nothing yet. Tested head-to-head 2026-08-08 and it looked *worse* than pro at 2× the price. | Everything, until someone finds a case it wins. | 2026-08-08 |
+| `google:4@2` | Nano Banana Pro | $0.138 / image (2752×1536) | **Photo-real people and scenes.** Clearly the most convincing of the five — real skin texture, worn clothing, no invented logos, believable light. Use for anything a customer will read as a real photograph. | Bulk social content (10× the price of FLUX dev). | 2026-08-08 |
+| `bytedance:seedream@4.5` | Seedream 4.5 | $0.040 / image (2688×1536) | Photo-real scenes and animals at a quarter of Nano Banana Pro's price. Second-best realism of the five. | Nothing found yet. | 2026-08-08 |
+
+**Realism ranking (identical prompt, 2026-08-08, NZ suburban scene with a person
+and a dog):** Nano Banana Pro ≫ Seedream 4.5 > FLUX.2 max > FLUX.2 pro. The FLUX
+family has a house style — orange golden-hour cast, smooth waxy skin, and it
+invents lettering and logos on clothing. It reads as AI at a glance. **Do not
+reach for FLUX when the image has to pass as a real photo of real people.**
 
 **Pricing scales with resolution** (serverless = GPU-seconds). Social-sized
 9:16 images (1088×1920, the nearest valid FLUX size to 1080×1920) cost ~$0.016
@@ -109,6 +118,24 @@ Other music models (not yet probed): `minimax:music@2.6` ($0.15/song, full vocal
 | — | — | — | Pending live probe. Candidates (cheapest in each family per docs): `lightricks:ltx-2-fast`, `google:veo@3.1-fast`, `bytedance:seedance@2.0-fast`, `alibaba:wan@2.6-flash`. | — | pending |
 
 ## Traps (verified)
+
+0. **Image-gen size limits differ per family, and `scripts/gen-image.mjs` hides
+   it.** That CLI clamps width/height to **2048** (a FLUX limit) before sending.
+   Seedream needs **≥ 3,686,400 pixels**, so every call through the CLI fails
+   with `invalidPixels`; Nano Banana Pro accepts only a **fixed list** of sizes,
+   most of the wide ones above 2048, so it fails with `unsupportedDimensions`.
+   Both errors look like the model is broken. It isn't — the CLI shrank the
+   request. Bypass by calling `imageInference()` from `lib/runware-image.mjs`
+   directly. Verified 2026-08-08. **`gen-image.mjs` should learn per-model
+   limits; until it does, don't trust it for non-FLUX models.**
+0a. **`bfl:5@1` (FLUX.2 pro) rejects `negativePrompt` outright** —
+   `invalidParameter`. FLUX dev accepts it. Put the "avoid this" wording into
+   the positive prompt instead. Verified 2026-08-08.
+0b. **A shared prompt suffix will attach itself to whatever is in frame.** A
+   twelve-image set shared the line "the polo shirt is completely plain with no
+   logo". In the one shot with no human in it, the model dressed the **dog** in
+   a polo shirt. Keep wardrobe instructions out of the shared suffix, or strip
+   them for people-free frames. Verified 2026-08-08.
 
 | AIR id | Modality | Trap | Verified |
 |---|---|---|---|
