@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Bucket List</title>
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: var(--leaf-deep); }
+  .stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); }
+  .scrim-top { position: absolute; inset: 0 0 auto 0; height: 420px; z-index: 4; background: linear-gradient(180deg, rgba(13,34,24,0.60) 0%, rgba(13,34,24,0.18) 60%, transparent 100%); }
+  .scrim-bottom { position: absolute; inset: auto 0 0 0; height: 1000px; z-index: 4; background: linear-gradient(0deg, rgba(13,34,24,0.94) 0%, rgba(13,34,24,0.78) 34%, rgba(13,34,24,0.22) 76%, transparent 100%); }
+  .brand-chip { position: absolute; top: 268px; left: 0; right: 0; margin: 0 auto; width: fit-content; z-index: 12; display: flex; align-items: center; gap: 14px; background: rgba(13,34,24,0.62); padding: 14px 30px 14px 20px; border-radius: 999px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .brand-chip .bin-mark { width: 50px; height: 50px; }
+  .brand-chip .wm { font-family: var(--brand-display); font-weight: 800; font-size: 44px; color: #fff; letter-spacing: -0.01em; margin: 0; }
+  .brand-chip .wm i { font-style: normal; color: var(--sunny); }
+  .doc { position: absolute; left: 60px; right: 60px; top: 470px; z-index: 10; background: rgba(250,246,238,0.96); border: 3px solid var(--ink); border-radius: 14px; padding: 40px 44px; box-shadow: 18px 18px 0 rgba(13,34,24,0.28); }
+  .doc .sheet-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid rgba(13,34,24,0.18); padding-bottom: 16px; margin-bottom: 22px; }
+  .doc .sheet-title { font-family: var(--brand-display); font-weight: 800; font-size: 46px; color: var(--ink); margin: 0; letter-spacing: -0.01em; }
+  .doc .sheet-meta { font-family: var(--brand-ui); font-weight: 700; font-size: 20px; color: #7D8A9A; letter-spacing: 0.16em; text-transform: uppercase; }
+  .row { margin-bottom: 22px; }
+  .row .k { font-family: var(--brand-ui); font-weight: 800; font-size: 22px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--leaf); margin: 0 0 8px; }
+  .row .v { font-family: var(--brand-display); font-weight: 600; font-size: 40px; color: var(--ink); margin: 0; line-height: 1.12; }
+  .row .v em { font-style: normal; color: var(--leaf-deep); }
+  .cta { position: absolute; left: 0; right: 0; top: 1600px; z-index: 13; text-align: center; opacity: 0; }
+  .cta .line { font-family: var(--brand-display); font-weight: 800; font-size: 72px; color: #fff; line-height: 0.98; margin: 0 0 22px; }
+  .cta .line em { font-style: normal; color: var(--sunny); }
+  .cta .pill { display: inline-block; font-family: var(--brand-ui); font-weight: 700; font-size: 42px; color: var(--ink); background: var(--sunny); padding: 20px 50px; border-radius: 999px; box-shadow: 0 12px 30px rgba(0,0,0,0.3); }
+  .cta .pill i { font-style: normal; color: var(--leaf-deep); }
+</style>
+</head>
+<body>
+<div id="bucketlist-video" class="comp" data-composition-id="bucketlist-video" data-width="1080" data-height="1920" data-start="0" data-duration="15">
+  <div class="stage"><img src="videos/binsparkle/assets/char-02-content.png" alt=""></div>
+  <div class="scrim-top"></div>
+  <div class="scrim-bottom"></div>
+  <div class="brand-chip"><svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg><p class="wm">bin<i>sparkle</i></p></div>
+  <div class="doc" id="doc">
+    <div class="sheet-head"><p class="sheet-title">Bin's Bucket List</p><span class="sheet-meta">Before recycling</span></div>
+    <div class="row" id="r1"><p class="k">One</p><p class="v">A whole day with the <em>lid closed.</em></p></div>
+    <div class="row" id="r2"><p class="k">Two</p><p class="v">A bath that isn't rain.</p></div>
+    <div class="row" id="r3"><p class="k">Three</p><p class="v">To smell like absolutely nothing.</p></div>
+  </div>
+  <div class="cta" id="cta"><p class="line">Let's tick them off. One<br>BinSparkle clean <em>does all three.</em></p><span class="pill">book a clean · <i>binsparkle.nz</i></span></div>
+  <audio id="music"   class="clip" src="assets/music/binsparkle-bed.mp3" data-start="0"    data-duration="15" data-track-index="8"  data-volume="0.22" loop></audio>
+  <audio id="sfx-1"   class="clip" src="assets/sfx/whoosh.mp3" data-start="0.30"  data-duration="0.8" data-track-index="20" data-volume="0.5"></audio>
+  <audio id="sfx-r1"  class="clip" src="assets/sfx/tick.wav"   data-start="1.30"  data-duration="0.4" data-track-index="21" data-volume="0.5"></audio>
+  <audio id="sfx-r2"  class="clip" src="assets/sfx/tick.wav"   data-start="4.30"  data-duration="0.4" data-track-index="22" data-volume="0.5"></audio>
+  <audio id="sfx-r3"  class="clip" src="assets/sfx/tick.wav"   data-start="7.55"  data-duration="0.4" data-track-index="23" data-volume="0.5"></audio>
+  <audio id="sfx-cta" class="clip" src="assets/sfx/ding.wav"   data-start="11.00" data-duration="0.6" data-track-index="24" data-volume="0.55"></audio>
+</div>
+<script>
+  gsap.set(["#doc .row"], { opacity: 0, y: 22 });
+  gsap.set("#doc", { opacity: 0, y: 30 });
+  gsap.set("#cta", { opacity: 0, y: 26 });
+  gsap.set(".stage img", { opacity: 0, scale: 1.08 });
+  const tl = gsap.timeline({ paused: true });
+  tl.to(".stage img", { opacity: 1, duration: 0.4 }, 0.1)
+    .to(".scrim-top", { opacity: 1, duration: 0.5 }, 0.1)
+    .to(".scrim-bottom", { opacity: 1, duration: 0.5 }, 0.1)
+    .to("#doc", { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.2)" }, 0.5);
+  tl.to("#r1", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 1.2)
+    .to(".stage img", { scale: 1.12, duration: 14, ease: "power1.inOut" }, 0.5);
+  tl.to("#r2", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 4.2);
+  tl.to("#r3", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 7.5);
+  tl.to("#doc", { opacity: 0, y: -20, duration: 0.4 }, 10.6)
+    .to("#cta", { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.3)" }, 10.9)
+    .set("#doc", { opacity: 0 }, 11.0);
+  window.__timelines = window.__timelines || {};
+  window.__timelines["bucketlist-video"] = tl;
+</script>
+</body>
+</html>

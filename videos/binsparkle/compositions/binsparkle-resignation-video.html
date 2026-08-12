@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Resignation</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 92% 88% at 50% 42%, #faf6ee 52%, #efe6cf 84%, #e3d6b6 100%);
+    box-shadow: inset 0 0 220px rgba(120, 92, 40, 0.28);
+  }
+  .comp::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.05;
+    background-image: radial-gradient(#5a4326 1px, transparent 1.4px);
+    background-size: 7px 7px;
+  }
+
+  .frame {
+    position: absolute; inset: 46px; z-index: 2; pointer-events: none;
+    border: 7px solid var(--ink);
+    box-shadow: 0 0 0 3px var(--cream), 0 0 0 7px var(--ink);
+  }
+
+  .wordmark { position: absolute; top: 64px; left: 0; right: 0; z-index: 10;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 40px; height: 40px; }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 32px;
+                   color: var(--ink); letter-spacing: -0.01em; }
+  .wordmark span i { font-style: normal; color: var(--leaf); }
+
+  /* ── Letter sheet ── */
+  .letter {
+    position: absolute; top: 240px; left: 80px; width: 920px; height: 1140px; z-index: 3;
+    background: #fffef9;
+    border: 5px solid var(--ink);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.16);
+  }
+  /* faint ruled lines, like letter paper */
+  .letter::after {
+    content: ""; position: absolute; inset: 150px 0 90px 0; pointer-events: none;
+    background-image: linear-gradient(to bottom, transparent 0, transparent 63px, rgba(13,34,24,0.10) 63px, rgba(13,34,24,0.10) 64px);
+    background-size: 100% 64px; opacity: 0.55;
+  }
+  /* top hairline under the letterhead */
+  .letter::before {
+    content: ""; position: absolute; top: 150px; left: 56px; right: 56px; height: 3px;
+    background: var(--ink); opacity: 0.85;
+  }
+
+  .letterhead { position: absolute; top: 56px; left: 56px; z-index: 4; margin: 0;
+                font-family: var(--brand-ui); font-weight: 800; font-size: 24px;
+                letter-spacing: 0.30em; color: var(--leaf-deep); text-transform: uppercase; }
+  .letter-date { position: absolute; top: 98px; left: 56px; z-index: 4; margin: 0;
+                 font-family: var(--brand-ui); font-weight: 500; font-size: 20px;
+                 letter-spacing: 0.10em; color: var(--ink); opacity: 0.6; }
+
+  /* employee photo, top-right corner of the letter */
+  .photo-wrap { position: absolute; top: 46px; right: 48px; z-index: 5; width: 210px; text-align: center; }
+  .photo-label { font-family: var(--brand-ui); font-weight: 700; letter-spacing: 0.24em;
+                 font-size: 15px; color: var(--ink); opacity: 0.7; text-transform: uppercase; margin-bottom: 8px; }
+  .photo-frame { position: relative; width: 210px; height: 210px; background: #cfd2bf;
+                 border: 7px solid var(--ink); box-shadow: 0 8px 18px rgba(0,0,0,0.18); overflow: hidden; }
+  .photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  #clean-bin { opacity: 0; }
+
+  .salutation { position: absolute; top: 232px; left: 56px; right: 290px; z-index: 4; margin: 0;
+                font-family: var(--brand-display); font-weight: 800; font-size: 92px;
+                line-height: 0.98; color: var(--ink); letter-spacing: -0.01em; }
+  .opener { position: absolute; top: 372px; left: 56px; right: 56px; z-index: 4; margin: 0;
+            font-family: var(--brand-display); font-weight: 600; font-size: 66px;
+            line-height: 1.08; color: var(--ink); }
+  .opener em { font-style: normal; color: var(--leaf); }
+
+  .reasons { position: absolute; top: 522px; left: 56px; right: 56px; z-index: 4; }
+  .reasons-head { font-family: var(--brand-ui); font-weight: 800; letter-spacing: 0.32em;
+                  font-size: 24px; color: var(--leaf-deep); text-transform: uppercase; margin: 0 0 18px; }
+  .reason { font-family: var(--brand-display); font-weight: 600; font-size: 56px;
+            line-height: 1.12; color: var(--ink); margin: 0; }
+  .reason::before { content: "—"; color: var(--coral); margin-right: 16px; font-weight: 700; }
+
+  .closer { position: absolute; top: 838px; left: 56px; right: 56px; z-index: 4; margin: 0;
+            font-family: var(--brand-display); font-weight: 800; font-size: 78px;
+            line-height: 1.0; color: var(--ink); }
+  .closer em { font-style: normal; color: var(--leaf); }
+
+  .sig { position: absolute; top: 990px; left: 56px; right: 56px; z-index: 4; }
+  .sig-line { height: 3px; width: 360px; background: var(--ink); opacity: 0.5; margin-bottom: 14px; }
+  .sig-name { font-family: var(--brand-display); font-style: italic; font-weight: 600;
+              font-size: 42px; color: var(--leaf-deep); }
+  .sig-name i { font-style: italic; color: var(--ink); }
+
+  /* SO FRESH stamp — rotates in on the reveal */
+  .fresh-stamp { position: absolute; top: 858px; right: 64px; z-index: 6;
+                 border: 6px double var(--leaf); border-radius: 12px;
+                 padding: 12px 26px; font-family: var(--brand-display); font-weight: 800;
+                 font-size: 56px; color: var(--leaf); letter-spacing: 0.04em;
+                 text-transform: uppercase; background: rgba(255,254,249,0.30);
+                 text-shadow: 1px 1px 0 rgba(47,122,77,0.22); white-space: nowrap; }
+  .fresh-stamp .tick { color: var(--sunny-deep); margin-right: 8px; }
+
+  /* ── Beat 4: CTA end card ── */
+  .cta-card { position: absolute; top: 232px; left: 0; right: 0; z-index: 7; text-align: center; }
+  .cta-tag { display: inline-block; font-family: var(--brand-ui); font-weight: 800;
+             font-size: 24px; letter-spacing: 0.32em; color: var(--cream);
+             background: var(--coral); padding: 10px 26px; border-radius: 999px;
+             text-transform: uppercase; }
+  .cta-portrait { position: relative; width: 620px; height: 620px; margin: 34px auto 0;
+                  background: #cfd2bf; border: 9px solid var(--ink);
+                  box-shadow: 0 14px 36px rgba(0,0,0,0.18); overflow: hidden; }
+  .cta-portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .cta-line { font-family: var(--brand-display); font-weight: 800; font-size: 92px;
+              line-height: 1.0; color: var(--ink); margin: 40px 0 0; letter-spacing: -0.01em; }
+  .cta-line em { font-style: normal; color: var(--leaf); }
+  .cta-pill { display: inline-block; margin-top: 30px;
+              font-family: var(--brand-ui); font-weight: 700; font-size: 44px; color: var(--cream);
+              background: var(--leaf-deep); padding: 20px 54px; border-radius: 999px;
+              box-shadow: 0 8px 26px rgba(0,0,0,0.28); white-space: nowrap; letter-spacing: 0.01em; }
+
+  .poster-foot { position: absolute; top: 1422px; left: 0; right: 0; z-index: 6; text-align: center;
+                 font-family: var(--brand-ui); font-weight: 700; font-size: 30px;
+                 letter-spacing: 0.28em; color: var(--leaf-deep); opacity: 0.6;
+                 text-transform: uppercase; }
+  .poster-foot::before { content: ""; display: block; width: 300px; height: 2px;
+                         background: var(--leaf-deep); opacity: 0.4; margin: 0 auto 16px; }
+</style>
+</head>
+<body>
+
+<div id="resignation-video" class="comp" data-composition-id="resignation-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <div class="frame"></div>
+
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <!-- The letter (beats 1-3) -->
+  <div class="letter" id="letter">
+    <p class="letterhead" id="letterhead">Letter of Resignation</p>
+    <p class="letter-date" id="letter-date">Hamilton, NZ · Today</p>
+
+    <div class="photo-wrap" id="photo-wrap">
+      <div class="photo-label">Employee · Bin #4</div>
+      <div class="photo-frame">
+        <img class="photo" id="dirty-bin" src="videos/binsparkle/assets/char2-front-disgusted-dirty.png" alt="">
+        <img class="photo" id="clean-bin" src="videos/binsparkle/assets/char2-front-happy.png" alt="">
+      </div>
+    </div>
+
+    <h2 class="salutation" id="salutation">Dear Human,</h2>
+    <p class="opener" id="opener">I'm handing in my <em>notice.</em></p>
+
+    <div class="reasons" id="reasons">
+      <p class="reasons-head" id="reasons-head">Reasons</p>
+      <p class="reason">The prawn shells.</p>
+      <p class="reason">The mystery Tupperware.</p>
+      <p class="reason">The summer heat.</p>
+    </div>
+
+    <p class="closer" id="closer">Effective <em>immediately.</em></p>
+
+    <div class="sig" id="sig">
+      <div class="sig-line"></div>
+      <span class="sig-name">Yours, <i>Bin #4</i></span>
+    </div>
+
+    <div class="fresh-stamp" id="fresh-stamp"><span class="tick">✓</span>So Fresh</div>
+  </div>
+
+  <!-- Beat 4: CTA end card -->
+  <div class="cta-card" id="cta-card">
+    <span class="cta-tag" id="cta-tag">Available now</span>
+    <div class="cta-portrait" id="cta-portrait">
+      <img class="clip" src="videos/binsparkle/assets/char2-front-happy.png" alt=""
+            data-start="20" data-duration="7" data-track-index="2">
+    </div>
+    <p class="cta-line" id="cta-line">Book my <em>replacement.</em></p>
+    <div class="cta-pill" id="cta-pill">binsparkle.nz</div>
+  </div>
+
+  <div class="poster-foot" id="poster-foot">book online · binsparkle.nz · Aotearoa NZ</div>
+
+  <audio id="sfx-slam"    class="clip" src="assets/sfx/impact.wav" data-start="0.10"  data-duration="0.60" data-track-index="9"  data-volume="0.7"></audio>
+  <audio id="sfx-reasons" class="clip" src="assets/sfx/tick.wav"   data-start="6.00"  data-duration="0.45" data-track-index="10" data-volume="0.6"></audio>
+  <audio id="sfx-reveal"  class="clip" src="assets/sfx/whoosh.mp3" data-start="14.00" data-duration="1.00" data-track-index="11" data-volume="0.55"></audio>
+  <audio id="sfx-stamp"   class="clip" src="assets/sfx/impact.wav" data-start="14.65" data-duration="0.55" data-track-index="12" data-volume="0.7"></audio>
+  <audio id="sfx-cta"     class="clip" src="assets/sfx/ding.wav"   data-start="20.40" data-duration="0.60" data-track-index="13" data-volume="0.6"></audio>
+
+</div>
+
+<script>
+  gsap.set("#letter",        { opacity: 0, y: 26 });
+  gsap.set("#letterhead",    { opacity: 0 });
+  gsap.set("#photo-wrap",    { opacity: 0, scale: 0.9 });
+  gsap.set("#salutation",    { opacity: 0, y: 18 });
+  gsap.set("#opener",        { opacity: 0, y: 18 });
+  gsap.set("#reasons-head",  { opacity: 0 });
+  gsap.set(".reason",        { opacity: 0, y: 22, scale: 0.94 });
+  gsap.set("#closer",        { opacity: 0, y: 18 });
+  gsap.set("#sig",           { opacity: 0 });
+  gsap.set("#fresh-stamp",   { opacity: 0, scale: 1.6, rotation: 24 });
+  gsap.set("#clean-bin",     { opacity: 0 });
+  gsap.set("#cta-card",      { opacity: 0 });
+  gsap.set("#cta-tag",       { opacity: 0, y: -14 });
+  gsap.set("#cta-line",      { opacity: 0, y: 24 });
+  gsap.set("#cta-pill",      { opacity: 0, scale: 0.85 });
+  gsap.set("#poster-foot",   { opacity: 0 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Beat 1 (0-6s): the letter arrives — "Dear Human, I'm handing in my notice."
+  tl.to("#letter",     { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.15)
+    .to("#letterhead", { opacity: 1, duration: 0.4 }, 0.3)
+    .to("#photo-wrap", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 0.5)
+    .to("#sig",        { opacity: 1, duration: 0.5 }, 0.7)
+    .to("#salutation", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.9)
+    .to("#opener",     { opacity: 1, y: 0, duration: 0.5 }, 1.2)
+    .to("#poster-foot",{ opacity: 0.6, duration: 0.6 }, 1.4);
+
+  // Beat 2 (6-14s): reasons stamp in, staggered; slow push-in on the photo
+  tl.to("#reasons-head", { opacity: 1, duration: 0.3 }, 6.0)
+    .to(".reason", { opacity: 1, y: 0, scale: 1, duration: 0.32, stagger: 0.42, ease: "back.out(2)" }, 6.1)
+    .to("#photo-wrap", { scale: 1.05, duration: 4.2, ease: "power1.inOut" }, 7.1);
+
+  // Beat 3 (14-20s): reveal — dirty→clean bin, SO FRESH stamp, reasons dismissed, closer
+  tl.to("#dirty-bin", { opacity: 0, duration: 0.65 }, 14.0)
+    .to("#clean-bin", { opacity: 1, duration: 0.65 }, 14.0)
+    .to("#fresh-stamp", { opacity: 1, scale: 1, rotation: -13, duration: 0.4, ease: "back.out(1.8)" }, 14.7)
+    .to(["#reasons-head", ".reason", "#opener"], { opacity: 0, duration: 0.4 }, 14.9)
+    .to("#closer", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 15.3);
+  tl.set("#dirty-bin", { opacity: 0 }, 14.65);
+
+  // Beat 4 (20-27s): end card — letter folds away, clean bin becomes the hero, CTA in the safe band
+  tl.to("#letter", { opacity: 0, duration: 0.5 }, 20.0)
+    .to("#cta-card", { opacity: 1, duration: 0.5 }, 20.2)
+    .to("#cta-tag", { opacity: 1, y: 0, duration: 0.4 }, 20.4)
+    .to("#cta-line", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 20.7)
+    .to("#cta-pill", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 21.2);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["resignation-video"] = tl;
+</script>
+</body>
+</html>

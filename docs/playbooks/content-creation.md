@@ -69,6 +69,16 @@ and low-word-count for video, save the wordy ones for carousels.
 Never make the user tell you "it's too fast." Start at the formula's number;
 they'll say "speed it up" or "hold it longer" if the rate is off.
 
+**Total video length: aim ~27s (the 25-30s band).** Short-form platforms
+(TikTok, Reels, Shorts) reward *completion* — the viewer watching to the
+end — and the high-completion sweet spot is roughly 21-34s. Long enough to
+land the gag, short enough that most viewers finish it. Four beats at
+readable holds land here naturally (≈6-8s a beat). Under ~20s cuts the joke
+short; over ~35s and completion drops, which the algorithm punishes harder
+than the extra seconds help. **Don't pad with dead holds to hit the number**
+— if a concept is done in 22s, ship 22s. Confirmed by the user 2026-08-07
+after the first character batch shipped at 18s and read a touch short.
+
 ---
 
 ## Rule 3 — Check every lint warning before rendering
@@ -262,6 +272,36 @@ only the deliverables, clearly named:
 The video in `final/` is the one that plays everywhere — hand that file out,
 not the `-graded.mp4`. Currently this is a manual copy/rename step after
 `render:still` + `to-yuv420`; a wrapper to automate it is open.
+
+---
+
+## Rule 12 — After every video/carousel, run the improvements sweep (non-optional)
+
+A creation task is **not done** when the render lands. It is done when the
+lessons from that creation have been written back into the docs. This is the
+discipline that stops the same bug shipping twice (the 2026-08-08 comeback
+video shipped with no on-screen text because nothing enforced a "did the text
+actually render?" check, and nothing captured the parent-opacity bug until the
+user caught it).
+
+**Run this checklist at the end of every video or carousel creation, every
+time, before reporting "done":**
+
+1. **Verify it actually rendered.** Extract a mid-scene frame (`ffmpeg -ss <t> -i <mp4> -frames:v 1 frame.jpg`) and run `node scripts/look.mjs frame.jpg "list EVERY piece of text visible, read each exactly"`. Confirm the headlines/CTA/SVG effects are actually painting. Do **not** trust `judge:still`/`judge:video` for this — they score safe-zone criteria and will pass an empty frame. (See `LEARNINGS.md §4` — the headline parent-opacity bug.)
+
+2. **Log the work in `LEARNINGS.md §6`** (increment log, newest at top). One entry: what shipped, what worked, what cost time, the one next-time line. Use the template at the top of §6.
+
+3. **Promote anything that bit you into `LEARNINGS.md §4`** (pitfalls). If a bug, a quirk, or a wrong assumption cost more than 5 minutes, it goes in §4 with the symptom, cause, fix, and how to detect it — not just in the §6 entry. §4 is what the next session reads first; §6 is the chronological record.
+
+4. **Update the brand `MANIFEST.md`.** New composition → row in the compositions table. New render → row in the renders section. New brand-copy rule or trap → the relevant section. If a service claim was corrected (e.g. "washed", not "pressure-washed"), it goes at the top with the other brand facts.
+
+5. **Update the "How to make new content" section (`MANIFEST.md §7`) if the method moved.** Did you use a new render flag, a new SVG technique, a different voice, a no-VO pattern, a one-composition carousel technique? If the playbook steps would now be written differently, edit them in place so the next session inherits the improvement instead of rediscovering it.
+
+6. **Root-fix tooling, don't just work around it.** If a script needed a special flag or a tool behaved oddly (e.g. Runware music rejecting its own default `steps`), fix the script if it's a one-liner rather than documenting "always pass --steps." Only fall back to a documented workaround when the root fix is out of scope. If you keep the workaround, say so explicitly in the doc.
+
+**The test:** a brand-new session, opening this repo cold, should be able to
+reproduce this creation without hitting any problem you hit. If they would hit
+one, the sweep isn't finished.
 
 ---
 

@@ -82,6 +82,69 @@ IG zypri, Threads binsparklenz). Verified against Postiz Postgres
 | 2026-08-08 18:00 | Instagram | zypri | carousel | 7 | **Reviews** — "Your bin has been keeping receipts… one clean and it takes it all back… binsparkle.nz" | `cmsdrxbms0015lj65v2ftcs67` | — |
 | 2026-08-08 18:00 | Threads | binsparklenz | single | 1 | **Reviews** — "your wheelie bin has left you a review and honestly it's brutal… binsparkle.nz" | `cmsdrxbne0016lj653dnkso75` | — |
 
+### 2026-08-09 — "Comeback" batch (6 posts, first TikTok + LinkedIn via Zernio)
+
+| publishDate (NZ) | platform | channel | format | imgs | copy summary | postiz / zernio id | ref slug |
+|---|---|---|---|---|---|---|---|
+| 2026-08-09 09:00 | Facebook | Bin Sparkle | carousel | 6 | **Comeback** — "Rock bottom for a wheelie bin?… washed, scrubbed, and deodorised… Every bin deserves a comeback." | `cmsjp4nil0000rp6u0qj5zfi6` | — |
+| 2026-08-09 09:02 | Instagram | zypri | video | 1 | **Comeback (video)** — same arc, IG caption + 16 hashtags | `cmsjpaau10001rp6uswggo894` | — |
+| 2026-08-09 09:04 | Threads | binsparklenz | single | 1 | **Comeback** — slide 6 ("Every bin deserves a comeback") | `cmsjrkpml0002rp6u6lvhpth1` | — |
+| 2026-08-09 09:06 | TikTok | binsparkle | video | 1 | **Comeback (video)** — first TikTok post via Zernio | Zernio `6a7696c6bf1eb72d9dd8f6ad` | — |
+| 2026-08-09 09:08 | LinkedIn | Bin Sparkle | single | 1 | **Comeback** — purpose-built professional slide (`linkedin-clean-4×5.png`) + marketplace caption | Zernio `6a7696d2bf1eb72d9dd8fb1e` | — |
+| 2026-08-09 18:00 | Facebook | Bin Sparkle | video | 1 | **Comeback (video)** — 2nd FB post of the day (carousel AM, video PM) | `cmsjrlkac0003rp6upedyyuse` | — |
+
+**Notes for this batch:**
+- **First use of Zernio** (TikTok + LinkedIn). Key was added to `automation-template/.env` 2026-08-08; both accounts `canPost: true`. TikTok token refreshes ~monthly — if the 09:06 post 401s, reconnect from the Zernio dashboard and re-submit.
+- **First 5-platform day** — previously FB/IG/Threads only. LinkedIn gets the purpose-built real-photo slide (not the cartoon) — rated 8/10 LinkedIn-fit vs 3–6/10 for the comeback cartoon slides.
+- **FB twice, LinkedIn once:** FB takes 2/day (carousel + video); LinkedIn = 1/day max for a business page (the professional audience tunes out more — ~2–3/week is the long-term sweet spot). IG held at 1 for this concept (same comeback twice on IG is one too many) — revisit per-concept.
+- **Re-verify after publish:** re-query Postiz for the 4 `cms…` ids to confirm `QUEUE → PUBLISHED`; poll `GET https://zernio.com/api/v1/posts/<id>` for the two Zernio ids until `status=published`.
+- **Operational gotcha:** the 12 MB video SCP'd to the VPS dropped once (`Connection reset / Broken pipe`) on the first IG attempt — retry succeeded. The `scp()` in `post-to-postiz.mjs` has a 60s timeout; large files on a flaky link can hit it. If a video post fails at SCP, just retry — no partial state is created (it fails before the post is made).
+
+### 2026-08-11 → 16 — Character-gag set (24 posts, 6 concepts × 4 platforms)
+
+One unused character-gag video per day, each to Facebook + Instagram + Threads (Postiz) + TikTok (Zernio). **LinkedIn skipped** for this batch — cartoon character gags rate 3–6/10 LinkedIn-fit (the comeback taught us that). Configs in `videos/binsparkle/posting/2026-08-11-to-16-character-set/`.
+
+| NZ day | concept | gag | FB / IG / Threads (Postiz) | TikTok (Zernio) |
+|---|---|---|---|---|
+| Aug 11 | `therapy` | bin in therapy, "I just hold it all in" | 3 posts (1 each) | `6a79a2ce4cc9e822798a5460` |
+| Aug 12 | `resignation` | bin's letter of resignation | 3 posts | `6a79a2d28cefd1376b180713` |
+| Aug 13 | `forecast` | 5-day smell forecast (high: FISH) | 3 posts | `6a79a2d66003dabaef159067` |
+| Aug 14 | `horoscope` | Binscopes, "time to let go" | 3 posts | `6a79a2d96003dabaef159107` |
+| Aug 15 | `playlist` | 2026 Wrapped, "Sounds of the Sea" | 3 posts | `6a79a2dca6427e380c113ebb` |
+| Aug 16 | `groupchat` | Neighbourhood Bin Chat, the nappy | 3 posts | `6a79a2dfe8858ac43eeb051d` |
+
+All 18 Postiz posts verified `QUEUE` with the right `publishDate` (UTC `2026-08-10..15 21:00` = NZST Aug 11–16 09:00), 1 per channel per day, **no duplicates**. All 6 Zernio posts `status=scheduled`.
+
+**Notes for this batch:**
+- **Captions:** all 24 generated in one pass through the copy expert (Opus 4.8, $0.08). Each uses "washed, scrubbed, and deodorised" (no "pressure-wash"), ends on `binsparkle.nz`, platform-tuned (FB warm, IG energetic + hashtags, Threads short, TikTok punchy + hashtags).
+- **Threads gets the video** in this batch (the comeback sent a single image). Threads plays video fine; sending the video avoided building 6 single-image slides.
+- **Same SCP flakiness as Aug 9** — `forecast` and `playlist` each needed 2–3 retries (`Connection reset / closed`). All eventually landed. The 60s `scp()` timeout + a flaky VPS link is the recurring cause; a retry always works. Worth a proper fix in `post-to-postiz.mjs` (longer timeout + auto-retry) — filed mentally.
+- **Re-verify after publish:** from Aug 11 onward, re-query Postiz `where publishDate >= '2026-08-10 20:00' and state='PUBLISHED'` to confirm each day flipped; poll the 6 Zernio ids until `status=published`. Watch TikTok — `platformPostUrl` is often empty even on success; `status=published` is the signal.
+- **Runway after this batch:** the 6 unused character videos are now scheduled. Aug 17+ needs fresh concepts ("another set, totally different" — in progress). The 2–3 unused *product* ads (customer / clean / fullcare) remain available as a different flavour if needed.
+
+### 2026-08-17 → 21 — Set 2: five brand-new concepts (20 posts, video + carousel each)
+
+Five new character concepts built from scratch (new gags, unused character poses), each shipped as **both** a 15s video and a 5-slide carousel. Per concept, one day: FB gets the carousel, IG + TikTok get the video, Threads gets the CTA slide. LinkedIn skipped (cartoon). Configs in `videos/binsparkle/posting/2026-08-17-to-21-set2/`; compositions in `videos/binsparkle/compositions/binsparkle-{resume,cookbook,openmic,bucketlist,confessional}-{video,carousel}.html`.
+
+| NZ day | concept | gag | FB carousel / IG video / Threads (Postiz) | TikTok (Zernio) |
+|---|---|---|---|---|
+| Aug 17 | `resume` | bin's letter of application | 3 posts (5-slide carousel / video / slide-5) | `6a7a1076b32f515bdc1212e0` |
+| Aug 18 | `cookbook` | "From the Bin Kitchen" recipes | 3 posts | `6a7a110f761e98a3a69953a7` |
+| Aug 19 | `openmic` | bin doing standup | 3 posts | `6a7a11d7761e98a3a6996852` |
+| Aug 20 | `bucketlist` | bin's list before recycling | 3 posts | `6a7a12a5a0bfe4b95bac6271` |
+| Aug 21 | `confessional` | "Bless me, doc" | 3 posts | `6a7a136c53f2b33fd52f585a` |
+
+All 15 Postiz posts verified `QUEUE` with the right `publishDate` (UTC `2026-08-16..20 21:00` = NZST Aug 17–21 09:00), 1 per channel per day, no duplicates. All 5 Zernio posts scheduled.
+
+**Notes for this batch:**
+- **Built, not reused** — five new compositions (mirrored the lean `wanted`-style template: full-bleed character image + a content card with 3 animated beats + CTA, music + SFX, 15s). Reused the existing character *image* library (the brand's visual), with five previously-unused poses (proud / surprised / annoyed / content / embarrassed) so nothing repeats the comeback or set 1.
+- **Captions:** all 20 generated in one pass through the copy expert (Opus 4.8, $0.07). All "washed, scrubbed, and deodorised" (no "pressure-washed"), all end `binsparkle.nz`.
+- **Carousels generated programmatically** — `gen-carousel-comps.mjs` emitted all 5 carousel compositions from a concept-data table (5 clip-windowed slides each, full-bleed style matching the comeback carousel). The hook-slide kicker was initially a leftover ("A bin redemption") — caught and fixed to "A Bin Sparkle original".
+- **Orchestrator pattern worked well** — one script (`schedule-set2.mjs`) wrote all 20 configs and ran them with auto-retry on the SCP drops. It timed out near the very end (confessional Threads + TikTok) — re-ran those two manually. Worth raising the script's per-call timeout or splitting FB-carousel (5 SCPs) from the rest next time.
+- **Re-verify after publish:** from Aug 17, re-query Postiz `where publishDate >= '2026-08-16 20:00' and state='PUBLISHED'` per day; poll the 5 Zernio ids until `status=published`.
+
+**Runway after this batch:** Aug 22+ is empty again. The 2–3 unused *product* ads (customer / clean / fullcare — real footage, service-forward) are the obvious next direction if a format break from the cartoon is wanted.
+
 - **First scheduler test:** the 2026-08-04 08:30 NZST batch (publishDate `2026-08-03 20:30:00` UTC) is the first real publish through the Postiz scheduler. Re-query the DB after that time to confirm those three flipped `QUEUE → PUBLISHED`. If they haven't, the scheduler isn't firing — check the postiz container + cron.
 - **"Bin talks" angle posts twice** — the same "if your bin could talk / ROAST you" joke is queued for **2026-08-04 13:30 AND 2026-08-05 18:00**, same channels. Likely over-scheduled; will read repetitive on the feed. Decide: drop the 08-05 re-run, or swap it for a different angle.
 - **POV source video:** `renders/binsparkle/binsparkle_2026-08-03_22-07-26-graded-yuv420.mp4` (27s, 8.26 MB). Composition: `videos/binsparkle/compositions/binsparkle-pov-video.html`.

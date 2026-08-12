@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Comeback</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background: var(--leaf-deep);
+  }
+
+  /* === Full-bleed character image stage === */
+  .stage { position: absolute; inset: 0; z-index: 1; }
+  .stage img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0;
+    transform: scale(1.04);
+  }
+
+  /* Top + bottom scrims for text legibility, brand-tinted */
+  .scrim-top {
+    position: absolute; inset: 0 0 auto 0; height: 360px; z-index: 4;
+    background: linear-gradient(180deg, rgba(13,34,24,0.62) 0%, rgba(13,34,24,0.28) 55%, transparent 100%);
+    pointer-events: none;
+  }
+  .scrim-bottom {
+    position: absolute; inset: auto 0 0 0; height: 820px; z-index: 4;
+    background: linear-gradient(0deg, rgba(13,34,24,0.86) 0%, rgba(13,34,24,0.66) 30%, rgba(13,34,24,0.20) 70%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Lightning flicker overlay (beat 1 storm) */
+  .flicker {
+    position: absolute; inset: 0; z-index: 5; pointer-events: none;
+    background: rgba(255,255,255,0.85); opacity: 0;
+  }
+
+  /* === SVG overlay layer (custom animations live here) === */
+  .fx-layer { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+
+  /* Stink waves — wavy green lines rising above the bin (beats 2-3) */
+  .stink { position: absolute; left: 50%; top: 580px; transform: translateX(-50%); width: 440px; height: 300px; opacity: 0; }
+  .stink path { fill: none; stroke: #9bd64a; stroke-width: 10; stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(0,0,0,0.35)); }
+  .stink .w1 { animation: stink-rise 2.4s ease-out infinite; transform-origin: center; }
+  .stink .w2 { animation: stink-rise 2.4s ease-out infinite 0.8s; }
+  .stink .w3 { animation: stink-rise 2.4s ease-out infinite 1.6s; }
+  @keyframes stink-rise {
+    0%   { opacity: 0; transform: translateY(60px) scale(0.85); }
+    30%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-160px) scale(1.2); }
+  }
+
+  /* Wriggling dot — the "something has moved in" gag (beat 3) */
+  .wriggle { position: absolute; left: 50%; top: 980px; transform: translateX(-50%); width: 60px; height: 60px; opacity: 0; }
+  .wriggle circle { fill: #f4b942; }
+  .wriggle .body { animation: wriggle 0.9s ease-in-out infinite; transform-origin: center; }
+  @keyframes wriggle {
+    0%,100% { transform: scaleX(1) rotate(0deg); }
+    50%     { transform: scaleX(1.5) rotate(8deg); }
+  }
+
+  /* Water-spray arc (beat 4 rescue) */
+  .spray { position: absolute; left: 50%; top: 700px; transform: translateX(-50%); width: 520px; height: 420px; opacity: 0; }
+  .spray drop { fill: #cdeafe; }
+  .spray .droplet { animation: spray 1.1s ease-out infinite; }
+  .spray .d2 { animation-delay: 0.15s; }
+  .spray .d3 { animation-delay: 0.30s; }
+  .spray .d4 { animation-delay: 0.45s; }
+  .spray .d5 { animation-delay: 0.60s; }
+  @keyframes spray {
+    0%   { opacity: 0; transform: translate(0,0) scale(0.4); }
+    30%  { opacity: 0.95; }
+    100% { opacity: 0; transform: translate(var(--dx,60px), var(--dy,-90px)) scale(1); }
+  }
+
+  /* Suds bubbles drifting up (beat 5) */
+  .suds { position: absolute; inset: 0; opacity: 0; }
+  .suds .bubble { position: absolute; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.98), rgba(220,240,255,0.55) 60%, rgba(255,255,255,0.12));
+    border: 3px solid rgba(255,255,255,0.85); box-shadow: 0 0 10px rgba(180,220,255,0.4); }
+  .suds .b1 { width: 70px; height: 70px; left: 16%; bottom: 180px; animation: suds-rise 3.2s ease-in infinite; }
+  .suds .b2 { width: 44px; height: 44px; left: 28%; bottom: 120px; animation: suds-rise 3.2s ease-in infinite 0.5s; }
+  .suds .b3 { width: 96px; height: 96px; left: 44%; bottom: 200px; animation: suds-rise 3.2s ease-in infinite 1.0s; }
+  .suds .b4 { width: 52px; height: 52px; left: 62%; bottom: 140px; animation: suds-rise 3.2s ease-in infinite 1.6s; }
+  .suds .b5 { width: 80px; height: 80px; left: 74%; bottom: 190px; animation: suds-rise 3.2s ease-in infinite 2.1s; }
+  .suds .b6 { width: 38px; height: 38px; left: 36%; bottom: 90px;  animation: suds-rise 3.2s ease-in infinite 2.6s; }
+  .suds .b7 { width: 60px; height: 60px; left: 56%; bottom: 110px; animation: suds-rise 3.2s ease-in infinite 0.9s; }
+  @keyframes suds-rise {
+    0%   { opacity: 0; transform: translateY(60px) scale(0.7); }
+    25%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(-780px) scale(1.15); }
+  }
+
+  /* Sparkle pops (beat 4 + 6) */
+  .spark { position: absolute; opacity: 0; }
+  .spark svg { width: 100%; height: 100%; }
+  .spark .sp { fill: #fff7d6; }
+  .spark .sp-core { fill: #fff; }
+
+  /* Confetti burst host (beat 6) */
+  .confetti { position: absolute; inset: 0; opacity: 0; }
+  .confetti i { position: absolute; top: 30%; left: 50%; width: 16px; height: 22px; border-radius: 2px; }
+
+  /* === Persistent wordmark (top) — dark brand-chip pill, clears the 220px top unsafe zone === */
+  .wordmark { position: absolute; top: 268px; left: 0; right: 0; margin: 0 auto; width: fit-content;
+              z-index: 12; display: flex; align-items: center; gap: 14px; opacity: 0;
+              background: rgba(13,34,24,0.62); padding: 14px 30px 14px 20px; border-radius: 999px;
+              backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .wordmark .bin-mark { width: 50px; height: 50px; }
+  .wordmark .wm-text { font-family: var(--brand-display); font-weight: 800; font-size: 44px;
+                       color: #fff; letter-spacing: -0.01em; margin: 0; }
+  .wordmark .wm-text i { font-style: normal; color: var(--sunny); }
+
+  /* === Headline layer (lower third, on the bottom scrim) === */
+  .headline-layer { position: absolute; left: 70px; right: 70px; top: 1180px; height: 520px; z-index: 10; }
+  .beat-text { position: absolute; inset: 0; display: flex; flex-direction: column;
+               justify-content: center; align-items: flex-start; }
+  .beat-text .kicker { font-family: var(--brand-ui); font-weight: 800; font-size: 26px;
+                       letter-spacing: 0.34em; text-transform: uppercase; color: var(--sunny);
+                       margin: 0 0 18px; opacity: 0.95; }
+  .beat-text h1 { font-family: var(--brand-display); font-weight: 800; color: #fff;
+                  font-size: 104px; line-height: 0.94; letter-spacing: -0.015em; margin: 0;
+                  text-shadow: 0 4px 24px rgba(0,0,0,0.45); }
+  .beat-text h1 em { font-style: normal; color: var(--sunny); }
+  .beat-text h1 .leaf { color: #8be0a8; }
+  .beat-text .sub { font-family: var(--brand-ui); font-weight: 600; font-size: 38px;
+                    color: rgba(255,255,255,0.82); margin: 22px 0 0; letter-spacing: 0.02em; }
+
+  /* CTA pill (beat 6 end-card) — sits in the safe band, not the bottom unsafe zone */
+  .cta-pill { position: absolute; left: 50%; transform: translateX(-50%) scale(0.85);
+              top: 1390px; z-index: 13; opacity: 0;
+              font-family: var(--brand-ui); font-weight: 700; font-size: 48px; color: var(--ink);
+              background: var(--sunny); padding: 24px 62px; border-radius: 999px;
+              box-shadow: 0 14px 34px rgba(0,0,0,0.34); white-space: nowrap; letter-spacing: 0.01em; }
+  .cta-pill i { font-style: normal; color: var(--leaf-deep); }
+
+  /* Slide-counter dot row removed — sat in the top unsafe zone; wordmark carries branding */
+</style>
+</head>
+<body>
+
+<div id="comeback-video" class="comp" data-composition-id="comeback-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <!-- Character image stage — one full-bleed hero per beat -->
+  <div class="stage">
+    <img id="img-1" src="videos/binsparkle/assets/char-05-rockbottom.png" alt="">
+    <img id="img-2" src="videos/binsparkle/assets/char-04-sad.png" alt="">
+    <img id="img-3" src="videos/binsparkle/assets/char-03-worried.png" alt="">
+    <img id="img-4" src="videos/binsparkle/assets/char-06-rescued.png" alt="">
+    <img id="img-5" src="videos/binsparkle/assets/char2-front-happy.png" alt="">
+    <img id="img-6" src="videos/binsparkle/assets/char-07-triumphant.png" alt="">
+  </div>
+
+  <div class="scrim-top" id="scrim-top"></div>
+  <div class="scrim-bottom" id="scrim-bottom"></div>
+  <div class="flicker" id="flicker"></div>
+
+  <!-- Custom SVG FX layer -->
+  <div class="fx-layer">
+    <!-- Stink waves (beats 2-3) -->
+    <svg class="stink" id="stink" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+      <path class="w1" d="M30 160 C 50 120, 10 90, 40 60 C 70 30, 30 10, 50 0" />
+      <path class="w2" d="M100 170 C 120 130, 80 100, 110 70 C 140 40, 100 20, 120 10" />
+      <path class="w3" d="M170 160 C 190 120, 150 90, 180 60 C 210 30, 170 10, 190 0" />
+    </svg>
+
+    <!-- Wriggling thing (beat 3) -->
+    <svg class="wriggle" id="wriggle" viewBox="0 0 60 60">
+      <g class="body">
+        <circle cx="30" cy="30" r="20" />
+        <circle cx="30" cy="30" r="9" fill="#0d2218" />
+      </g>
+    </svg>
+
+    <!-- Water spray (beat 4) -->
+    <svg class="spray" id="spray" viewBox="0 0 520 420">
+      <circle class="droplet d1" cx="260" cy="380" r="16" style="--dx: -120px; --dy: -260px;" />
+      <circle class="droplet d2" cx="260" cy="380" r="12" style="--dx: -60px;  --dy: -300px;" />
+      <circle class="droplet d3" cx="260" cy="380" r="18" style="--dx: 40px;   --dy: -280px;" />
+      <circle class="droplet d4" cx="260" cy="380" r="12" style="--dx: 120px;  --dy: -250px;" />
+      <circle class="droplet d5" cx="260" cy="380" r="14" style="--dx: 180px;  --dy: -200px;" />
+    </svg>
+
+    <!-- Suds (beat 5) -->
+    <div class="suds" id="suds">
+      <span class="bubble b1"></span><span class="bubble b2"></span>
+      <span class="bubble b3"></span><span class="bubble b4"></span>
+      <span class="bubble b5"></span><span class="bubble b6"></span>
+      <span class="bubble b7"></span>
+    </div>
+
+    <!-- Sparkle pops (4-point stars) for beats 4 + 6 -->
+    <div class="spark" id="spark-a" style="left: 18%; top: 720px; width: 90px; height: 90px;">
+      <svg viewBox="0 0 100 100"><path class="sp" d="M50 0 L58 42 L100 50 L58 58 L50 100 L42 58 L0 50 L42 42 Z"/><circle class="sp-core" cx="50" cy="50" r="6"/></svg>
+    </div>
+    <div class="spark" id="spark-b" style="right: 16%; top: 820px; width: 70px; height: 70px;">
+      <svg viewBox="0 0 100 100"><path class="sp" d="M50 0 L58 42 L100 50 L58 58 L50 100 L42 58 L0 50 L42 42 Z"/><circle class="sp-core" cx="50" cy="50" r="6"/></svg>
+    </div>
+    <div class="spark" id="spark-c" style="left: 26%; top: 540px; width: 110px; height: 110px;">
+      <svg viewBox="0 0 100 100"><path class="sp" d="M50 0 L58 42 L100 50 L58 58 L50 100 L42 58 L0 50 L42 42 Z"/><circle class="sp-core" cx="50" cy="50" r="7"/></svg>
+    </div>
+    <div class="spark" id="spark-d" style="right: 22%; top: 600px; width: 80px; height: 80px;">
+      <svg viewBox="0 0 100 100"><path class="sp" d="M50 0 L58 42 L100 50 L58 58 L50 100 L42 58 L0 50 L42 42 Z"/><circle class="sp-core" cx="50" cy="50" r="6"/></svg>
+    </div>
+
+    <!-- Confetti burst (beat 6) -->
+    <div class="confetti" id="confetti">
+      <i style="background:#f4b942"></i><i style="background:#2f7a4d"></i>
+      <i style="background:#c25a35"></i><i style="background:#fff"></i>
+      <i style="background:#8be0a8"></i><i style="background:#f4b942"></i>
+      <i style="background:#2f7a4d"></i><i style="background:#fff"></i>
+      <i style="background:#c25a35"></i><i style="background:#8be0a8"></i>
+      <i style="background:#f4b942"></i><i style="background:#fff"></i>
+    </div>
+  </div>
+
+  <!-- Persistent wordmark -->
+  <div class="wordmark" id="wordmark">
+    <svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span class="wm-text">bin<i>sparkle</i></span>
+  </div>
+
+  <!-- Headlines (one per beat) -->
+  <div class="headline-layer">
+    <div id="t1" class="beat-text">
+      <p class="kicker">A bin redemption arc</p>
+      <h1>Every bin hits<br><em>rock bottom.</em></h1>
+    </div>
+    <div id="t2" class="beat-text">
+      <p class="kicker">The shame</p>
+      <h1>The smell.<br>The <em>stares.</em></h1>
+      <p class="sub">The postie crosses the street.</p>
+    </div>
+    <div id="t3" class="beat-text">
+      <p class="kicker">It gets worse</p>
+      <h1>Something has<br><em>moved in.</em></h1>
+      <p class="sub">It is time.</p>
+    </div>
+    <div id="t4" class="beat-text">
+      <p class="kicker">The turn</p>
+      <h1>One <span class="leaf">BinSparkle</span><br><em>clean.</em></h1>
+    </div>
+    <div id="t5" class="beat-text">
+      <p class="kicker">The work</p>
+      <h1>Pressure-washed.<br><em>Scrubbed.</em><br>Deodorised.</h1>
+    </div>
+    <div id="t6" class="beat-text">
+      <p class="kicker">The comeback</p>
+      <h1>Every bin deserves<br>a <em>comeback.</em></h1>
+    </div>
+  </div>
+
+  <!-- CTA pill (beat 6 end-card) -->
+  <div class="cta-pill" id="cta-pill">book a clean · <i>binsparkle.nz</i></div>
+
+  <!-- Audio: fresh music bed (Runware, distinct from kindred/binsparkle beds) + SFX -->
+  <audio id="music"    class="clip" src="assets/music/binsparkle-comeback-bed.mp3" data-start="0"    data-duration="27"   data-track-index="8"  data-volume="0.30" loop></audio>
+
+  <audio id="sfx-slam1" class="clip" src="assets/sfx/impact.wav"    data-start="0.15"  data-duration="0.60" data-track-index="20" data-volume="0.65"></audio>
+  <audio id="sfx-c12"   class="clip" src="assets/sfx/whoosh.mp3"    data-start="4.35"  data-duration="0.80" data-track-index="21" data-volume="0.55"></audio>
+  <audio id="sfx-c23"   class="clip" src="assets/sfx/whoosh.mp3"    data-start="8.85"  data-duration="0.80" data-track-index="22" data-volume="0.55"></audio>
+  <audio id="sfx-c34"   class="clip" src="assets/sfx/whoosh-up.wav" data-start="12.85" data-duration="0.90" data-track-index="23" data-volume="0.60"></audio>
+  <audio id="sfx-ding4" class="clip" src="assets/sfx/ding.wav"      data-start="13.70" data-duration="0.60" data-track-index="24" data-volume="0.60"></audio>
+  <audio id="sfx-c45"   class="clip" src="assets/sfx/whoosh.mp3"    data-start="17.35" data-duration="0.80" data-track-index="25" data-volume="0.55"></audio>
+  <audio id="sfx-tick5" class="clip" src="assets/sfx/tick.wav"      data-start="18.10" data-duration="0.40" data-track-index="26" data-volume="0.55"></audio>
+  <audio id="sfx-c56"   class="clip" src="assets/sfx/whoosh-up.wav" data-start="21.90" data-duration="0.90" data-track-index="27" data-volume="0.60"></audio>
+  <audio id="sfx-slam6" class="clip" src="assets/sfx/impact.wav"    data-start="22.10" data-duration="0.60" data-track-index="28" data-volume="0.70"></audio>
+  <audio id="sfx-ding6" class="clip" src="assets/sfx/ding.wav"      data-start="22.85" data-duration="0.60" data-track-index="29" data-volume="0.60"></audio>
+
+</div>
+
+<script>
+  // === Initial states (gsap.set, then one paused timeline — mirrors wanted-video) ===
+  gsap.set(".stage img", { opacity: 0, scale: 1.04 });
+  gsap.set("#scrim-top", { opacity: 0 });
+  gsap.set("#scrim-bottom", { opacity: 0 });
+  gsap.set("#wordmark", { opacity: 0, y: -20 });
+  gsap.set(".beat-text h1", { opacity: 0, y: 30 });
+  gsap.set(".beat-text .kicker", { opacity: 0, x: -16 });
+  gsap.set(".beat-text .sub", { opacity: 0, y: 16 });
+  gsap.set("#cta-pill", { opacity: 0, scale: 0.85 });
+  gsap.set(["#stink","#wriggle","#spray","#suds","#confetti"], { opacity: 0 });
+  gsap.set(["#spark-a","#spark-b","#spark-c","#spark-d"], { opacity: 0, scale: 0.3 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Helper: hard-cut from one beat's hero+text to the next
+  function cutTo(imgIn, textIn, at) {
+    tl.to(imgIn, { opacity: 1, scale: 1, duration: 0.45, ease: "power2.out" }, at)
+      .to(textIn + " .kicker", { opacity: 0.95, x: 0, duration: 0.4 }, at + 0.05)
+      .to(textIn + " h1", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, at + 0.10)
+      .to(textIn + " .sub", { opacity: 0.82, y: 0, duration: 0.5 }, at + 0.45);
+  }
+
+  // === Open: scrims + wordmark + beat 1 ===
+  tl.to("#scrim-top", { opacity: 1, duration: 0.5 }, 0.0)
+    .to("#scrim-bottom", { opacity: 1, duration: 0.5 }, 0.0)
+    .to("#wordmark", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.2);
+
+  // Beat 1 (0–4.5s): rock bottom — slam-in + storm flicker
+  tl.to("#img-1", { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 0.2)
+    .to("#t1 .kicker", { opacity: 0.95, x: 0, duration: 0.4 }, 0.55)
+    .to("#t1 h1", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 0.65)
+    .to("#flicker", { opacity: 0.85, duration: 0.08 }, 1.6)
+    .to("#flicker", { opacity: 0, duration: 0.06 }, 1.68)
+    .to("#flicker", { opacity: 0.6, duration: 0.06 }, 2.1)
+    .to("#flicker", { opacity: 0, duration: 0.10 }, 2.16)
+    .to("#img-1", { scale: 1.08, duration: 4.0, ease: "power1.inOut" }, 0.5);
+  // exit beat 1
+  tl.to("#t1", { opacity: 0, duration: 0.35, ease: "power2.in" }, 4.15)
+    .to("#img-1", { opacity: 0, duration: 0.4 }, 4.30);
+
+  // Beat 2 (4.5–9s): the smell + the shame — stink waves on
+  tl.to("#img-2", { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 4.4)
+    .to("#stink", { opacity: 1, duration: 0.4 }, 4.7)
+    .to("#t2 .kicker", { opacity: 0.95, x: 0, duration: 0.4 }, 4.75)
+    .to("#t2 h1", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 4.85)
+    .to("#t2 .sub", { opacity: 0.82, y: 0, duration: 0.5 }, 5.2)
+    .to("#img-2", { scale: 1.07, duration: 4.2, ease: "power1.inOut" }, 4.6);
+  tl.to("#t2", { opacity: 0, duration: 0.35, ease: "power2.in" }, 8.65)
+    .to("#stink", { opacity: 0, duration: 0.3 }, 8.8)
+    .to("#img-2", { opacity: 0, duration: 0.4 }, 8.80);
+
+  // Beat 3 (9–13s): something moved in — stink + wriggle
+  tl.to("#img-3", { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 8.9)
+    .to("#stink", { opacity: 1, duration: 0.4 }, 9.1)
+    .to("#wriggle", { opacity: 1, duration: 0.4 }, 9.6)
+    .to("#t3 .kicker", { opacity: 0.95, x: 0, duration: 0.4 }, 9.25)
+    .to("#t3 h1", { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 9.35)
+    .to("#t3 .sub", { opacity: 0.82, y: 0, duration: 0.5 }, 9.8)
+    .to("#img-3", { scale: 1.07, duration: 3.9, ease: "power1.inOut" }, 9.1);
+  tl.to("#t3", { opacity: 0, duration: 0.35, ease: "power2.in" }, 12.65)
+    .to(["#stink","#wriggle"], { opacity: 0, duration: 0.3 }, 12.8)
+    .to("#img-3", { opacity: 0, duration: 0.4 }, 12.80);
+
+  // Beat 4 (13–17.5s): THE TURN — one BinSparkle clean. Water spray + sparkle pop + ding
+  tl.to("#img-4", { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, 12.9)
+    .to("#spray", { opacity: 1, duration: 0.4 }, 13.3)
+    .to("#spark-a", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 13.8)
+    .to("#spark-b", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 14.0)
+    .to("#t4 .kicker", { opacity: 0.95, x: 0, duration: 0.4 }, 13.25)
+    .to("#t4 h1", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 13.40)
+    .to("#img-4", { scale: 1.05, duration: 4.3, ease: "power1.inOut" }, 13.1);
+  tl.to("#t4", { opacity: 0, duration: 0.35, ease: "power2.in" }, 17.15)
+    .to(["#spray","#spark-a","#spark-b"], { opacity: 0, duration: 0.3 }, 17.3)
+    .to("#img-4", { opacity: 0, duration: 0.4 }, 17.30);
+
+  // Beat 5 (17.5–22s): the work — pressure-washed / scrubbed / deodorised. Suds drift
+  tl.to("#img-5", { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 17.4)
+    .to("#suds", { opacity: 1, duration: 0.5 }, 17.7)
+    .to("#t5 .kicker", { opacity: 0.95, x: 0, duration: 0.4 }, 17.75)
+    .to("#t5 h1", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 17.85)
+    .to("#img-5", { scale: 1.06, duration: 4.0, ease: "power1.inOut" }, 17.6);
+  tl.to("#t5", { opacity: 0, duration: 0.35, ease: "power2.in" }, 21.65)
+    .to("#suds", { opacity: 0, duration: 0.3 }, 21.8)
+    .to("#img-5", { opacity: 0, duration: 0.4 }, 21.80);
+
+  // Beat 6 (22–27s): THE COMEBACK — triumphant hero, sparkles + confetti, CTA pill
+  tl.to("#img-6", { opacity: 1, scale: 1.02, duration: 0.5, ease: "power2.out" }, 21.9)
+    .to("#t6 .kicker", { opacity: 0.95, x: 0, duration: 0.4 }, 22.35)
+    .to("#t6 h1", { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }, 22.50)
+    .to("#spark-c", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, 22.8)
+    .to("#spark-d", { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(2)" }, 23.0)
+    .to("#confetti", { opacity: 1, duration: 0.4 }, 22.9);
+  // Confetti scatter — deterministic (no Math.random): fixed end transforms
+  tl.to("#confetti i:nth-child(1)",  { x: -340, y: 520,  rotation: 140, duration: 1.6, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(2)",  { x: -210, y: 640,  rotation: -90, duration: 1.7, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(3)",  { x: -90,  y: 700,  rotation: 200, duration: 1.8, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(4)",  { x: 60,   y: 720,  rotation: -160,duration: 1.9, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(5)",  { x: 190,  y: 660,  rotation: 80,  duration: 1.7, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(6)",  { x: 330,  y: 560,  rotation: -40, duration: 1.6, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(7)",  { x: -260, y: 460,  rotation: 120, duration: 1.5, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(8)",  { x: 250,  y: 440,  rotation: -110,duration: 1.5, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(9)",  { x: -150, y: 580,  rotation: 30,  duration: 1.6, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(10)", { x: 130,  y: 600,  rotation: -70, duration: 1.7, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(11)", { x: -30,  y: 540,  rotation: 160, duration: 1.8, ease: "power1.out" }, 22.95)
+    .to("#confetti i:nth-child(12)", { x: 30,   y: 680,  rotation: -130,duration: 1.9, ease: "power1.out" }, 22.95);
+  // CTA pill lands + final swell — pill sits in the safe band as the end-card CTA
+  tl.to("#cta-pill", { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 23.6)
+    .to("#music", { volume: 0.42, duration: 1.4 }, 23.6);   // swell the bed into the CTA
+  // End-card settle: let confetti + sparkles fall away so the final ~1.5s is a
+  // clean held lockup (hero + comeback line + pill + wordmark) — a distinct end-card.
+  tl.to("#confetti", { opacity: 0, duration: 0.6 }, 25.2)
+    .to(["#spark-c","#spark-d"], { opacity: 0, duration: 0.5 }, 25.4)
+    .to("#scrim-bottom", { opacity: 1, duration: 0.5 }, 25.2);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["comeback-video"] = tl;
+</script>
+</body>
+</html>

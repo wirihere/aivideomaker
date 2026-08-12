@@ -9,9 +9,65 @@
 > = the last time a human or agent confirmed it against the real system. If
 > the date is old, re-check before relying on it.
 
+<!-- NEXT-SESSION:START -->
+## ▶ Start here — written 2026-08-10, end of session
+
+**This session shipped a lot.** Read in order: this block → §3 (comps) → §5
+(`posts.md` ledger) → `POSTING-PLAN.md`. The comeback concept + two scheduling
+sets are done; the feed is queued through **Aug 21**.
+
+**Verified live 2026-08-10 ~22:00 NZST** (Postiz Postgres on the VPS + Zernio API):
+- **36 Postiz posts** across this session's batches: **9 PUBLISHED, 27 QUEUED,
+  0 ERROR.** The scheduler is firing (the Aug 9 comeback batch went out on time).
+- **Zernio:** 2 comeback posts (TikTok + LinkedIn) `published`; **9 TikTok posts
+  scheduled** Aug 11–21 (one/day per concept). Zernio key is in
+  `automation-template/.env`; both accounts `canPost: true`.
+
+**The next 1–3 jobs, in order:**
+1. **Watch the queue publish, day by day (Aug 11 → 21).** Re-query Postiz:
+   `select state, count(*) from "Post" where "deletedAt" is null and
+   "publishDate" between '2026-08-10 20:00' and '2026-08-21 12:00' group by state;`
+   — each day should flip `QUEUE → PUBLISHED` with no `ERROR`. Poll Zernio
+   `GET /v1/posts/<id>` until `status=published`. **Watch the TikTok token** — it
+   refreshes ~monthly; a 401 on a TikTok post means reconnect @binsparkle in the
+   Zernio dashboard and re-submit that one.
+2. **Aug 22+ runway is empty.** Build the next set. Suggested direction (a format
+   break from the cartoon): the **unused real-footage product ads** — customer /
+   clean / fullcare videos (renders exist, never posted). Or new character
+   concepts. Ask the user which.
+3. **One record-only blemish:** the comeback FB-video Postiz row (`cmsjrlkac…`)
+   was soft-deleted (deletedAt set) mid-session — I deleted it thinking it was
+   still queued, but it had already published. The **live Facebook post is still
+   up**; only the Postiz record is hidden. No action needed unless you want the
+   record restored for clean tracking.
+
+**Constraints (project-specific):**
+- **Never post without the user's explicit yes** — public action.
+- **Service copy:** "washed, scrubbed, and deodorised" — NOT "pressure-washed."
+- **LinkedIn:** 1/day max; the cartoon character gags rate 3–6/10 LinkedIn-fit,
+  so they're skipped on LinkedIn (the comeback's purpose-built real-photo slide
+  is the model when LinkedIn is wanted).
+- **Posting flakiness:** the video SCP to the VPS drops ~1-in-3 (`Connection
+  reset / broken pipe`, 60s timeout in `post-to-postiz.mjs`). Retry always works;
+  no partial state. Worth a proper fix (longer timeout + auto-retry).
+- **Copy expert for captions:** `docs/playbooks/script-and-copy.md` — don't
+  hand-write. After every video/carousel, run the §7 "Final step" sweep.
+
+**Deliberately NOT done this session:** the bookkeeping for the 11 new
+compositions (5 set-2 videos + 5 carousels + the LinkedIn slide) isn't yet in
+§3 below — add them. The 5 set-2 `final/` deliverables exist on disk.
+<!-- NEXT-SESSION:END -->
+
 **The brand:** BinSparkle — wheelie-bin-cleaning marketplace, Hamilton NZ.
 Homeowners book, self-employed contractors clean. Site: https://binsparkle.nz
 Tone: warm, plain-spoken, friendly-local, never corporate.
+
+**Service copy — say this, not that:** the clean is **"washed and deodorised"**
+or **"washed, scrubbed, and deodorised."** Do **not** say "pressure-washed" — the
+service isn't necessarily pressure-washing (user correction, 2026-08-08). Note:
+the shipped `comeback-video.mp4` still says "Pressure-washed. Scrubbed.
+Deodorised." on beat 5 by the user's explicit "leave it" — any future re-cut of
+that comp should swap the line to "Washed. Scrubbed. Deodorised."
 
 **The model:** one source → many outputs. The same brand kit + image set +
 copy becomes video ads, carousel slides, stories, and hero stills. Drop new
@@ -70,6 +126,12 @@ All at `compositions/`. All 1080×1920 vertical except onboarding.
 | `binsparkle-fullcare.html` | Full Care premium tier — "we do bin day for you" | `voiceover/binsparkle-fullcare-mixed.mp3` | Script finished; **reuses 5 customer-set images**, no dedicated Full Care set yet. |
 | `binsparkle-recruit.html` | Cleaner-recruitment ad | `voiceover/binsparkle-recruit-final.mp3` | SVG-drawn (not photo). |
 | `binsparkle-onboarding.html` | Contractor onboarding orientation (landscape 1920×1080) | `voiceover/binsparkle-onboarding.mp3` | The only landscape comp. Built for the welcome-call screen. |
+| `binsparkle-comeback-video.html` | **Comeback** — the bin's redemption arc (rock bottom → rescued → triumphant), text-driven, fast-cut. New angle: the only comp that plays the character-emotion set as a *journey* rather than a static gag. | none (text-driven + music + SFX) | **New 2026-08-08.** Fresh Runware music bed (`assets/music/binsparkle-comeback-bed.mp3`, 120bpm Dmaj comeback-anthem — distinct from kindred/binsparkle beds). 6 beats, 27s, custom inline SVG (stink waves, water spray, suds, sparkle burst, confetti). |
+| `binsparkle-comeback-carousel.html` | Same arc as a 6-slide vertical carousel (render:still). | none | **New 2026-08-08.** One source → two outputs. Slides render at t=1,3,5,7,9,11. |
+| `binsparkle-linkedin-clean.html` | Purpose-built LinkedIn slide (real photo `04_scrub.png` + professional overlay). | none | **New 2026-08-08.** Rated 8/10 LinkedIn-fit. Renders 4:5 + 9:16. |
+| **Set 2 (2026-08-10) — five brand-new character concepts, each video + carousel:** | | | |
+| `binsparkle-{resume,cookbook,openmic,bucketlist,confessional}-video.html` | 5 × 15s character videos, new gags (CV / recipe / standup / list / confession). | none (music bed + SFX) | **New 2026-08-10.** Lean `wanted`-style template (full-bleed char image + content card with 3 animated beats + CTA). Unused poses: proud / surprised / annoyed / content / embarrassed. |
+| `binsparkle-{resume,cookbook,openmic,bucketlist,confessional}-carousel.html` | 5 matching 5-slide carousels (gen via `gen-carousel-comps.mjs`). | none | **New 2026-08-10.** Full-bleed slide style, render:still at t=1,3,5,7,9. |
 
 **Scripts:** [`SCRIPT.md`](SCRIPT.md) (onboarding), [`SCRIPT-customer.md`](SCRIPT-customer.md) (v10 customer — **not** what shipped v3 says),
 [`SCRIPT-fullcare.md`](SCRIPT-fullcare.md) (gold-standard example).
@@ -89,6 +151,10 @@ Postiz/library machine when needed.
 | `binsparkle_2026-08-02_20-13-31-graded-yuv420.mp4` | **Clean ad — master, upload-ready.** yuv420 re-encode (the only format every player reads). |
 | `binsparkle_2026-08-02_20-13-31-graded.mp4` | Same, pre-yuv420. |
 | `binsparkle-customer-v1.mp4`, `-v2.mp4` | Earlier customer iterations. |
+| `comeback/final/comeback-video.mp4` | **Comeback video — 2026-08-08.** 1080×1920, 27s, yuv420 (plays everywhere). The deliverable. |
+| `comeback/final/slide-1..6-*.png` | **Comeback carousel — 2026-08-08.** 6 vertical slides off the same arc. |
+| `comeback/binsparkle_2026-08-07_*-graded-yuv420.mp4` | Pre-yuv420 + earlier iterations (kept for A/B). |
+| `comeback/verify/*.jpg` | Frame-verification stills at each beat peak. |
 | Other `binsparkle_2026-08-02_*` pairs | The 5 earlier clean-ad iterations from the build session (raw + graded each). |
 
 `verified: 2026-08-02`
@@ -157,6 +223,29 @@ rule 1: "Do not bake text into scenes 1–6"), and it's how carousel slides
 and stories should work too. A new slide = base image + new HTML text +
 `render:still`. The image never gets touched.
 
+### Platform matrix — one concept, native formats per channel (the matching method)
+Every concept ships to up to **5 channels** via two tools: **Postiz** (FB / IG / Threads) and **Zernio** (TikTok / LinkedIn). The same gag lands on every platform, but each gets the **format it favours** and a **caption tuned to its tone**. This is how content "matches" the platform — don't post the identical asset + caption everywhere.
+
+| Platform | Tool → channel | Asset for a VIDEO concept | Asset for a CAROUSEL concept | Caption style |
+|---|---|---|---|---|
+| **Facebook** | Postiz → Bin Sparkle page | the **carousel slides** (FB favours swipeable decks over video) | the carousel | warm, medium (3–5 lines), a few emojis |
+| **Instagram** | Postiz → zypri | the **video** (IG favours video; ≤90s) | the carousel | energetic, longer (5–8 lines) + 15–20 hashtags |
+| **Threads** | Postiz → binsparklenz | **slide 6** (the payoff) — single image | slide 6 — single image | short, conversational (1–3 lines), minimal hashtags |
+| **TikTok** | Zernio → @binsparkle | the **video** (9:16, 3s–10min) | the slides cut as a video | energetic, trending hashtags; wrapper adds `tiktokSettings` |
+| **LinkedIn** | Zernio → Bin Sparkle page | **purpose-built professional slide** — real photo (`04_scrub.png`, a contractor washing a bin) + restrained overlay (`compositions/binsparkle-linkedin-clean.html`). Rated 8/10 LinkedIn-fit vs the cartoon comeback slides at 3–6/10. Render at 4:5 for the feed. | professional, minimal emojis, business framing |
+
+**How the captions get matched:** one brief → the copy expert (`docs/playbooks/script-and-copy.md`) generates **all five platform-tuned versions** in one pass, each against the bar in `SCRIPT-fullcare.md`. Don't hand-write one caption and paste it everywhere — Rule 7 in `content-creation.md` is explicit about per-platform tone.
+
+**Scheduling mechanism:** one Postiz call (`npm run post -- --config=postiz.json`) handles FB + IG + Threads together — the config carries a per-channel caption and a `threads_file` index so Threads gets its single image. Then one Zernio call each for TikTok and LinkedIn (`npm run post:zernio -- --config=<tiktok.json>`). Same publish instant across platforms, or staggered ~2 min to avoid Facebook's identity-checkpoint trigger on rapid posts.
+
+**Native constraints to respect:**
+- **Threads** — single image only (that's why it gets one slide, not the deck).
+- **TikTok** — needs the `tiktokSettings` block (`privacy_level`, `allow_*`, the two consent flags); daily post cap per account; token refreshes ~monthly (watch for a 401 on the first post after refresh).
+- **Instagram** — posts as a video **post** via the current integration, not a Reel (Reel audio fields are a known gap). The comeback has audio baked in, so it's fine as a video post.
+- **LinkedIn via Zernio** — image or text, not video. Use the strongest single slide.
+
+`verified: 2026-08-08`
+
 ### Step zero — ALWAYS check the catalogue first
 Before making ANY content that uses a base image — a **video**, an **image
 post**, a **carousel**, a **story**, a thumbnail — open
@@ -195,11 +284,23 @@ and the catalogue isn't refreshed, the next session won't know it exists.
 6. Render: `npm run render:comp -- --comp=<name>` → `npm run to-yuv420 -- <mp4>` (every render).
 7. Judge: `npm run judge:still` and/or `npm run judge:video` against the rubric.
 
+**Two video patterns — pick by pace:**
+- **VO-driven** (steps above): narration carries the message; ~20–30s; the customer / clean / fullcare / recruit / onboarding ads. Use when the script needs to land out loud.
+- **Text-driven, no VO:** fast-cut on-screen text punches over a music bed + SFX; ~15–27s; the character-gag comps (`wanted`, `therapy`, `stages`, `comeback`). Faster feel, and sidesteps the Edge-TTS SSML traps. **Cleanest reference: `binsparkle-comeback-video.html`.** Omit step 5; add `<audio>` music + SFX (unique `data-track-index` per SFX, counting up from 20). Fresh Runware music: `node scripts/fetch-music-runware.mjs <name>.mp3 --prompt="..." --duration=30 --bpm=N --key="X major" --seed=N` (the `steps` param defaults to 15 in the script — ACE-Step needs 1–20 — so you no longer need `--steps` unless you want to override).
+
+**⚠ Always verify the text actually rendered.** After `to-yuv420`, extract a mid-scene frame and run `node scripts/look.mjs <frame.jpg> "list EVERY piece of text visible, read each exactly"`. Do **not** trust `judge:still`/`judge:video` to report missing text — they score safe-zone criteria and will grade an empty frame without plainly saying "the headline is gone." This is how the 2026-08-08 comeback video shipped with no writing (caught by the user, not the judge). Full pitfall + fix: `LEARNINGS.md §4` "Animating text children while the parent sits at opacity:0".
+
 ### Carousel slides
 1. **Check the catalogue** (step zero) — pick images from `asset-catalogue.md`.
 2. Write the slide copy (one line per slide, punchy).
 3. Build an HTML slide template that overlays branded text on the base image (never bake text into the image itself).
 4. Render each slide with `render:still`.
+
+**Proven deck technique — one composition, clip windows.** Put every slide in a single comp as `<div class="slide clip">` blocks, each with its own `data-start` / `data-duration` / `data-track-index` (e.g. slide *i* at `data-start=(i-1)*2`, `data-duration=2`). Then one call pulls the whole deck:
+```bash
+npm run render:still -- --comp=videos/binsparkle/compositions/<name>.html --at=1,3,5,7,9,11 --out=renders/binsparkle/<concept>
+```
+Reference: `binsparkle-comeback-carousel.html` → 6 slides → `renders/binsparkle/comeback/final/slide-1..6-*.png`. This is the "one source → many outputs" model — the same comp can also yield a video, and the slide copy stays editable HTML, never baked into the image. (Same `look`-verification rule applies: confirm the text rendered before shipping.)
 
 The 7-image `clean-*` set reads as a carousel arc: house-bin → interior →
 scrub → fresh → sparkle → brand-reveal → before-after. The 4 published
@@ -212,7 +313,18 @@ isn't built yet — defer until a repeatable deck format is wanted.
 3. Overlay text via HTML on each base image.
 4. Render with `render:still` — one PNG per slide.
 
-`verified: 2026-08-03`
+### Final step — run the improvements sweep (every time, non-optional)
+A creation is **not done when the render lands** — it's done when the lessons are written back into the docs. Before reporting "done," run the 6-point sweep in [`docs/playbooks/content-creation.md`](../../docs/playbooks/content-creation.md) **Rule 12**:
+1. Verify the text/visuals actually rendered — extract a mid-scene frame and `node scripts/look.mjs <frame> "list EVERY piece of text visible"` (the judge tools won't report missing text).
+2. Log the work in `LEARNINGS.md §6`.
+3. Promote any new pitfall to `LEARNINGS.md §4` (with fix + detection).
+4. Update this MANIFEST (compositions table, renders, brand-copy rules, traps).
+5. Update §7 above if the method itself moved (new flag, new technique, new pattern).
+6. Root-fix tooling instead of documenting a workaround where possible.
+
+This is what stops the same bug shipping twice — the 2026-08-08 comeback video shipped with no on-screen text because nothing enforced step 1.
+
+`verified: 2026-08-08`
 
 ---
 
@@ -269,7 +381,9 @@ isn't built yet — defer until a repeatable deck format is wanted.
 |---|---|---|
 | Live website (do not edit for content) | `bin-sparkle` | `landing-page/` (brand kit lives here; copied into this repo) |
 | Postiz playbook + VPS details | `automation-template` | `postiz.md` |
-| API keys + secrets | `automation-template` | `.env` (RUNWARE_API_KEY etc.) |
+| Zernio playbook (TikTok + LinkedIn path) | `automation-template` | `zernio.md` |
+| API keys + secrets | `automation-template` | `.env` — incl. `ZERNIO_API_KEY` (TikTok/LinkedIn via Zernio) and `POSTIZ_API_KEY`. Verified present 2026-08-08. |
+| **Posting to TikTok / LinkedIn (Zernio)** | this repo | `npm run post:zernio -- --config=<json>` → `scripts/post-to-zernio.mjs`. AccountIds baked in: TikTok `@binsparkle` `6a75223cd0fe733d1ae1e045`, LinkedIn Bin Sparkle page `6a757a4bd0fe733d1aef10f0`. Health check: `curl -s -H "Authorization: Bearer $ZERNIO_API_KEY" https://zernio.com/api/v1/accounts/health`. |
 | Cron / unattended runner | `autonomous-runner` | separate — wire up only when unattended runs are wanted |
 | **Obsolete:** social distributor docs | — | `docs/social-media-pipeline.md` in this repo is OBSOLETE (proposed a `bin-sparkle-social` distributor layer; superseded by the one-repo model). |
 

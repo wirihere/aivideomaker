@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Comeback (carousel)</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp { width: 1080px; height: 1920px; position: relative; overflow: hidden; background: var(--leaf-deep); }
+
+  /* Each slide is a clip window — render:still at each midpoint captures it */
+  .slide { position: absolute; inset: 0; }
+  .slide .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .scrim-top { position: absolute; inset: 0 0 auto 0; height: 460px; z-index: 4;
+               background: linear-gradient(180deg, rgba(13,34,24,0.55) 0%, rgba(13,34,24,0.18) 60%, transparent 100%); }
+  .scrim-bottom { position: absolute; inset: auto 0 0 0; height: 1000px; z-index: 4;
+                  background: linear-gradient(0deg, rgba(13,34,24,0.92) 0%, rgba(13,34,24,0.74) 32%, rgba(13,34,24,0.18) 78%, transparent 100%); }
+
+  /* Brand chip — dark pill, top safe zone (clears 220px) */
+  .brand-chip { position: absolute; top: 268px; left: 0; right: 0; margin: 0 auto; width: fit-content;
+                z-index: 12; display: flex; align-items: center; gap: 14px;
+                background: rgba(13,34,24,0.62); padding: 14px 30px 14px 20px; border-radius: 999px;
+                backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .brand-chip .bin-mark { width: 50px; height: 50px; }
+  .brand-chip .wm { font-family: var(--brand-display); font-weight: 800; font-size: 44px; color: #fff; letter-spacing: -0.01em; margin: 0; }
+  .brand-chip .wm i { font-style: normal; color: var(--sunny); }
+
+  /* Slide counter — top right, safe zone */
+  .counter { position: absolute; top: 282px; right: 64px; z-index: 13;
+             font-family: var(--brand-ui); font-weight: 700; font-size: 26px; color: #fff;
+             letter-spacing: 0.22em; background: rgba(13,34,24,0.5); padding: 8px 18px; border-radius: 999px; }
+  .counter b { color: var(--sunny); }
+
+  /* Headline block — lower safe band */
+  .headline { position: absolute; left: 70px; right: 70px; top: 1080px; z-index: 10; }
+  .kicker { font-family: var(--brand-ui); font-weight: 800; font-size: 30px; letter-spacing: 0.34em;
+            text-transform: uppercase; color: var(--sunny); margin: 0 0 22px; }
+  h1 { font-family: var(--brand-display); font-weight: 800; color: #fff; font-size: 122px; line-height: 0.92;
+       letter-spacing: -0.015em; margin: 0; text-shadow: 0 4px 26px rgba(0,0,0,0.5); }
+  h1 em { font-style: normal; color: var(--sunny); }
+  h1 .leaf { color: #8be0a8; }
+  .sub { font-family: var(--brand-ui); font-weight: 600; font-size: 44px; color: rgba(255,255,255,0.88);
+         margin: 28px 0 0; letter-spacing: 0.02em; }
+
+  /* CTA pill — slide 6 only, in the safe band */
+  .cta-pill { position: absolute; left: 50%; transform: translateX(-50%); top: 1500px; z-index: 13;
+              font-family: var(--brand-ui); font-weight: 700; font-size: 50px; color: var(--ink);
+              background: var(--sunny); padding: 24px 64px; border-radius: 999px;
+              box-shadow: 0 14px 34px rgba(0,0,0,0.34); white-space: nowrap; letter-spacing: 0.01em; }
+  .cta-pill i { font-style: normal; color: var(--leaf-deep); }
+
+  /* Slide 6 hero tint — slightly brightened for the triumphant end */
+  .win .scrim-top { background: linear-gradient(180deg, rgba(13,34,24,0.40) 0%, transparent 70%); }
+</style>
+</head>
+<body>
+
+<div id="comeback-carousel" class="comp" data-composition-id="comeback-carousel"
+     data-width="1080" data-height="1920" data-start="0" data-duration="12">
+
+  <!-- Slide 1 — rock bottom (hook) -->
+  <div class="slide clip" id="s1" data-start="0" data-duration="2" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/char-05-rockbottom.png" alt="">
+    <div class="scrim-top"></div><div class="scrim-bottom"></div>
+    <div class="brand-chip"><svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg><p class="wm">bin<i>sparkle</i></p></div>
+    <div class="counter"><b>01</b> / 06</div>
+    <div class="headline"><p class="kicker">A bin redemption arc</p><h1>Every bin hits<br><em>rock bottom.</em></h1></div>
+  </div>
+
+  <!-- Slide 2 — the smell / the shame -->
+  <div class="slide clip" id="s2" data-start="2" data-duration="2" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/char-04-sad.png" alt="">
+    <div class="scrim-top"></div><div class="scrim-bottom"></div>
+    <div class="brand-chip"><svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg><p class="wm">bin<i>sparkle</i></p></div>
+    <div class="counter"><b>02</b> / 06</div>
+    <div class="headline"><p class="kicker">The shame</p><h1>The smell.<br>The <em>stares.</em></h1><p class="sub">The postie crosses the street.</p></div>
+  </div>
+
+  <!-- Slide 3 — something moved in -->
+  <div class="slide clip" id="s3" data-start="4" data-duration="2" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/char-03-worried.png" alt="">
+    <div class="scrim-top"></div><div class="scrim-bottom"></div>
+    <div class="brand-chip"><svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg><p class="wm">bin<i>sparkle</i></p></div>
+    <div class="counter"><b>03</b> / 06</div>
+    <div class="headline"><p class="kicker">It gets worse</p><h1>Something has<br><em>moved in.</em></h1><p class="sub">It is time.</p></div>
+  </div>
+
+  <!-- Slide 4 — the turn: one BinSparkle clean -->
+  <div class="slide clip" id="s4" data-start="6" data-duration="2" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/char-06-rescued.png" alt="">
+    <div class="scrim-top"></div><div class="scrim-bottom"></div>
+    <div class="brand-chip"><svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg><p class="wm">bin<i>sparkle</i></p></div>
+    <div class="counter"><b>04</b> / 06</div>
+    <div class="headline"><p class="kicker">The turn</p><h1>One <span class="leaf">BinSparkle</span><br><em>clean.</em></h1><p class="sub">Pressure-wash · scrub · deodorise.</p></div>
+  </div>
+
+  <!-- Slide 5 — fresh again -->
+  <div class="slide clip" id="s5" data-start="8" data-duration="2" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/char2-front-happy.png" alt="">
+    <div class="scrim-top"></div><div class="scrim-bottom"></div>
+    <div class="brand-chip"><svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg><p class="wm">bin<i>sparkle</i></p></div>
+    <div class="counter"><b>05</b> / 06</div>
+    <div class="headline"><p class="kicker">The result</p><h1>Squeaky.<br><em>Fresh.</em><br>Yours again.</h1></div>
+  </div>
+
+  <!-- Slide 6 — the comeback + CTA -->
+  <div class="slide clip win" id="s6" data-start="10" data-duration="2" data-track-index="0">
+    <img class="bg" src="videos/binsparkle/assets/char-07-triumphant.png" alt="">
+    <div class="scrim-top"></div><div class="scrim-bottom"></div>
+    <div class="brand-chip"><svg class="bin-mark" viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg><p class="wm">bin<i>sparkle</i></p></div>
+    <div class="counter"><b>06</b> / 06</div>
+    <div class="headline"><p class="kicker">The comeback</p><h1>Every bin deserves<br>a <em>comeback.</em></h1></div>
+    <div class="cta-pill">book a clean · <i>binsparkle.nz</i></div>
+  </div>
+
+</div>
+
+<script>
+  // Carousel: clip windows handle slide visibility (render:still seeks + captures).
+  // Minimal paused timeline to satisfy the studio/renderer contract.
+  const tl = gsap.timeline({ paused: true });
+  window.__timelines = window.__timelines || {};
+  window.__timelines["comeback-carousel"] = tl;
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Binscopes</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 80% 58% at 50% 28%, #1a3326 0%, #0d2218 48%, #050f0a 100%);
+  }
+  /* starfield — small cream + sunny dots on the night sky */
+  .comp::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.6;
+    background-image:
+      radial-gradient(#faf6ee 0.8px, transparent 1.2px),
+      radial-gradient(#f4b942 0.7px, transparent 1.1px);
+    background-size: 23px 23px, 57px 57px;
+    background-position: 0 0, 11px 17px;
+  }
+  /* cosmic glow ring behind the title — crescent/halo vibe */
+  .comp::after {
+    content: ""; position: absolute; left: 50%; top: 330px; transform: translateX(-50%);
+    width: 760px; height: 760px; pointer-events: none; z-index: 1; opacity: 0.55;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(244,185,66,0.30) 0%, rgba(244,185,66,0.10) 36%, transparent 62%);
+    border-radius: 50%;
+  }
+
+  .frame {
+    position: absolute; inset: 46px; z-index: 2; pointer-events: none;
+    border: 6px solid var(--cream); opacity: 0.35;
+    box-shadow: inset 0 0 80px rgba(5,15,10,0.7);
+  }
+
+  .wordmark { position: absolute; top: 64px; left: 0; right: 0; z-index: 10;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 40px; height: 40px; }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 32px;
+                   color: var(--cream); letter-spacing: -0.01em; }
+  .wordmark span i { font-style: normal; color: var(--sunny); }
+
+  /* big mystical title (beat 1) */
+  .title { position: absolute; top: 296px; left: 0; right: 0; z-index: 6; text-align: center;
+           font-family: var(--brand-display); font-weight: 800; font-size: 140px;
+           line-height: 0.92; letter-spacing: 0.01em; color: var(--cream); margin: 0;
+           text-shadow: 0 0 32px rgba(244,185,66,0.45); }
+  .title em { font-style: normal; color: var(--sunny); }
+  .tagline { position: absolute; top: 482px; left: 0; right: 0; z-index: 6; text-align: center;
+             font-family: var(--brand-display); font-weight: 500; font-style: italic;
+             font-size: 46px; color: var(--sunny); margin: 0; opacity: 0.92; }
+
+  /* sign reading card (beats 2 + 3) — floats over upper-center */
+  .reading { position: absolute; left: 90px; right: 90px; top: 560px; z-index: 7;
+             background: rgba(250,246,238,0.05);
+             border: 3px solid rgba(244,185,66,0.55);
+             border-radius: 26px; padding: 52px 58px 60px;
+             box-shadow: 0 0 60px rgba(244,185,66,0.18), inset 0 0 40px rgba(194,90,53,0.08); }
+  .reading .sign { font-family: var(--brand-ui); font-weight: 800; letter-spacing: 0.32em;
+                   font-size: 30px; color: var(--sunny); text-transform: uppercase;
+                   margin: 0 0 18px; }
+  .reading .verdict { font-family: var(--brand-display); font-weight: 700; font-size: 80px;
+                      line-height: 1.04; color: var(--cream); margin: 0; }
+  .reading .verdict em { font-style: normal; color: var(--coral); }
+  .reading .stars { font-family: var(--brand-ui); font-size: 24px; color: var(--sunny);
+                    letter-spacing: 0.6em; margin: 26px 0 0; }
+
+  /* end card (beat 4) */
+  .closing { position: absolute; top: 560px; left: 0; right: 0; z-index: 7; text-align: center; }
+  .closing .lead { font-family: var(--brand-display); font-weight: 500; font-style: italic;
+                   font-size: 50px; color: var(--sunny); margin: 0 0 14px; }
+  .closing .punch { font-family: var(--brand-display); font-weight: 800; font-size: 108px;
+                    line-height: 1.0; color: var(--cream); margin: 0;
+                    text-shadow: 0 0 32px rgba(244,185,66,0.45); }
+  .closing .punch em { font-style: normal; color: var(--sunny); }
+
+  .cta-pill { position: absolute; left: 50%; transform: translateX(-50%); top: 950px; z-index: 9;
+              font-family: var(--brand-ui); font-weight: 700; font-size: 44px; color: var(--leaf-deep);
+              background: var(--sunny); padding: 22px 56px; border-radius: 999px;
+              box-shadow: 0 12px 32px rgba(0,0,0,0.45), 0 0 34px rgba(244,185,66,0.55);
+              white-space: nowrap; letter-spacing: 0.01em; }
+
+  /* the contemplative bin — lower center, always present */
+  .hero-glow { position: absolute; left: 50%; transform: translateX(-50%); top: 1140px;
+               width: 820px; height: 300px; z-index: 3; pointer-events: none;
+               background: radial-gradient(ellipse 62% 70% at 50% 60%, rgba(244,185,66,0.22), transparent 70%); }
+  .hero { position: absolute; left: 50%; transform: translateX(-50%);
+          top: 1180px; width: 620px; height: 540px; z-index: 4; }
+  .hero img { width: 100%; height: 100%; object-fit: contain;
+              filter: drop-shadow(0 20px 34px rgba(0,0,0,0.55)); }
+
+  .footer { position: absolute; top: 1430px; left: 0; right: 0; z-index: 6; text-align: center;
+            font-family: var(--brand-ui); font-weight: 700; font-size: 28px;
+            letter-spacing: 0.28em; color: var(--cream); opacity: 0.5;
+            text-transform: uppercase; }
+  .footer::before { content: ""; display: block; width: 240px; height: 2px;
+                    background: var(--sunny); opacity: 0.5; margin: 0 auto 16px; }
+</style>
+</head>
+<body>
+
+<div id="horoscope-video" class="comp" data-composition-id="horoscope-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <div class="frame"></div>
+  <div class="hero-glow"></div>
+
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#faf6ee"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#faf6ee"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <h1 class="title" id="title">✨ <em>BINSCOPES</em></h1>
+  <p class="tagline" id="tagline">what the stars say</p>
+
+  <div class="reading" id="reading-virgo">
+    <p class="sign">♍ Virgo bin</p>
+    <p class="verdict">you're carrying <em>too much.</em></p>
+    <p class="stars">★ ★ ★</p>
+  </div>
+
+  <div class="reading" id="reading-libra">
+    <p class="sign">♎ Libra bin</p>
+    <p class="verdict">it's time to <em>let go.</em></p>
+    <p class="stars">★ ★ ★</p>
+  </div>
+
+  <div class="closing" id="closing">
+    <p class="lead">The stars say:</p>
+    <p class="punch">book a <em>clean.</em></p>
+  </div>
+  <div class="cta-pill" id="cta-pill">binsparkle.nz ✨</div>
+
+  <div class="hero" id="hero">
+    <img src="videos/binsparkle/assets/char2-side-thinking.png" alt="">
+  </div>
+
+  <div class="footer" id="footer">book online · binsparkle.nz · Aotearoa NZ</div>
+
+  <audio id="sfx-intro"  class="clip" src="assets/sfx/ding.wav"   data-start="0.10"  data-duration="0.60" data-track-index="9"  data-volume="0.6"></audio>
+  <audio id="sfx-virgo"  class="clip" src="assets/sfx/whoosh.mp3" data-start="6.0"   data-duration="1.00" data-track-index="10" data-volume="0.55"></audio>
+  <audio id="sfx-libra"  class="clip" src="assets/sfx/whoosh.mp3" data-start="14.0"  data-duration="1.00" data-track-index="11" data-volume="0.55"></audio>
+  <audio id="sfx-cta"    class="clip" src="assets/sfx/ding.wav"   data-start="20.4"  data-duration="0.60" data-track-index="12" data-volume="0.6"></audio>
+
+</div>
+
+<script>
+  gsap.set("#title",         { opacity: 0, scale: 1.3 });
+  gsap.set("#tagline",       { opacity: 0, y: 18 });
+  gsap.set("#hero",          { opacity: 0, scale: 0.9 });
+  gsap.set("#reading-virgo", { opacity: 0, y: 30, scale: 0.96 });
+  gsap.set("#reading-libra", { opacity: 0, y: 30, scale: 0.96 });
+  gsap.set("#closing",       { opacity: 0, y: 24 });
+  gsap.set("#cta-pill",      { opacity: 0, scale: 0.85 });
+  gsap.set("#footer",        { opacity: 0 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Beat 1 (0-6s): Binscopes title arrives, contemplative bin below
+  tl.to("#title",   { opacity: 1, scale: 1, duration: 0.73, ease: "back.out(1.5)" }, 0.27)
+    .to("#hero",    { opacity: 1, scale: 1, duration: 0.93, ease: "power2.out" }, 0.53)
+    .to("#tagline", { opacity: 0.92, y: 0, duration: 0.67 }, 1.2)
+    .to("#footer",  { opacity: 0.5, duration: 0.8 }, 1.6);
+
+  // Beat 2 (6-14s): Virgo reading; title + tagline fade out, slow push on bin
+  tl.to(["#title", "#tagline"], { opacity: 0, duration: 0.51 }, 6.0)
+    .to("#reading-virgo", { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "back.out(1.6)" }, 6.29)
+    .to("#hero", { scale: 1.04, duration: 6.11, ease: "power1.inOut" }, 7.6);
+
+  // Beat 3 (14-20s): swap Virgo → Libra reading
+  tl.to("#reading-virgo", { opacity: 0, y: -20, duration: 0.53 }, 14.0)
+    .to("#reading-libra", { opacity: 1, y: 0, scale: 1, duration: 0.83, ease: "back.out(1.6)" }, 14.38);
+
+  // Beat 4 (20-27s): readings fade, closing + CTA pill land, then hold
+  tl.to(["#reading-libra"], { opacity: 0, duration: 0.4 }, 20.0)
+    .to("#closing",  { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 20.4)
+    .to("#cta-pill", { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 21.0);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["horoscope-video"] = tl;
+</script>
+</body>
+</html>

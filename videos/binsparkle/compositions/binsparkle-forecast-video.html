@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Forecast</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background: #bfe3f5;
+  }
+
+  /* ── Sky layers (cross-faded per beat) ── */
+  .sky { position: absolute; inset: 0; z-index: 0; }
+  .sky-calm { background: linear-gradient(180deg, #bfe3f5 0%, #e6f3fb 60%, #f5f9fc 100%); }
+  .sky-calm::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 620px 120px at 28% 16%, rgba(255,255,255,0.6), transparent 70%),
+      radial-gradient(ellipse 520px 100px at 76% 28%, rgba(255,255,255,0.45), transparent 70%); }
+  .sky-rain { background: linear-gradient(180deg, #6b7a8a 0%, #8a98a8 55%, #a8b3bf 100%); }
+  .sky-rain::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(115deg, transparent 0 14px, rgba(255,255,255,0.07) 14px 16px); }
+  .sky-storm { background: linear-gradient(180deg, #2c333d 0%, #3e4654 55%, #545d6b 100%); }
+  .sky-storm::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: repeating-linear-gradient(115deg, transparent 0 12px, rgba(255,255,255,0.05) 12px 14px); }
+  .sky-bright { background: linear-gradient(180deg, #8fcff5 0%, #ffe9a8 68%, #ffd07a 100%); }
+  .sky-bright::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(circle 420px at 78% 20%, rgba(255,245,200,0.7), transparent 70%); }
+
+  .vig { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+         box-shadow: inset 0 0 160px rgba(0,0,0,0.16); }
+
+  /* ── Wordmark (verbatim) ── */
+  .wordmark { position: absolute; top: 64px; left: 0; right: 0; z-index: 10;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 40px; height: 40px; }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 32px;
+                   color: var(--ink); letter-spacing: -0.01em;
+                   text-shadow: 0 2px 0 rgba(250,246,238,0.55); }
+  .wordmark span i { font-style: normal; color: var(--leaf); }
+
+  /* ── Header banner (beats 1-3) ── */
+  .header-bar { position: absolute; top: 236px; left: 0; right: 0; z-index: 7;
+                background: var(--leaf-deep); color: var(--cream);
+                padding: 24px 40px; text-align: center;
+                font-family: var(--brand-display); font-weight: 800; font-size: 48px;
+                letter-spacing: 0.03em; text-transform: uppercase;
+                border-top: 4px solid var(--ink); border-bottom: 6px solid var(--sunny); }
+
+  /* ── Readout stage ── */
+  .readout { position: absolute; top: 430px; left: 80px; right: 80px; height: 900px;
+             z-index: 6; display: flex; flex-direction: column; align-items: center;
+             justify-content: center; text-align: center; }
+
+  .chip { font-family: var(--brand-ui); font-weight: 700; letter-spacing: 0.3em; font-size: 26px;
+          color: var(--ink); background: rgba(250,246,238,0.92); border: 3px solid var(--ink);
+          padding: 9px 24px; border-radius: 999px; text-transform: uppercase; margin-bottom: 26px; }
+
+  .big-icon { font-size: 220px; line-height: 1; margin: 0 0 6px;
+              filter: drop-shadow(0 10px 18px rgba(0,0,0,0.20)); }
+
+  .tagline { font-family: var(--brand-display); font-weight: 800; font-size: 76px;
+             line-height: 0.98; color: var(--ink); margin-top: 18px;
+             text-shadow: 0 2px 0 rgba(250,246,238,0.6); }
+
+  /* 5-day strip */
+  .days { display: flex; gap: 14px; margin: 28px 0 6px; }
+  .day { width: 142px; background: rgba(250,246,238,0.94); border: 4px solid var(--ink);
+         border-radius: 16px; padding: 16px 0 12px; box-shadow: 0 8px 18px rgba(0,0,0,0.15); }
+  .day .dn { display: block; font-family: var(--brand-ui); font-weight: 800; font-size: 26px;
+             letter-spacing: 0.16em; color: var(--ink); }
+  .day .di { display: block; font-size: 58px; margin-top: 6px; line-height: 1; }
+
+  /* Temperature-style readout (beat 2) */
+  .readout-temp { background: rgba(250,246,238,0.94); border: 6px solid var(--ink);
+                  border-radius: 28px; padding: 46px 40px;
+                  box-shadow: 0 16px 40px rgba(0,0,0,0.22); }
+  .temp-label { font-family: var(--brand-ui); font-weight: 800; letter-spacing: 0.34em;
+                font-size: 32px; color: var(--ink); margin-bottom: 6px; }
+  .temp-value { font-family: var(--brand-display); font-weight: 800; font-size: 220px;
+                line-height: 0.9; color: var(--ink); letter-spacing: -0.02em; }
+  .temp-value .deg { font-size: 0.46em; color: var(--coral); vertical-align: super; }
+  .temp-sub { font-family: var(--brand-display); font-weight: 600; font-style: italic;
+              font-size: 54px; color: var(--leaf-deep); margin-top: 16px; }
+
+  /* Severe warning (beat 3) */
+  .warn-tag { font-family: var(--brand-display); font-weight: 800; font-size: 56px;
+              letter-spacing: 0.05em; color: var(--cream); background: var(--coral);
+              border: 5px solid var(--ink); padding: 13px 38px; border-radius: 14px;
+              text-transform: uppercase; margin-bottom: 24px;
+              box-shadow: 0 10px 26px rgba(0,0,0,0.30); }
+  .warn-bin { width: 340px; height: auto; max-height: 460px; object-fit: contain;
+              border: 7px solid var(--ink); background: var(--cream); border-radius: 12px;
+              box-shadow: 0 14px 34px rgba(0,0,0,0.36); }
+  .warn-text { font-family: var(--brand-display); font-weight: 800; font-size: 80px;
+               line-height: 0.98; color: var(--cream); margin-top: 24px;
+               text-shadow: 0 3px 0 rgba(0,0,0,0.28); }
+
+  /* CTA (beat 4) */
+  .cta-head { font-family: var(--brand-display); font-weight: 800; font-size: 116px;
+              line-height: 0.92; color: var(--ink); margin: 18px 0 38px;
+              text-shadow: 0 2px 0 rgba(250,246,238,0.5); }
+  .cta-pill { font-family: var(--brand-ui); font-weight: 700; font-size: 48px; color: var(--cream);
+              background: var(--leaf-deep); padding: 20px 56px; border-radius: 999px;
+              box-shadow: 0 10px 28px rgba(0,0,0,0.26); white-space: nowrap; }
+
+  /* ── Lower-third presenter strip (beats 1-3) ── */
+  .lower-third { position: absolute; top: 1388px; left: 0; right: 0; z-index: 7; display: flex; }
+  .lt-brand { background: var(--leaf-deep); color: var(--cream);
+              font-family: var(--brand-display); font-weight: 800; font-size: 34px;
+              letter-spacing: 0.04em; padding: 24px 32px; text-transform: uppercase; }
+  .lt-meta { flex: 1; background: var(--cream); color: var(--ink);
+             font-family: var(--brand-ui); font-weight: 700; font-size: 28px;
+             letter-spacing: 0.08em; padding: 24px 28px; display: flex; align-items: center;
+             text-transform: uppercase; border-bottom: 6px solid var(--leaf); }
+</style>
+</head>
+<body>
+
+<div id="forecast-video" class="comp" data-composition-id="forecast-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <div class="sky sky-calm"   id="sky-calm"></div>
+  <div class="sky sky-rain"   id="sky-rain"></div>
+  <div class="sky sky-storm"  id="sky-storm"></div>
+  <div class="sky sky-bright" id="sky-bright"></div>
+  <div class="vig"></div>
+
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <div class="header-bar" id="header-bar">📺 The 5-Day Smell Forecast</div>
+
+  <!-- Beat 1 — establishing -->
+  <div id="r1" class="readout">
+    <div class="chip">Hamilton · NZ</div>
+    <div class="big-icon">☀️</div>
+    <div class="days">
+      <div class="day"><span class="dn">MON</span><span class="di">☀️</span></div>
+      <div class="day"><span class="dn">TUE</span><span class="di">🌧️</span></div>
+      <div class="day"><span class="dn">WED</span><span class="di">⛈️</span></div>
+      <div class="day"><span class="dn">THU</span><span class="di">🌧️</span></div>
+      <div class="day"><span class="dn">FRI</span><span class="di">☀️</span></div>
+    </div>
+    <div class="tagline">your weekly whiff report</div>
+  </div>
+
+  <!-- Beat 2 — the joke forecast -->
+  <div id="r2" class="readout readout-temp">
+    <div class="chip">Today · Hamilton</div>
+    <div class="temp-label">High:</div>
+    <div class="temp-value">FISH<span class="deg">°</span></div>
+    <div class="temp-sub">light prawn showers 🌧️</div>
+  </div>
+
+  <!-- Beat 3 — severe warning -->
+  <div id="r3" class="readout">
+    <div class="warn-tag">⚠️ Severe</div>
+    <img id="r3-bin" class="warn-bin" src="videos/binsparkle/assets/char-05-rockbottom.png" alt="">
+    <div class="warn-text">bin warning<br>inland</div>
+  </div>
+
+  <!-- Beat 4 — CTA -->
+  <div id="r4" class="readout">
+    <div class="big-icon">☀️</div>
+    <div class="cta-head">Change the<br>outlook.</div>
+    <div class="cta-pill" id="cta-pill">binsparkle.nz</div>
+  </div>
+
+  <div class="lower-third" id="lower-third">
+    <div class="lt-brand">BinSparkle Weather</div>
+    <div class="lt-meta">5-day smell outlook · Hamilton NZ</div>
+  </div>
+
+  <audio id="sfx-open"  class="clip" src="assets/sfx/impact.wav" data-start="0.10"  data-duration="0.60" data-track-index="9"  data-volume="0.7"></audio>
+  <audio id="sfx-tick"  class="clip" src="assets/sfx/tick.wav"   data-start="6.00"  data-duration="0.45" data-track-index="10" data-volume="0.6"></audio>
+  <audio id="sfx-storm" class="clip" src="assets/sfx/whoosh.mp3" data-start="14.00" data-duration="1.00" data-track-index="11" data-volume="0.6"></audio>
+  <audio id="sfx-alert" class="clip" src="assets/sfx/impact.wav" data-start="14.65" data-duration="0.55" data-track-index="12" data-volume="0.7"></audio>
+  <audio id="sfx-clear" class="clip" src="assets/sfx/ding.wav"   data-start="20.40" data-duration="0.60" data-track-index="13" data-volume="0.6"></audio>
+
+</div>
+
+<script>
+  gsap.set(["#sky-rain", "#sky-storm", "#sky-bright"], { opacity: 0 });
+  gsap.set("#header-bar",  { opacity: 0, y: -16 });
+  gsap.set("#lower-third", { opacity: 0, y: 24 });
+  gsap.set(["#r1", "#r2", "#r3", "#r4"], { opacity: 0, y: 20 });
+  gsap.set("#r3-bin", { opacity: 0, scale: 0.9 });
+  gsap.set("#cta-pill", { opacity: 0, scale: 0.85 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Beat 1 (0-6s): broadcast opens on a calm sky
+  tl.to("#header-bar",  { opacity: 1, y: 0, duration: 0.5 }, 0.13)
+    .to("#r1",          { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.4)
+    .to("#lower-third", { opacity: 1, y: 0, duration: 0.5 }, 0.8);
+
+  // Beat 2 (6-14s): sky clouds over to rain, today's "high of fish°"
+  tl.to("#sky-calm", { opacity: 0, duration: 0.8 }, 6.44)
+    .to("#sky-rain", { opacity: 1, duration: 0.8 }, 6.44)
+    .to("#r1",       { opacity: 0, y: -20, duration: 0.4 }, 6.15)
+    .to("#r2",       { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 6.58);
+
+  // Beat 3 (14-20s): storm rolls in, severe bin warning
+  tl.to("#sky-rain",  { opacity: 0, duration: 0.7 }, 14.0)
+    .to("#sky-storm", { opacity: 1, duration: 0.7 }, 14.0)
+    .to("#r2",        { opacity: 0, y: -20, duration: 0.35 }, 14.0)
+    .to("#r3",        { opacity: 1, y: 0, duration: 0.5 }, 14.3)
+    .to("#r3-bin",    { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 14.6);
+
+  // Beat 4 (20-27s): skies clear, change the outlook + CTA
+  tl.to("#sky-storm", { opacity: 0, duration: 0.7 }, 20.0)
+    .to("#sky-bright",{ opacity: 1, duration: 0.7 }, 20.0)
+    .to(["#header-bar", "#lower-third"], { opacity: 0, duration: 0.4 }, 20.0)
+    .to("#r3",        { opacity: 0, y: -20, duration: 0.35 }, 20.0)
+    .to("#r4",        { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 20.53)
+    .to("#cta-pill",  { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.6)" }, 21.75);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["forecast-video"] = tl;
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Therapy</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 92% 88% at 50% 42%, #faf6ee 52%, #efe6cf 84%, #e3d6b6 100%);
+    box-shadow: inset 0 0 220px rgba(120, 92, 40, 0.28);
+  }
+  .comp::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.05;
+    background-image: radial-gradient(#5a4326 1px, transparent 1.4px);
+    background-size: 7px 7px;
+  }
+  .comp::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 520px;
+    background: linear-gradient(180deg, rgba(120,92,40,0) 0%, rgba(120,92,40,0.10) 100%);
+    pointer-events: none; z-index: 1;
+  }
+
+  .frame {
+    position: absolute; inset: 46px; z-index: 2; pointer-events: none;
+    border: 7px solid var(--ink);
+    box-shadow: 0 0 0 3px var(--cream), 0 0 0 7px var(--ink);
+  }
+
+  .wordmark { position: absolute; top: 64px; left: 0; right: 0; z-index: 10;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 40px; height: 40px; }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 32px;
+                   color: var(--ink); letter-spacing: -0.01em; }
+  .wordmark span i { font-style: normal; color: var(--leaf); }
+
+  /* ── Therapy room: couch + bin "on the couch" ── */
+  .couch { position: absolute; top: 820px; left: 50%; margin-left: -470px;
+           width: 940px; height: 540px; z-index: 3; }
+  .couch-back { position: absolute; left: 100px; right: 100px; top: 0; height: 300px;
+                background: var(--leaf-soft); border: 6px solid var(--ink);
+                border-radius: 80px 80px 18px 18px; box-shadow: 0 12px 28px rgba(0,0,0,0.10); }
+  .couch-back::before { content: ""; position: absolute; left: 38px; right: 38px; top: 46px; bottom: 30px;
+                        border: 4px solid var(--leaf-line); border-radius: 46px; opacity: 0.7; }
+  .couch-base { position: absolute; left: 0; right: 0; top: 248px; height: 232px;
+                background: #c3ddc9; border: 6px solid var(--ink); border-radius: 30px;
+                box-shadow: 0 14px 30px rgba(0,0,0,0.12); }
+  .couch-base::after { content: ""; position: absolute; left: 60px; right: 60px; top: 42%;
+                       height: 4px; background: var(--leaf-line); border-radius: 4px; opacity: 0.6; }
+
+  .bin-wrap { position: absolute; top: 760px; left: 50%; margin-left: -360px;
+              width: 720px; height: 620px; z-index: 5; }
+  .bin { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  #clean-bin { opacity: 0; }
+
+  /* ── Speech bubbles ── */
+  .bubble { border: 5px solid var(--ink); border-radius: 40px; padding: 26px 38px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.14); }
+  .bubble .who { display: block; font-family: var(--brand-ui); font-weight: 800;
+                 font-size: 22px; letter-spacing: 0.26em; text-transform: uppercase;
+                 margin-bottom: 10px; opacity: 0.85; }
+  .bubble p { margin: 0; font-family: var(--brand-display); font-weight: 700; color: var(--ink); }
+
+  .bubble-therapist { position: absolute; top: 250px; left: 50%; margin-left: -440px;
+                      width: 880px; z-index: 7; background: var(--leaf-soft); }
+  .bubble-therapist::after { content: ""; position: absolute; left: 50%; margin-left: -23px;
+                             bottom: -24px; transform: rotate(45deg); width: 46px; height: 46px;
+                             background: var(--leaf-soft); border-right: 5px solid var(--ink);
+                             border-bottom: 5px solid var(--ink); }
+  .bubble-therapist .who { color: var(--leaf-deep); }
+  .bubble-therapist p { font-size: 60px; line-height: 1.1; }
+  .bubble-therapist p i { font-style: italic; color: var(--leaf-deep); font-weight: 800; }
+  .bubble-therapist p b { font-weight: 800; color: var(--leaf); }
+
+  .bubble-bin { position: absolute; top: 472px; left: 40px; width: 680px; z-index: 7;
+                background: var(--sunny); }
+  .bubble-bin::after { content: ""; position: absolute; right: 120px; bottom: -22px;
+                       transform: rotate(45deg); width: 42px; height: 42px; background: var(--sunny);
+                       border-right: 5px solid var(--ink); border-bottom: 5px solid var(--ink); }
+  .bubble-bin .who { color: var(--sunny-deep); }
+  .bubble-bin p { font-size: 48px; line-height: 1.14; }
+  .bubble-bin p b { font-weight: 800; color: var(--coral); }
+
+  .rx-badge { position: absolute; top: -28px; right: -20px; width: 78px; height: 78px;
+              border-radius: 50%; background: var(--sunny); border: 5px solid var(--ink);
+              display: flex; align-items: center; justify-content: center;
+              font-family: var(--brand-display); font-weight: 800; font-size: 38px; color: var(--ink);
+              transform: rotate(-12deg); box-shadow: 0 6px 16px rgba(0,0,0,0.18); }
+
+  /* ── CTA (beat 4) ── */
+  .cta-row { position: absolute; top: 1400px; left: 0; right: 0; z-index: 9;
+             display: flex; justify-content: center; }
+  .cta-pill { display: inline-block; font-family: var(--brand-ui); font-weight: 700;
+              font-size: 46px; color: var(--cream); background: var(--leaf-deep);
+              padding: 20px 56px; border-radius: 999px; border: 5px solid var(--ink);
+              box-shadow: 0 10px 28px rgba(0,0,0,0.28); white-space: nowrap; letter-spacing: 0.01em; }
+</style>
+</head>
+<body>
+
+<div id="therapy-video" class="comp" data-composition-id="therapy-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <div class="frame"></div>
+
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <div class="couch" id="couch">
+    <div class="couch-back"></div>
+    <div class="couch-base"></div>
+  </div>
+
+  <div class="bin-wrap" id="bin-wrap">
+    <img class="bin" id="dirty-bin" src="videos/binsparkle/assets/char2-side-thinking-dirty.png" alt="">
+    <img class="bin" id="clean-bin" src="videos/binsparkle/assets/char2-front-happy.png" alt="">
+  </div>
+
+  <div class="bubble bubble-therapist" id="therapist-bubble-1">
+    <span class="who">Dr. Sparkle</span>
+    <p>So… tell me about your <i>week.</i></p>
+  </div>
+
+  <div class="bubble bubble-bin" id="bin-bubble-1">
+    <span class="who">The Bin</span>
+    <p>They keep putting <b>prawn shells</b> in me, doc.</p>
+  </div>
+
+  <div class="bubble bubble-bin" id="bin-bubble-2">
+    <span class="who">The Bin</span>
+    <p>I just… <b>hold it all in.</b></p>
+  </div>
+
+  <div class="bubble bubble-therapist" id="therapist-bubble-2">
+    <div class="rx-badge">Rx</div>
+    <span class="who">Dr. Sparkle</span>
+    <p>I'm prescribing one <b>BinSparkle</b> clean.</p>
+  </div>
+
+  <div class="cta-row" id="cta-row">
+    <div class="cta-pill" id="cta-pill">binsparkle.nz</div>
+  </div>
+
+  <audio id="sfx-bubble1" class="clip" src="assets/sfx/whoosh.mp3" data-start="0.10"  data-duration="1.00" data-track-index="9"  data-volume="0.55"></audio>
+  <audio id="sfx-bubble2" class="clip" src="assets/sfx/tick.wav"   data-start="6.00"  data-duration="0.45" data-track-index="10" data-volume="0.60"></audio>
+  <audio id="sfx-bubble3" class="clip" src="assets/sfx/tick.wav"   data-start="14.00" data-duration="0.45" data-track-index="11" data-volume="0.60"></audio>
+  <audio id="sfx-clean"   class="clip" src="assets/sfx/impact.wav" data-start="20.00" data-duration="0.60" data-track-index="12" data-volume="0.65"></audio>
+  <audio id="sfx-cta"     class="clip" src="assets/sfx/ding.wav"   data-start="20.40" data-duration="0.60" data-track-index="13" data-volume="0.65"></audio>
+
+</div>
+
+<script>
+  gsap.set("#therapist-bubble-1", { opacity: 0, y: -18 });
+  gsap.set("#bin-bubble-1",        { opacity: 0, y: 18 });
+  gsap.set("#bin-bubble-2",        { opacity: 0, y: 18 });
+  gsap.set("#therapist-bubble-2",  { opacity: 0, y: -18 });
+  gsap.set("#bin-wrap",            { opacity: 0, scale: 0.96 });
+  gsap.set("#couch",               { opacity: 0 });
+  gsap.set("#clean-bin",           { opacity: 0 });
+  gsap.set("#cta-pill",            { opacity: 0, y: 20 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Beat 1 (0-6s): therapy room + Dr. Sparkle opens
+  tl.to("#couch",    { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.10)
+    .to("#bin-wrap", { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, 0.10)
+    .to("#therapist-bubble-1", { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.4)" }, 0.55);
+
+  // Beat 2 (6-14s): the bin replies (line 1); slow push-in for life
+  tl.to("#therapist-bubble-1", { opacity: 0, duration: 0.35 }, 6.00)
+    .to("#bin-bubble-1", { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.4)" }, 6.25)
+    .to("#bin-wrap", { scale: 1.04, duration: 6.70, ease: "power1.inOut" }, 6.90);
+
+  // Beat 3 (14-20s): the bin replies (line 2)
+  tl.to("#bin-bubble-1", { opacity: 0, y: -12, duration: 0.35 }, 14.00)
+    .to("#bin-bubble-2", { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.4)" }, 14.20);
+
+  // Beat 4 (20-27s): dirty->clean crossfade + prescription + CTA
+  tl.to("#bin-bubble-2", { opacity: 0, duration: 0.30 }, 20.00)
+    .to("#dirty-bin", { opacity: 0, duration: 0.70, ease: "power2.inOut" }, 20.00)
+    .to("#clean-bin", { opacity: 1, duration: 0.70, ease: "power2.inOut" }, 20.00)
+    .to("#therapist-bubble-2", { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.4)" }, 20.15)
+    .to("#cta-pill", { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.6)" }, 20.40);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["therapy-video"] = tl;
+</script>
+</body>
+</html>

@@ -1016,6 +1016,16 @@ Verified 2026-04-25 — single round of 4 parallel agents (Explore + 3 general-p
   Loop to ~2× the comp duration. The comp duration decides where playback stops; the bed just needs to be present throughout. Peaks stay flat (~0 dBFS) end-to-end.
 - **Status:** Verified 2026-08-02 on the binsparkle-clean mix. Pre-loop peaks: 0 dBFS → +6.7 dBFS at the bed-out point. Post-loop peaks: 0 dBFS → 0.7 dBFS throughout. Warning also added at the top of `audio-duck.mjs` so the next session sees it before re-blending.
 
+### ❌ Animating text children while the parent sits at `opacity: 0` → the whole block is invisible
+- **Symptom:** A composition's headline text never appears in the render, even though the GSAP timeline animates the headline's *children* (`#t1 h1`, `#t1 .kicker`) to `opacity: 1`. The wordmark and CTA pill — animated directly, not inside the gated block — DO show. The render looks like "the writing is just missing." The user catches it; the rubric judge does not.
+- **Cause:** `opacity` multiplies down the DOM tree — child opacity 1 × parent opacity 0 = 0. The parent had `opacity: 0` set (in CSS and/or `gsap.set(".parent", { opacity: 0 })`) and the timeline only ever animated the children, never raising the parent. The exit tween targeted the parent to 0 (its starting value), so it never rose.
+- **Fix:** Pick ONE gating strategy and follow it all the way through:
+  - **(a) Gate the parent:** set parent to 0 AND add `tl.to("#parent", { opacity: 1 })` at the entrance; animate children for the staggered reveal; animate parent to 0 on exit.
+  - **(b) Gate the children:** leave the parent at default opacity; set each child (`h1`, `.kicker`, `.sub`) to `opacity: 0`; animate each child in; animate the parent to 0 only on exit.
+  - Don't mix the two (parent pinned to 0 + only children animated = invisible forever).
+- **Detection:** the freeform `look` tool is the definitive check — `node scripts/look.mjs <frame.jpg> "list EVERY piece of text visible, read each exactly"`. The rubric `judge:still` will NOT plainly tell you the headline is gone; it fixates on safe-zone scoring and grades the empty frame on other criteria. Always verify text is actually painting with `look` before declaring a render done.
+- **Status:** Caught 2026-08-08 on the binsparkle comeback video — the user flagged "the video doesn't have the writing," required a second build + re-render. Applies to ANY layered text block animated via GSAP.
+
 ---
 
 ## 5. Free-tier quotas in this project
@@ -1167,6 +1177,61 @@ Don't treat music as a pure capability-agent task. The user has taste on music a
   one-liner. Even "remember X exists" counts.
 - **Promoted to §4 / §3?** yes / no — anything reusable should be lifted upward.
 ```
+
+---
+
+### 2026-08-10 · Bin Sparkle multi-platform scheduling at scale + 5 brand-new concepts (set 2)
+- **What:** Took the comeback (built 2026-08-08) and the six existing character concepts live across **5 platforms** (FB/IG/Threads via Postiz + TikTok/LinkedIn via Zernio), then built **five brand-new character concepts** (resume / cookbook / open-mic / bucket-list / confessional) — each as a video AND a 5-slide carousel — and scheduled the lot. End state: **44 posts scheduled** (comeback Aug 9 + set-1 Aug 11–16 + set-2 Aug 17–21), feed covered through Aug 21.
+- **Outcome:** Done. Verified live 2026-08-10: 36 Postiz posts (9 PUBLISHED, 27 QUEUED, 0 ERROR); 11 Zernio posts (2 published, 9 scheduled). All on the binsparkle TikTok `@binsparkle` + LinkedIn + the 3 Postiz channels.
+- **Worked:**
+  - **Zernio unlocked.** Key was missing from `automation-template/.env`; once added, health-check clean, both accounts `canPost: true`. TikTok creator-info confirmed `PUBLIC_TO_EVERYONE` is an allowed privacy level (the wrapper's hardcoded value works). Documented in `automation-template/zernio.md` + MANIFEST §10.
+  - **The orchestrator pattern.** `schedule-set2.mjs` wrote all 20 configs from a concept-data table and ran them with auto-retry on SCP drops — one script beat 20 manual calls. Reusable for future batches.
+  - **Carousel generator.** `gen-carousel-comps.mjs` emits N carousel compositions from a concept table (5 clip-windowed slides each). Caught a leftover kicker ("A bin redemption") by spot-checking with `look` before shipping.
+  - **Captions batched.** 20 captions (5 concepts × 4 platforms) in one copy-expert pass (Opus 4.8, $0.07).
+- **Friction:**
+  - **Video SCP flakiness** — `post-to-postiz.mjs`'s 60s `scp()` timeout drops ~1-in-3 video uploads (`Connection reset / closed`). Retries always work; no partial state. **Root fix still owed:** longer timeout + auto-retry in the script. Documented in `posts.md` + MANIFEST.
+  - **Soft-delete mistake** — deleted a Postiz row (`cmsjrlkac…`, comeback FB video) thinking it was queued; it had already published. A Postiz soft-delete does NOT unpublish from Facebook. Lesson: **check state before deleting/modifying a scheduled post.** No content harm (FB post still live); record-only blemish.
+  - **Orchestrator timed out** at the very end (15-min cap, confessional's last 2 posts) — re-ran those two manually. Split FB-carousel (5 SCPs) from the rest, or raise the per-call timeout.
+- **Next time:**
+  - **Verify state before mutating** a queued/published post (the soft-delete lesson).
+  - For a batch of N concepts, the orchestrator + carousel-generator combo scales — reuse it. Add auto-retry to `post-to-postiz.mjs` itself so the orchestrator doesn't have to.
+  - **Day-by-day publish verification** is the open loop: the posts are scheduled, not yet proven to publish (future-dated). Each day, confirm `QUEUE → PUBLISHED`.
+- **Promoted to §4 / §3?** No new pitfall promoted (the SCP flakiness is captured in this entry's Friction; promote if it persists across batches). The orchestrator + carousel-generator patterns are reusable — worth a §3 entry if scheduling-at-scale becomes routine.
+
+**Files shipped:**
+- 5 video comps + 5 carousel comps: `videos/binsparkle/compositions/binsparkle-{resume,cookbook,openmic,bucketlist,confessional}-{video,carousel}.html`
+- LinkedIn slide comp: `binsparkle-linkedin-clean.html`
+- 20 scheduling configs: `videos/binsparkle/posting/2026-08-17-to-21-set2/` (+ the Aug 9 + Aug 11–16 config dirs)
+- `videos/binsparkle/POSTING-PLAN.md`, `posts.md`, `MANIFEST.md` (NEXT-SESSION block + §3 + §10), `docs/playbooks/content-creation.md` (Rule 12 sweep), `LEARNINGS.md` (this entry + §4 headline-bug + the comeback entry), `scripts/fetch-music-runware.mjs` (steps default fix)
+
+---
+
+### 2026-08-08 · Bin Sparkle "Comeback" — new angle (video + carousel) + the invisible-headline bug
+- **What:** Built a fresh Bin Sparkle angle — "The Comeback" (the bin's redemption arc: rock bottom → rescued → triumphant, with the BinSparkle clean as the turning point). Two outputs from one concept: a 27s text-driven 9:16 video and a 6-slide vertical carousel. Fresh Runware music bed (120bpm D-major "comeback anthem," distinct from kindred/binsparkle beds), SFX on every cut, hand-built inline SVG accents (stink waves, water spray, soap bubbles, sparkle pops, confetti).
+- **Outcome:** Done — both in `renders/binsparkle/comeback/final/`. User approved the video as-is (declined further changes); only note left was a copy correction for *next* time (see below).
+- **Worked:**
+  - The angle is genuinely new — 29 existing binsparkle comps and none play the character-emotion set as a journey. The "rescued" image (bin hosed under a rainbow) IS the brand intervention, so the value prop lands without a hard sell.
+  - Runware music gen (`fetch-music-runware.mjs`) produced a usable, distinct bed in one shot at $0.0009.
+  - `render:still` pulled all 6 carousel slides from one composition via clip windows at t=1,3,5,7,9,11 — the "one source → many outputs" model works cleanly.
+  - The freeform `look` tool proved the right verifier for "is element X rendering" (promoted to §4).
+- **Friction:**
+  - **The headline bug (promoted to §4).** First shipped video had zero on-screen text — `.beat-text` parent had `opacity:0` in CSS and nothing raised it. User caught it. Required a second build + re-render. The rubric judge had graded the empty frames without plainly saying "the headline is missing."
+  - **Runware ACE-Step rejected its own default `steps`.** `fetch-music-runware.mjs` only sent `steps` if you passed `--steps`, but the runware-audio lib injected a value Runware rejected (`invalidSteps: 'steps' must be an integer between 1 and 20`). **Root-fixed 2026-08-08** — the script now defaults `steps` to 15, so the flag is optional. Verified by generating a bed with no flags passed.
+  - **The cheap vision judge (gpt-5-mini) miscounts y-coordinates by ~180px** — it read a wordmark at CSS `top:268px` as "~y=80", producing consistent false "unsafe zone" failures across every frame. Its pixel-coordinate estimates are not reliable; trust the CSS, not the judge's y-numbers.
+- **Next time:**
+  - For any layered text block animated via GSAP, pick one gating strategy (parent OR children) and follow it through — see §4. Then verify with `look` ("list every piece of text visible") before declaring done.
+  - Runware music no longer needs `--steps` (root-fixed; defaults to 15).
+  - Don't chase the vision judge's y-coordinate "unsafe zone" fails without a CSS sanity check — it over-reports low.
+  - **Bin Sparkle service copy:** say "washed and deodorised" or "washed, scrubbed, and deodorised" — NOT "pressure-washed." (Recorded in `videos/binsparkle/MANIFEST.md` top + the comeback comp's beat-5 line is left as-is per user instruction.)
+  - **After every video/carousel, run the improvements sweep** — see `docs/playbooks/content-creation.md` Rule 12. Not done until the lessons are written back into the docs.
+- **Promoted to §4 / §3?** Yes — §4 gains the invisible-headline parent-opacity pitfall (the high-value one). The Runware-steps quirk and judge-miscount are captured in this entry's Friction; promote to §4 if they recur.
+
+**Files shipped:**
+- `videos/binsparkle/compositions/binsparkle-comeback-video.html` + `binsparkle-comeback-carousel.html`
+- `videos/binsparkle/SCRIPT-comeback.md` (gold-standard format, 8/8 rubric)
+- `assets/music/binsparkle-comeback-bed.mp3` (+ `.gen.json`)
+- `renders/binsparkle/comeback/final/` — `comeback-video.mp4` + `slide-1..6-*.png`
+- `videos/binsparkle/MANIFEST.md` — comeback rows (§3, §4) + the "washed, not pressure-washed" copy rule (top)
 
 ---
 

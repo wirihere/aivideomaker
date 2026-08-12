@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Playlist (2026 Wrapped)</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+
+  /* DARK wrapped canvas — near-black ink with neon glows */
+  .comp {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 68% 46% at 50% 26%, rgba(47,122,77,0.30) 0%, rgba(13,34,24,0) 60%),
+      radial-gradient(ellipse 58% 42% at 82% 76%, rgba(244,185,66,0.16) 0%, rgba(13,34,24,0) 56%),
+      radial-gradient(ellipse 52% 40% at 14% 78%, rgba(194,90,53,0.20) 0%, rgba(13,34,24,0) 56%),
+      #0d2218;
+  }
+  /* faint grid for app-screen structure */
+  .comp::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.05;
+    background-image:
+      linear-gradient(rgba(250,246,238,0.7) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(250,246,238,0.7) 1px, transparent 1px);
+    background-size: 90px 90px;
+  }
+
+  /* neon corner ticks */
+  .tick { position: absolute; width: 56px; height: 56px; z-index: 7; pointer-events: none; }
+  .tick svg { width: 100%; height: 100%; display: block; }
+  .tick.tl { top: 44px; left: 44px; }
+  .tick.tr { top: 44px; right: 44px; }
+  .tick.bl { bottom: 44px; left: 44px; }
+  .tick.br { bottom: 44px; right: 44px; }
+
+  /* wordmark — recoloured to cream so it reads on dark (verbatim SVG) */
+  .wordmark { position: absolute; top: 80px; left: 0; right: 0; z-index: 10;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 40px; height: 40px; }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 32px;
+                   color: var(--cream); letter-spacing: -0.01em; }
+  .wordmark span i { font-style: normal; color: var(--sunny); }
+
+  /* small persistent section label */
+  .year-pill { position: absolute; top: 170px; left: 0; right: 0; z-index: 8; text-align: center;
+               font-family: var(--brand-ui); font-weight: 700; font-size: 22px; letter-spacing: 0.34em;
+               color: var(--cream); text-transform: uppercase; }
+
+  /* album-art hero */
+  .art-glow { position: absolute; top: 300px; left: 50%; margin-left: -380px;
+              width: 760px; height: 760px; border-radius: 50%; z-index: 3; pointer-events: none;
+              background: radial-gradient(circle, rgba(244,185,66,0.34) 0%, rgba(47,122,77,0.18) 45%, rgba(13,34,24,0) 70%);
+              filter: blur(6px); }
+  .art-card { position: absolute; top: 380px; left: 50%; margin-left: -320px;
+              width: 640px; height: 640px; z-index: 5; border-radius: 28px; overflow: hidden;
+              background: radial-gradient(circle at 50% 38%, #2f7a4d 0%, #1f5b38 55%, #0d2218 100%);
+              box-shadow: 0 0 0 3px rgba(250,246,238,0.10), 0 0 70px rgba(244,185,66,0.28), 0 30px 60px rgba(0,0,0,0.55);
+              border: 2px solid rgba(250,246,238,0.14); }
+  .art-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+
+  /* in-card “now playing” chrome */
+  .art-eq { position: absolute; left: 26px; bottom: 24px; z-index: 7;
+            display: flex; align-items: flex-end; gap: 7px; height: 44px; }
+  .eq-bar { width: 10px; height: 44px; background: var(--sunny); border-radius: 4px;
+            transform-origin: bottom center; box-shadow: 0 0 8px rgba(244,185,66,0.5); }
+  .art-tag { position: absolute; right: 22px; bottom: 24px; z-index: 7;
+             font-family: var(--brand-ui); font-weight: 700; font-size: 17px; letter-spacing: 0.22em;
+             color: var(--ink); background: var(--sunny); padding: 8px 16px; border-radius: 999px;
+             text-transform: uppercase; }
+
+  /* shared content zone below the art — one block per beat */
+  .block { position: absolute; left: 0; right: 0; top: 1110px; z-index: 6; text-align: center;
+           padding: 0 70px; box-sizing: border-box; }
+  .kicker { font-family: var(--brand-ui); font-weight: 700; letter-spacing: 0.36em; font-size: 26px;
+            color: var(--sunny); text-transform: uppercase; margin: 0 0 20px; }
+  .kicker.coral { color: var(--coral); }
+  .line { font-family: var(--brand-display); font-weight: 800; font-size: 82px; line-height: 0.98;
+          color: var(--cream); margin: 0; letter-spacing: -0.01em; }
+  .line .neon { color: var(--sunny); }
+  .line .neon-coral { color: var(--coral); }
+  .line .quote { color: var(--leaf-soft); font-style: italic; font-weight: 700; }
+  .line.title { font-size: 68px; }
+
+  /* beat 1 — wrapped headline */
+  .b1 .topline { font-family: var(--brand-display); font-weight: 600; font-size: 50px;
+                 line-height: 1.0; color: var(--cream); opacity: 0.9; margin: 0 0 8px; }
+  .b1 .bigword { font-family: var(--brand-display); font-weight: 800; font-size: 132px;
+                 line-height: 0.9; margin: 0; color: var(--cream); letter-spacing: -0.02em; }
+
+  /* CTA pill (centred by parent text-align, no transform on the pill) */
+  .cta-pill { display: inline-block; margin-top: 34px; font-family: var(--brand-ui); font-weight: 700;
+              font-size: 42px; color: var(--ink); background: var(--sunny); padding: 20px 54px;
+              border-radius: 999px; letter-spacing: 0.01em;
+              box-shadow: 0 0 0 4px rgba(244,185,66,0.25), 0 14px 32px rgba(0,0,0,0.45); }
+
+  /* footer (kept inside safe band) */
+  .foot { position: absolute; top: 1470px; left: 0; right: 0; z-index: 6; text-align: center;
+          font-family: var(--brand-ui); font-weight: 600; font-size: 26px; letter-spacing: 0.26em;
+          color: var(--cream); text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div id="playlist-video" class="comp" data-composition-id="playlist-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <!-- neon corner ticks -->
+  <div class="tick tl"><svg viewBox="0 0 56 56"><path d="M2 18 L2 2 L18 2" fill="none" stroke="#f4b942" stroke-width="4"/></svg></div>
+  <div class="tick tr"><svg viewBox="0 0 56 56"><path d="M54 18 L54 2 L38 2" fill="none" stroke="#c25a35" stroke-width="4"/></svg></div>
+  <div class="tick bl"><svg viewBox="0 0 56 56"><path d="M2 38 L2 54 L18 54" fill="none" stroke="#2f7a4d" stroke-width="4"/></svg></div>
+  <div class="tick br"><svg viewBox="0 0 56 56"><path d="M54 38 L54 54 L38 54" fill="none" stroke="#f4b942" stroke-width="4"/></svg></div>
+
+  <!-- wordmark (verbatim SVG, recoloured to cream) -->
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#faf6ee"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#faf6ee"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#faf6ee"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <div class="year-pill" id="year-pill">2026 · Wrapped</div>
+
+  <!-- album art -->
+  <div class="art-glow" id="art-glow"></div>
+  <div class="art-card" id="art-card">
+    <img src="videos/binsparkle/assets/char2-quarter-cheeky.png" alt="">
+    <div class="art-eq" id="art-eq">
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+      <div class="eq-bar"></div>
+    </div>
+    <div class="art-tag">Now Playing</div>
+  </div>
+
+  <!-- Beat 1 (0-6): wrapped intro -->
+  <div class="block b1" id="b1">
+    <p class="topline">your bin’s 2026</p>
+    <p class="bigword"><span style="color:var(--sunny);">Wrapped</span> 🎧</p>
+  </div>
+
+  <!-- Beat 2 (6-14): top track -->
+  <div class="block" id="b2">
+    <p class="kicker">Top track</p>
+    <p class="line title"><span class="quote">“Sounds of the Sea”</span> 🎵</p>
+  </div>
+
+  <!-- Beat 3 (14-20): top genre -->
+  <div class="block" id="b3">
+    <p class="kicker coral">Top genre</p>
+    <p class="line title"><span class="quote">“mystery Tupperwave”</span></p>
+  </div>
+
+  <!-- Beat 4 (20-27): refresh + CTA -->
+  <div class="block" id="b4">
+    <p class="line">Refresh the<br><span class="neon">playlist.</span></p>
+    <div class="cta-pill" id="cta-pill">binsparkle.nz</div>
+  </div>
+
+  <div class="foot" id="foot">book online · binsparkle.nz · Aotearoa NZ</div>
+
+  <audio id="sfx-drop"  class="clip" src="assets/sfx/impact.wav" data-start="0.1"   data-duration="0.60" data-track-index="9"  data-volume="0.70"></audio>
+  <audio id="sfx-track" class="clip" src="assets/sfx/tick.wav"   data-start="6.0"   data-duration="0.45" data-track-index="10" data-volume="0.60"></audio>
+  <audio id="sfx-genre" class="clip" src="assets/sfx/ding.wav"   data-start="14.0"  data-duration="0.55" data-track-index="11" data-volume="0.60"></audio>
+  <audio id="sfx-who"   class="clip" src="assets/sfx/whoosh.mp3" data-start="14.65" data-duration="0.85" data-track-index="12" data-volume="0.55"></audio>
+  <audio id="sfx-cta"   class="clip" src="assets/sfx/ding.wav"   data-start="20.4"  data-duration="0.55" data-track-index="13" data-volume="0.60"></audio>
+
+</div>
+
+<script>
+  gsap.set(".tick",        { opacity: 0 });
+  gsap.set("#year-pill",   { opacity: 0, y: -10 });
+  gsap.set("#art-glow",    { opacity: 0, scale: 0.82 });
+  gsap.set("#art-card",    { opacity: 0, scale: 0.90, y: 30 });
+  gsap.set("#art-eq .eq-bar", { scaleY: 0.2 });
+  gsap.set("#b1",          { opacity: 0, y: 24 });
+  gsap.set("#b2",          { opacity: 0, y: 24 });
+  gsap.set("#b3",          { opacity: 0, y: 24 });
+  gsap.set("#b4",          { opacity: 0, y: 24 });
+  gsap.set("#cta-pill",    { opacity: 0, scale: 0.85 });
+  gsap.set("#foot",        { opacity: 0 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Beat 1 (0-6s): the wrapped card drops in
+  tl.to(".tick",      { opacity: 1, duration: 0.67, stagger: 0.07 }, 0.07)
+    .to("#year-pill", { opacity: 0.85, y: 0, duration: 0.67 }, 0.27)
+    .to("#art-glow",  { opacity: 1, scale: 1, duration: 0.93, ease: "power2.out" }, 0.40)
+    .to("#art-card",  { opacity: 1, scale: 1, y: 0, duration: 0.93, ease: "back.out(1.4)" }, 0.53)
+    .to("#art-eq .eq-bar", { scaleY: 1, duration: 0.40, repeat: 40, yoyo: true,
+                             ease: "sine.inOut", stagger: { each: 0.16 } }, 1.20)
+    .to("#b1",        { opacity: 1, y: 0, duration: 0.67, ease: "power3.out" }, 1.33)
+    .to("#foot",      { opacity: 0.40, duration: 0.80 }, 1.87)
+    .to("#art-card",  { scale: 1.04, duration: 18.9, ease: "power1.inOut" }, 2.13);
+
+  // Beat 2 (6-14s): top track
+  tl.to("#b1",        { opacity: 0, y: -16, duration: 0.51 }, 6.00)
+    .to("#b2",        { opacity: 1, y: 0, duration: 0.73, ease: "power3.out" }, 6.29);
+
+  // Beat 3 (14-20s): top genre
+  tl.to("#b2",        { opacity: 0, y: -16, duration: 0.53 }, 14.00)
+    .to("#b3",        { opacity: 1, y: 0, duration: 0.75, ease: "power3.out" }, 14.30);
+
+  // Beat 4 (20-27s): refresh + CTA
+  tl.to("#b3",        { opacity: 0, y: -16, duration: 0.61 }, 20.00)
+    .to("#b4",        { opacity: 1, y: 0, duration: 0.88, ease: "power3.out" }, 20.35)
+    .to("#cta-pill",  { opacity: 1, scale: 1, duration: 0.70, ease: "back.out(1.6)" }, 21.58);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["playlist-video"] = tl;
+</script>
+</body>
+</html>

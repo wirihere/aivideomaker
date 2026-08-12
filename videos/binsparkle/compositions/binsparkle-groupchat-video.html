@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bin Sparkle — Group Chat (Video)</title>
+
+<link rel="stylesheet" href="design/cards.css">
+<link rel="stylesheet" href="design/templates/warm-community.css">
+<link rel="stylesheet" href="videos/binsparkle/tokens.css">
+<link rel="stylesheet" href="design/modules/all.css">
+<script src="design/vendor/gsap.min.js"></script>
+<script src="design/modules/all.js"></script>
+
+<style>
+  body { margin: 0; background: #000; font-family: var(--brand-ui); }
+  .comp {
+    width: 1080px; height: 1920px; position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 92% 88% at 50% 42%, #faf6ee 52%, #efe6cf 84%, #e3d6b6 100%);
+    box-shadow: inset 0 0 220px rgba(120, 92, 40, 0.22);
+  }
+  .comp::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.04;
+    background-image: radial-gradient(#5a4326 1px, transparent 1.4px);
+    background-size: 7px 7px;
+  }
+
+  /* ── Wordmark (branding, top centre on the cream surface) ── */
+  .wordmark { position: absolute; top: 50px; left: 0; right: 0; z-index: 30;
+              display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .wordmark svg { width: 40px; height: 40px; }
+  .wordmark span { font-family: var(--brand-display); font-weight: 800; font-size: 32px;
+                   color: var(--ink); letter-spacing: -0.01em; }
+  .wordmark span i { font-style: normal; color: var(--leaf); }
+
+  /* ── Phone body ── */
+  .phone-bezel {
+    position: absolute; left: 60px; top: 120px; width: 960px; height: 1680px;
+    background: var(--ink); border-radius: 80px; z-index: 5;
+    box-shadow: 0 44px 100px rgba(13,34,24,0.42),
+                0 16px 38px rgba(13,34,24,0.30),
+                inset 0 0 0 2px rgba(255,255,255,0.05);
+  }
+  .phone-screen {
+    position: absolute; left: 74px; top: 134px; width: 932px; height: 1652px;
+    background: #eceef0; border-radius: 66px; z-index: 6; overflow: hidden;
+  }
+  .notch {
+    position: absolute; left: 430px; top: 150px; width: 220px; height: 50px;
+    background: var(--ink); border-radius: 25px; z-index: 40;
+  }
+
+  /* ── Status bar (time + battery) ── */
+  .status-bar {
+    position: absolute; left: 116px; right: 116px; top: 158px; height: 40px; z-index: 35;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .status-bar .time { font-family: var(--brand-ui); font-weight: 600; font-size: 30px; color: var(--ink); }
+  .batt { width: 46px; height: 24px; border: 2.5px solid var(--ink); border-radius: 7px; position: relative; }
+  .batt::after { content: ""; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+                 width: 4px; height: 12px; background: var(--ink); border-radius: 0 3px 3px 0; }
+  .batt::before { content: ""; position: absolute; inset: 3px; background: var(--leaf-deep); border-radius: 3px; }
+
+  /* ── Chat header ── */
+  .chat-header {
+    position: absolute; left: 56px; right: 56px; top: 214px; height: 138px; z-index: 25;
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+  }
+  .back { position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
+          font-family: var(--brand-display); font-weight: 600; font-size: 64px; line-height: 1;
+          color: var(--leaf-deep); }
+  .av-stack { display: flex; flex-shrink: 0; }
+  .av-stack .mini {
+    width: 64px; height: 64px; border-radius: 50%; border: 3px solid #eceef0;
+    margin-left: -16px; box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--brand-display); font-weight: 800; font-size: 30px; color: #fff;
+  }
+  .av-stack .mini:first-child { margin-left: 0; }
+  .av-stack .mini.m1 { background: var(--coral); }
+  .av-stack .mini.m2 { background: #8a93a0; }
+  .av-stack .mini.m3 { background: var(--leaf); font-size: 34px; }
+  .title-block { display: flex; flex-direction: column; }
+  .title { font-family: var(--brand-display); font-weight: 800; font-size: 38px;
+           color: var(--ink); line-height: 1; letter-spacing: -0.01em; }
+  .members { font-family: var(--brand-ui); font-size: 24px; color: #6b7785; margin-top: 7px; line-height: 1; }
+  .header-rule { position: absolute; left: 0; right: 0; top: 360px; height: 1.5px;
+                 background: rgba(13,34,24,0.10); z-index: 24; }
+
+  /* ── Thread ── */
+  .thread {
+    position: absolute; left: 92px; right: 92px; top: 392px; height: 1000px; z-index: 10;
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .time-label { align-self: center; font-family: var(--brand-ui); font-weight: 600;
+                font-size: 24px; color: #8a93a0; letter-spacing: 0.02em; }
+  .sys-pill { align-self: center; font-family: var(--brand-ui); font-weight: 600;
+              font-size: 26px; color: var(--ink); background: #dfe2e7;
+              padding: 16px 30px; border-radius: 18px; max-width: 86%;
+              text-align: center; line-height: 1.25; }
+
+  .row { display: flex; align-items: flex-end; gap: 16px; max-width: 720px; }
+  .row .av {
+    width: 84px; height: 84px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    background: var(--leaf-soft); border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+  }
+  .row .av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .row .col { display: flex; flex-direction: column; }
+  .sender { font-family: var(--brand-ui); font-size: 24px; font-weight: 600;
+            color: #7a8794; margin: 0 16px 8px; letter-spacing: 0.01em; line-height: 1; }
+
+  .bubble { font-family: var(--brand-ui); font-size: 50px; line-height: 1.22; font-weight: 500;
+            padding: 26px 34px; letter-spacing: -0.005em; }
+  .bubble.in {
+    background: #ffffff; color: var(--ink);
+    border-radius: 40px 40px 40px 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.10);
+    border: 1px solid rgba(13,34,24,0.05);
+  }
+  .bubble.out {
+    background: var(--leaf); color: #ffffff;
+    border-radius: 40px 40px 12px 40px;
+    box-shadow: 0 5px 16px rgba(47,122,77,0.32);
+    align-self: flex-end; max-width: 620px;
+  }
+  .bubble.in .em { color: var(--coral); font-weight: 700; }
+  .bubble.out .em { color: var(--sunny); font-weight: 700; }
+
+  .cta-out {
+    align-self: flex-end; display: flex; align-items: center; gap: 16px;
+    background: var(--leaf-deep); color: #fff;
+    font-family: var(--brand-display); font-weight: 800; font-size: 44px;
+    padding: 22px 42px; border-radius: 999px; letter-spacing: -0.005em;
+    box-shadow: 0 10px 28px rgba(31,91,56,0.42);
+  }
+  .cta-out .dot { width: 16px; height: 16px; border-radius: 50%; background: var(--sunny); flex-shrink: 0; }
+
+  /* ── Input bar ── */
+  .input-bar {
+    position: absolute; left: 96px; right: 96px; top: 1414px; height: 92px; z-index: 20;
+    background: #ffffff; border-radius: 999px;
+    border: 1px solid rgba(13,34,24,0.08);
+    display: flex; align-items: center; gap: 20px;
+    padding: 0 12px 0 38px;
+    box-shadow: 0 5px 16px rgba(0,0,0,0.08);
+  }
+  .input-bar .field { flex: 1; font-family: var(--brand-ui); font-size: 36px; color: #9aa5b1; }
+  .input-bar .send {
+    width: 76px; height: 76px; border-radius: 50%; background: var(--leaf);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 40px; line-height: 1;
+  }
+
+  /* ── Home indicator ── */
+  .home-indicator {
+    position: absolute; left: 50%; transform: translateX(-50%); top: 1714px;
+    width: 230px; height: 8px; border-radius: 4px; background: rgba(13,34,24,0.28); z-index: 20;
+  }
+</style>
+</head>
+<body>
+
+<div id="groupchat-video" class="comp" data-composition-id="groupchat-video"
+     data-width="1080" data-height="1920" data-start="0" data-duration="27">
+
+  <!-- Brand wordmark -->
+  <div class="wordmark">
+    <svg viewBox="0 0 64 64"><g><rect x="6" y="20" width="52" height="38" rx="5" fill="#2f7a4d"/><rect x="6" y="12" width="52" height="9" rx="4" fill="#2f7a4d"/><path d="M48 3 L58 13 L52 13 L52 22 L44 22 L44 13 L38 13 Z" fill="#f4b942"/></g></svg>
+    <span>bin<i>sparkle</i></span>
+  </div>
+
+  <!-- Phone -->
+  <div class="phone-bezel"></div>
+  <div class="phone-screen"></div>
+  <div class="notch"></div>
+
+  <!-- Status bar -->
+  <div class="status-bar" id="status-bar">
+    <span class="time">9:41</span>
+    <div class="batt"></div>
+  </div>
+
+  <!-- Chat header -->
+  <div class="chat-header" id="chat-header">
+    <div class="back">&lsaquo;</div>
+    <div class="av-stack">
+      <div class="mini m1">A</div>
+      <div class="mini m2">B</div>
+      <div class="mini m3">&#10022;</div>
+    </div>
+    <div class="title-block">
+      <div class="title">Neighbourhood Bin Chat</div>
+      <div class="members">4 members</div>
+    </div>
+  </div>
+  <div class="header-rule" id="header-rule"></div>
+
+  <!-- Thread -->
+  <div class="thread">
+    <div class="time-label" id="time-label">Today</div>
+    <div class="sys-pill" id="sys">Neighbourhood Bin Chat &middot; 4 members</div>
+
+    <div class="row" id="row-a">
+      <div class="av"><img src="videos/binsparkle/assets/cutouts/char2-side-annoyed-cutout.png" alt=""></div>
+      <div class="col">
+        <div class="sender">Bin A</div>
+        <div class="bubble in">mate. mine put a <span class="em">nappy</span> in me.</div>
+      </div>
+    </div>
+
+    <div class="row" id="row-b">
+      <div class="av"><img src="videos/binsparkle/assets/cutouts/char2-front-sad-dirty-cutout.png" alt=""></div>
+      <div class="col">
+        <div class="sender">Bin B</div>
+        <div class="bubble in">prawn stock. <span class="em">again.</span> &#128557;</div>
+      </div>
+    </div>
+
+    <div class="bubble out" id="bubble-c">ngmi. get a <span class="em">BinSparkle</span> clean.</div>
+
+    <div class="cta-out" id="cta-out"><span class="dot"></span>binsparkle.nz</div>
+  </div>
+
+  <!-- Input bar -->
+  <div class="input-bar" id="input-bar">
+    <div class="field">Message&hellip;</div>
+    <div class="send">&uarr;</div>
+  </div>
+
+  <div class="home-indicator" id="home-indicator"></div>
+
+  <!-- SFX -->
+  <audio id="sfx-arrive" class="clip" src="assets/sfx/impact.wav" data-start="0.1"   data-duration="0.60" data-track-index="9"  data-volume="0.60"></audio>
+  <audio id="sfx-sys"    class="clip" src="assets/sfx/tick.wav"   data-start="0.80"  data-duration="0.45" data-track-index="10" data-volume="0.50"></audio>
+  <audio id="sfx-a"      class="clip" src="assets/sfx/ding.wav"   data-start="6.0"   data-duration="0.60" data-track-index="11" data-volume="0.55"></audio>
+  <audio id="sfx-b"      class="clip" src="assets/sfx/ding.wav"   data-start="14.0"  data-duration="0.60" data-track-index="12" data-volume="0.55"></audio>
+  <audio id="sfx-c"      class="clip" src="assets/sfx/whoosh.mp3" data-start="20.0"  data-duration="0.70" data-track-index="13" data-volume="0.50"></audio>
+  <audio id="sfx-cta"    class="clip" src="assets/sfx/ding.wav"   data-start="20.4"  data-duration="0.60" data-track-index="14" data-volume="0.60"></audio>
+
+</div>
+
+<script>
+  // Initial hidden states
+  gsap.set("#status-bar",   { opacity: 0, y: -10 });
+  gsap.set("#chat-header",  { opacity: 0, y: -14 });
+  gsap.set("#header-rule",  { opacity: 0 });
+  gsap.set("#time-label",   { opacity: 0, y: 10 });
+  gsap.set("#sys",          { opacity: 0, y: 14, scale: 0.92 });
+  gsap.set("#row-a",        { opacity: 0, y: 26, scale: 0.94 });
+  gsap.set("#row-b",        { opacity: 0, y: 26, scale: 0.94 });
+  gsap.set("#bubble-c",     { opacity: 0, y: 26, scale: 0.94 });
+  gsap.set("#cta-out",      { opacity: 0, y: 20, scale: 0.85 });
+  gsap.set("#input-bar",    { opacity: 0, y: 16 });
+  gsap.set("#home-indicator",{ opacity: 0 });
+
+  const tl = gsap.timeline({ paused: true });
+
+  // Beat 1 (0-6s): phone UI arrives + system / group banner
+  tl.to("#status-bar",  { opacity: 1, y: 0, duration: 0.45 }, 0.15)
+    .to("#chat-header", { opacity: 1, y: 0, duration: 0.50, ease: "power2.out" }, 0.20)
+    .to("#header-rule", { opacity: 1, duration: 0.40 }, 0.35)
+    .to("#input-bar",   { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.55)
+    .to("#home-indicator", { opacity: 1, duration: 0.50 }, 0.75)
+    .to("#time-label",  { opacity: 1, y: 0, duration: 0.40 }, 0.80)
+    .to("#sys",         { opacity: 1, y: 0, scale: 1, duration: 0.40, ease: "back.out(1.4)" }, 0.90);
+
+  // Beat 2 (6-14s): Bin A complains
+  tl.to("#row-a", { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: "back.out(1.6)" }, 6.0);
+
+  // Beat 3 (14-20s): Bin B piles on
+  tl.to("#row-b", { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: "back.out(1.6)" }, 14.0);
+
+  // Beat 4 (20-27s): clean bin drops the answer + CTA
+  tl.to("#bubble-c", { opacity: 1, y: 0, scale: 1, duration: 0.42, ease: "back.out(1.5)" }, 20.0)
+    .to("#cta-out",  { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.8)" }, 20.4);
+
+  window.__timelines = window.__timelines || {};
+  window.__timelines["groupchat-video"] = tl;
+</script>
+</body>
+</html>

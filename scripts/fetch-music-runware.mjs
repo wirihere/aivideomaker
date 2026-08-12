@@ -36,7 +36,10 @@ const keyScale = flags.key || undefined;
 const timeSignature = flags["time-signature"] ? parseInt(flags["time-signature"], 10) : undefined;
 const vocalLanguage = flags["vocal-language"] || "unknown";   // "unknown" = instrumental
 const seed = flags.seed ? parseInt(flags.seed, 10) : undefined;
-const steps = flags.steps ? parseInt(flags.steps, 10) : undefined;
+// ACE-Step requires `steps` in 1–20. The runware-audio lib injects its own
+// default when this is absent, which Runware rejects (`invalidSteps`), so we
+// always send an explicit valid value. 15 = high quality; override with --steps.
+const steps = flags.steps ? parseInt(flags.steps, 10) : 15;
 const outputFormat = flags.format || "MP3";
 
 if (!positivePrompt) {
